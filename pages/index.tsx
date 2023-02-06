@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-export default function Home() {
+const Home = () => {
   return (
     <>
       <Head>
@@ -12,4 +12,6 @@ export default function Home() {
       <h1 className="flex p-3 bg-[gray]">oh Ju</h1>
     </>
   );
-}
+};
+
+export default Home;
