@@ -2,15 +2,9 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import { FIREBASE } from "./config";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDs6fDfBacnPtNuSpQMm0bbwFKZ7YeGgyE",
-  authDomain: "oh-ju-79642.firebaseapp.com",
-  projectId: "oh-ju-79642",
-  storageBucket: "oh-ju-79642.appspot.com",
-  messagingSenderId: "54704831310",
-  appId: "1:54704831310:web:585a4ee7a356c8417b3c1f",
-};
+const firebaseConfig = FIREBASE;
 
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
