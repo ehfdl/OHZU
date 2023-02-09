@@ -1,6 +1,23 @@
 import Layout from "@/components/layout";
+import { dbService } from "@/firebase";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 const Detail = () => {
+  const [posts, setPosts] = useState({});
+  useEffect(() => {
+    const q = query(collection(dbService, "Posts"));
+
+    const posts = onSnapshot(q, (snapshot) => {
+      const newPost = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setPosts(newPost);
+    });
+  }, []);
+  console.log("🚀 ~ file: [id].tsx:8 ~ Detail ~ posts", posts);
+
   return (
     <Layout>
       <div className="bg-gray-300 w-full aspect-square" />
