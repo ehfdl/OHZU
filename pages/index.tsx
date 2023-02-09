@@ -1,4 +1,4 @@
-import Layout from "@/components/layout";
+import Layout from "@/components/Layout";
 import Head from "next/head";
 import "tailwindcss/tailwind.css";
 import Dropdown from "components/dropdown.jsx";
