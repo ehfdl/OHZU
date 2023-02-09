@@ -53,8 +53,8 @@ const Post = () => {
       setForm((prev) => {
         return { ...prev, img: imgFileUrl };
       });
+      await addDoc(collection(dbService, "Posts"), form);
     }
-    await addDoc(collection(dbService, "Posts"), form);
   };
 
   useEffect(() => {
@@ -146,7 +146,7 @@ const Post = () => {
           onChange={onChangeValue}
         />
         <div>만드는 방법</div>
-        <textarea name="receipe" value={form.recipe} onChange={onChangeValue} />
+        <textarea name="recipe" value={form.recipe} onChange={onChangeValue} />
         <div>내용</div>
         <textarea
           className="flex min-h-[200px]"
