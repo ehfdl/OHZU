@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
 import Layout from "@/components/layout";
 import { useState } from "react";
-import { Form } from "@/d";
+import { dbService, storageService } from "@/firebase";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { v4 as uuidv4 } from "uuid";
+import { addDoc, collection } from "firebase/firestore";
+
 const Post = () => {
   const [form, setForm] = useState<Form>({
     userId: "",
@@ -14,8 +18,8 @@ const Post = () => {
     like: [],
     view: 0,
   });
-
-  const [preview, setPreview] = useState<File | null>();
+  const [imgFile, setImgFile] = useState<File | null>();
+  const [preview, setPreview] = useState<string | null>("");
 
   const onChangeValue = (
     event:
@@ -31,30 +35,45 @@ const Post = () => {
     if (event.target.files !== null) {
       const file = event.target.files[0];
       if (file && file.type.substring(0, 5) === "image") {
-        setPreview(file);
+        setImgFile(file);
       } else {
-        setPreview(null);
+        setImgFile(null);
       }
     }
   };
 
+  const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    let imgFileUrl = "";
+    if (preview !== "") {
+      const previewRef = ref(storageService, `user/${uuidv4()}`);
+      const response = await uploadString(
+        previewRef,
+        preview as string,
+        "data_url"
+      );
+      imgFileUrl = await getDownloadURL(previewRef);
+    }
+    console.log(imgFileUrl);
+    setForm((prev) => {
+      return { ...prev, img: imgFileUrl };
+    });
+
+    console.log(form);
+    await addDoc(collection(dbService, "Posts"), form);
+  };
+
   useEffect(() => {
-    if (preview) {
+    if (imgFile) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setForm((prev) => {
-          return { ...prev, img: reader.result as string };
-        });
+        setPreview(reader.result as string);
       };
-      reader.readAsDataURL(preview);
+      reader.readAsDataURL(imgFile);
     } else {
-      setForm((prev) => {
-        return { ...prev, img: null };
-      });
+      setPreview(null);
     }
-  }, [preview]);
-
-  console.log(form);
+  }, [imgFile]);
 
   return (
     <Layout>
@@ -67,55 +86,65 @@ const Post = () => {
             onChange={onChangeImg}
             className="hidden"
           />
-          <img src={form.img as string} />
+          <img src={preview as string} />
         </label>
 
         <div className="mt-3 bg-slate-300 w-full">
           <div>제목</div>
           <input name="title" value={form.title} onChange={onChangeValue} />
         </div>
-        <div className="flex bg-white mt-2 gap-2 p-3 w-[90%] justify-around">
-          <label className="w-30 p-2 bg-slate-500">
+
+        <div className="flex bg-slate-300 mt-2 p-2 w-[90%] justify-around">
+          <label className="w-[60px] h-[50px] p-1 bg-slate-300">
             <input
               type="radio"
               name="type"
-              value="소주"
+              id="소주"
               onChange={onChangeValue}
-              className="hidden"
+              className="hidden peer"
             />
-            소주
+            <span className="w-full h-full bg-white rounded-md flex items-center justify-center text-center peer-checked:bg-slate-500 peer-checked:rounded-md">
+              소주
+            </span>
           </label>
-          <label className="w-30 p-2 bg-slate-500">
+          <label className="w-[60px] h-[50px] p-1 bg-slate-300">
             <input
               type="radio"
               name="type"
               value="맥주"
               onChange={onChangeValue}
-              className="hidden"
+              className="hidden peer"
             />
-            맥주
+            <span className="w-full h-full bg-white rounded-md flex items-center justify-center text-center peer-checked:bg-slate-500 peer-checked:rounded-md">
+              맥주
+            </span>
           </label>
-          <label className="w-30 p-2 bg-slate-500">
+          <label className="w-[60px] h-[50px] p-1 bg-slate-300">
             <input
               type="radio"
               name="type"
               value="양주"
               onChange={onChangeValue}
-              className="hidden"
+              className="hidden peer"
             />
-            양주
+            <span className="w-full h-full bg-white rounded-md flex items-center justify-center text-center peer-checked:bg-slate-500 peer-checked:rounded-md">
+              양주
+            </span>
           </label>
-          <label className="w-30 p-2 bg-slate-500">
+          <label className="w-[60px] h-[50px] p-1 bg-slate-300">
             <input
               type="radio"
               name="type"
               value="Etc"
               onChange={onChangeValue}
-              className="hidden"
+              className="hidden peer"
             />
-            Etc
+            <span className="w-full h-full bg-white rounded-md flex items-center justify-center text-center peer-checked:bg-slate-500 peer-checked:rounded-md">
+              Etc
+            </span>
           </label>
         </div>
+
         <div>ingredient</div>
         <textarea
           name="ingredient"
@@ -136,7 +165,9 @@ const Post = () => {
           onChange={onChangeValue}
         />
         <div className="w-full flex justify-end items-center">
-          <button className="bg-white p-2">작성</button>
+          <button onClick={onSubmit} className="bg-white p-2">
+            작성
+          </button>
         </div>
       </form>
     </Layout>

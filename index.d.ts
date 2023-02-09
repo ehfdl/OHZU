@@ -1,4 +1,4 @@
-export interface Form {
+declare interface Form {
   userId: string;
   img: string | null;
   title: string;
