@@ -4,8 +4,9 @@ declare interface Form {
   title: string;
   type: string;
   ingredient: string;
-  receipe: string;
+  recipe: string;
   text: string;
   like: string[];
+  liked: string[];
   view: number;
 }

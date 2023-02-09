@@ -13,9 +13,10 @@ const Post = () => {
     title: "",
     type: "",
     ingredient: "",
-    receipe: "",
+    recipe: "",
     text: "",
     like: [],
+    liked: [],
     view: 0,
   });
   const [imgFile, setImgFile] = useState<File | null>();
@@ -47,19 +48,12 @@ const Post = () => {
     let imgFileUrl = "";
     if (preview !== "") {
       const previewRef = ref(storageService, `user/${uuidv4()}`);
-      const response = await uploadString(
-        previewRef,
-        preview as string,
-        "data_url"
-      );
+      await uploadString(previewRef, preview as string, "data_url");
       imgFileUrl = await getDownloadURL(previewRef);
+      setForm((prev) => {
+        return { ...prev, img: imgFileUrl };
+      });
     }
-    console.log(imgFileUrl);
-    setForm((prev) => {
-      return { ...prev, img: imgFileUrl };
-    });
-
-    console.log(form);
     await addDoc(collection(dbService, "Posts"), form);
   };
 
@@ -145,18 +139,14 @@ const Post = () => {
           </label>
         </div>
 
-        <div>ingredient</div>
+        <div>재료</div>
         <textarea
           name="ingredient"
           value={form.ingredient}
           onChange={onChangeValue}
         />
-        <div>Receipe</div>
-        <textarea
-          name="receipe"
-          value={form.receipe}
-          onChange={onChangeValue}
-        />
+        <div>만드는 방법</div>
+        <textarea name="receipe" value={form.recipe} onChange={onChangeValue} />
         <div>내용</div>
         <textarea
           className="flex min-h-[200px]"
