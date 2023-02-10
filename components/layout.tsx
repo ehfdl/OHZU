@@ -1,17 +1,16 @@
-import Header from "./Header";
-import Footer from "./Footer";
-import LoginModal from "./LoginModal";
-import JoinModal from "./JoinModal";
+import Header from "./header";
+import Footer from "./footer";
+import JoinModal from "./join_modal";
 
 const Layout = ({ children }: { children: any }) => {
   return (
-    <>
+    <div className="max-w-sm mx-auto">
       {/* <LoginModal /> */}
-      <JoinModal />
+      {/* <JoinModal /> */}
       <Header />
       {children}
       <Footer />
-    </>
+    </div>
   );
 };
 

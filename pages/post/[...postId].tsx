@@ -1,32 +1,55 @@
 import Layout from "@/components/layout";
 import { dbService } from "@/firebase";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
+import Head from "next/head";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const Detail = () => {
-  const [posts, setPosts] = useState({});
-  useEffect(() => {
-    const q = query(collection(dbService, "Posts"));
+  const [post, setPost] = useState<Form>({
+    userId: "",
+    img: "",
+    title: "",
+    type: "",
+    ingredient: "",
+    recipe: "",
+    text: "",
+    like: [],
+    liked: [],
+    view: 0,
+  });
 
-    const posts = onSnapshot(q, (snapshot) => {
-      const newPost = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setPosts(newPost);
-    });
+  useEffect(() => {
+    const docId = window.location.pathname.substring(6);
+    // const docId = router.query.postId;
+
+    const getPost = async () => {
+      const docRef = doc(dbService, "Posts", docId);
+      // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
+      const docSnap = await getDoc(docRef);
+      const data = docSnap.data();
+      console.log("🚀 ~ file: [...postId].tsx:38 ~ getPost ~ data", data);
+      setPost((prev) => ({ ...prev, ...data }));
+    };
+    getPost();
   }, []);
-  console.log("🚀 ~ file: [id].tsx:8 ~ Detail ~ posts", posts);
 
   return (
     <Layout>
-      <div className="bg-gray-300 w-full aspect-square" />
+      <img src={post.img!} className="bg-gray-300 w-full aspect-square" />
       <div className="px-4 py-8 space-y-6">
         <div className="flex justify-between items-center">
           <div className="space-x-3 flex items-end">
-            <span className="text-2xl font-medium">Title</span>
+            <span className="text-2xl font-medium">{post.title}</span>
             <span className="text-xs inline-block px-3 py-1 bg-gray-300 rounded-full">
-              Category
+              {post.type}
             </span>
           </div>
           <div className="flex flex-col items-center justify-center">
@@ -47,36 +70,27 @@ const Detail = () => {
                 ></path>
               </svg>
             </span>
-            <span className="text-xs">10</span>
+            <span className="text-xs">{post.like.length}</span>
           </div>
         </div>
-        <div className="flex space-x-4 justify-between items-start pb-4">
-          <div className="flex flex-col items-center justify-center w-28">
+        <div className="flex space-x-4 justify-start items-start pb-4">
+          <div className="flex flex-col items-center justify-center w-[25%]">
             <div className="bg-gray-300 rounded-full w-full aspect-square" />
             <span className="text-sm">Nick</span>
           </div>
-          <p className="text-sm">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum...
-          </p>
+          <p className="text-sm w-full">{post.text}</p>
         </div>
         <div className="space-y-2">
           <span className="inline-block rounded-full bg-gray-300 px-4 py-1">
-            Ingredients
+            재료
           </span>
-          <p className="ml-4">소주잔 / 소주 / 맥주</p>
+          <p className="ml-4">{post.ingredient}</p>
         </div>
         <div className="space-y-2">
           <span className="inline-block rounded-full bg-gray-300 px-4 py-1">
-            Recipe
+            만드는 방법
           </span>
-          <p className="ml-4">
-            1. Lorem Ipsum is simply dummy text of the
-            <br />
-            2. printing and typesetting
-            <br />
-            3. industry. Lorem Ipsum
-          </p>
+          <p className="ml-4">{post.recipe}</p>
         </div>
       </div>
       <hr></hr>

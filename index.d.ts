@@ -1,6 +1,6 @@
 declare interface Form {
   userId: string;
-  img: string | null;
+  img?: string | null;
   title: string;
   type: string;
   ingredient: string;
