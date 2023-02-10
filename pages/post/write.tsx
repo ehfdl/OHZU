@@ -6,6 +6,7 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { doc, setDoc, addDoc, collection } from "firebase/firestore";
 import { AiFillCamera } from "react-icons/ai";
+import { AiOutlineClose } from "react-icons/ai";
 
 const Post = () => {
   const [form, setForm] = useState<Form>({
@@ -38,10 +39,14 @@ const Post = () => {
       const file = event.target.files[0];
       if (file && file.type.substring(0, 5) === "image") {
         setImgFile(file);
-      } else {
-        setImgFile(null);
       }
+      // else {
+      //   setImgFile(null);
+      // }
     }
+  };
+  const onClickCancelImg = () => {
+    setImgFile(null);
   };
 
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -88,15 +93,11 @@ const Post = () => {
               <AiFillCamera className="scale-[2] text-slate-400 hover:scale-[2.2]" />
             </label>
           ) : (
-            <label className="w-full h-[200px] bg-transparent flex justify-end p-5 pr-9 items-end absolute">
-              <input
-                name="img"
-                type="file"
-                accept="image/*"
-                onChange={onChangeImg}
-                className="hidden"
+            <label className="w-full h-[200px] bg-transparent flex justify-end p-5 pr-9 items-start absolute">
+              <AiOutlineClose
+                onClick={onClickCancelImg}
+                className=" text-black p-[2px] bg-white rounded-full hover:scale-[2.2] box-border"
               />
-              <AiFillCamera className="scale-[2] text-slate-400 opacity-30 hover:scale-[2.2]" />
             </label>
           )}
           <img src={preview as string} className=" object-cover" />
