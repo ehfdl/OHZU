@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { authService } from "@/firebase";
+import { authService, dbService } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 // import axios from "axios";
@@ -34,10 +34,13 @@ const JoinModal = () => {
   console.log("password : ", password);
 
   const signUpForm = (e: any) => {
-    // e.preventDefault();
+    e.preventDefault();
     createUserWithEmailAndPassword(authService, email, password)
       .then((userCredential) => {
-        // console.log("회원가입 성공 ! :", userCredential);
+        console.log("회원가입 성공 ! :", authService.currentUser?.uid);
+        setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
+          user: authService.currentUser?.uid,
+        });
         alert("회원가입 성공 !");
       })
       .catch((error) => {
