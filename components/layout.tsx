@@ -1,13 +1,13 @@
-import Header from "./Header";
-import Footer from "./Footer";
-import LoginModal from "./LoginModal";
-import JoinModal from "./JoinModal";
+import Header from "./header";
+import Footer from "./footer";
+import LoginModal from "./loginModal";
+import JoinModal from "./joinModal";
 
 const Layout = ({ children }: { children: any }) => {
   return (
     <>
       {/* <LoginModal /> */}
-      <JoinModal />
+      {/* <JoinModal /> */}
       <Header />
       {children}
       <Footer />

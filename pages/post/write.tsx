@@ -4,7 +4,8 @@ import { useState } from "react";
 import { dbService, storageService } from "@/firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import { addDoc, collection } from "firebase/firestore";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { AiFillCamera } from "react-icons/ai";
 
 const Post = () => {
   const [form, setForm] = useState<Form>({
@@ -50,11 +51,13 @@ const Post = () => {
       const previewRef = ref(storageService, `user/${uuidv4()}`);
       await uploadString(previewRef, preview as string, "data_url");
       imgFileUrl = await getDownloadURL(previewRef);
-      setForm((prev) => {
-        return { ...prev, img: imgFileUrl };
-      });
+      const newForm = {
+        ...form,
+        img: imgFileUrl,
+      };
+      await addDoc(collection(dbService, "Posts"), newForm);
+      // await setDoc(doc(dbService, "Posts", `${user.id}:${uuidv4}`), form);
     }
-    await addDoc(collection(dbService, "Posts"), form);
   };
 
   useEffect(() => {
@@ -72,16 +75,32 @@ const Post = () => {
   return (
     <Layout>
       <form className="flex flex-col justify-center items-center bg-slate-400 p-5">
-        <label className="w-full h-[200px] bg-slate-100">
-          <input
-            name="img"
-            type="file"
-            accept="image/*"
-            onChange={onChangeImg}
-            className="hidden"
-          />
-          <img src={preview as string} />
-        </label>
+        <div className="w-full h-[200px] bg-slate-100 flex justify-center items-center overflow-hidden">
+          {preview === null ? (
+            <label className="w-[50px] h-[50px] bg-slate-200 flex justify-center items-center absolute">
+              <input
+                name="img"
+                type="file"
+                accept="image/*"
+                onChange={onChangeImg}
+                className="hidden"
+              />
+              <AiFillCamera className="scale-[2] text-slate-400 hover:scale-[2.2]" />
+            </label>
+          ) : (
+            <label className="w-full h-[200px] bg-transparent flex justify-end p-5 pr-9 items-end absolute">
+              <input
+                name="img"
+                type="file"
+                accept="image/*"
+                onChange={onChangeImg}
+                className="hidden"
+              />
+              <AiFillCamera className="scale-[2] text-slate-400 opacity-30 hover:scale-[2.2]" />
+            </label>
+          )}
+          <img src={preview as string} className=" object-cover" />
+        </div>
 
         <div className="mt-3 bg-slate-300 w-full">
           <div>제목</div>
@@ -93,7 +112,7 @@ const Post = () => {
             <input
               type="radio"
               name="type"
-              id="소주"
+              value="소주"
               onChange={onChangeValue}
               className="hidden peer"
             />
@@ -146,7 +165,7 @@ const Post = () => {
           onChange={onChangeValue}
         />
         <div>만드는 방법</div>
-        <textarea name="receipe" value={form.recipe} onChange={onChangeValue} />
+        <textarea name="recipe" value={form.recipe} onChange={onChangeValue} />
         <div>내용</div>
         <textarea
           className="flex min-h-[200px]"
