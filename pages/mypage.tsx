@@ -1,7 +1,13 @@
 import Layout from "@/components/layout";
-import React from "react";
+import Cate_Navbar from "@/components/navbar/cate_navbar";
+import Ohju_Navbar from "@/components/navbar/ohju_navbar";
+import React, { useState } from "react";
 
-export default function mypage() {
+const Mypage = () => {
+  const [ohju, setOhju] = useState("my-ohju");
+  const [cate, setCate] = useState("전체");
+
+  console.log(cate);
   return (
     <Layout>
       <div className="p-3">
@@ -32,17 +38,20 @@ export default function mypage() {
             </div>
           </div>
         </div>
-        <div className="bg-slate-300 mt-3 w-full h-screen flex flex-col items-center">
-          <div className="bg-slate-200 w-11/12 h-7 flex justify-around">
-            <div className="w-[45%] text-lg border-b-2 border-black h-full text-center font-bold">
-              나만의 오주
-            </div>
-            <div className="w-[45%] text-lg border-b-2 border-black h-full text-center font-bold">
-              좋아한 오주
-            </div>
+        <div className=" mt-4 w-full flex flex-col items-center">
+          <Ohju_Navbar setOhju={setOhju} />
+          <Cate_Navbar setCate={setCate} />
+          <div className="bg-black w-full h-8">dropdown</div>
+          <div className="w-full bg-white grid grid-cols-2 gap-2">
+            <div className="h-32 bg-slate-200"></div>
+            <div className="h-32 bg-slate-300"></div>
+            <div className="h-32 bg-slate-400"></div>
+            <div className="h-32 bg-slate-200"></div>
           </div>
         </div>
       </div>
     </Layout>
   );
-}
+};
+
+export default Mypage;
