@@ -17,6 +17,9 @@ const JoinModal = () => {
   const [isPassword, setIsPassword] = useState("");
   const [isNickname, setIsNickname] = useState("");
 
+  // 회원가입 모달 상태 on/off 유무
+  const [joinOpen, setJoinOpen] = useState(false);
+
   // email, password 정규식
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
@@ -46,6 +49,10 @@ const JoinModal = () => {
       .catch((error) => {
         console.log("error : ", error);
       });
+  };
+
+  const closeModal = () => {
+    setJoinOpen(false);
   };
 
   return (
@@ -106,7 +113,10 @@ const JoinModal = () => {
             >
               <div className="flex items-center">Sign up</div>
             </button>
-            <button className="pt-1.5 pb-1.5 pl-3 pr-3 border border-[#d0d0d0] rounded-lg text-sm bg-[#d0d0d0] text-[#aaa]">
+            <button
+              onClick={closeModal}
+              className="pt-1.5 pb-1.5 pl-3 pr-3 border border-[#d0d0d0] rounded-lg text-sm bg-[#d0d0d0] text-[#aaa]"
+            >
               <div className="flex items-center">Cancel</div>
             </button>
           </form>

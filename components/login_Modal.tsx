@@ -1,16 +1,39 @@
-import React from "react";
+import { authService } from "@/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 
-const LoginModal = () => {
+const LoginModal = ({ isOpen, setIsOpen }: any) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  console.log("isOpensssss : ", isOpen);
+
+  console.log("email : ", email);
+  console.log("password : ", password);
+
+  // 로그인 함수
+  const signIn = (e: any) => {
+    e.preventDefault();
+
+    signInWithEmailAndPassword(authService, email, password).then(
+      (userCredential) => {
+        console.log("로그인 성공!");
+        setIsOpen(false);
+      }
+    );
+  };
+
   return (
     <>
       <div className="container w-screen h-screen fixed bg-slate-500 opacity-90"></div>
       <div className="inner w-80 h-96 bg-[#f2f2f2] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="loginContainer flex-col text-center">
           <h4 className="text-2xl mt-14 mb-6">LOGIN</h4>
-          <form className="formContainer">
+          <form className="formContainer" onSubmit={signIn}>
             <div>
               <input
+                onChange={(e) => setEmail(e.target.value)}
                 type="text"
                 id="email"
                 placeholder="Email"
@@ -19,6 +42,7 @@ const LoginModal = () => {
             </div>
             <div>
               <input
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 id="password"
                 placeholder="Password"

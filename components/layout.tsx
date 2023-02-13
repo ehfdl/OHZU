@@ -1,14 +1,17 @@
-import Header from "./Header";
-import Footer from "./Footer";
-import LoginModal from "./LoginModal";
-import JoinModal from "./JoinModal";
+import Header from "./header";
+import Footer from "./footer";
+import LoginModal from "./login_Modal";
+import JoinModal from "./join_Modal";
+import { useState } from "react";
 
 const Layout = ({ children }: { children: any }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <>
-      {/* <LoginModal /> */}
+      {isOpen ? <LoginModal isOpen="false" /> : null}
       {/* <JoinModal /> */}
-      <Header />
+      <Header isOpen={isOpen} setIsOpen={setIsOpen} />
       {children}
       <Footer />
     </>
