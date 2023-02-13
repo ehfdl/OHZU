@@ -4,8 +4,6 @@ import { authService, dbService } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { MdOutlineClose } from "react-icons/md";
 
-// import axios from "axios";
-
 const JoinModal = ({ joinIsOpen, setJoinIsOpen }: any) => {
   // 이메일, 비밀번호, 비밀번호 확인, 닉네임
   const [email, setEmail] = useState("");
@@ -58,7 +56,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen }: any) => {
             onClick={() => setJoinIsOpen(false)}
             className="absolute top-[12px] right-[12px] w-8 h-8 cursor-pointer duration-150 hover:text-red-400"
           />
-          <h4 className="text-2xl mt-10 mb-6">REGISTER</h4>
+          <h4 className="text-2xl mt-10 mb-6">회원가입</h4>
           <form className="formContainer" onClick={signUpForm}>
             <div>
               <input

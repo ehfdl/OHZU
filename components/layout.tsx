@@ -10,7 +10,13 @@ const Layout = ({ children }: { children: any }) => {
 
   return (
     <>
-      {isOpen ? <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} /> : null}
+      {isOpen ? (
+        <LoginModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          setJoinIsOpen={setJoinIsOpen}
+        />
+      ) : null}
       {joinIsOpen ? (
         <JoinModal joinIsOpen={joinIsOpen} setJoinIsOpen={setJoinIsOpen} />
       ) : null}
