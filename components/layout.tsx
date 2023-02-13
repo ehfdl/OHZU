@@ -6,12 +6,20 @@ import { useState } from "react";
 
 const Layout = ({ children }: { children: any }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [joinIsOpen, setJoinIsOpen] = useState(false);
 
   return (
     <>
-      {isOpen ? <LoginModal isOpen="false" /> : null}
-      {/* <JoinModal /> */}
-      <Header isOpen={isOpen} setIsOpen={setIsOpen} />
+      {isOpen ? <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} /> : null}
+      {joinIsOpen ? (
+        <JoinModal joinIsOpen={joinIsOpen} setJoinIsOpen={setJoinIsOpen} />
+      ) : null}
+      <Header
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        joinIsOpen={joinIsOpen}
+        setJoinIsOpen={setJoinIsOpen}
+      />
       {children}
       <Footer />
     </>

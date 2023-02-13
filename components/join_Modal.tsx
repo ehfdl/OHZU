@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { authService, dbService } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { MdOutlineClose } from "react-icons/md";
 
 // import axios from "axios";
 
-const JoinModal = () => {
+const JoinModal = ({ joinIsOpen, setJoinIsOpen }: any) => {
   // 이메일, 비밀번호, 비밀번호 확인, 닉네임
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,9 +17,6 @@ const JoinModal = () => {
   const [isEmail, setIsEmail] = useState("");
   const [isPassword, setIsPassword] = useState("");
   const [isNickname, setIsNickname] = useState("");
-
-  // 회원가입 모달 상태 on/off 유무
-  const [joinOpen, setJoinOpen] = useState(false);
 
   // email, password 정규식
   const emailRegEx =
@@ -51,15 +49,15 @@ const JoinModal = () => {
       });
   };
 
-  const closeModal = () => {
-    setJoinOpen(false);
-  };
-
   return (
     <>
-      <div className="container w-screen h-screen fixed bg-slate-500 opacity-90"></div>
-      <div className="inner w-80 h-96 bg-[#f2f2f2] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div className="w-screen h-screen fixed bg-slate-500 z-[1] opacity-90"></div>
+      <div className="inner w-80 h-96 bg-[#f2f2f2] z-[10] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="loginContainer flex-col text-center">
+          <MdOutlineClose
+            onClick={() => setJoinIsOpen(false)}
+            className="absolute top-[12px] right-[12px] w-8 h-8 cursor-pointer duration-150 hover:text-red-400"
+          />
           <h4 className="text-2xl mt-10 mb-6">REGISTER</h4>
           <form className="formContainer" onClick={signUpForm}>
             <div>
@@ -113,10 +111,7 @@ const JoinModal = () => {
             >
               <div className="flex items-center">Sign up</div>
             </button>
-            <button
-              onClick={closeModal}
-              className="pt-1.5 pb-1.5 pl-3 pr-3 border border-[#d0d0d0] rounded-lg text-sm bg-[#d0d0d0] text-[#aaa]"
-            >
+            <button className="pt-1.5 pb-1.5 pl-3 pr-3 border border-[#d0d0d0] rounded-lg text-sm bg-[#d0d0d0] text-[#aaa]">
               <div className="flex items-center">Cancel</div>
             </button>
           </form>

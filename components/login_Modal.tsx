@@ -1,17 +1,17 @@
 import { authService } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { MdOutlineClose } from "react-icons/md";
 
 const LoginModal = ({ isOpen, setIsOpen }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  console.log("isOpensssss : ", isOpen);
-
   console.log("email : ", email);
   console.log("password : ", password);
 
+  console.log(" isOpen : ", isOpen);
   // 로그인 함수
   const signIn = (e: any) => {
     e.preventDefault();
@@ -26,9 +26,13 @@ const LoginModal = ({ isOpen, setIsOpen }: any) => {
 
   return (
     <>
-      <div className="container w-screen h-screen fixed bg-slate-500 opacity-90"></div>
-      <div className="inner w-80 h-96 bg-[#f2f2f2] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div className="w-screen h-screen fixed bg-slate-500 z-[1] opacity-90"></div>
+      <div className="inner w-80 h-96 bg-[#f2f2f2] z-[10] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="loginContainer flex-col text-center">
+          <MdOutlineClose
+            onClick={() => setIsOpen(false)}
+            className="absolute top-[12px] right-[12px] w-8 h-8 cursor-pointer duration-150 hover:text-red-400"
+          />
           <h4 className="text-2xl mt-14 mb-6">LOGIN</h4>
           <form className="formContainer" onSubmit={signIn}>
             <div>
