@@ -14,12 +14,14 @@ import Link from "next/link";
 import { FiHeart } from "react-icons/fi";
 import { FaHeart, FaCrown } from "react-icons/fa";
 import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import CommentList from "@/components/comment/comment_list";
 
 const PostDetail = () => {
   const router = useRouter();
+  const ref = useRef();
+  const POST_ID = router.query.postId;
   const date = new Date();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
@@ -39,9 +41,9 @@ const PostDetail = () => {
   });
   const initialComment = {
     content: "",
-    postId: router.query.postId as string,
-    userId: authService.currentUser?.uid!,
-    createdAt: dateForm,
+    postId: "",
+    userId: "",
+    createdAt: "",
     isEdit: false,
   };
   const [comment, setComment] = useState<CommentType>(initialComment);
@@ -57,7 +59,14 @@ const PostDetail = () => {
 
   const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await addDoc(collection(dbService, "Comments"), comment);
+    const newComment = {
+      content: comment.content,
+      postId: window.location.pathname.substring(6),
+      userId: authService.currentUser?.uid!,
+      createdAt: dateForm,
+      isEdit: false,
+    };
+    await addDoc(collection(dbService, "Comments"), newComment);
     setComment(initialComment);
   };
 
@@ -100,8 +109,6 @@ const PostDetail = () => {
       alert("클립보드에 복사되었습니다.");
     }
   };
-
-  const POST_ID = router.query.postId;
 
   useEffect(() => {
     const docId = window.location.pathname.substring(6);
@@ -162,8 +169,6 @@ const PostDetail = () => {
   // Specify default date formatting for language (locale)
   // console.log(new Intl.DateTimeFormat("ko-KR").format(date));
 
-  console.log(comments);
-
   return (
     <Layout>
       <div className="sm:max-w-[1200px] mx-auto py-20">
@@ -181,22 +186,17 @@ const PostDetail = () => {
         >
           <div id="images-column" className="w-2/5">
             <img
-              src={post.img!}
+              src={post.img === null ? "" : post.img[0]}
               className="w-full bg-slate-300 aspect-square"
             />
-            <div className="my-5 flex justify-between items-center">
-              <img
-                src={post.img!}
-                className="w-[30%] bg-slate-300 aspect-square"
-              />
-              <img
-                src={post.img!}
-                className="w-[30%] bg-slate-300 aspect-square"
-              />
-              <img
-                src={post.img!}
-                className="w-[30%] bg-slate-300 aspect-square"
-              />
+            <div className="my-5 flex justify-start space-x-6 items-center w-full">
+              {post.img?.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  className="w-[30%] bg-slate-300 aspect-square"
+                />
+              ))}
             </div>
           </div>
           <div id="detail-info-column" className="w-1/2 relative">
