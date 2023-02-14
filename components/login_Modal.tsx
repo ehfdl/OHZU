@@ -69,7 +69,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
               <button className="w-[472px] h-[52px] mb-3 bg-[#333] border-[#aaa] text-slate-100">
                 로그인
               </button>
-              <p className=" w-[472px] m-auto text-right text-gray-500 text-sm">
+              <p className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer">
                 비밀번호 찾기
               </p>
             </div>
