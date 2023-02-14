@@ -1,26 +1,87 @@
 import Layout from "@/components/layout";
 import Cate_Navbar from "@/components/navbar/cate_navbar";
 import Ohju_Navbar from "@/components/navbar/ohju_navbar";
-import React, { useState } from "react";
+import ProfileModal from "@/components/profile_modal";
+import React, { useEffect, useState } from "react";
+import { authService, dbService, storageService } from "@/firebase";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+  addDoc,
+  collection,
+} from "firebase/firestore";
 
 const Mypage = () => {
+  const [myProfile, setMyProfile] = useState<any>();
+
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
 
-  console.log(cate);
+  const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
+
+  useEffect(() => {
+    const getMyProfile = async () => {
+      const snapshot = await getDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string)
+      );
+      const snapshotdata = await snapshot.data();
+      const newProfile = {
+        ...snapshotdata,
+      };
+
+      setMyProfile(newProfile);
+    };
+    getMyProfile();
+  }, []);
+
+  useEffect(() => {
+    const getMyProfile = async () => {
+      const snapshot = await getDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string)
+      );
+      const snapshotdata = await snapshot.data();
+      const newProfile = {
+        ...snapshotdata,
+      };
+
+      setMyProfile(newProfile);
+    };
+    getMyProfile();
+  }, [isOpenProfileModal]);
+
   return (
     <Layout>
       <div className="w-full h-screen flex justify-center">
         <div className="w-[1200px] flex flex-col justify-start items-center">
           <div className="mt-[70px] w-[688px] flex gap-11">
             <div className="flex flex-col items-center">
-              <div className="bg-[#d9d9d9] rounded-full h-[160px] w-[160px]"></div>
-              <button className="mt-4">프로필 편집</button>
+              <div className="bg-[#d9d9d9] rounded-full h-40 w-40 overflow-hidden">
+                <img
+                  src={myProfile?.imageURL as string}
+                  className="w-40 aspect-square object-cover"
+                />
+              </div>
+              <button
+                className="mt-4"
+                onClick={() => setIsOpenProfileModal(true)}
+              >
+                프로필 편집
+              </button>
+              {isOpenProfileModal ? (
+                <ProfileModal
+                  setIsOpenProfileModal={setIsOpenProfileModal}
+                  myProfile={myProfile}
+                />
+              ) : null}
             </div>
             <div className="flex flex-col">
               <div className="w-[484px] flex justify-between">
                 <div>
-                  <div className="font-bold text-[24px]">심청이 🍺</div>
+                  <div className="font-bold text-[24px]">
+                    {myProfile?.nickname} 🍺
+                  </div>
                   <div className="text-[20px] ml-1">
                     999잔 <span className="ml-[2px]">ℹ</span>
                   </div>
@@ -40,10 +101,7 @@ const Mypage = () => {
                   </div>
                 </div>
               </div>
-              <div className="h-14 mt-7 ">
-                자기소개 글 자기소개 글 자기소개 글 자기소개 글 자기소개 글
-                자기소개 글 자기소개 글 자기소개 글
-              </div>
+              <pre className="h-14 mt-7 ">{myProfile?.introduce}</pre>
             </div>
           </div>
           <Ohju_Navbar setOhju={setOhju} />
@@ -54,15 +112,15 @@ const Mypage = () => {
           <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
             <div className="h-64 bg-slate-200 overflow-hidden relative">
               <div className="w-full h-2/5 bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
-              <div className="absolute text-white pt-7 pl-8 font-bold text-[24px]">
+              <div className="absolute z-10 text-white pt-7 pl-8 font-bold text-[24px]">
                 제목
               </div>
-              <div className="text-[12px] bg-[#d9d9d9] ml-[92px] mt-7 h-7 w-[54px] flex justify-center items-center rounded-[20px] absolute">
+              <div className="text-[12px] z-10 bg-[#d9d9d9] ml-[92px] mt-7 h-7 w-[54px] flex justify-center items-center rounded-[20px] absolute">
                 기타
               </div>
               <img
                 src="https://i.ytimg.com/vi/Nec6HPObADw/maxresdefault.jpg"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover z-10"
               />
             </div>
             <div className="h-64 bg-slate-300"></div>

@@ -18,3 +18,20 @@ declare interface CommentType {
   id?: string;
   isEdit: boolean;
 }
+
+declare interface UserType {
+  userId: string;
+  email: string;
+  nickname: string;
+  imageURL: string;
+  introduce: string;
+  rank: string;
+  point: number;
+  following: string[];
+  follower: string[];
+}
+
+declare interface ModalType {
+  setIsOpenProfileModal: React.Dispatch<React.SetStateAction<boolean>>;
+  myProfile: any;
+}

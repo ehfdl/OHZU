@@ -111,6 +111,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           email: email,
           nickname: nickname,
           imageURL: "",
+          introduce: "",
           rank: "",
           point: "",
           following: [],
