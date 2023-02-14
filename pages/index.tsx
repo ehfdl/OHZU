@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { dbService } from "@/firebase";
-import { useNavigate } from "react-router-dom";
+import Link from "next/link";
 import "tailwindcss/tailwind.css";
 import Banner from "@/components/main_page/Banner";
 import Category from "@/components/main_page/Category";
@@ -18,6 +18,8 @@ import AllList from "@/components/main_page/AllList";
 import NewList from "@/components/main_page/NewList";
 import PopularList from "@/components/main_page/PopularList";
 import MostWatchedList from "@/components/main_page/MostWatchedList";
+import TopButton from "@/components/TopButton";
+import WriteButton from "@/components/WriteButton";
 
 const Home = () => {
   return (
@@ -35,7 +37,10 @@ const Home = () => {
 
         {/* 조회수 많은 오주 목록 */}
         <MostWatchedList />
-
+        <Link href="/post/write">
+          <WriteButton></WriteButton>
+        </Link>
+        <TopButton />
       </div>
     </Layout>
   );

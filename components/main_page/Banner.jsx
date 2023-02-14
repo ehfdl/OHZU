@@ -41,7 +41,7 @@ function Banner() {
             style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
             className="w-full h-full bg-center bg-cover duration-500"
           >
-            <div className="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-16 left-1/2">
+            <div className="absolute flex space-x-3 -translate-x-1/2 bottom-16 left-1/2">
               {slides.map((slide, slideIndex) => (
                 <div
                   key={slideIndex}
