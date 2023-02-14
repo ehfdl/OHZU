@@ -18,7 +18,12 @@ const Layout = ({ children }: { children: any }) => {
         />
       ) : null}
       {joinIsOpen ? (
-        <JoinModal joinIsOpen={joinIsOpen} setJoinIsOpen={setJoinIsOpen} />
+        <JoinModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          joinIsOpen={joinIsOpen}
+          setJoinIsOpen={setJoinIsOpen}
+        />
       ) : null}
       <Header
         isOpen={isOpen}
