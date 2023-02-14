@@ -187,14 +187,14 @@ const PostDetail = () => {
           <div id="images-column" className="w-2/5">
             <img
               src={post.img === null ? "" : post.img[0]}
-              className="w-full bg-slate-300 aspect-square"
+              className="w-full bg-slate-300 aspect-square object-cover"
             />
             <div className="my-5 flex justify-start space-x-6 items-center w-full">
               {post.img?.map((img, i) => (
                 <img
                   key={i}
                   src={img}
-                  className="w-[30%] bg-slate-300 aspect-square"
+                  className="w-[30%] bg-slate-300 aspect-square object-cover"
                 />
               ))}
             </div>
@@ -216,7 +216,7 @@ const PostDetail = () => {
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center space-y-2">
                 <div className="w-20 aspect-square bg-slate-300 rounded-full" />
-                <div className="flex items-center space-x-1">
+                <div className="flex justify-center items-center space-x-1">
                   <span>홍길동</span>
                   <span>
                     <FaCrown size={16} />
