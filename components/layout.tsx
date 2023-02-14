@@ -1,8 +1,8 @@
 import Header from "./header";
 import Footer from "./footer";
+import LoginModal from "./login_modal";
 import JoinModal from "./join_Modal";
 import { useState } from "react";
-import LoginModal from "./login_modal";
 
 const Layout = ({ children }: { children: any }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,7 +18,12 @@ const Layout = ({ children }: { children: any }) => {
         />
       ) : null}
       {joinIsOpen ? (
-        <JoinModal joinIsOpen={joinIsOpen} setJoinIsOpen={setJoinIsOpen} />
+        <JoinModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          joinIsOpen={joinIsOpen}
+          setJoinIsOpen={setJoinIsOpen}
+        />
       ) : null}
       <Header
         isOpen={isOpen}

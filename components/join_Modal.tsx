@@ -4,7 +4,7 @@ import { authService, dbService } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { MdOutlineClose } from "react-icons/md";
 
-const JoinModal = ({ joinIsOpen, setJoinIsOpen }: any) => {
+const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   // 이메일, 비밀번호, 비밀번호 확인, 닉네임
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,29 +21,45 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen }: any) => {
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
   const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
 
+  // 정규식 체크
   // const emailCheck = (email: any) => {
   //   return emailRegEx.test(email);
   // };
 
   const uid = authService.currentUser?.uid;
   const currentUser = authService.currentUser;
+
   console.log("currentUser : ", currentUser);
 
   console.log("email : ", email);
   console.log("password : ", password);
+  console.log("nickname : ", nickname);
 
   const signUpForm = (e: any) => {
     e.preventDefault();
     createUserWithEmailAndPassword(authService, email, password)
       .then((userCredential) => {
         console.log("회원가입 성공 ! :", authService.currentUser?.uid);
-        setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
-          user: authService.currentUser?.uid,
+        // setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
+        setDoc(doc(dbService, "Users", email), {
+          userId: authService.currentUser?.uid,
+          email: email,
+          password: password,
+          nickname: nickname,
+          imageURL: "",
+          rank: "",
+          point: "",
         });
         alert("회원가입 성공 !");
+        setJoinIsOpen(false);
+        setIsOpen(true);
       })
       .catch((error) => {
-        console.log("error : ", error);
+        const message =
+          "이미 가입되어있는 이메일입니다. 다른 이메일을 사용해주세요.";
+        error.message = message;
+        console.log("message : ", message);
+        // alert(error.message);
       });
   };
 
@@ -57,7 +73,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen }: any) => {
             className="absolute top-[12px] right-[12px] w-8 h-8 cursor-pointer duration-150 hover:text-red-400"
           />
           <h4 className="text-2xl mt-10 mb-6">회원가입</h4>
-          <form className="formContainer" onClick={signUpForm}>
+          <form className="formContainer" onSubmit={signUpForm}>
             <div>
               <input
                 onChange={(e) => {
@@ -109,7 +125,10 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen }: any) => {
             >
               <div className="flex items-center">Sign up</div>
             </button>
-            <button className="pt-1.5 pb-1.5 pl-3 pr-3 border border-[#d0d0d0] rounded-lg text-sm bg-[#d0d0d0] text-[#aaa]">
+            <button
+              onClick={() => setJoinIsOpen(false)}
+              className="pt-1.5 pb-1.5 pl-3 pr-3 border border-[#d0d0d0] rounded-lg text-sm bg-[#d0d0d0] text-[#aaa]"
+            >
               <div className="flex items-center">Cancel</div>
             </button>
           </form>

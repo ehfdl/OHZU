@@ -2,16 +2,11 @@ import { authService, dbService } from "@/firebase";
 import {
   addDoc,
   collection,
-  deleteDoc,
   doc,
   getDoc,
-  getDocs,
-  limit,
   onSnapshot,
   orderBy,
   query,
-  startAfter,
-  updateDoc,
 } from "firebase/firestore";
 
 import Layout from "@/components/layout";
@@ -33,7 +28,7 @@ const PostDetail = () => {
 
   const [post, setPost] = useState<Form>({
     userId: "",
-    img: "",
+    img: [],
     title: "",
     type: "",
     ingredient: "",
@@ -42,13 +37,14 @@ const PostDetail = () => {
     like: [],
     view: 0,
   });
-  const [comment, setComment] = useState<CommentType>({
+  const initialComment = {
     content: "",
     postId: router.query.postId as string,
     userId: authService.currentUser?.uid!,
     createdAt: dateForm,
     isEdit: false,
-  });
+  };
+  const [comment, setComment] = useState<CommentType>(initialComment);
   const [comments, setComments] = useState<CommentType[]>([]);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -62,6 +58,7 @@ const PostDetail = () => {
   const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     await addDoc(collection(dbService, "Comments"), comment);
+    setComment(initialComment);
   };
 
   // url 공유함수

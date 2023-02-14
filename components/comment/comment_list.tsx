@@ -38,7 +38,7 @@ const CommentList = ({ comment }: CommentProps) => {
         </div>
         <div className="space-y-2 flex flex-col justify-between">
           <pre>{content}</pre>
-          <span className="text-xs text-gray-500">{comment?.createdAt}</span>
+          <span className="text-xs text-gray-500">{createdAt}</span>
         </div>
       </div>
       <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/4">
