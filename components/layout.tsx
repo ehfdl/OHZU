@@ -1,6 +1,6 @@
 import Header from "./header";
 import Footer from "./footer";
-import LoginModal from "./login_Modal";
+import LoginModal from "./login_modal";
 import JoinModal from "./join_Modal";
 import { useState } from "react";
 

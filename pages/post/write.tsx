@@ -19,7 +19,6 @@ const Post = () => {
     recipe: "",
     text: "",
     like: [],
-    liked: [],
     view: 0,
   });
   const [imgFile_01, setImgFile_01] = useState<File | null>();

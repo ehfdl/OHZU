@@ -7,6 +7,14 @@ declare interface Form {
   recipe: string;
   text: string;
   like: string[];
-  liked: string[];
   view: number;
+}
+
+declare interface CommentType {
+  content: string;
+  postId: string;
+  userId: string;
+  createdAt: string;
+  id?: string;
+  isEdit: boolean;
 }
