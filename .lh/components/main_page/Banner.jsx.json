@@ -1,0 +1,26 @@
+{
+    "sourceFile": "components/main_page/Banner.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1676318289816,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1676318366567,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,9 +34,9 @@\n \n   return (\n     <form>\n       <div className=\"relative\">\n-        <p className=\"font-bold text-4xl\">🍺 오주가 추천하는 레시피</p>\n+        <p className=\"font-bold text-3xl\">🍺 오주가 추천하는 레시피</p>\n         <div className=\"max-w-[1920px] h-[400px] w-full mt-[-40px] py-16 relative group\">\n           <div\n             style={{ backgroundImage: `url(${slides[currentIndex].url})` }}\n             className=\"w-full h-full bg-center bg-cover duration-500\"\n"
+                },
+                {
+                    "date": 1676318515084,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -34,9 +34,9 @@\n \n   return (\n     <form>\n       <div className=\"relative\">\n-        <p className=\"font-bold text-3xl\">🍺 오주가 추천하는 레시피</p>\n+        <p className=\"font-bold text-3xl\">⭐️ 오주가 추천하는 레시피</p>\n         <div className=\"max-w-[1920px] h-[400px] w-full mt-[-40px] py-16 relative group\">\n           <div\n             style={{ backgroundImage: `url(${slides[currentIndex].url})` }}\n             className=\"w-full h-full bg-center bg-cover duration-500\"\n"
+                }
+            ],
+            "date": 1676318289816,
+            "name": "Commit-0",
+            "content": "import React, { useState } from \"react\";\nimport { BsChevronLeft, BsChevronRight } from \"react-icons/bs\";\nimport { RxDotFilled } from \"react-icons/rx\";\n\nfunction Banner() {\n  const slides = [\n    {\n      url: \"https://upload.wikimedia.org/wikipedia/commons/4/47/Cocktail_02.jpg\",\n    },\n    {\n      url: \"https://img.delicious.com.au/CKMUcpx-/w1200/del/2015/11/summer-cocktails-24374-3.jpg\",\n    },\n    {\n      url: \"https://img.taste.com.au/v31qR-vt/taste/2021/12/choc-mint-mudslide-cocktail-175833-2.jpg\",\n    },\n  ];\n\n  const [currentIndex, setCurrentIndex] = useState(0);\n  const prevSlide = () => {\n    const isFirstSlide = currentIndex === 0;\n    const newIndex = isFirstSlide ? slides.length - 1 : currentIndex - 1;\n    setCurrentIndex(newIndex);\n  };\n\n  const nextSlide = () => {\n    const isLastSlide = currentIndex === slides.length - 1;\n    const newIndex = isLastSlide ? 0 : currentIndex + 1;\n    setCurrentIndex(newIndex);\n  };\n\n  const goToSlide = (slideIndex) => {\n    setCurrentIndex(slideIndex);\n  };\n\n  return (\n    <form>\n    <div className=\"relative\">\n      <p className=\"font-bold text-4xl\">🍺 오주가 추천하는 레시피</p>\n    <div className=\"max-w-[1920px] h-[400px] w-full mt-[-40px] py-16 relative group\">\n      <div\n        style={{ backgroundImage: `url(${slides[currentIndex].url})` }}\n        className=\"w-full h-full bg-center bg-cover duration-500\"\n      >\n        <div className=\"absolute z-30 flex space-x-3 -translate-x-1/2 bottom-16 left-1/2\">\n          {slides.map((slide, slideIndex) => (\n            <div\n              key={slideIndex}\n              onClick={() => goToSlide(slideIndex)}\n              className=\"text-5xl cursor-pointer text-gray-200/60 hover:text-white focus:text-white \"\n            >\n              <RxDotFilled />\n            </div>\n          ))}\n        </div>\n      </div>\n      {/* Left arrow */}\n      <div className=\"hidden group-hover:block hover:text-white hover:bg-white/40 absolute top-[50%] -translate-x-0 translate-y-[-50%] left-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer\">\n        <BsChevronLeft onClick={prevSlide} size={20} />\n      </div>\n\n      {/* Right arrow */}\n      <div className=\"hidden group-hover:block hover:text-white hover:bg-white/40 absolute top-[50%] -translate-x-0 translate-y-[-50%] right-5 text-2xl rounded-full p-2 bg-black/20 text-white cursor-pointer\">\n        <BsChevronRight onClick={nextSlide} size={20} />\n      </div>\n    </div>\n    </div>\n    </form>\n  );\n}\n\nexport default Banner;\n"
+        }
+    ]
+}
