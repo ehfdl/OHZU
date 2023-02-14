@@ -1,54 +1,120 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { authService, dbService } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  onSnapshot,
+  query,
+  setDoc,
+  where,
+} from "firebase/firestore";
 import { MdOutlineClose } from "react-icons/md";
+import { FcGoogle } from "react-icons/fc";
+import { GrFacebook } from "react-icons/gr";
+import { SiNaver } from "react-icons/si";
+import { async } from "@firebase/util";
 
 const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
-  // 이메일, 비밀번호, 비밀번호 확인, 닉네임
+  // 이메일, 비밀번호, 비밀번호 확인, 닉네임, 유저 생년월일
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [nickname, setNickname] = useState("");
+  const [userYear, setUserYear] = useState("");
+  const [userMonth, setUserMonth] = useState("");
+  const [userDay, setUserDay] = useState("");
 
   // 이메일, 비밀번호, 닉네임 유효성 검사
-  const [isEmail, setIsEmail] = useState("");
-  const [isPassword, setIsPassword] = useState("");
-  const [isNickname, setIsNickname] = useState("");
+  const [checkEmail, setCheckEmail] = useState("");
+  const [boolEmail, setBoolEmail] = useState(false);
+  const [checkPassword, setCheckPassword] = useState("");
+  const [checkNickname, setCheckNickname] = useState("");
 
   // email, password 정규식
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
   const passwordRegEx = /^[A-Za-z0-9]{8,20}$/;
 
-  // 정규식 체크
-  // const emailCheck = (email: any) => {
-  //   return emailRegEx.test(email);
-  // };
-
   const uid = authService.currentUser?.uid;
   const currentUser = authService.currentUser;
 
-  console.log("currentUser : ", currentUser);
+  // Users 필드 모두 가져와서 email 반환.
+  const getCollection = async () => {
+    const querySnapshot = await getDocs(collection(dbService, "Users"));
+    querySnapshot.forEach((doc) => {
+      const usersData: any = { ...doc.data() };
+      setCheckEmail(usersData);
+      console.log(checkEmail);
+    });
+  };
 
-  console.log("email : ", email);
-  console.log("password : ", password);
-  console.log("nickname : ", nickname);
+  const isEmail = async () => {
+    const q = query(
+      collection(dbService, "Users"),
+      where("email", "==", email)
+    );
+
+    console.log(q);
+
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+      const isCheckEmail: any = {
+        ...doc.data(),
+      };
+      setCheckEmail(isCheckEmail);
+      console.log(isCheckEmail);
+    });
+  };
+
+  // useEffect(() => {
+  //   if (checkEmail === email) {
+  //     setCheckEmail("이메일 사용 가능합니다.");
+  //   } else {
+  //     console.log("tlqkf..");
+  //   }
+  // }, [email]);
+
+  // 비밀번호 유효성 검사
+  useEffect(() => {
+    if (password === passwordConfirm) {
+      setCheckPassword("비밀번호가 동일합니다.");
+    } else {
+      setCheckPassword("비밀번호가 일치하지 않습니다.");
+    }
+  }, [passwordConfirm]);
+
+  // Console 영역
+  // console.log("currentUser : ", currentUser);
+
+  // console.log("email : ", email);
+  // console.log("password : ", password);
+  // console.log("nickname : ", nickname);
+  // console.log("userYear : ", userYear);
+  // console.log("userMonth : ", userMonth);
+  // console.log("userDay : ", userDay);
 
   const signUpForm = (e: any) => {
     e.preventDefault();
+
+    if (email.match(emailRegEx) === null) {
+    }
+
     createUserWithEmailAndPassword(authService, email, password)
       .then((userCredential) => {
         console.log("회원가입 성공 ! :", authService.currentUser?.uid);
-        // setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
-        setDoc(doc(dbService, "Users", email), {
+        setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
           userId: authService.currentUser?.uid,
           email: email,
-          password: password,
           nickname: nickname,
           imageURL: "",
           rank: "",
           point: "",
+          following: [],
+          follower: [],
         });
         alert("회원가입 성공 !");
         setJoinIsOpen(false);
@@ -59,31 +125,36 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           "이미 가입되어있는 이메일입니다. 다른 이메일을 사용해주세요.";
         error.message = message;
         console.log("message : ", message);
-        // alert(error.message);
       });
   };
 
   return (
     <>
       <div className="w-screen h-screen fixed bg-slate-500 z-[1] opacity-90"></div>
-      <div className="inner w-80 h-96 bg-[#f2f2f2] z-[10] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div className="inner w-[588px] h-[880px] bg-[#f2f2f2] z-[10] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="loginContainer flex-col text-center">
           <MdOutlineClose
             onClick={() => setJoinIsOpen(false)}
             className="absolute top-[12px] right-[12px] w-8 h-8 cursor-pointer duration-150 hover:text-red-400"
           />
-          <h4 className="text-2xl mt-10 mb-6">회원가입</h4>
+          <button onClick={isEmail}>클릭</button>
+          <h4 className="text-4xl font-bold mt-[72px] mb-[42px]">회원가입</h4>
           <form className="formContainer" onSubmit={signUpForm}>
             <div>
               <input
                 onChange={(e) => {
                   setEmail(e.target.value);
+                  setCheckEmail(e.target.value);
+                  isEmail;
                 }}
                 type="text"
                 id="email"
                 placeholder="Email"
-                className="w-52 p-2 pl-4 mb-2.5 bg-gray-300 placeholder:text-[#666] text-sm rounded-lg duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
               />
+              <p className="w-[472px] m-auto mb-3 text-right text-sm">
+                {checkEmail}
+              </p>
             </div>
             <div>
               <input
@@ -93,8 +164,11 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 type="password"
                 id="password"
                 placeholder="Password"
-                className="w-52 p-2 pl-4 mb-2.5 bg-gray-300 placeholder:text-[#666] text-sm rounded-lg duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
               />
+              <p className="w-[472px] m-auto mb-3 text-right text-sm">
+                양식에 맞게 비밀번호를 입력해주세요.
+              </p>
             </div>
             <div>
               <input
@@ -104,8 +178,11 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 type="password"
                 id="pwCheck"
                 placeholder="Confirm Password"
-                className="w-52 p-2 pl-4 mb-2.5 bg-gray-300 placeholder:text-[#666] text-sm rounded-lg duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
               />
+              <p className="w-[472px] m-auto mb-3 text-right text-sm">
+                {password ? checkPassword : null}
+              </p>
             </div>
             <div>
               <input
@@ -115,22 +192,77 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 type="text"
                 id="nickname"
                 placeholder="Nickname"
-                className="w-52 p-2 pl-4 mb-8 bg-gray-300 placeholder:text-[#666] text-sm rounded-lg duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
               />
+              <p className="w-[472px] m-auto mb-3 text-right text-sm">
+                이미 사용중인 닉네임입니다.
+              </p>
+            </div>
+            <div className="birth_Container">
+              <div className="birth_input_Wrap w-[472px] m-auto mb-3 flex items-center justify-between">
+                <input
+                  onChange={(e) => {
+                    setUserYear(e.target.value);
+                  }}
+                  type="text"
+                  placeholder="출생년도"
+                  className="w-[144px] h-11"
+                />
+                <input
+                  onChange={(e) => {
+                    setUserMonth(e.target.value);
+                  }}
+                  type="text"
+                  placeholder="월"
+                  className="w-[144px] h-11"
+                />
+                <input
+                  onChange={(e) => {
+                    setUserDay(e.target.value);
+                  }}
+                  type="text"
+                  placeholder="일"
+                  className="w-[144px] h-11"
+                />
+              </div>
+              <div className="flex w-[472px] m-auto">
+                <label htmlFor="auto_login" className="flex  items-center mb-4">
+                  <input id="auto_login" type="checkbox" className="w-5 h-5" />
+                  <span className="ml-2 text-sm ">19세 이상 성인입니다.</span>
+                </label>
+              </div>
             </div>
             <button
               type="submit"
               onClick={() => {}}
-              className="pt-1.5 pb-1.5 pl-3 pr-3 mr-4 border border-[#aaa] rounded-lg text-sm"
+              className="w-[472px] h-[52px] mb-[27px] bg-[#333] border-[#aaa] text-slate-100"
             >
-              <div className="flex items-center">Sign up</div>
+              회원가입
             </button>
-            <button
-              onClick={() => setJoinIsOpen(false)}
-              className="pt-1.5 pb-1.5 pl-3 pr-3 border border-[#d0d0d0] rounded-lg text-sm bg-[#d0d0d0] text-[#aaa]"
-            >
-              <div className="flex items-center">Cancel</div>
-            </button>
+            <p className="text-2xl font-bold mb-12">간편 회원가입</p>
+            <div className="w-[473px] m-auto mb-[31px] flex items-center  justify-center">
+              <div>
+                <FcGoogle className="w-10 h-10 border bg-black cursor-pointer" />
+              </div>
+              <div>
+                <GrFacebook className="w-10 h-10 ml-20 mr-20 border border-slate-400 cursor-pointer" />
+              </div>
+              <div>
+                <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
+              </div>
+            </div>
+            <div className="w-[473px] m-auto flex justify-center text-sm">
+              <p className="text-slate-400 mr-1">이미 계정이 있으신가요?</p>
+              <span
+                onClick={() => {
+                  setIsOpen(true);
+                  setJoinIsOpen(false);
+                }}
+                className="cursor-pointer"
+              >
+                로그인
+              </span>
+            </div>
           </form>
         </div>
       </div>
