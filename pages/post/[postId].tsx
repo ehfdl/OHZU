@@ -20,8 +20,10 @@ import { FiHeart } from "react-icons/fi";
 import { FaHeart, FaCrown } from "react-icons/fa";
 import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const PostDetail = () => {
+  const router = useRouter();
   const [post, setPost] = useState<Form>({
     userId: "",
     img: "",
@@ -33,7 +35,31 @@ const PostDetail = () => {
     like: [],
     view: 0,
   });
+  const [comments, setComments] = useState<CommentType[]>([
+    {
+      content: "",
+      postId: "",
+      userId: "",
+      createdAt: "",
+      isEdit: false,
+    },
+  ]);
+  const [content, setContent] = useState("");
 
+  const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const newComment = {
+      content: content.replaceAll("\r\n", "<br />"),
+      postId: router.query.postId!,
+      // userId: authService.currentUser?.uid,
+      createdAt: new Date(),
+      isEdit: false,
+    };
+    await addDoc(collection(dbService, "Comments"), newComment);
+    setContent("");
+  };
+
+  // url 공유함수
   const doCopy = () => {
     // 흐음 1.
     if (navigator.clipboard) {
@@ -75,7 +101,6 @@ const PostDetail = () => {
 
   useEffect(() => {
     const docId = window.location.pathname.substring(6);
-
     const getPost = async () => {
       const docRef = doc(dbService, "Posts", docId);
       // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
@@ -83,7 +108,7 @@ const PostDetail = () => {
       const data = docSnap.data();
       const postId = docSnap.id;
 
-      setPost((prev) => ({ ...prev, ...data, postId }));
+      setPost((prev) => ({ ...prev, ...data }));
     };
 
     getPost();
@@ -149,11 +174,7 @@ const PostDetail = () => {
                 </div>
               </div>
               <div>
-                <p>
-                  Lorem ipsum dolor sit amet consectetur. Sit mi nunc luctus
-                  fermentum turpis arcu. Habitasse commodo odio nunc id lobortis
-                  vitae. Diam feugiat sem{" "}
-                </p>
+                <p>{post.text}</p>
               </div>
             </div>
             <div id="ingredient" className="mt-12 mb-16">
@@ -166,7 +187,7 @@ const PostDetail = () => {
               <span className="inline-block px-5 py-2 bg-red-300 text-white mb-5 rounded-full">
                 만드는 방법
               </span>
-              <p className="pl-3 box-content">{post.text}</p>
+              <p className="pl-3 box-content">{post.recipe}</p>
             </div>
             <div
               id="faq"
@@ -188,16 +209,42 @@ const PostDetail = () => {
           </div>
           <div className="h-[1px] w-full bg-black mb-6" />
           <form className="w-full flex items-center relative space-x-6">
-            <div className="bg-slate-300 w-[40px] aspect-square rounded-full" />
+            <div className="bg-slate-300 w-12 aspect-square rounded-full" />
             <textarea
-              name=""
+              name="content"
+              value={content}
+              onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
+                setContent(event.target.value);
+              }}
               id=""
               className="w-full p-2 border min-h-[40px] h-10"
-            ></textarea>
-            <button className="absolute right-0 pr-4">
+              placeholder="댓글을 입력해주세요. &#x0a; 댓글"
+            />
+            <button onClick={addComment} className="absolute right-0 pr-4">
               <span className="text-sm font-medium">등록</span>
             </button>
           </form>
+          <ul
+            id="comment-list"
+            className="mt-10 divide-y-[1px] divide-gray-300"
+          >
+            <li className="flex justify-between py-6">
+              <div className="flex space-x-5">
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="bg-slate-300 w-[40px] aspect-square rounded-full" />
+                  <span className="text-xs">닉네임</span>
+                </div>
+                <div className="space-y-2">
+                  <p>내용</p>
+                  <span className="text-sm text-gray-500">시간</span>
+                </div>
+              </div>
+              <div className="flex items-end space-x-2 text-gray-500 text-sm">
+                <button>신고</button>
+                <button>답글달기</button>
+              </div>
+            </li>
+          </ul>
         </div>
       </div>
     </Layout>
