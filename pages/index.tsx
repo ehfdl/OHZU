@@ -35,6 +35,7 @@ const Home = () => {
 
         {/* 조회수 많은 오주 목록 */}
         <MostWatchedList />
+
       </div>
     </Layout>
   );
