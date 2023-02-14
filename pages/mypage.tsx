@@ -11,10 +11,10 @@ const Mypage = () => {
   return (
     <Layout>
       <div className="w-full h-screen flex justify-center">
-        <div className="bg-slate-100 w-[1200px] flex flex-col justify-start items-center">
-          <div className="bg-slate-300 mt-[70px] w-[688px] flex gap-11">
+        <div className="w-[1200px] flex flex-col justify-start items-center">
+          <div className="mt-[70px] w-[688px] flex gap-11">
             <div className="flex flex-col items-center">
-              <div className="bg-slate-200 rounded-full h-[160px] w-[160px]"></div>
+              <div className="bg-[#d9d9d9] rounded-full h-[160px] w-[160px]"></div>
               <button className="mt-4">프로필 편집</button>
             </div>
             <div className="flex flex-col">
