@@ -1,0 +1,26 @@
+{
+    "sourceFile": "components/banner.jsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1676282788542,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1676283720111,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,1 +1,12 @@\n import React, { useState } from \"react\";\n+\n+function Banner() {\n+    const slides = [{\n+        url: \"https://upload.wikimedia.org/wikipedia/commons/4/47/Cocktail_02.jpg\"\n+    },];\n+    return <div className=\"max-w-[1200px] h-[3000px] w-full m-auto py-16 px-4 relative\">\n+        <div style={{backgroundImage: `url(${slides[0].url})`}}className=\"w-full h-full rounded-2xl bg-center bg-cover duration-500\"></div>\n+    </div>\n+}\n+\n+export default Banner;\n\\ No newline at end of file\n"
+                },
+                {
+                    "date": 1676283829811,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,9 +6,9 @@\n       url: \"https://upload.wikimedia.org/wikipedia/commons/4/47/Cocktail_02.jpg\",\n     },\n   ];\n   return (\n-    <div className=\"max-w-[1200px] h-[3000px] w-full m-auto py-16 px-4 relative\">\n+    <div className=\"max-w-[1200px] h-[60px] w-full m-auto py-16 px-4 relative\">\n       <div\n         style={{ backgroundImage: `url(${slides[0].url})` }}\n         className=\"w-full h-full rounded-2xl bg-center bg-cover duration-500\"\n       ></div>\n"
+                }
+            ],
+            "date": 1676282788542,
+            "name": "Commit-0",
+            "content": "import React, {useState} from 'react'"
+        }
+    ]
+}
