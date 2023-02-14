@@ -3,11 +3,15 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 0,
+            "activePatchIndex": 1,
             "patches": [
                 {
                     "date": 1676317892355,
                     "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1676360365656,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -7,9 +7,9 @@\n   doc,\n   getDoc,\n } from \"firebase/firestore\";\n import { dbService } from \"@/firebase\";\n-import { useNavigate } from \"react-router-dom\";\n+import Link from \"next/link\";\n import \"tailwindcss/tailwind.css\";\n import { IoHeartOutline, IoHeartSharp } from \"react-icons/io5\";\n \n const PopularList = () => {\n"
                 }
             ],
             "date": 1676317892355,

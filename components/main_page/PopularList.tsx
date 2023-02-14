@@ -8,7 +8,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { dbService } from "@/firebase";
-import { useNavigate } from "react-router-dom";
+import Link from "next/link";
 import "tailwindcss/tailwind.css";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 
