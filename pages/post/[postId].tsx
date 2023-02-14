@@ -21,9 +21,16 @@ import { FaHeart, FaCrown } from "react-icons/fa";
 import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import CommentList from "@/components/comment/comment_list";
 
 const PostDetail = () => {
   const router = useRouter();
+  const date = new Date();
+  const dateForm = new Intl.DateTimeFormat("ko-KR", {
+    dateStyle: "long",
+    timeStyle: "medium",
+  }).format(date);
+
   const [post, setPost] = useState<Form>({
     userId: "",
     img: "",
@@ -35,28 +42,26 @@ const PostDetail = () => {
     like: [],
     view: 0,
   });
-  const [comments, setComments] = useState<CommentType[]>([
-    {
-      content: "",
-      postId: "",
-      userId: "",
-      createdAt: "",
-      isEdit: false,
-    },
-  ]);
-  const [content, setContent] = useState("");
+  const [comment, setComment] = useState<CommentType>({
+    content: "",
+    postId: router.query.postId as string,
+    userId: authService.currentUser?.uid!,
+    createdAt: dateForm,
+    isEdit: false,
+  });
+  const [comments, setComments] = useState<CommentType[]>([]);
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setComment({
+      ...comment,
+      [name]: value,
+    });
+  };
 
   const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    const newComment = {
-      content: content.replaceAll("\r\n", "<br />"),
-      postId: router.query.postId!,
-      // userId: authService.currentUser?.uid,
-      createdAt: new Date(),
-      isEdit: false,
-    };
-    await addDoc(collection(dbService, "Comments"), newComment);
-    setContent("");
+    await addDoc(collection(dbService, "Comments"), comment);
   };
 
   // url 공유함수
@@ -99,6 +104,8 @@ const PostDetail = () => {
     }
   };
 
+  const POST_ID = router.query.postId;
+
   useEffect(() => {
     const docId = window.location.pathname.substring(6);
     const getPost = async () => {
@@ -106,13 +113,59 @@ const PostDetail = () => {
       // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
       const docSnap = await getDoc(docRef);
       const data = docSnap.data();
-      const postId = docSnap.id;
 
       setPost((prev) => ({ ...prev, ...data }));
     };
+    const getComments = async () => {
+      const q = query(
+        collection(dbService, "Comments"),
+        orderBy("createdAt", "desc") // 해당 collection 내의 docs들을 createdAt 속성을 내림차순 기준으로
+      );
+
+      onSnapshot(q, (snapshot) => {
+        // q (쿼리)안에 담긴 collection 내의 변화가 생길 때 마다 매번 실행됨
+        const newComments = snapshot.docs.map((doc: any) => {
+          const newComment = {
+            id: doc.id,
+            ...doc.data(), // doc.data() : { text, createdAt, ...  }
+          };
+          return newComment;
+        });
+        setComments(newComments);
+      });
+    };
+    // const getComments = async () => {
+    //   const first = query(
+    //     collection(dbService, "comments"),
+    //     orderBy("createdAt", "desc"),
+    //     limit(3)
+    //   );
+
+    //   const documentSnapshots = await getDocs(first);
+
+    //   const lastVisible =
+    //     documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+    //   const next = query(
+    //     collection(dbService, "comments"),
+    //     orderBy("createdAt", "desc"),
+    //     startAfter(lastVisible),
+    //     limit(3)
+    //   );
+
+    //   console.log(first, lastVisible, next);
+    // };
 
     getPost();
+    getComments();
   }, []);
+
+  // Results below assume UTC timezone - your results may vary
+
+  // Specify default date formatting for language (locale)
+  // console.log(new Intl.DateTimeFormat("ko-KR").format(date));
+
+  console.log(comments);
 
   return (
     <Layout>
@@ -174,7 +227,7 @@ const PostDetail = () => {
                 </div>
               </div>
               <div>
-                <p>{post.text}</p>
+                <pre>{post.text}</pre>
               </div>
             </div>
             <div id="ingredient" className="mt-12 mb-16">
@@ -187,7 +240,7 @@ const PostDetail = () => {
               <span className="inline-block px-5 py-2 bg-red-300 text-white mb-5 rounded-full">
                 만드는 방법
               </span>
-              <p className="pl-3 box-content">{post.recipe}</p>
+              <pre className="pl-3 box-content">{post.recipe}</pre>
             </div>
             <div
               id="faq"
@@ -212,13 +265,11 @@ const PostDetail = () => {
             <div className="bg-slate-300 w-12 aspect-square rounded-full" />
             <textarea
               name="content"
-              value={content}
-              onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) => {
-                setContent(event.target.value);
-              }}
+              value={comment.content}
+              onChange={handleChange}
               id=""
-              className="w-full p-2 border min-h-[40px] h-10"
-              placeholder="댓글을 입력해주세요. &#x0a; 댓글"
+              className="w-full p-2 border h-10 resize-none"
+              placeholder="댓글을 입력해주세요."
             />
             <button onClick={addComment} className="absolute right-0 pr-4">
               <span className="text-sm font-medium">등록</span>
@@ -228,22 +279,11 @@ const PostDetail = () => {
             id="comment-list"
             className="mt-10 divide-y-[1px] divide-gray-300"
           >
-            <li className="flex justify-between py-6">
-              <div className="flex space-x-5">
-                <div className="flex flex-col items-center space-y-2">
-                  <div className="bg-slate-300 w-[40px] aspect-square rounded-full" />
-                  <span className="text-xs">닉네임</span>
-                </div>
-                <div className="space-y-2">
-                  <p>내용</p>
-                  <span className="text-sm text-gray-500">시간</span>
-                </div>
-              </div>
-              <div className="flex items-end space-x-2 text-gray-500 text-sm">
-                <button>신고</button>
-                <button>답글달기</button>
-              </div>
-            </li>
+            {comments?.map((comment) => {
+              if (POST_ID === comment.postId) {
+                return <CommentList key={comment.id} comment={comment} />;
+              }
+            })}
           </ul>
         </div>
       </div>

@@ -55,12 +55,9 @@ const Post = () => {
       const previewRef = ref(storageService, `user/${uuidv4()}`);
       await uploadString(previewRef, preview as string, "data_url");
       imgFileUrl = await getDownloadURL(previewRef);
-      const newForm = {
-        ...form,
-        img: imgFileUrl,
-      };
-      await addDoc(collection(dbService, "Posts"), newForm);
-      // await setDoc(doc(dbService, "Posts", `${user.id}:${uuidv4}`), form);
+      setForm((prev) => {
+        return { ...prev, img: imgFileUrl };
+      });
     }
   };
 
