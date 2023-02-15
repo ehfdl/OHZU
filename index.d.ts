@@ -8,6 +8,7 @@ declare interface Form {
   text?: string;
   like?: string[];
   view?: number;
+  createdAt?: string;
 }
 declare interface PostType extends Form {
   postId: string;

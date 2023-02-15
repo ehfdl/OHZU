@@ -14,6 +14,7 @@ import {
   query,
   where,
   onSnapshot,
+  orderBy,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
 import MyPostCard from "@/components/my_page/my_post";
@@ -44,7 +45,8 @@ const Mypage = () => {
 
       const q = query(
         collection(dbService, "Posts"),
-        where("userId", "==", authService.currentUser?.uid as string)
+        where("userId", "==", authService.currentUser?.uid as string),
+        orderBy("createdAt", "desc")
       );
 
       onSnapshot(q, (snapshot) => {
