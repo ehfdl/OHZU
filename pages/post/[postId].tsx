@@ -53,6 +53,11 @@ const PostDetail = () => {
   };
   const [comment, setComment] = useState<CommentType>(initialComment);
   const [comments, setComments] = useState<CommentType[]>([]);
+  const [imgIdx, setImgIdx] = useState(0);
+
+  const onImgChange = (i: number) => {
+    setImgIdx(i);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -78,7 +83,6 @@ const PostDetail = () => {
     }
     setComment(initialComment);
   };
-
   // url 공유함수
   const doCopy = () => {
     // 흐음 1.
@@ -139,7 +143,6 @@ const PostDetail = () => {
     }
     getPost();
   };
-
   const getPost = async () => {
     const docRef = doc(dbService, "Posts", docId);
     // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
@@ -166,7 +169,6 @@ const PostDetail = () => {
       setComments(newComments);
     });
   };
-
   const updateView = async () => {
     const docRef = doc(dbService, "Posts", docId);
     const docSnap = await getDoc(docRef);
@@ -226,16 +228,25 @@ const PostDetail = () => {
         >
           <div id="images-column" className="w-2/5">
             <img
-              src={post.img === null ? "" : post.img![0]}
-              className="w-full bg-slate-300 aspect-square object-cover"
+              src={post.img === null ? "" : post.img![imgIdx]}
+              className="w-full bg-slate-300 aspect-square object-cover rounded"
             />
             <div className="my-5 flex justify-start space-x-6 items-center w-full">
               {post.img?.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  className="w-[30%] bg-slate-300 aspect-square object-cover rounded"
-                />
+                <button
+                  className={`${
+                    img === post.img![imgIdx]
+                      ? "border-2 border-black"
+                      : "border-0"
+                  } w-full bg-slate-300 aspect-square object-cover rounded overflow-hidden`}
+                  onClick={() => onImgChange(i)}
+                >
+                  <img
+                    key={i}
+                    src={img}
+                    className="w-full aspect-square object-cover"
+                  />
+                </button>
               ))}
             </div>
           </div>
