@@ -22,12 +22,16 @@ import CommentList from "@/components/comment/comment_list";
 const PostDetail = () => {
   const router = useRouter();
   const ref = useRef();
-  const POST_ID = router.query.postId;
   const date = new Date();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
     timeStyle: "medium",
   }).format(date);
+
+  let docId: string;
+  if (typeof window !== "undefined") {
+    docId = window.location.pathname.substring(6);
+  }
 
   const [post, setPost] = useState<Form>({
     userId: "",
@@ -133,36 +137,51 @@ const PostDetail = () => {
     } else {
       alert("로그인이 필요한 서비스입니다.");
     }
+    getPost();
+  };
+
+  const getPost = async () => {
+    const docRef = doc(dbService, "Posts", docId);
+    // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+
+    setPost((prev) => ({ ...prev, ...data }));
+  };
+  const getComments = async () => {
+    const q = query(
+      collection(dbService, "Comments"),
+      orderBy("createdAt", "desc") // 해당 collection 내의 docs들을 createdAt 속성을 내림차순 기준으로
+    );
+
+    onSnapshot(q, (snapshot) => {
+      // q (쿼리)안에 담긴 collection 내의 변화가 생길 때 마다 매번 실행됨
+      const newComments = snapshot.docs.map((doc: any) => {
+        const newComment = {
+          id: doc.id,
+          ...doc.data(), // doc.data() : { text, createdAt, ...  }
+        };
+        return newComment;
+      });
+      setComments(newComments);
+    });
+  };
+
+  const updateView = async () => {
+    const docRef = doc(dbService, "Posts", docId);
+    const docSnap = await getDoc(docRef);
+    const forUpdate = {
+      ...docSnap.data(),
+    };
+    let curView = ++forUpdate.view;
+    try {
+      await updateDoc(docRef, { view: curView });
+    } catch (error) {
+      alert(error);
+    }
   };
 
   useEffect(() => {
-    const docId = window.location.pathname.substring(6);
-    const getPost = async () => {
-      const docRef = doc(dbService, "Posts", docId);
-      // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
-      const docSnap = await getDoc(docRef);
-      const data = docSnap.data();
-
-      setPost((prev) => ({ ...prev, ...data }));
-    };
-    const getComments = async () => {
-      const q = query(
-        collection(dbService, "Comments"),
-        orderBy("createdAt", "desc") // 해당 collection 내의 docs들을 createdAt 속성을 내림차순 기준으로
-      );
-
-      onSnapshot(q, (snapshot) => {
-        // q (쿼리)안에 담긴 collection 내의 변화가 생길 때 마다 매번 실행됨
-        const newComments = snapshot.docs.map((doc: any) => {
-          const newComment = {
-            id: doc.id,
-            ...doc.data(), // doc.data() : { text, createdAt, ...  }
-          };
-          return newComment;
-        });
-        setComments(newComments);
-      });
-    };
     // const getComments = async () => {
     //   const first = query(
     //     collection(dbService, "comments"),
@@ -187,12 +206,8 @@ const PostDetail = () => {
 
     getPost();
     getComments();
+    updateView();
   }, []);
-
-  // Results below assume UTC timezone - your results may vary
-
-  // Specify default date formatting for language (locale)
-  // console.log(new Intl.DateTimeFormat("ko-KR").format(date));
 
   return (
     <Layout>
@@ -312,8 +327,11 @@ const PostDetail = () => {
             className="mt-10 divide-y-[1px] divide-gray-300"
           >
             {comments?.map((comment) => {
-              if (POST_ID === comment.postId) {
-                return <CommentList key={comment.id} comment={comment} />;
+              if (typeof window !== "undefined") {
+                const docId = window.location.pathname.substring(6);
+                if (docId === comment.postId) {
+                  return <CommentList key={comment.id} comment={comment} />;
+                }
               }
             })}
           </ul>
