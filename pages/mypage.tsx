@@ -1,7 +1,7 @@
 import Layout from "@/components/layout";
-import Cate_Navbar from "@/components/my_page/navbar/cate_navbar";
-import Ohju_Navbar from "@/components/my_page/navbar/ohju_navbar";
-import ProfileModal from "@/components/my_page/profile_modal";
+import Cate_Navbar from "@/components/navbar/cate_navbar";
+import Ohju_Navbar from "@/components/navbar/ohju_navbar";
+import ProfileModal from "@/components/sub_page/profile_modal";
 import React, { useEffect, useState } from "react";
 import { authService, dbService } from "@/firebase";
 import {
@@ -17,11 +17,9 @@ import {
   orderBy,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
-import MyPostCard from "@/components/my_page/my_post";
+import SubPostCard from "@/components/sub_page/my_post";
 
 const Mypage = () => {
-  const defaultImg =
-    "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
   const [myProfile, setMyProfile] = useState<any>();
   const [myPosts, setMyPosts] = useState<PostType[]>();
   const [myLike, setMyLike] = useState<number>();
@@ -90,7 +88,7 @@ const Mypage = () => {
 
   return (
     <Layout>
-      <div className="w-full flex justify-center mb-4">
+      <div className="w-full flex justify-center mb-4 min-h-screen">
         <div className="w-[1200px] flex flex-col justify-start items-center">
           <div className="mt-[70px] w-[688px] flex gap-11">
             <div className="flex flex-col items-center">
@@ -151,9 +149,9 @@ const Mypage = () => {
           <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
             {myPosts?.map((post) =>
               cate === "전체" ? (
-                <MyPostCard key={post.postId} post={post} />
+                <SubPostCard key={post.postId} post={post} />
               ) : cate === post.type ? (
-                <MyPostCard key={post.postId} post={post} />
+                <SubPostCard key={post.postId} post={post} />
               ) : null
             )}
           </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const MyPostCard = ({ post }: { post: any }) => {
+const SubPostCard = ({ post }: { post: any }) => {
   const defaultImg =
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
 
@@ -24,4 +24,4 @@ const MyPostCard = ({ post }: { post: any }) => {
   );
 };
 
-export default MyPostCard;
+export default SubPostCard;
