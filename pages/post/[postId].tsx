@@ -7,6 +7,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
 } from "firebase/firestore";
 
 import Layout from "@/components/layout";
@@ -61,12 +62,16 @@ const PostDetail = () => {
     event.preventDefault();
     const newComment = {
       content: comment.content,
-      postId: window.location.pathname.substring(6),
+      postId: router.query.postId,
       userId: authService.currentUser?.uid!,
       createdAt: dateForm,
       isEdit: false,
     };
-    await addDoc(collection(dbService, "Comments"), newComment);
+    if (comment.content.trim() !== "") {
+      await addDoc(collection(dbService, "Comments"), newComment);
+    } else {
+      alert("내용이 없습니다!");
+    }
     setComment(initialComment);
   };
 
@@ -107,6 +112,26 @@ const PostDetail = () => {
       // 흐름 6.
       document.body.removeChild(textarea);
       alert("클립보드에 복사되었습니다.");
+    }
+  };
+
+  const likedUser = post?.like.includes(authService.currentUser?.uid!);
+
+  const postLike = async (id: string) => {
+    if (authService.currentUser) {
+      if (likedUser) {
+        await updateDoc(doc(dbService, "Posts", id), {
+          like: post.like.filter(
+            (prev) => prev !== authService.currentUser?.uid
+          ),
+        });
+      } else {
+        await updateDoc(doc(dbService, "Posts", id), {
+          like: [...post.like, authService.currentUser?.uid],
+        });
+      }
+    } else {
+      alert("로그인이 필요한 서비스입니다.");
     }
   };
 
@@ -162,7 +187,7 @@ const PostDetail = () => {
 
     getPost();
     getComments();
-  }, []);
+  }, [post]);
 
   // Results below assume UTC timezone - your results may vary
 
@@ -194,7 +219,7 @@ const PostDetail = () => {
                 <img
                   key={i}
                   src={img}
-                  className="w-[30%] bg-slate-300 aspect-square object-cover"
+                  className="w-[30%] bg-slate-300 aspect-square object-cover rounded"
                 />
               ))}
             </div>
@@ -208,9 +233,14 @@ const PostDetail = () => {
                 </span>
               </div>
               <div className="flex flex-col items-center">
-                <FiHeart size={24} />
+                <button onClick={() => postLike(router.query.postId as string)}>
+                  {likedUser ? (
+                    <FaHeart size={24} color={"#ff6161"} />
+                  ) : (
+                    <FiHeart size={24} />
+                  )}
+                </button>
                 <span>{post.like.length}</span>
-                {/* <FaHeart size={24} /> */}
               </div>
             </div>
             <div id="post-user" className="flex items-start space-x-6 mt-7">
@@ -261,6 +291,7 @@ const PostDetail = () => {
           <form className="w-full flex items-center relative space-x-6">
             <div className="bg-slate-300 w-12 aspect-square rounded-full" />
             <textarea
+              disabled={authService.currentUser ? false : true}
               name="content"
               value={comment.content}
               onChange={handleChange}
@@ -268,7 +299,11 @@ const PostDetail = () => {
               className="w-full p-2 border h-10 resize-none"
               placeholder="댓글을 입력해주세요."
             />
-            <button onClick={addComment} className="absolute right-0 pr-4">
+            <button
+              disabled={authService.currentUser ? false : true}
+              onClick={addComment}
+              className="absolute right-0 pr-4 disabled:text-gray-400"
+            >
               <span className="text-sm font-medium">등록</span>
             </button>
           </form>
