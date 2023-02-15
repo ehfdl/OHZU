@@ -2,6 +2,8 @@ import { authService } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { SetStateAction, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { GrFacebook } from "react-icons/gr";
+import { SiNaver } from "react-icons/si";
 import { MdOutlineClose } from "react-icons/md";
 
 const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
@@ -78,13 +80,13 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
 
             <div className="w-[473px] m-auto flex items-center  justify-center">
               <div>
-                <FcGoogle className="w-10 h-10 border border-slate-400 cursor-pointer" />
+                <FcGoogle className="w-10 h-10 border bg-black cursor-pointer" />
               </div>
               <div>
-                <FcGoogle className="w-10 h-10 ml-20 mr-20 border border-slate-400 cursor-pointer" />
+                <GrFacebook className="w-10 h-10 ml-20 mr-20 border border-slate-400 cursor-pointer" />
               </div>
               <div>
-                <FcGoogle className="w-10 h-10 border border-slate-400 cursor-pointer" />
+                <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
               </div>
             </div>
             <div className="w-[473px] m-auto mt-[100px] flex justify-center text-sm">
