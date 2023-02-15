@@ -2,8 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
-
-
+import { GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_APIKEY,
@@ -18,3 +17,8 @@ const app = initializeApp(firebaseConfig);
 export const dbService = getFirestore(app);
 export const authService = getAuth(app);
 export const storageService = getStorage(app);
+// 휴대폰 인증 reCAPTCHA 설정
+authService.languageCode = "ko";
+
+// 구글
+export const provider = new GoogleAuthProvider();
