@@ -5,14 +5,14 @@ import { useEffect, useState } from "react";
 
 const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
-  const [currentUser, setCurrenUser] = useState(false);
+  const [currentUser, setCurrentUser] = useState(false);
 
   // 로그인&회원가입 모달창 show/hidden
   const loginModalHandler = () => {
     if (props.isOpen === false) {
       console.log("Open");
       props.setIsOpen(true);
-      setCurrenUser(true);
+      setCurrentUser(true);
     }
   };
 
@@ -29,7 +29,7 @@ const Header = ({ ...props }: any) => {
       .then(() => {
         props.setJoinIsOpen(false);
         props.setIsOpen(false);
-        setCurrenUser(false);
+        setCurrentUser(false);
         console.log("currentUser is: ", currentUser);
         console.log("props.joinIsOpen : ", props.joinIsOpen);
         console.log("props.isOpen : ", props.isOpen);
@@ -95,19 +95,19 @@ const Header = ({ ...props }: any) => {
             </button>
           )}
 
-          {authService.currentUser ? (
-            <button
-              onClick={logOut}
-              className="w-24 h-[42px] mr-[12px] text-sm border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
-            >
-              로그아웃
-            </button>
-          ) : (
+          {authService.currentUser === null ? (
             <button
               onClick={joinModalHandler}
               className="w-24 h-[42px] mr-[12px] text-sm  border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
             >
               회원가입
+            </button>
+          ) : (
+            <button
+              onClick={logOut}
+              className="w-24 h-[42px] mr-[12px] text-sm border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
+            >
+              로그아웃
             </button>
           )}
         </div>
