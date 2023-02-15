@@ -1,0 +1,22 @@
+{
+    "sourceFile": "hooks/useScrollDirection.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1676375238497,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1676375285686,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -24,4 +24,6 @@\n   }, [scrollDirection]);\n \n   return scrollDirection;\n }\n+\n+export default useScrollDirection;\n\\ No newline at end of file\n"
+                }
+            ],
+            "date": 1676375238497,
+            "name": "Commit-0",
+            "content": "import React, {useEffect, useState} from \"react\";\n\nfunction useScrollDirection() {\n    const [scrollDirection, setScrollDirection] = useState(null);\n  \n    useEffect(() => {\n      let lastScrollY = window.pageYOffset;\n  \n      const updateScrollDirection = () => {\n        const scrollY = window.pageYOffset;\n        const direction:any = scrollY > lastScrollY ? \"down\" : \"up\";\n        if (direction !== scrollDirection && (scrollY - lastScrollY > 10 || scrollY - lastScrollY < -10)) {\n          setScrollDirection(direction);\n        }\n        lastScrollY = scrollY > 0 ? scrollY : 0;\n      };\n      window.addEventListener(\"scroll\", updateScrollDirection); // add event listener\n      return () => {\n        window.removeEventListener(\"scroll\", updateScrollDirection); // clean up\n      }\n    }, [scrollDirection]);\n  \n    return scrollDirection;\n  };"
+        }
+    ]
+}

@@ -3,7 +3,7 @@
     "activeCommit": 0,
     "commits": [
         {
-            "activePatchIndex": 1,
+            "activePatchIndex": 2,
             "patches": [
                 {
                     "date": 1676318640532,
@@ -12,6 +12,10 @@
                 {
                     "date": 1676319035313,
                     "content": "Index: \n===================================================================\n--- \n+++ \n@@ -4,22 +4,8 @@\n     \"./pages/**/*.{js,ts,jsx,tsx}\",\n     \"./components/**/*.{js,ts,jsx,tsx}\",\n   ],\n   theme: {\n-    extend: {\n-      keyframes: {\n-        slider: {\n-          \"0%\": {\n-            transform: \"translateX(0px)\",\n-          },\n-          \"100%\": {\n-            transform: \"translateX(-1400px)\",\n-          },\n-        },\n-      },\n-      animation: {\n-        slider: \"slider 5s linear infinite\",\n-      },\n-    },\n+    extend: {},\n   },\n   plugins: [],\n };\n"
+                },
+                {
+                    "date": 1676430789964,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -6,6 +6,6 @@\n   ],\n   theme: {\n     extend: {},\n   },\n-  plugins: [require(\"tailwind-scrollbar\")],\n+  plugins: {},\n };\n"
                 }
             ],
             "date": 1676318640532,

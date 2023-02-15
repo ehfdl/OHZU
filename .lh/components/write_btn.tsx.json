@@ -1,0 +1,26 @@
+{
+    "sourceFile": "components/write_btn.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1676365132953,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1676365160430,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,9 +36,9 @@\n           id=\"write\"\n           // onClick={scrollToTop}\n           type=\"button\"\n         >\n-          <RiPencilFill size={33} className=\"ml-4 cursor-pointer\" />\n+          <RiPencilFill size={20} className=\"ml-4 cursor-pointer\" />\n         </button>\n       </div>\n       {/* )} */}\n     </>\n"
+                },
+                {
+                    "date": 1676365168033,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -36,9 +36,9 @@\n           id=\"write\"\n           // onClick={scrollToTop}\n           type=\"button\"\n         >\n-          <RiPencilFill size={28} className=\"ml-4 cursor-pointer\" />\n+          <RiPencilFill size={25} className=\"ml-4 cursor-pointer\" />\n         </button>\n       </div>\n       {/* )} */}\n     </>\n"
+                }
+            ],
+            "date": 1676365132953,
+            "name": "Commit-0",
+            "content": "import React, { useEffect, useState } from \"react\";\nimport \"tailwindcss/tailwind.css\";\nimport { RiPencilFill } from \"react-icons/ri\";\n\nconst WriteButton = () => {\n  //   const [showButton, setShowButton] = useState(false);\n\n  //   const scrollToTop = () => {\n  //     window.scroll({\n  //       top: 0,\n  //       behavior: \"smooth\",\n  //     });\n  //   };\n  //   useEffect(() => {\n  //     const handleShowButton = () => {\n  //       if (window.scrollY > 500) {\n  //         setShowButton(true);\n  //       } else {\n  //         setShowButton(false);\n  //       }\n  //     };\n\n  //     console.log(window.scrollY);\n  //     window.addEventListener(\"scroll\", handleShowButton);\n  //     return () => {\n  //       window.removeEventListener(\"scroll\", handleShowButton);\n  //     };\n  //   }, []);\n\n  return (\n    <>\n      {/* {showButton && ( */}\n      <div className=\"scroll__container fixed right-[5%] bottom-[5%] z-0\">\n        <button\n          className=\"rounded-full w-16 h-16 font-thin text-sm text-white/80 bg-black hover:text-white hover:drop-shadow-xl\"\n          id=\"write\"\n          // onClick={scrollToTop}\n          type=\"button\"\n        >\n          <RiPencilFill size={33} className=\"ml-4 cursor-pointer\" />\n        </button>\n      </div>\n      {/* )} */}\n    </>\n  );\n};\n\nexport default WriteButton;\n"
+        }
+    ]
+}

@@ -29,7 +29,7 @@ const TopButton = () => {
   return (
     <>
       {showButton && (
-        <div className="scroll__container fixed right-[5%] bottom-[5%] z-0">
+        <div className="scroll__container fixed right-[5%] bottom-[13%] z-0">
           <button
             className="rounded-full w-16 h-16 font-thin text-sm text-white/80 bg-black hover:text-white hover:font-normal hover:drop-shadow-xl"
             id="top"
