@@ -1,5 +1,5 @@
 import Layout from "@/components/layout";
-import SubPostCard from "@/components/sub_page/my_post";
+import SubPostCard from "@/components/sub_page/sub_post_card";
 import Cate_Navbar from "@/components/navbar/cate_navbar";
 import { authService, dbService } from "@/firebase";
 import {

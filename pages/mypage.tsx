@@ -17,11 +17,15 @@ import {
   orderBy,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
-import SubPostCard from "@/components/sub_page/my_post";
+import SubPostCard from "@/components/sub_page/sub_post_card";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
+  const [allPosts, setAllPosts] = useState<PostType[]>();
   const [myPosts, setMyPosts] = useState<PostType[]>();
+  const [likePosts, setLikePosts] = useState<PostType[]>();
+  const [recentlyPosts, setRecentlyPosts] = useState<PostType[]>();
+
   const [myLike, setMyLike] = useState<number>();
 
   const [ohju, setOhju] = useState("my-ohju");
@@ -43,19 +47,18 @@ const Mypage = () => {
 
       const q = query(
         collection(dbService, "Posts"),
-        where("userId", "==", authService.currentUser?.uid as string),
         orderBy("createdAt", "desc")
       );
 
       onSnapshot(q, (snapshot) => {
-        const newMyPosts = snapshot.docs.map((doc) => {
-          const newMyPost: PostType = {
+        const newPosts = snapshot.docs.map((doc) => {
+          const newPost: PostType = {
             postId: doc.id,
             ...doc.data(),
           };
-          return newMyPost;
+          return newPost;
         });
-        setMyPosts(newMyPosts);
+        setAllPosts(newPosts);
       });
 
       setMyProfile(newProfile);
@@ -63,6 +66,55 @@ const Mypage = () => {
 
     getMyProfile();
   }, []);
+
+  useEffect(() => {
+    const ohjuMyPosts = allPosts?.filter(
+      (post) => post.userId === authService.currentUser?.uid
+    );
+    const ohjuLikePosts = allPosts?.filter((post) =>
+      post.like?.includes(authService.currentUser?.uid as string)
+    );
+    const ohjuRecentlyPosts = allPosts?.filter((post) =>
+      myProfile.recently.map((id: any) => id === post.postId)
+    );
+
+    setMyPosts(ohjuMyPosts);
+    setLikePosts(ohjuLikePosts);
+    setRecentlyPosts(ohjuRecentlyPosts);
+  }, [allPosts]);
+
+  // useEffect(() => {
+  // const getMyProfile = async () => {
+  //   const snapshot = await getDoc(
+  //     doc(dbService, "Users", authService.currentUser?.uid as string)
+  //   );
+  //   const snapshotdata = await snapshot.data();
+  //   const newProfile = {
+  //     ...snapshotdata,
+  //   };
+
+  //     const q = query(
+  //       collection(dbService, "Posts"),
+  //       where("userId", "==", authService.currentUser?.uid as string),
+  //       orderBy("createdAt", "desc")
+  //     );
+
+  //     onSnapshot(q, (snapshot) => {
+  //       const newMyPosts = snapshot.docs.map((doc) => {
+  //         const newMyPost: PostType = {
+  //           postId: doc.id,
+  //           ...doc.data(),
+  //         };
+  //         return newMyPost;
+  //       });
+  //       setMyPosts(newMyPosts);
+  //     });
+
+  //     setMyProfile(newProfile);
+  //   };
+
+  //   getMyProfile();
+  // }, []);
 
   useEffect(() => {
     const getMyProfile = async () => {
@@ -138,22 +190,51 @@ const Mypage = () => {
           </div>
           <Ohju_Navbar setOhju={setOhju} />
           <Cate_Navbar setCate={setCate} />
+
           <div className="w-full mt-12 ml-[3px] text-[20px] font-bold">
             게시글{" "}
             <span className="text-[#c6c6d4]">
-              {cate === "전체"
-                ? myPosts?.length
-                : myPosts?.filter((post) => cate === post.type).length}
+              {ohju === "my-ohju"
+                ? cate === "전체"
+                  ? myPosts?.length
+                  : myPosts?.filter((post) => cate === post.type).length
+                : ohju === "like-ohju"
+                ? cate === "전체"
+                  ? likePosts?.length
+                  : likePosts?.filter((post) => cate === post.type).length
+                : ohju === "recently-ohju"
+                ? cate === "전체"
+                  ? recentlyPosts?.length
+                  : recentlyPosts?.filter((post) => cate === post.type).length
+                : null}
             </span>
           </div>
           <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
-            {myPosts?.map((post) =>
-              cate === "전체" ? (
-                <SubPostCard key={post.postId} post={post} />
-              ) : cate === post.type ? (
-                <SubPostCard key={post.postId} post={post} />
-              ) : null
-            )}
+            {ohju === "my-ohju"
+              ? myPosts?.map((post) =>
+                  cate === "전체" ? (
+                    <SubPostCard key={post.postId} post={post} />
+                  ) : cate === post.type ? (
+                    <SubPostCard key={post.postId} post={post} />
+                  ) : null
+                )
+              : ohju === "like-ohju"
+              ? likePosts?.map((post) =>
+                  cate === "전체" ? (
+                    <SubPostCard key={post.postId} post={post} />
+                  ) : cate === post.type ? (
+                    <SubPostCard key={post.postId} post={post} />
+                  ) : null
+                )
+              : ohju === "recently-ohju"
+              ? recentlyPosts?.map((post) =>
+                  cate === "전체" ? (
+                    <SubPostCard key={post.postId} post={post} />
+                  ) : cate === post.type ? (
+                    <SubPostCard key={post.postId} post={post} />
+                  ) : null
+                )
+              : null}
           </div>
         </div>
         {isOpenProfileModal ? (
