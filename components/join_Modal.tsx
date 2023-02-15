@@ -123,7 +123,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           point: "",
           following: [],
           follower: [],
-          introduce: "",
         });
         alert("회원가입 성공 !");
         setJoinIsOpen(false);

@@ -326,8 +326,8 @@ const Post = () => {
             onChange={onChangeValue}
             placeholder="1. Lorem Ipsum is simply dummy text of the..."
           />
-          <div className="w-full flex justify-end items-center">
-            <button onClick={onSubmit} className="bg-white p-2">
+          <div className="w-full flex justify-center items-center">
+            <button onClick={onSubmit} className="bg-[#ff6161] w-[280px] h-12">
               작성
             </button>
           </div>

@@ -12,6 +12,7 @@ import {
   addDoc,
   collection,
 } from "firebase/firestore";
+import FollowModal from "@/components/follow_modal";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -20,6 +21,8 @@ const Mypage = () => {
   const [cate, setCate] = useState("전체");
 
   const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
+  const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
+  const [isOpenFollowingModal, setIsOpenFollowingModal] = useState(false);
 
   useEffect(() => {
     const getMyProfile = async () => {
@@ -69,12 +72,6 @@ const Mypage = () => {
               >
                 프로필 편집
               </button>
-              {isOpenProfileModal ? (
-                <ProfileModal
-                  setIsOpenProfileModal={setIsOpenProfileModal}
-                  myProfile={myProfile}
-                />
-              ) : null}
             </div>
             <div className="flex flex-col">
               <div className="w-[484px] flex justify-between">
@@ -93,7 +90,10 @@ const Mypage = () => {
                   <div className="flex flex-col justify-center items-center">
                     게시글<div>27</div>
                   </div>
-                  <div className="flex flex-col justify-center items-center">
+                  <div
+                    onClick={() => setIsOpenFollowModal(true)}
+                    className="flex flex-col justify-center items-center cursor-pointer"
+                  >
                     팔로워<div>27</div>
                   </div>
                   <div className="flex flex-col justify-center items-center">
@@ -130,6 +130,15 @@ const Mypage = () => {
             <div className="h-64 bg-slate-400"></div>
           </div>
         </div>
+        {isOpenProfileModal ? (
+          <ProfileModal
+            setIsOpenProfileModal={setIsOpenProfileModal}
+            myProfile={myProfile}
+          />
+        ) : null}
+        {isOpenFollowModal ? (
+          <FollowModal setIsOpenFollowModal={setIsOpenFollowModal} />
+        ) : null}
       </div>
     </Layout>
   );
