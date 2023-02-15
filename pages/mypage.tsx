@@ -23,6 +23,7 @@ const Mypage = () => {
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
   const [myProfile, setMyProfile] = useState<any>();
   const [myPosts, setMyPosts] = useState<PostType[]>();
+  const [myLike, setMyLike] = useState<number>();
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
@@ -59,6 +60,7 @@ const Mypage = () => {
 
       setMyProfile(newProfile);
     };
+
     getMyProfile();
   }, []);
 
@@ -76,6 +78,13 @@ const Mypage = () => {
     };
     getMyProfile();
   }, [isOpenProfileModal]);
+
+  useEffect(() => {
+    const totalLike = myPosts?.reduce((accumulator, currentObject) => {
+      return accumulator + currentObject.like!.length;
+    }, 0);
+    setMyLike(totalLike);
+  }, [myPosts]);
 
   return (
     <Layout>
@@ -108,10 +117,10 @@ const Mypage = () => {
                 </div>
                 <div className="w-[264px] flex justify-between">
                   <div className="flex flex-col justify-center items-center">
-                    좋아요<div>99</div>
+                    좋아요<div>{myLike}</div>
                   </div>
                   <div className="flex flex-col justify-center items-center">
-                    게시글<div>27</div>
+                    게시글<div>{myPosts?.length}</div>
                   </div>
                   <div
                     onClick={() => setIsOpenFollowModal(true)}
@@ -130,7 +139,12 @@ const Mypage = () => {
           <Ohju_Navbar setOhju={setOhju} />
           <Cate_Navbar setCate={setCate} />
           <div className="w-full mt-12 ml-[3px] text-[20px] font-bold">
-            게시글 <span className="text-[#c6c6d4]">{myPosts?.length}</span>
+            게시글{" "}
+            <span className="text-[#c6c6d4]">
+              {cate === "전체"
+                ? myPosts?.length
+                : myPosts?.filter((post) => cate === post.type).length}
+            </span>
           </div>
           <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
             {myPosts?.map((post) =>
