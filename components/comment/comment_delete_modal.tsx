@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 
 interface DeleteModalProps {
@@ -12,6 +12,18 @@ const DeleteModal = ({
   deleteComment,
   id,
 }: DeleteModalProps) => {
+  useEffect(() => {
+    document.body.style.cssText = `
+      position: fixed;
+      top: -${window.scrollY}px;
+      overflow-y: scroll;
+      width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    };
+  }, []);
   return (
     <div className="fixed top-0 left-0 w-full h-screen bg-black bg-opacity-50 flex justify-center items-center">
       <div className="relative w-5/6 md:w-4/5 lg:w-3/5  xl:w-2/5 2xl:w-2/6 aspect-vedio bg-white flex flex-col justify-center items-center p-20 space-y-16">
