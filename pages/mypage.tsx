@@ -1,9 +1,9 @@
 import Layout from "@/components/layout";
-import Cate_Navbar from "@/components/navbar/cate_navbar";
-import Ohju_Navbar from "@/components/navbar/ohju_navbar";
-import ProfileModal from "@/components/profile_modal";
+import Cate_Navbar from "@/components/my_page/navbar/cate_navbar";
+import Ohju_Navbar from "@/components/my_page/navbar/ohju_navbar";
+import ProfileModal from "@/components/my_page/profile_modal";
 import React, { useEffect, useState } from "react";
-import { authService, dbService, storageService } from "@/firebase";
+import { authService, dbService } from "@/firebase";
 import {
   doc,
   getDoc,
@@ -11,11 +11,18 @@ import {
   setDoc,
   addDoc,
   collection,
+  query,
+  where,
+  onSnapshot,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
+import MyPostCard from "@/components/my_page/my_post";
 
 const Mypage = () => {
+  const defaultImg =
+    "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
   const [myProfile, setMyProfile] = useState<any>();
+  const [myPosts, setMyPosts] = useState<PostType[]>();
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
@@ -33,6 +40,22 @@ const Mypage = () => {
       const newProfile = {
         ...snapshotdata,
       };
+
+      const q = query(
+        collection(dbService, "Posts"),
+        where("userId", "==", authService.currentUser?.uid as string)
+      );
+
+      onSnapshot(q, (snapshot) => {
+        const newMyPosts = snapshot.docs.map((doc) => {
+          const newMyPost: PostType = {
+            postId: doc.id,
+            ...doc.data(),
+          };
+          return newMyPost;
+        });
+        setMyPosts(newMyPosts);
+      });
 
       setMyProfile(newProfile);
     };
@@ -56,7 +79,7 @@ const Mypage = () => {
 
   return (
     <Layout>
-      <div className="w-full h-screen flex justify-center">
+      <div className="w-full flex justify-center mb-4">
         <div className="w-[1200px] flex flex-col justify-start items-center">
           <div className="mt-[70px] w-[688px] flex gap-11">
             <div className="flex flex-col items-center">
@@ -107,27 +130,16 @@ const Mypage = () => {
           <Ohju_Navbar setOhju={setOhju} />
           <Cate_Navbar setCate={setCate} />
           <div className="w-full mt-12 ml-[3px] text-[20px] font-bold">
-            게시글 <span className="text-[#c6c6d4]">115</span>
+            게시글 <span className="text-[#c6c6d4]">{myPosts?.length}</span>
           </div>
           <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
-            <div className="h-64 bg-slate-200 overflow-hidden relative">
-              <div className="w-full h-2/5 bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
-              <div className="absolute z-10 text-white pt-7 pl-8 font-bold text-[24px]">
-                제목
-              </div>
-              <div className="text-[12px] z-10 bg-[#d9d9d9] ml-[92px] mt-7 h-7 w-[54px] flex justify-center items-center rounded-[20px] absolute">
-                기타
-              </div>
-              <img
-                src="https://i.ytimg.com/vi/Nec6HPObADw/maxresdefault.jpg"
-                className="w-full h-full object-cover z-10"
-              />
-            </div>
-            <div className="h-64 bg-slate-300"></div>
-            <div className="h-64 bg-slate-400"></div>
-            <div className="h-64 bg-slate-200"></div>
-            <div className="h-64 bg-slate-300"></div>
-            <div className="h-64 bg-slate-400"></div>
+            {myPosts?.map((post) =>
+              cate === "전체" ? (
+                <MyPostCard key={post.postId} post={post} />
+              ) : cate === post.type ? (
+                <MyPostCard key={post.postId} post={post} />
+              ) : null
+            )}
           </div>
         </div>
         {isOpenProfileModal ? (
