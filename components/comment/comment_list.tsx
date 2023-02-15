@@ -87,7 +87,7 @@ const CommentList = ({ comment }: CommentProps) => {
                   <span className="text-sm font-medium">취소</span>
                 </button>
                 <button onClick={() => editComment(id as string, editContent)}>
-                  <span className="text-sm font-medium">등록</span>
+                  <span className="text-sm font-medium">완료</span>
                 </button>
               </div>
             </div>
