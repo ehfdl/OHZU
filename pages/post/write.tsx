@@ -10,6 +10,11 @@ import { useRouter } from "next/router";
 
 const Post = () => {
   const router = useRouter();
+  const date = new Date();
+  const dateForm = new Intl.DateTimeFormat("ko-KR", {
+    dateStyle: "long",
+    timeStyle: "medium",
+  }).format(date);
 
   const [form, setForm] = useState<Form>({
     userId: authService.currentUser?.uid as string,
@@ -20,6 +25,7 @@ const Post = () => {
     recipe: "",
     text: "",
     like: [],
+    createdAt: dateForm,
     view: 0,
   });
 
