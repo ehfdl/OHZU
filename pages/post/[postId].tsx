@@ -168,9 +168,17 @@ const PostDetail = () => {
   };
 
   const updateView = async () => {
-    await updateDoc(doc(dbService, "Posts", docId as string), {
-      view: post.view! + 1,
-    });
+    const docRef = doc(dbService, "Posts", docId);
+    const docSnap = await getDoc(docRef);
+    const forUpdate = {
+      ...docSnap.data(),
+    };
+    let curView = ++forUpdate.view;
+    try {
+      await updateDoc(docRef, { view: curView });
+    } catch (error) {
+      alert(error);
+    }
   };
 
   useEffect(() => {
@@ -200,12 +208,6 @@ const PostDetail = () => {
     getComments();
     updateView();
   }, []);
-
-  console.log(post.view);
-  // Results below assume UTC timezone - your results may vary
-
-  // Specify default date formatting for language (locale)
-  // console.log(new Intl.DateTimeFormat("ko-KR").format(date));
 
   return (
     <Layout>
