@@ -73,7 +73,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
   }, [imgFile]);
 
   return (
-    <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center">
+    <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
       <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)]" />
       <div className="w-[588px] h-[820px] bg-white z-40 flex flex-col justify-start items-center">
         <button
