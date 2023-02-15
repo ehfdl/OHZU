@@ -2,6 +2,7 @@ import { authService, dbService } from "@/firebase";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
@@ -12,12 +13,13 @@ import {
 
 import Layout from "@/components/layout";
 import Link from "next/link";
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiMoreVertical } from "react-icons/fi";
 import { FaHeart, FaCrown } from "react-icons/fa";
 import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import CommentList from "@/components/comment/comment_list";
+import DeleteModal from "@/components/delete_modal";
 
 const PostDetail = () => {
   const router = useRouter();
@@ -44,6 +46,7 @@ const PostDetail = () => {
     like: [],
     view: 0,
   });
+
   const initialComment = {
     content: "",
     postId: "",
@@ -53,6 +56,8 @@ const PostDetail = () => {
   };
   const [comment, setComment] = useState<CommentType>(initialComment);
   const [comments, setComments] = useState<CommentType[]>([]);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [postId, setPostId] = useState("");
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -119,8 +124,19 @@ const PostDetail = () => {
     }
   };
 
-  const likedUser = post?.like!.includes(authService.currentUser?.uid!);
+  const deleteToggle = () => {
+    setDeleteConfirm(!deleteConfirm);
+  };
 
+  const getId = async () => {
+    const docRef = doc(dbService, "Posts", docId);
+    // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
+    const docSnap = await getDoc(docRef);
+    const docID = docSnap.id;
+    setPostId(docID);
+  };
+
+  const likedUser = post?.like!.includes(authService.currentUser?.uid!);
   const postLike = async (id: string) => {
     if (authService.currentUser) {
       if (likedUser) {
@@ -148,6 +164,7 @@ const PostDetail = () => {
 
     setPost((prev) => ({ ...prev, ...data }));
   };
+
   const getComments = async () => {
     const q = query(
       collection(dbService, "Comments"),
@@ -181,6 +198,10 @@ const PostDetail = () => {
     }
   };
 
+  const deletePost = async (id: string) => {
+    await deleteDoc(doc(dbService, "Posts", id));
+    router.push("/");
+  };
   useEffect(() => {
     // const getComments = async () => {
     //   const first = query(
@@ -207,6 +228,7 @@ const PostDetail = () => {
     getPost();
     getComments();
     updateView();
+    getId();
   }, []);
 
   return (
@@ -247,17 +269,36 @@ const PostDetail = () => {
                   {post.type}
                 </span>
               </div>
-              <div className="flex flex-col items-center">
-                <button onClick={() => postLike(router.query.postId as string)}>
-                  {likedUser ? (
-                    <FaHeart size={24} color={"#ff6161"} />
-                  ) : (
-                    <FiHeart size={24} />
-                  )}
+              <div className="flex justify-end items-start space-x-2">
+                <div className="flex flex-col items-center">
+                  <button
+                    onClick={() => postLike(router.query.postId as string)}
+                  >
+                    {likedUser ? (
+                      <FaHeart size={24} color={"#ff6161"} />
+                    ) : (
+                      <FiHeart size={24} />
+                    )}
+                  </button>
+                  <span>{post.like!.length}</span>
+                </div>
+                <button>
+                  <FiMoreVertical size={24} />
                 </button>
-                <span>{post.like!.length}</span>
+                <div className="flex flex-col space-y-2 items-center">
+                  <Link href="/post/edit">수정</Link>
+                  <button onClick={deleteToggle}>삭제</button>
+                </div>
               </div>
             </div>
+            {deleteConfirm && (
+              <DeleteModal
+                deletePost={deletePost}
+                setDeleteConfirm={setDeleteConfirm}
+                id={postId}
+                text="게시글"
+              />
+            )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center space-y-2">
                 <div className="w-20 aspect-square bg-slate-300 rounded-full" />
