@@ -115,19 +115,19 @@ const PostDetail = () => {
     }
   };
 
-  const likedUser = post?.like.includes(authService.currentUser?.uid!);
+  const likedUser = post?.like!.includes(authService.currentUser?.uid!);
 
   const postLike = async (id: string) => {
     if (authService.currentUser) {
       if (likedUser) {
         await updateDoc(doc(dbService, "Posts", id), {
-          like: post.like.filter(
+          like: post?.like!.filter(
             (prev) => prev !== authService.currentUser?.uid
           ),
         });
       } else {
         await updateDoc(doc(dbService, "Posts", id), {
-          like: [...post.like, authService.currentUser?.uid],
+          like: [...post?.like!, authService.currentUser?.uid],
         });
       }
     } else {
@@ -211,7 +211,7 @@ const PostDetail = () => {
         >
           <div id="images-column" className="w-2/5">
             <img
-              src={post.img === null ? "" : post.img[0]}
+              src={post.img === null ? "" : post.img![0]}
               className="w-full bg-slate-300 aspect-square object-cover"
             />
             <div className="my-5 flex justify-start space-x-6 items-center w-full">
@@ -240,7 +240,7 @@ const PostDetail = () => {
                     <FiHeart size={24} />
                   )}
                 </button>
-                <span>{post.like.length}</span>
+                <span>{post.like!.length}</span>
               </div>
             </div>
             <div id="post-user" className="flex items-start space-x-6 mt-7">

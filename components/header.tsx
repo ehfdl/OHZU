@@ -81,13 +81,15 @@ const Header = ({ ...props }: any) => {
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
         <div className="flex items-center">
           {authService.currentUser ? (
-            <button className="w-24 h-[42px] mr-[12px] border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200">
-              마이페이지
-            </button>
+            <Link legacyBehavior href="/mypage">
+              <button className="w-24 h-[42px] mr-[12px] text-sm  border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200">
+                마이페이지
+              </button>
+            </Link>
           ) : (
             <button
               onClick={loginModalHandler}
-              className="w-20 h-[42px] mr-[12px] border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
+              className="w-20 h-[42px] mr-[12px] text-sm border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
             >
               로그인
             </button>
@@ -96,14 +98,14 @@ const Header = ({ ...props }: any) => {
           {authService.currentUser ? (
             <button
               onClick={logOut}
-              className="w-24 h-[42px] mr-[12px] border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
+              className="w-24 h-[42px] mr-[12px] text-sm border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
             >
               로그아웃
             </button>
           ) : (
             <button
               onClick={joinModalHandler}
-              className="w-24 h-[42px] mr-[12px] border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
+              className="w-24 h-[42px] mr-[12px] text-sm  border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
             >
               회원가입
             </button>

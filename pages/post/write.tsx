@@ -1,17 +1,18 @@
 import React, { useEffect } from "react";
 import Layout from "@/components/layout";
 import { useState } from "react";
-import { dbService, storageService } from "@/firebase";
+import { dbService, storageService, authService } from "@/firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { doc, setDoc, addDoc, collection } from "firebase/firestore";
-import { AiFillCamera } from "react-icons/ai";
-import { AiOutlineClose } from "react-icons/ai";
 import { BsPlusLg, BsFillXCircleFill } from "react-icons/bs";
+import { useRouter } from "next/router";
 
 const Post = () => {
+  const router = useRouter();
+
   const [form, setForm] = useState<Form>({
-    userId: "",
+    userId: authService.currentUser?.uid as string,
     img: [""],
     title: "",
     type: "",
@@ -21,6 +22,7 @@ const Post = () => {
     like: [],
     view: 0,
   });
+
   const [imgFile_01, setImgFile_01] = useState<File | null>();
   const [imgFile_02, setImgFile_02] = useState<File | null>();
   const [imgFile_03, setImgFile_03] = useState<File | null>();
@@ -90,7 +92,7 @@ const Post = () => {
 
       await addDoc(collection(dbService, "Posts"), newForm);
 
-      // await setDoc(doc(dbService, "Posts", `${user.id}:${uuidv4}`), form);
+      router.push("/");
     }
   };
 
@@ -326,8 +328,8 @@ const Post = () => {
             onChange={onChangeValue}
             placeholder="1. Lorem Ipsum is simply dummy text of the..."
           />
-          <div className="w-full flex justify-end items-center">
-            <button onClick={onSubmit} className="bg-white p-2">
+          <div className="w-full flex justify-center items-center">
+            <button onClick={onSubmit} className="bg-[#ff6161] w-[280px] h-12">
               작성
             </button>
           </div>

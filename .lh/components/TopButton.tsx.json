@@ -1,0 +1,26 @@
+{
+    "sourceFile": "components/TopButton.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 2,
+            "patches": [
+                {
+                    "date": 1676356949924,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1676357046257,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,5 +1,6 @@\n import React, { useEffect, useState } from \"react\";\n+import \"tailwindcss/tailwind.css\";\n \n function TopButton() {\n   const [showButton, setShowButton] = useState(false);\n \n@@ -27,9 +28,9 @@\n \n   return (\n     showButton && (\n       <div className=\"scroll__container\">\n-        <button id=\"top\" onClick={scrollToTop} type=\"button\">\n+        <button className=\"rounded-full bg-black\" id=\"top\" onClick={scrollToTop} type=\"button\">\n           {\" \"}\n           Top\n         </button>\n       </div>\n"
+                },
+                {
+                    "date": 1676357211153,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -1,8 +1,8 @@\n import React, { useEffect, useState } from \"react\";\n import \"tailwindcss/tailwind.css\";\n \n-function TopButton() {\n+const TopButton=() => {\n   const [showButton, setShowButton] = useState(false);\n \n   const scrollToTop = () => {\n     window.scroll({\n"
+                }
+            ],
+            "date": 1676356949924,
+            "name": "Commit-0",
+            "content": "import React, {useEffect, useState} from \"react\";\n\nfunction TopButton() {\n\n    const [showButton, setShowButton] = useState(false);\n\n    const scrollToTop = () => {\n        window.scroll({\n            top: 0,\n            behavior: 'smooth'\n        })\n\n    }\n    useEffect(() => {\n        const handleShowButton = () => {\n            if (window.scrollY > 500) {\n                setShowButton(true)\n            } else {\n                setShowButton(false)\n            }\n        }\n\n        console.log(window.scrollY)\n        window.addEventListener(\"scroll\", handleShowButton)\n        return () => {\n            window.removeEventListener(\"scroll\", handleShowButton)\n        }\n    }, [])\n\n    return showButton && (\n        <div className=\"scroll__container\">\n            <button id=\"top\" onClick={scrollToTop} type=\"button\" > Top</button>\n        </div>\n\n    )\n}\n\nexport default TopButton;"
+        }
+    ]
+}
