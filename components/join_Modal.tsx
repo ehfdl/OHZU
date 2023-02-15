@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { authService, dbService } from "@/firebase";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  signInWithPopup,
+} from "firebase/auth";
+import { authService, dbService, provider } from "@/firebase";
 import {
   collection,
   doc,
-  getDoc,
   getDocs,
-  onSnapshot,
   query,
   setDoc,
   where,
@@ -15,7 +19,6 @@ import { MdOutlineClose } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
 import { SiNaver } from "react-icons/si";
-import { async } from "@firebase/util";
 
 const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   // 이메일, 비밀번호, 비밀번호 확인, 닉네임, 유저 생년월일
@@ -29,14 +32,10 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
 
   // 이메일, 비밀번호, 닉네임 유효성 검사
   const [checkEmail, setCheckEmail] = useState("");
-  const [boolEmail, setBoolEmail] = useState(false);
   const [checkPassword, setCheckPassword] = useState("");
   const [checkPasswordConfirm, setCheckPasswordConfirm] = useState("");
   const [checkNickname, setCheckNickname] = useState("");
-
-  // 이메일, 비밀번호, 닉네임 정규식 상태관리
-  const [regEmail, setRegEmail] = useState("");
-  const [regPassword, setRegPassword] = useState("");
+  const [checkAdult, setCheckAdult] = useState("");
 
   // email, password 정규식
   const emailRegEx =
@@ -57,10 +56,10 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     querySnapshot.forEach((doc) => {
       isCheckEmail = doc.data().email;
     });
-    console.log("checkEmail", checkEmail);
     return isCheckEmail;
   };
 
+  // 이메일 유효성 검사
   useEffect(() => {
     isEmail(email)
       .then((result) => {
@@ -73,27 +72,27 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
             setCheckEmail("사용 가능한 이메일입니다.");
           }
         } else {
-          setCheckEmail("이메일을 작성해주세요.");
+          setCheckEmail(" ");
         }
       })
       .catch((error) => {
-        console.log("error : ", error);
-        setCheckEmail("이메일 중복 확인 중 오류가 발생했습니다.");
+        alert(error.message);
+        // setCheckEmail("이메일 중복 확인 중 오류가 발생했습니다.");
       });
   }, [email, setCheckEmail]);
 
   // 비밀번호 유효성 검사
   useEffect(() => {
     if (!password) {
-      setCheckPassword("비밀번호를 입력해주세요.");
+      setCheckPassword("");
     } else if (!(password.length >= 8 && password.match(passwordRegEx))) {
-      setCheckPassword("비밀번호 형식이 맞지 않습니다.");
+      setCheckPassword(
+        "비밀번호는 최소8자리, 특수문자와 대문자, 소문자, 숫자로 작성하세요."
+      );
     } else if (password.length >= 8 && password.match(passwordRegEx)) {
-      setCheckPassword("통과");
+      setCheckPassword("성공!");
     } else if (passwordConfirm !== password) {
       setCheckPasswordConfirm("비밀번호가 다릅니다.");
-    } else {
-      setCheckPasswordConfirm("통과2");
     }
   }, [password]);
 
@@ -102,17 +101,64 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       if (passwordConfirm !== password) {
         setCheckPasswordConfirm("비밀번호가 다릅니다.");
       } else {
-        setCheckPasswordConfirm("통과2");
+        setCheckPasswordConfirm("비밀번호가 일치합니다.");
       }
     }
   }, [passwordConfirm]);
 
+  // 닉네임 중복검사 (FireStore <=> nickname input)
+  const isNick = async (nickname: any) => {
+    const q = query(
+      collection(dbService, "Users"),
+      where("nickname", "==", nickname)
+    );
+    const querySnapshot = await getDocs(q);
+
+    let isCheckNickname = "";
+
+    querySnapshot.forEach((doc) => {
+      isCheckNickname = doc.data().nickname;
+    });
+    console.log("checkNickname", checkNickname);
+    return isCheckNickname;
+  };
+
+  // 닉네임 유효성 검사
+  useEffect(() => {
+    isNick(nickname)
+      .then((result) => {
+        if (nickname) {
+          if (result === nickname) {
+            setCheckNickname("사용중인 닉네임입니다.");
+          } else {
+            setCheckNickname("사용 가능한 닉네임입니다.");
+          }
+        } else {
+          setCheckNickname(" ");
+        }
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  }, [nickname, setNickname]);
+
   const signUpForm = (e: any) => {
     e.preventDefault();
 
+    if (
+      !email ||
+      !password ||
+      !passwordConfirm ||
+      !nickname ||
+      !userYear ||
+      !userMonth ||
+      !userDay
+    ) {
+      return alert("빈칸을 채워주세요.");
+    }
+
     createUserWithEmailAndPassword(authService, email, password)
       .then((userCredential) => {
-        console.log("회원가입 성공 ! :", authService.currentUser?.uid);
         setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
           userId: authService.currentUser?.uid,
           email: email,
@@ -129,11 +175,80 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         setIsOpen(true);
       })
       .catch((error) => {
-        alert(error.massage);
+        // alert("다시 확인해주세요.");
+        console.log("error.massage : ", error.massage);
       });
   };
 
-  console.log("password :");
+  // 성인 인증 버튼
+  const ageVerification = () => {
+    const nowTime = new Date();
+    const nowYear = nowTime.getFullYear();
+    let newUserYear = Number(userYear);
+    console.log("newUserYear : ", newUserYear);
+
+    if (newUserYear === 0) {
+      setCheckAdult("출생년도와 태어난 월, 일을 입력해주세요.");
+    } else if (nowYear - newUserYear > 20) {
+      setCheckAdult("성인입니다.");
+    } else {
+      setCheckAdult("성인이 아닙니다. 서비스 이용이 불가합니다.");
+    }
+  };
+
+  // 간편 로그인
+  // 구글
+  const googleJoin = () => {
+    signInWithPopup(authService, provider)
+      .then((result) => {
+        // 다음은 구글 액세스 토큰을 발급하는 코드입니다. 이 토큰을 사용하여 구글 API에 접근할 수 있습니다.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // 로그인한 사용자 정보가 제공됩니다.
+        const user = result.user;
+        // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
+        setJoinIsOpen(false);
+        console.log("result : ", result);
+      })
+      .catch((error) => {
+        // 이 부분에서는 오류를 처리합니다.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // 사용된 사용자 계정 이메일
+        const email = error.customData.email;
+        // AuthCredential 타입 제공됩니다.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        console.log("error : ", error);
+      });
+
+    window.recaptchaVerifier = new RecaptchaVerifier(
+      "phoneNumberButton",
+      {
+        size: "invisible",
+        callback: (response: any) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+          onSignInSubmit();
+        },
+      },
+      authService
+    );
+
+    const phoneNumber = getPhoneNumberFromUserInput();
+    const appVerifier = window.recaptchaVerifier;
+
+    signInWithPhoneNumber(authService, phoneNumber, appVerifier)
+      .then((confirmationResult) => {
+        // SMS sent. Prompt user to type the code from the message, then sign the
+        // user in with confirmationResult.confirm(code).
+        window.confirmationResult = confirmationResult;
+        // ...
+      })
+      .catch((error) => {
+        // Error; SMS not sent
+        // ...
+      });
+  };
+
   return (
     <>
       <div className="w-screen h-screen fixed bg-slate-500 z-[1] opacity-90"></div>
@@ -158,7 +273,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
               />
               <p className="w-[472px] m-auto mb-3 text-right text-sm">
                 {checkEmail ? checkEmail : null}
-                {checkEmail.match(emailRegEx) ? null : regEmail}
               </p>
             </div>
             <div>
@@ -200,7 +314,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
               />
               <p className="w-[472px] m-auto mb-3 text-right text-sm">
-                {nickname}
+                {checkNickname}
               </p>
             </div>
             <div className="birth_Container">
@@ -211,7 +325,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   }}
                   type="text"
                   placeholder="출생년도"
-                  className="w-[144px] h-11"
+                  className="w-[144px] h-11 text-center"
                 />
                 <input
                   onChange={(e) => {
@@ -219,7 +333,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   }}
                   type="text"
                   placeholder="월"
-                  className="w-[144px] h-11"
+                  className="w-[144px] h-11 text-center"
                 />
                 <input
                   onChange={(e) => {
@@ -227,26 +341,33 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   }}
                   type="text"
                   placeholder="일"
-                  className="w-[144px] h-11"
+                  className="w-[144px] h-11 text-center"
                 />
               </div>
               <div className="flex w-[472px] m-auto">
                 <label htmlFor="auto_login" className="flex  items-center mb-4">
-                  <input id="auto_login" type="checkbox" className="w-5 h-5" />
-                  <span className="ml-2 text-sm ">19세 이상 성인입니다.</span>
+                  <div
+                    onClick={ageVerification}
+                    id="auto_login"
+                    className="px-2 py-1 border-1 bg-[#aaa] text-sm cursor-pointer duration-150 hover:bg-[#333] hover:text-slate-50"
+                  >
+                    성인 인증하기
+                  </div>
+                  <span className="ml-2 text-sm ">
+                    {!checkAdult ? " " : checkAdult}
+                  </span>
                 </label>
               </div>
             </div>
             <button
               type="submit"
-              onClick={() => {}}
               className="w-[472px] h-[52px] mb-[27px] bg-[#333] border-[#aaa] text-slate-100"
             >
               회원가입
             </button>
             <p className="text-2xl font-bold mb-12">간편 회원가입</p>
             <div className="w-[473px] m-auto mb-[31px] flex items-center  justify-center">
-              <div>
+              <div onClick={googleJoin}>
                 <FcGoogle className="w-10 h-10 border bg-black cursor-pointer" />
               </div>
               <div>
