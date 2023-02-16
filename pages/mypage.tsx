@@ -7,12 +7,8 @@ import { authService, dbService } from "@/firebase";
 import {
   doc,
   getDoc,
-  updateDoc,
-  setDoc,
-  addDoc,
   collection,
   query,
-  where,
   onSnapshot,
   orderBy,
 } from "firebase/firestore";

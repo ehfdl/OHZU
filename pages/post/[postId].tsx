@@ -84,7 +84,6 @@ const PostDetail = () => {
     }
     setComment(initialComment);
   };
-
   // url 공유함수
   const doCopy = () => {
     // 흐음 1.
@@ -161,7 +160,6 @@ const PostDetail = () => {
     }
     getPost();
   };
-
   const getPost = async () => {
     const docRef = doc(dbService, "Posts", docId);
     // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
@@ -203,7 +201,6 @@ const PostDetail = () => {
       alert(error);
     }
   };
-
   const updateUserRecently = async () => {
     const snapshot = await getDoc(
       doc(dbService, "Users", authService.currentUser?.uid as string)
@@ -219,6 +216,18 @@ const PostDetail = () => {
         { recently: newPost.recently }
       );
     }
+  };
+
+  const getUser = async () => {
+    const docRef = doc(dbService, "Users", post.userId as string);
+    // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    const newUser = {
+      ...data,
+    };
+
+    setUser(newUser);
   };
 
   useEffect(() => {
@@ -271,16 +280,25 @@ const PostDetail = () => {
         >
           <div id="images-column" className="w-2/5">
             <img
-              src={post.img === null ? "" : post.img![0]}
-              className="w-full bg-slate-300 aspect-square object-cover"
+              src={post.img === null ? "" : post.img![imgIdx]}
+              className="w-full bg-slate-300 aspect-square object-cover rounded"
             />
             <div className="my-5 flex justify-start space-x-6 items-center w-full">
               {post.img?.map((img, i) => (
-                <img
-                  key={i}
-                  src={img}
-                  className="w-[30%] bg-slate-300 aspect-square object-cover rounded"
-                />
+                <button
+                  className={`${
+                    img === post.img![imgIdx]
+                      ? "border-2 border-black"
+                      : "border-0"
+                  } w-[30%] bg-slate-300 aspect-square object-cover rounded overflow-hidden`}
+                  onClick={() => onImgChange(i)}
+                >
+                  <img
+                    key={i}
+                    src={img}
+                    className="w-full aspect-square object-cover"
+                  />
+                </button>
               ))}
             </div>
           </div>
@@ -330,9 +348,12 @@ const PostDetail = () => {
             )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center space-y-2">
-                <div className="w-20 aspect-square bg-slate-300 rounded-full" />
+                <img
+                  src={user.imageURL}
+                  className="w-20 aspect-square bg-slate-300 rounded-full"
+                />
                 <div className="flex justify-center items-center space-x-1">
-                  <span>홍길동</span>
+                  <span>{user.nickname}</span>
                   <span>
                     <FaCrown size={16} />
                   </span>
@@ -374,7 +395,7 @@ const PostDetail = () => {
           </div>
           <div className="h-[1px] w-full bg-black mb-6" />
           <form className="w-full flex items-center relative space-x-6">
-            <div className="bg-slate-300 w-12 aspect-square rounded-full" />
+            <img className="bg-slate-300 w-12 aspect-square rounded-full" />
             <textarea
               disabled={authService.currentUser ? false : true}
               name="content"
