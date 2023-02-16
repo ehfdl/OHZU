@@ -75,6 +75,7 @@ const PostDetail = () => {
     const docID = docSnap.id;
     setPostId(docID);
   };
+  const [imgIdx, setImgIdx] = useState(0);
 
   const onImgChange = (i: number) => {
     setImgIdx(i);
@@ -172,7 +173,6 @@ const PostDetail = () => {
     }
     getPost();
   };
-
   const getPost = async () => {
     const docRef = doc(dbService, "Posts", docId);
     const docSnap = await getDoc(docRef);
@@ -279,6 +279,7 @@ const PostDetail = () => {
 
     return setIsOpen(false);
   }, [post]);
+
 
   return (
     <Layout>
