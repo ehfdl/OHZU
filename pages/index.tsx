@@ -7,19 +7,17 @@ import {
   query,
   doc,
   getDoc,
+  where,
 } from "firebase/firestore";
 import { dbService, authService } from "@/firebase";
-
 import "tailwindcss/tailwind.css";
 import Banner from "@/components/main_page/banner";
 import Category from "@/components/main_page/Category";
-import AllList from "@/components/main_page/post_list";
-import NewList from "@/components/main_page/new_list";
-import PopularList from "@/components/main_page/popular_list";
-import MostWatchedList from "@/components/main_page/most_watched_list";
+import PostList from "@/components/main_page/post_list";
 
 const Home = () => {
-  const [posts, setPosts] = useState<Form[]>([]);
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [user, setUser] = useState<UserType[]>([]);
 
   useEffect(() => {
     const q = query(
@@ -28,7 +26,7 @@ const Home = () => {
     );
     onSnapshot(q, (snapshot) => {
       const newMyPosts = snapshot.docs.map((doc) => {
-        const newMyPost: any = {
+        const newMyPost: PostType = {
           postId: doc.id,
           ...doc.data(),
         };
@@ -38,21 +36,38 @@ const Home = () => {
     });
   }, []);
 
+  const getUsers = async () => {
+    const snapshot = await getDoc(doc(dbService, "Users", "nickname"));
+    const users = snapshot.data(); // 가져온 doc의 객체 내용
+    setUser(user);
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
   return (
     <Layout>
-      <div className="w-1920 h-3000 justify-center items-stretch mt-7 mb-4 ml-96 mr-96 p-3">
+      <div className="sm:max-w-[1200px] mx-auto justify-center items-center mt-7 mb-4">
         <Banner />
         <Category />
-        <AllList posts={posts} />
-
-        {/* 최신 오주 목록 */}
-        <NewList />
+        <p className="float-left font-bold text-xl">전체 게시글</p>
+        <span className="float-left ml-2 pt-0.5 font-base text-base text-gray-400">
+          300
+        </span>
+        <PostList posts={posts} user={user} />
 
         {/* 좋아요 많이 받은 오주 목록 */}
-        <PopularList />
+        <div className="mt-16">
+          <p className="float-left font-bold text-xl">인기 많은 오주</p>
+          <PostList posts={posts} user={user} />
+        </div>
 
         {/* 조회수 많은 오주 목록 */}
-        <MostWatchedList />
+        <div className="mt-16">
+          <p className="float-left font-bold text-xl">많이 본 오주</p>
+          <PostList posts={posts} user={user} />
+        </div>
       </div>
     </Layout>
   );
