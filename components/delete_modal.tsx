@@ -30,7 +30,7 @@ const DeleteModal = ({
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-full h-screen bg-black bg-opacity-50 flex justify-center items-center">
+    <div className="fixed top-0 left-0 w-full h-screen bg-black bg-opacity-50 flex justify-center items-center z-10">
       <div className="relative w-5/6 md:w-4/5 lg:w-3/5  xl:w-2/5 2xl:w-2/6 aspect-vedio bg-white flex flex-col justify-center items-center p-20 space-y-16">
         <h2 className="font-bold text-3xl">{text}을 삭제하시겠어요?</h2>
         <p>
