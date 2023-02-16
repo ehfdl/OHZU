@@ -24,15 +24,15 @@ declare interface CommentType {
 }
 
 declare interface UserType {
-  userId: string;
-  email: string;
-  nickname: string;
-  imageURL: string;
-  introduce: string;
-  rank: string;
-  point: number;
-  following: string[];
-  follower: string[];
+  userId?: string;
+  email?: string;
+  nickname?: string;
+  imageURL?: string;
+  introduce?: string;
+  point?: number;
+  following?: string[];
+  follower?: string[];
+  recently?: string[];
 }
 
 declare interface ModalType {
