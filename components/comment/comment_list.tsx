@@ -1,7 +1,7 @@
 import { authService, dbService } from "@/firebase";
 import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import DeleteModal from "./comment_delete_modal";
+import DeleteModal from "../delete_modal";
 
 interface CommentProps {
   comment: CommentType;
@@ -119,6 +119,7 @@ const CommentList = ({ comment }: CommentProps) => {
           deleteComment={deleteComment}
           setDeleteConfirm={setDeleteConfirm}
           id={id}
+          text="댓글"
         />
       )}
     </li>
