@@ -183,6 +183,23 @@ const PostDetail = () => {
     }
   };
 
+  const updateUserRecently = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "Users", authService.currentUser?.uid as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const newPost = {
+      ...snapshotdata,
+    };
+    if (!newPost.recently.includes(docId)) {
+      await newPost.recently.unshift(docId);
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        { recently: newPost.recently }
+      );
+    }
+  };
+
   useEffect(() => {
     // const getComments = async () => {
     //   const first = query(
@@ -205,7 +222,9 @@ const PostDetail = () => {
 
     //   console.log(first, lastVisible, next);
     // };
-
+    if (authService.currentUser) {
+      updateUserRecently();
+    }
     getPost();
     getComments();
     updateView();
