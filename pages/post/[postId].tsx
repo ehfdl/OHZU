@@ -76,7 +76,6 @@ const PostDetail = () => {
     const docID = docSnap.id;
     setPostId(docID);
   };
-  const [imgIdx, setImgIdx] = useState(0);
 
   const onImgChange = (i: number) => {
     setImgIdx(i);
@@ -224,10 +223,22 @@ const PostDetail = () => {
       ...snapshotdata,
     };
     if (!newPost.recently.includes(docId)) {
+      if (newPost.recently.length === 12) {
+        newPost.recently.pop();
+      }
       await newPost.recently.unshift(docId);
       await updateDoc(
         doc(dbService, "Users", authService.currentUser?.uid as string),
         { recently: newPost.recently }
+      );
+    } else if (newPost.recently.includes(docId)) {
+      const deletePost = await newPost.recently.filter(
+        (postId: any) => postId !== docId
+      );
+      await deletePost.unshift(docId);
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        { recently: deletePost }
       );
     }
   };
@@ -273,15 +284,14 @@ const PostDetail = () => {
     }
 
     getPost();
+    getId();
     getComments();
     updateView();
   }, []);
 
   useEffect(() => {
     getUser();
-    getId();
   }, [post]);
-
 
   return (
     <Layout>
