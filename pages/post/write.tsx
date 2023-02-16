@@ -94,7 +94,6 @@ const Post = () => {
         ...form,
         img: savePreview,
       };
-      console.log("newForm", newForm);
 
       await addDoc(collection(dbService, "Posts"), newForm);
 
