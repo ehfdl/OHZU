@@ -1,6 +1,6 @@
 import { authService } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
 import { SiNaver } from "react-icons/si";
