@@ -1,7 +1,7 @@
 import Header from "./header";
 import Footer from "./footer";
 import LoginModal from "./login_modal";
-import JoinModal from "./join_Modal";
+import JoinModal from "./join_modal";
 import { useState } from "react";
 
 const Layout = ({ children }: { children: any }) => {

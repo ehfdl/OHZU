@@ -2,6 +2,8 @@ import { authService } from "@/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import LOGO_Ohju from "../public/LOGO_Ohju.png";
+import Image from "next/image";
 
 const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
@@ -30,7 +32,6 @@ const Header = ({ ...props }: any) => {
         props.setJoinIsOpen(false);
         props.setIsOpen(false);
         setCurrentUser(false);
-        console.log("currentUser is: ", currentUser);
         console.log("props.joinIsOpen : ", props.joinIsOpen);
         console.log("props.isOpen : ", props.isOpen);
         console.log("authService.currentUser : ", authService.currentUser);
@@ -42,10 +43,10 @@ const Header = ({ ...props }: any) => {
   };
 
   return (
-    <div className="flex w-full h-[118px] justify-between items-center bg-[#d0d0d0]">
+    <div className="flex w-full h-[118px] sticky top-0 z-[99] justify-between items-center border-b-2 border-slate-100 bg-white">
       <Link legacyBehavior href="/">
-        <div className="Logo ml-[32px] w-[200px;] h-[60px] justify-center flex items-center bg-white cursor-pointer">
-          Logo
+        <div className="Logo ml-[32px] w-[200px;] h-[60px] justify-center flex items-center cursor-pointer">
+          <Image src={LOGO_Ohju} alt="Ohju LOGO" />
         </div>
       </Link>
       <div className="iconWrap h-[80px] mr-[32px] flex justify-end items-center relative ">

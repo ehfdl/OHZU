@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import {
   createUserWithEmailAndPassword,
+  FacebookAuthProvider,
   GoogleAuthProvider,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
   signInWithPopup,
 } from "firebase/auth";
-import { authService, dbService, provider } from "@/firebase";
+import {
+  authService,
+  dbService,
+  providerFacebook,
+  providerGoogle,
+} from "@/firebase";
 import {
   collection,
   doc,
@@ -19,6 +23,13 @@ import { MdOutlineClose } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
 import { SiNaver } from "react-icons/si";
+import Link from "next/link";
+
+declare global {
+  interface Window {
+    Kakao: any;
+  }
+}
 
 const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   // 이메일, 비밀번호, 비밀번호 확인, 닉네임, 유저 생년월일
@@ -42,6 +53,9 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
   const passwordRegEx =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/; // 최소 8자, 대문자 하나 이상, 소문자 하나 및 숫자 하나
+
+  // 카카오 앱 키
+  const kakaoAppKey = process.env.NEXT_PUBLIC_VITE_KAKAO_JAVASCRIPT_KEY;
 
   // 이메일 중복검사 (FireStore <=> email input)
   const isEmail = async (email: any) => {
@@ -165,10 +179,10 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           nickname: nickname,
           imageURL: "",
           introduce: "",
-          rank: "",
           point: "",
           following: [],
           follower: [],
+          recently: [],
         });
         alert("회원가입 성공 !");
         setJoinIsOpen(false);
@@ -176,7 +190,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       })
       .catch((error) => {
         // alert("다시 확인해주세요.");
-        console.log("error.massage : ", error.massage);
+        // console.log("error.massage : ", error.massage);
+        alert(error.massage);
       });
   };
 
@@ -197,13 +212,24 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   };
 
   // 간편 로그인
-  // 구글
+  // 구글 -> uid 생성 후, setDoc으로 document 생성하여 유저 추가.
   const googleJoin = () => {
-    signInWithPopup(authService, provider)
+    signInWithPopup(authService, providerGoogle)
       .then((result) => {
         // 다음은 구글 액세스 토큰을 발급하는 코드입니다. 이 토큰을 사용하여 구글 API에 접근할 수 있습니다.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        const token = credential?.accessToken;
+        setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
+          userId: authService.currentUser?.uid,
+          email: token, // 실제 값은 이메일이 아닌 token으로 변경.
+          nickname: result.user.displayName,
+          imageURL: "",
+          introduce: "",
+          point: "",
+          following: [],
+          follower: [],
+          recently: [],
+        });
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
@@ -220,34 +246,63 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         const credential = GoogleAuthProvider.credentialFromError(error);
         console.log("error : ", error);
       });
+  };
 
-    window.recaptchaVerifier = new RecaptchaVerifier(
-      "phoneNumberButton",
-      {
-        size: "invisible",
-        callback: (response: any) => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-          onSignInSubmit();
-        },
-      },
-      authService
-    );
-
-    const phoneNumber = getPhoneNumberFromUserInput();
-    const appVerifier = window.recaptchaVerifier;
-
-    signInWithPhoneNumber(authService, phoneNumber, appVerifier)
-      .then((confirmationResult) => {
-        // SMS sent. Prompt user to type the code from the message, then sign the
-        // user in with confirmationResult.confirm(code).
-        window.confirmationResult = confirmationResult;
-        // ...
+  // 페이스북
+  const facebookJoin = () => {
+    signInWithPopup(authService, providerFacebook)
+      .then((result) => {
+        // 다음은 구글 액세스 토큰을 발급하는 코드입니다. 이 토큰을 사용하여 구글 API에 접근할 수 있습니다.
+        const credential = FacebookAuthProvider.credentialFromResult(result);
+        const token = credential?.accessToken;
+        setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
+          userId: authService.currentUser?.uid,
+          email: token, // 실제 값은 이메일이 아닌 token으로 변경.
+          nickname: result.user.displayName,
+          imageURL: "",
+          introduce: "",
+          point: "",
+          following: [],
+          follower: [],
+          recently: [],
+        });
+        // 로그인한 사용자 정보가 제공됩니다.
+        const user = result.user;
+        // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
+        setJoinIsOpen(false);
+        console.log("result : ", result);
       })
       .catch((error) => {
-        // Error; SMS not sent
-        // ...
+        // 이 부분에서는 오류를 처리합니다.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // 사용된 사용자 계정 이메일
+        const email = error.customData.email;
+        // AuthCredential 타입 제공됩니다.
+        const credential = FacebookAuthProvider.credentialFromError(error);
+        alert(error);
       });
   };
+
+  // 카카오
+  // const kakaoJoin = () => {
+  //   if (!window.Kakao.isInitialized()) {
+  //     window.Kakao.init(kakaoAppKey);
+  //   }
+
+  //   const redirectUri = `${location.origin}/callback/kakaotalk`;
+  // const scope = [
+  //   KAKAO_SCOPE_NICKNAME,
+  //   KAKAO_SCOPE_GENDER,
+  //   KAKAO_SCOPE_BIRTHDAY,
+  // ].join(",");
+
+  // window.Kakao.Auth.authorize({
+  //   redirectUri,
+  //   scope,
+  // });
+  //   // return alert("실행됩니다.");
+  // };
 
   return (
     <>
@@ -370,11 +425,16 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
               <div onClick={googleJoin}>
                 <FcGoogle className="w-10 h-10 border bg-black cursor-pointer" />
               </div>
-              <div>
+              <div onClick={facebookJoin}>
                 <GrFacebook className="w-10 h-10 ml-20 mr-20 border border-slate-400 cursor-pointer" />
               </div>
               <div>
                 <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
+              </div>
+              <div>
+                <Link href="https://http://localhost:3000/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API}&redirect_uri=https://localhost:3000">
+                  카카오로 회원가입하기
+                </Link>
               </div>
             </div>
             <div className="w-[473px] m-auto flex justify-center text-sm">

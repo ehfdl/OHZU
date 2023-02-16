@@ -187,7 +187,7 @@ const PostDetail = () => {
 
     getPost();
     getComments();
-  }, [post]);
+  }, []);
 
   // Results below assume UTC timezone - your results may vary
 
