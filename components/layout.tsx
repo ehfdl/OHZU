@@ -1,7 +1,8 @@
 import Header from "./header";
 import Footer from "./footer";
 import LoginModal from "./login_modal";
-import JoinModal from "./join_Modal";
+import JoinModal from "./join_modal";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";

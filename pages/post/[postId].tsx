@@ -56,8 +56,9 @@ const PostDetail = () => {
   };
   const [comment, setComment] = useState<CommentType>(initialComment);
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [postId, setPostId] = useState("");
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -249,6 +250,8 @@ const PostDetail = () => {
     getComments();
     updateView();
     getId();
+
+    return setIsOpen(false);
   }, []);
 
   return (
@@ -302,13 +305,19 @@ const PostDetail = () => {
                   </button>
                   <span>{post.like!.length}</span>
                 </div>
-                <button>
+                <button
+                  onClick={() => {
+                    setIsOpen(!isOpen);
+                  }}
+                >
                   <FiMoreVertical size={24} />
                 </button>
-                <div className="flex flex-col space-y-2 items-center">
-                  <Link href="/post/edit">수정</Link>
-                  <button onClick={deleteToggle}>삭제</button>
-                </div>
+                {isOpen && (
+                  <div className="absolute top-14 right-0 z-10 bg-white border-black border  flex flex-col space-y-2 items-center p-4">
+                    <Link href="/post/edit">게시글 수정하기</Link>
+                    <button onClick={deleteToggle}>게시글 삭제하기</button>
+                  </div>
+                )}
               </div>
             </div>
             {deleteConfirm && (
