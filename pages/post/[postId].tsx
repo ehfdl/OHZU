@@ -35,6 +35,11 @@ const PostDetail = () => {
     docId = window.location.pathname.substring(6);
   }
 
+  const [postId, setPostId] = useState("");
+  const [imgIdx, setImgIdx] = useState(0);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const [post, setPost] = useState<Form>({
     userId: "",
     img: [],
@@ -56,9 +61,24 @@ const PostDetail = () => {
   };
   const [comment, setComment] = useState<CommentType>(initialComment);
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [postId, setPostId] = useState("");
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<UserType>({
+    userId: "",
+    email: "",
+    nickname: "",
+    imageURL: "",
+    point: 0,
+  });
+
+  const getId = async () => {
+    const docRef = doc(dbService, "Posts", docId);
+    const docSnap = await getDoc(docRef);
+    const docID = docSnap.id;
+    setPostId(docID);
+  };
+
+  const onImgChange = (i: number) => {
+    setImgIdx(i);
+  };
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -133,14 +153,6 @@ const PostDetail = () => {
     router.push("/");
   };
 
-  const getId = async () => {
-    const docRef = doc(dbService, "Posts", docId);
-    // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
-    const docSnap = await getDoc(docRef);
-    const docID = docSnap.id;
-    setPostId(docID);
-  };
-
   const likedUser = post?.like!.includes(authService.currentUser?.uid!);
   const postLike = async (id: string) => {
     if (authService.currentUser) {
@@ -160,9 +172,9 @@ const PostDetail = () => {
     }
     getPost();
   };
+
   const getPost = async () => {
     const docRef = doc(dbService, "Posts", docId);
-    // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
 
@@ -201,6 +213,7 @@ const PostDetail = () => {
       alert(error);
     }
   };
+
   const updateUserRecently = async () => {
     const snapshot = await getDoc(
       doc(dbService, "Users", authService.currentUser?.uid as string)
@@ -219,15 +232,17 @@ const PostDetail = () => {
   };
 
   const getUser = async () => {
-    const docRef = doc(dbService, "Users", post.userId as string);
-    // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    const newUser = {
-      ...data,
-    };
+    if (post?.userId) {
+      const userRef = doc(dbService, "Users", post?.userId! as string);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
 
-    setUser(newUser);
+      const newUser = {
+        ...userData,
+      };
+
+      setUser(newUser);
+    }
   };
 
   useEffect(() => {
@@ -255,13 +270,15 @@ const PostDetail = () => {
     if (authService.currentUser) {
       updateUserRecently();
     }
+
     getPost();
+    getUser();
     getComments();
     updateView();
     getId();
 
     return setIsOpen(false);
-  }, []);
+  }, [post]);
 
   return (
     <Layout>
@@ -286,6 +303,7 @@ const PostDetail = () => {
             <div className="my-5 flex justify-start space-x-6 items-center w-full">
               {post.img?.map((img, i) => (
                 <button
+                  key={i}
                   className={`${
                     img === post.img![imgIdx]
                       ? "border-2 border-black"
@@ -294,7 +312,6 @@ const PostDetail = () => {
                   onClick={() => onImgChange(i)}
                 >
                   <img
-                    key={i}
                     src={img}
                     className="w-full aspect-square object-cover"
                   />
@@ -312,9 +329,7 @@ const PostDetail = () => {
               </div>
               <div className="flex justify-end items-start space-x-2">
                 <div className="flex flex-col items-center">
-                  <button
-                    onClick={() => postLike(router.query.postId as string)}
-                  >
+                  <button onClick={() => postLike(postId as string)}>
                     {likedUser ? (
                       <FaHeart size={24} color={"#ff6161"} />
                     ) : (
@@ -349,11 +364,11 @@ const PostDetail = () => {
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center space-y-2">
                 <img
-                  src={user.imageURL}
+                  src={user?.imageURL}
                   className="w-20 aspect-square bg-slate-300 rounded-full"
                 />
                 <div className="flex justify-center items-center space-x-1">
-                  <span>{user.nickname}</span>
+                  <span>{user?.nickname}</span>
                   <span>
                     <FaCrown size={16} />
                   </span>

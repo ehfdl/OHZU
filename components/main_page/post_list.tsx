@@ -19,7 +19,7 @@ const PostList = ({ posts, user }: { posts: any; user: any }) => {
   const ref = useRef();
 
   // console.log({ posts });
-  console.log({ user });
+
   return (
     <div className="mt-5">
       <div className="grid grid-cols-3 gap-4 w-full">
