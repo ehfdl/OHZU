@@ -68,14 +68,17 @@ const Mypage = () => {
   }, []);
 
   useEffect(() => {
+    const ohjuRecentlyPosts = new Array();
     const ohjuMyPosts = allPosts?.filter(
       (post) => post.userId === authService.currentUser?.uid
     );
     const ohjuLikePosts = allPosts?.filter((post) =>
       post.like?.includes(authService.currentUser?.uid as string)
     );
-    const ohjuRecentlyPosts = allPosts?.filter((post) =>
-      myProfile.recently.map((id: any) => id === post.postId)
+    myProfile.recently.map((id: any) =>
+      allPosts?.map((post) =>
+        post.postId === id ? ohjuRecentlyPosts.push(post) : null
+      )
     );
 
     setMyPosts(ohjuMyPosts);

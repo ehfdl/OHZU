@@ -14,270 +14,72 @@ import { useRouter } from "next/router";
 import "tailwindcss/tailwind.css";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 
-const AllList = ({ posts }: { posts: any }) => {
+const PostList = ({ posts, user }: { posts: any; user: any }) => {
   const router = useRouter();
   const ref = useRef();
 
   // console.log({ posts });
-
+  console.log({ user });
   return (
     <div className="mt-5">
-      <p className="float-left font-bold text-xl">전체 게시글</p>
-      <span className="float-left ml-2 pt-0.5 font-base text-base text-gray-400">
-        300
-      </span>
-
       <div className="grid grid-cols-3 gap-4 w-full">
-        {posts?.map((post) => (
+        {posts?.map((post: any) => (
           <div
             key={post.postId}
-            className="border shadow mt-3 overflow-hidden rounded-md"
+            className="border shadow mt-3 overflow-hidden rounded hover:border-red-100 hover:shadow-xl hover:shadow-red-300"
           >
             <Link href={`/post/${post.postId}`}>
               <div className="bg-gray-100">
                 <img
-                  className="flex w-full h-50"
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIxBbpeIxWZedUDAvb7C2Yqp6KWkVTuOlyJA&usqp=CAU"
+                  className="flex w-full h-[284px] object-cover"
+                  src={post.img}
                   alt=""
                 />
               </div>
             </Link>
 
-            <div className="">
-              <div className="mt-5 ml-1">
+            <div className="h-[136px]">
+              <div className="mt-5 ml-3">
                 <div className="flex items-center w-full">
                   <Link href={`/users/${post.userId}`}>
                     <div className="">
                       <img
                         className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer"
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIxBbpeIxWZedUDAvb7C2Yqp6KWkVTuOlyJA&usqp=CAU"
+                        src=""
                         alt=""
                       />
                     </div>
                   </Link>
+
                   <div className="float-left">
                     <div className="text-lg font-semibold">{post.title}</div>
-                    <div className="text-sm font-thin">
-                      <p className="text-gray-900 leading-none">오주 👑</p>
-                    </div>
+                    {user?.map((user: any) => (
+                      <div className="text-sm font-thin" key={user.userId}>
+                        <p className="text-gray-900 leading-none">
+                          {user.nickname}
+                        </p>
+                      </div>
+                    ))}
                   </div>
+
                   <div className="flex float-right">
                     <IoHeartOutline
                       size={23}
-                      className="translate-x-20 cursor-pointer"
+                      className="translate-x-[200px] cursor-pointer"
                     />
                   </div>
                 </div>
               </div>
 
-              <div className="font-base text-black/60 text-sm mx-3 mt-3 mb-2">
-                맛있어요 맛있어요 진짜 맛있어요 맛있어요 맛있어요 진짜
-                맛있어요...
+              <div className="font-base text-black/60 text-sm mx-5 mt-5 mb-2">
+                {post.text}
               </div>
             </div>
           </div>
         ))}
-
-        <div className="border shadow mt-3 overflow-hidden">
-          <div className="bg-gray-100">
-            <img
-              className="flex w-full h-50"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIxBbpeIxWZedUDAvb7C2Yqp6KWkVTuOlyJA&usqp=CAU"
-              alt=""
-            />
-          </div>
-          <div className="">
-            <div className="mt-5 ml-1">
-              <div className="flex items-center w-full">
-                <button className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer" />
-                <div className="float-left">
-                  <div className="text-lg font-semibold">일대일 꿀주</div>
-                  <div className="text-sm font-thin">
-                    <p className="text-gray-900 leading-none">오주 👑</p>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <IoHeartOutline
-                    size={23}
-                    className="translate-x-20 cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="font-base text-black/60 text-sm mx-3 mt-3 mb-2">
-              맛있어요 맛있어요 진짜 맛있어요 맛있어요 맛있어요 진짜 맛있어요...
-            </div>
-          </div>
-        </div>
-
-        <div className="border shadow mt-3 overflow-hidden">
-          <div className="bg-gray-100">
-            <img
-              className="flex w-full h-50"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIxBbpeIxWZedUDAvb7C2Yqp6KWkVTuOlyJA&usqp=CAU"
-              alt=""
-            />
-          </div>
-          <div className="">
-            <div className="mt-5 ml-1">
-              <div className="flex items-center w-full">
-                <button className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer" />
-                <div className="float-left">
-                  <div className="text-lg font-semibold">일대일 꿀주</div>
-                  <div className="text-sm font-thin">
-                    <p className="text-gray-900 leading-none">오주 👑</p>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <IoHeartSharp
-                    size={23}
-                    className="translate-x-20 fill-red-600 cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="font-base text-black/60 text-sm mx-3 mt-3 mb-2">
-              맛있어요 맛있어요 진짜 맛있어요 맛있어요 맛있어요 진짜 맛있어요...
-            </div>
-          </div>
-        </div>
-
-        <div className="border shadow mt-3 overflow-hidden">
-          <div className="bg-gray-100">
-            <img
-              className="flex w-full h-50"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIxBbpeIxWZedUDAvb7C2Yqp6KWkVTuOlyJA&usqp=CAU"
-              alt=""
-            />
-          </div>
-          <div className="">
-            <div className="mt-5 ml-1">
-              <div className="flex items-center w-full">
-                <button className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer" />
-                <div className="float-left">
-                  <div className="text-lg font-semibold">일대일 꿀주</div>
-                  <div className="text-sm font-thin">
-                    <p className="text-gray-900 leading-none">오주 👑</p>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <IoHeartOutline
-                    size={23}
-                    className="translate-x-20 cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="font-base text-black/60 text-sm mx-3 mt-3 mb-2">
-              맛있어요 맛있어요 진짜 맛있어요 맛있어요 맛있어요 진짜 맛있어요...
-            </div>
-          </div>
-        </div>
-
-        <div className="border shadow mt-3 overflow-hidden">
-          <div className="bg-gray-100">
-            <img
-              className="flex w-full h-50"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIxBbpeIxWZedUDAvb7C2Yqp6KWkVTuOlyJA&usqp=CAU"
-              alt=""
-            />
-          </div>
-          <div className="">
-            <div className="mt-5 ml-1">
-              <div className="flex items-center w-full">
-                <button className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer" />
-                <div className="float-left">
-                  <div className="text-lg font-semibold">일대일 꿀주</div>
-                  <div className="text-sm font-thin">
-                    <p className="text-gray-900 leading-none">오주 👑</p>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <IoHeartSharp
-                    size={23}
-                    className="translate-x-20 fill-red-600 cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="font-base text-black/60 text-sm mx-3 mt-3 mb-2">
-              맛있어요 맛있어요 진짜 맛있어요 맛있어요 맛있어요 진짜 맛있어요...
-            </div>
-          </div>
-        </div>
-
-        <div className="border shadow mt-3 overflow-hidden">
-          <div className="bg-gray-100">
-            <img
-              className="flex w-full h-50"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIxBbpeIxWZedUDAvb7C2Yqp6KWkVTuOlyJA&usqp=CAU"
-              alt=""
-            />
-          </div>
-          <div className="">
-            <div className="mt-5 ml-1">
-              <div className="flex items-center w-full">
-                <button className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer" />
-                <div className="float-left">
-                  <div className="text-lg font-semibold">일대일 꿀주</div>
-                  <div className="text-sm font-thin">
-                    <p className="text-gray-900 leading-none">오주 👑</p>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <IoHeartSharp
-                    size={23}
-                    className="translate-x-20 fill-red-600 cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="font-base text-black/60 text-sm mx-3 mt-3 mb-2">
-              맛있어요 맛있어요 진짜 맛있어요 맛있어요 맛있어요 진짜 맛있어요...
-            </div>
-          </div>
-        </div>
-
-        <div className="border shadow mt-3 overflow-hidden">
-          <div className="bg-gray-100">
-            <img
-              className="flex w-full h-50"
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIxBbpeIxWZedUDAvb7C2Yqp6KWkVTuOlyJA&usqp=CAU"
-              alt=""
-            />
-          </div>
-          <div className="">
-            <div className="mt-5 ml-1">
-              <div className="flex items-center w-full">
-                <button className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer" />
-                <div className="float-left">
-                  <div className="text-lg font-semibold">일대일 꿀주</div>
-                  <div className="text-sm font-thin">
-                    <p className="text-gray-900 leading-none">오주 👑</p>
-                  </div>
-                </div>
-                <div className="flex float-right">
-                  <IoHeartSharp
-                    size={23}
-                    className="translate-x-20 fill-red-600 cursor-pointer"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="font-base text-black/60 text-sm mx-3 mt-3 mb-2">
-              맛있어요 맛있어요 진짜 맛있어요 맛있어요 맛있어요 진짜 맛있어요...
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
 
-export default AllList;
+export default PostList;

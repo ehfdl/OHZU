@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { FacebookAuthProvider, getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { GoogleAuthProvider } from "firebase/auth";
 
@@ -17,8 +17,8 @@ const app = initializeApp(firebaseConfig);
 export const dbService = getFirestore(app);
 export const authService = getAuth(app);
 export const storageService = getStorage(app);
-// 휴대폰 인증 reCAPTCHA 설정
-authService.languageCode = "ko";
 
 // 구글
-export const provider = new GoogleAuthProvider();
+export const providerGoogle = new GoogleAuthProvider();
+// 페이스북
+export const providerFacebook = new FacebookAuthProvider();

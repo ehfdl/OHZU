@@ -128,6 +128,11 @@ const PostDetail = () => {
     setDeleteConfirm(!deleteConfirm);
   };
 
+  const deletePost = async (id: string) => {
+    await deleteDoc(doc(dbService, "Posts", id));
+    router.push("/");
+  };
+
   const getId = async () => {
     const docRef = doc(dbService, "Posts", docId);
     // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
@@ -215,10 +220,6 @@ const PostDetail = () => {
     }
   };
 
-  const deletePost = async (id: string) => {
-    await deleteDoc(doc(dbService, "Posts", id));
-    router.push("/");
-  };
   useEffect(() => {
     // const getComments = async () => {
     //   const first = query(
