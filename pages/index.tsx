@@ -8,9 +8,8 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
 import { dbService, authService } from "@/firebase";
-import Link from "next/link";
+
 import "tailwindcss/tailwind.css";
 import Banner from "@/components/main_page/banner";
 import Category from "@/components/main_page/Category";
@@ -18,15 +17,15 @@ import AllList from "@/components/main_page/post_list";
 import NewList from "@/components/main_page/new_list";
 import PopularList from "@/components/main_page/popular_list";
 import MostWatchedList from "@/components/main_page/most_watched_list";
-import TopButton from "@/components/top_btn";
-import WriteButton from "@/components/write_btn";
-import { where } from "firebase/firestore";
 
 const Home = () => {
   const [posts, setPosts] = useState<Form[]>([]);
 
   useEffect(() => {
-    const q = query(collection(dbService, "Posts"));
+    const q = query(
+      collection(dbService, "Posts"),
+      orderBy("createdAt", "desc")
+    );
     onSnapshot(q, (snapshot) => {
       const newMyPosts = snapshot.docs.map((doc) => {
         const newMyPost: any = {
@@ -54,10 +53,6 @@ const Home = () => {
 
         {/* 조회수 많은 오주 목록 */}
         <MostWatchedList />
-        <Link href="/post/write">
-          <WriteButton></WriteButton>
-        </Link>
-        <TopButton />
       </div>
     </Layout>
   );

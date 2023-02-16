@@ -198,6 +198,23 @@ const PostDetail = () => {
     }
   };
 
+  const updateUserRecently = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "Users", authService.currentUser?.uid as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const newPost = {
+      ...snapshotdata,
+    };
+    if (!newPost.recently.includes(docId)) {
+      await newPost.recently.unshift(docId);
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        { recently: newPost.recently }
+      );
+    }
+  };
+
   const deletePost = async (id: string) => {
     await deleteDoc(doc(dbService, "Posts", id));
     router.push("/");
@@ -224,7 +241,9 @@ const PostDetail = () => {
 
     //   console.log(first, lastVisible, next);
     // };
-
+    if (authService.currentUser) {
+      updateUserRecently();
+    }
     getPost();
     getComments();
     updateView();
