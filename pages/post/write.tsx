@@ -4,7 +4,7 @@ import { useState } from "react";
 import { dbService, storageService, authService } from "@/firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import { doc, setDoc, addDoc, collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { BsPlusLg, BsFillXCircleFill } from "react-icons/bs";
 import { useRouter } from "next/router";
 
@@ -28,6 +28,12 @@ const Post = () => {
     createdAt: dateForm,
     view: 0,
   });
+
+  const [validateTitle, setValidateTitle] = useState("");
+  const [validateIntro, setValidateIntro] = useState("");
+  const [validateCate, setValidateCate] = useState("");
+  const [validateIng, setValidateIng] = useState("");
+  const [validateRecipe, setValidateRecipe] = useState("");
 
   const [imgFile_01, setImgFile_01] = useState<File | null>();
   const [imgFile_02, setImgFile_02] = useState<File | null>();
@@ -72,8 +78,55 @@ const Post = () => {
     }
   };
 
+  const validateChangePost = () => {
+    if (form.title!.length > 10) {
+      setValidateTitle("이름을 10자 이하로 입력해 주세요.");
+    } else if (form.title!.length <= 10) {
+      setValidateTitle("");
+    }
+    if (form.text !== "") {
+      setValidateIntro("");
+    }
+    if (form.type !== "") {
+      setValidateCate("");
+    }
+    if (form.ingredient !== "") {
+      setValidateIng("");
+    }
+    if (form.recipe !== "") {
+      setValidateRecipe("");
+    }
+  };
+  const validateClickPost = () => {
+    if (form.title === "") {
+      setValidateTitle("이름을 10자 이하로 입력해 주세요.");
+      return true;
+    } else if (form.text === "") {
+      setValidateIntro("소개를 입력해주세요");
+      return true;
+    } else if (form.type === "") {
+      setValidateCate("카테고리를 선택해주세요.");
+      return true;
+    } else if (form.ingredient === "") {
+      setValidateIng("재료를 입력해주세요.");
+      return true;
+    } else if (form.recipe === "") {
+      setValidateRecipe("방법을 입력해주세요.");
+      return true;
+    }
+  };
+
+  useEffect(() => {
+    validateChangePost();
+  }, [form]);
+
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
+    if (validateClickPost()) {
+      return;
+    }
+
     let imgFileUrl = "";
     let preview = [preview_01, preview_02, preview_03];
     let newPreview = preview.filter((view) => view != null);
@@ -88,16 +141,45 @@ const Post = () => {
           return imgFileUrl;
         })
       );
-
       downloadPreview.forEach((item: any) => savePreview.push(item.value));
-      let newForm = {
-        ...form,
-        img: savePreview,
-      };
 
-      await addDoc(collection(dbService, "Posts"), newForm);
+      if (savePreview.length === 0) {
+        if (form.type === "소주") {
+          savePreview = [
+            "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800",
+          ];
+        } else if (form.type === "맥주") {
+          savePreview = [
+            "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe",
+          ];
+        } else if (form.type === "양주") {
+          savePreview = [
+            "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg",
+          ];
+        } else if (form.type === "기타") {
+          savePreview = [
+            "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330",
+          ];
+        }
 
-      router.push("/");
+        let newForm = {
+          ...form,
+          img: savePreview,
+        };
+
+        await addDoc(collection(dbService, "Posts"), newForm);
+
+        router.push("/");
+      } else {
+        let newForm = {
+          ...form,
+          img: savePreview,
+        };
+
+        await addDoc(collection(dbService, "Posts"), newForm);
+
+        router.push("/");
+      }
     }
   };
 
@@ -236,8 +318,12 @@ const Post = () => {
               </div>
             </div>
           </div>
-
-          <div className="font-bold text-[20px] my-5">제목</div>
+          <div className=" my-5">
+            <span className="font-bold text-[20px]">제목</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateTitle}
+            </span>
+          </div>
           <input
             name="title"
             value={form.title}
@@ -248,7 +334,12 @@ const Post = () => {
 
           <div className="w-full border-[1px] border-[#d9d9d9] mt-[10px]" />
 
-          <div className="font-bold text-[20px] my-5">소개</div>
+          <div className=" my-5">
+            <span className="font-bold text-[20px]">소개</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateIntro}
+            </span>
+          </div>
           <textarea
             className="h-7 resize-none overflow-hidden"
             name="text"
@@ -258,63 +349,72 @@ const Post = () => {
           />
 
           <div className="w-full border-[1px] border-[#d9d9d9] mt-2" />
-          <div className="flex gap-7">
-            <div className="font-bold text-[20px] my-5">카테고리</div>
-            <div className="flex  gap-5 my-5 text-[#9e9e9e]">
-              <label className="w-20 h-8  rounded-[16px]">
-                <input
-                  type="radio"
-                  name="type"
-                  value="소주"
-                  onChange={onChangeValue}
-                  className="hidden peer"
-                />
-                <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
-                  소주
-                </span>
-              </label>
-              <label className="w-20 h-8  rounded-[16px]">
-                <input
-                  type="radio"
-                  name="type"
-                  value="맥주"
-                  onChange={onChangeValue}
-                  className="hidden peer"
-                />
-                <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
-                  맥주
-                </span>
-              </label>
-              <label className="w-20 h-8  rounded-[16px]">
-                <input
-                  type="radio"
-                  name="type"
-                  value="양주"
-                  onChange={onChangeValue}
-                  className="hidden peer"
-                />
-                <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
-                  양주
-                </span>
-              </label>
-              <label className="w-20 h-8 rounded-[16px]">
-                <input
-                  type="radio"
-                  name="type"
-                  value="Etc"
-                  onChange={onChangeValue}
-                  className="hidden peer"
-                />
-                <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
-                  Etc
-                </span>
-              </label>
-            </div>
+
+          <div className="mt-5">
+            <span className="font-bold text-[20px]">카테고리</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateCate}
+            </span>
+          </div>
+          <div className="flex w-full justify-center gap-5 my-5 text-[#9e9e9e]">
+            <label className="w-20 h-8  rounded-[16px]">
+              <input
+                type="radio"
+                name="type"
+                value="소주"
+                onChange={onChangeValue}
+                className="hidden peer"
+              />
+              <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
+                소주
+              </span>
+            </label>
+            <label className="w-20 h-8  rounded-[16px]">
+              <input
+                type="radio"
+                name="type"
+                value="맥주"
+                onChange={onChangeValue}
+                className="hidden peer"
+              />
+              <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
+                맥주
+              </span>
+            </label>
+            <label className="w-20 h-8  rounded-[16px]">
+              <input
+                type="radio"
+                name="type"
+                value="양주"
+                onChange={onChangeValue}
+                className="hidden peer"
+              />
+              <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
+                양주
+              </span>
+            </label>
+            <label className="w-20 h-8 rounded-[16px]">
+              <input
+                type="radio"
+                name="type"
+                value="기타"
+                onChange={onChangeValue}
+                className="hidden peer"
+              />
+              <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
+                기타
+              </span>
+            </label>
           </div>
 
           <div className="w-full border-[1px] border-[#d9d9d9]" />
 
-          <div className="font-bold text-[20px] my-5">재료</div>
+          <div className=" my-5">
+            <span className="font-bold text-[20px]">재료</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateIng}
+            </span>
+          </div>
           <textarea
             className="h-7 resize-none overflow-hidden"
             name="ingredient"
@@ -324,7 +424,12 @@ const Post = () => {
           />
           <div className="w-full border-[1px] border-[#d9d9d9] mt-2" />
 
-          <div className="font-bold text-[20px] my-5">만드는 방법</div>
+          <div className=" my-5">
+            <span className="font-bold text-[20px]">만드는 방법</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateRecipe}
+            </span>
+          </div>
 
           <textarea
             className="h-24 resize-none overflow-hidden"
@@ -345,111 +450,3 @@ const Post = () => {
 };
 
 export default Post;
-
-// 모바일 css 적용
-
-{
-  /* <Layout>
-<form className="flex flex-col justify-center items-center bg-slate-400 p-5">
-  <div className="w-full h-[200px] bg-slate-100 flex justify-center items-center overflow-hidden">
-    {preview === null ? (
-      <label className="w-[50px] h-[50px] bg-slate-200 flex justify-center items-center absolute">
-        <input
-          name="img"
-          type="file"
-          accept="image/*"
-          onChange={onChangeImg}
-          className="hidden"
-        />
-        <AiFillCamera className="scale-[2] text-slate-400 hover:scale-[2.2]" />
-      </label>
-    ) : (
-      <label className="w-full h-[200px] bg-transparent flex justify-end p-5 pr-9 items-start absolute">
-        <AiOutlineClose
-          onClick={onClickCancelImg}
-          className=" text-black p-[2px] bg-white rounded-full hover:scale-[2.2] box-border"
-        />
-      </label>
-    )}
-    <img src={preview as string} className=" object-cover" />
-  </div>
-
-  <div className="mt-3 bg-slate-300 w-full">
-    <div>제목</div>
-    <input name="title" value={form.title} onChange={onChangeValue} />
-  </div>
-
-  <div className="flex bg-slate-300 mt-2 p-2 w-[90%] justify-around">
-    <label className="w-[60px] h-[50px] p-1 bg-slate-300">
-      <input
-        type="radio"
-        name="type"
-        value="소주"
-        onChange={onChangeValue}
-        className="hidden peer"
-      />
-      <span className="w-full h-full bg-white rounded-md flex items-center justify-center text-center peer-checked:bg-slate-500 peer-checked:rounded-md">
-        소주
-      </span>
-    </label>
-    <label className="w-[60px] h-[50px] p-1 bg-slate-300">
-      <input
-        type="radio"
-        name="type"
-        value="맥주"
-        onChange={onChangeValue}
-        className="hidden peer"
-      />
-      <span className="w-full h-full bg-white rounded-md flex items-center justify-center text-center peer-checked:bg-slate-500 peer-checked:rounded-md">
-        맥주
-      </span>
-    </label>
-    <label className="w-[60px] h-[50px] p-1 bg-slate-300">
-      <input
-        type="radio"
-        name="type"
-        value="양주"
-        onChange={onChangeValue}
-        className="hidden peer"
-      />
-      <span className="w-full h-full bg-white rounded-md flex items-center justify-center text-center peer-checked:bg-slate-500 peer-checked:rounded-md">
-        양주
-      </span>
-    </label>
-    <label className="w-[60px] h-[50px] p-1 bg-slate-300">
-      <input
-        type="radio"
-        name="type"
-        value="Etc"
-        onChange={onChangeValue}
-        className="hidden peer"
-      />
-      <span className="w-full h-full bg-white rounded-md flex items-center justify-center text-center peer-checked:bg-slate-500 peer-checked:rounded-md">
-        Etc
-      </span>
-    </label>
-  </div>
-
-  <div>재료</div>
-  <textarea
-    name="ingredient"
-    value={form.ingredient}
-    onChange={onChangeValue}
-  />
-  <div>만드는 방법</div>
-  <textarea name="recipe" value={form.recipe} onChange={onChangeValue} />
-  <div>내용</div>
-  <textarea
-    className="flex min-h-[200px]"
-    name="text"
-    value={form.text}
-    onChange={onChangeValue}
-  />
-  <div className="w-full flex justify-end items-center">
-    <button onClick={onSubmit} className="bg-white p-2">
-      작성
-    </button>
-  </div>
-</form>
-</Layout> */
-}
