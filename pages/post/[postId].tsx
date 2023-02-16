@@ -189,7 +189,6 @@ const PostDetail = () => {
     }
     getPost();
   };
-
   const getPost = async () => {
     const docRef = doc(dbService, "Posts", docId);
     const docSnap = await getDoc(docRef);
@@ -240,10 +239,22 @@ const PostDetail = () => {
       ...snapshotdata,
     };
     if (!newPost.recently.includes(docId)) {
+      if (newPost.recently.length === 12) {
+        newPost.recently.pop();
+      }
       await newPost.recently.unshift(docId);
       await updateDoc(
         doc(dbService, "Users", authService.currentUser?.uid as string),
         { recently: newPost.recently }
+      );
+    } else if (newPost.recently.includes(docId)) {
+      const deletePost = await newPost.recently.filter(
+        (postId: any) => postId !== docId
+      );
+      await deletePost.unshift(docId);
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        { recently: deletePost }
       );
     }
   };
@@ -307,6 +318,7 @@ const PostDetail = () => {
     }
 
     getPost();
+    getId();
     getComments();
     getCurrentUser();
     updateView();
@@ -314,7 +326,6 @@ const PostDetail = () => {
 
   useEffect(() => {
     getUser();
-    getId();
   }, [post]);
 
   return (
