@@ -75,7 +75,7 @@ const Mypage = () => {
     const ohjuLikePosts = allPosts?.filter((post) =>
       post.like?.includes(authService.currentUser?.uid as string)
     );
-    myProfile.recently.map((id: any) =>
+    myProfile?.recently.map((id: any) =>
       allPosts?.map((post) =>
         post.postId === id ? ohjuRecentlyPosts.push(post) : null
       )
