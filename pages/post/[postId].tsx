@@ -21,8 +21,13 @@ import { useRouter } from "next/router";
 import CommentList from "@/components/comment/comment_list";
 import DeleteModal from "@/components/delete_modal";
 import { deleteObject, ref } from "firebase/storage";
+import { GetServerSideProps } from "next";
 
-const PostDetail = () => {
+interface PostDetailPropsType {
+  postId: string;
+}
+
+const PostDetail = ({ postId }: PostDetailPropsType) => {
   const router = useRouter();
   const date = new Date();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
@@ -30,12 +35,6 @@ const PostDetail = () => {
     timeStyle: "medium",
   }).format(date);
 
-  let docId: string;
-  if (typeof window !== "undefined") {
-    docId = window.location.pathname.substring(6);
-  }
-
-  const [postId, setPostId] = useState("");
   const [imgIdx, setImgIdx] = useState(0);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +49,7 @@ const PostDetail = () => {
     text: "",
     like: [],
     view: 0,
+    id: "",
   });
 
   const initialComment = {
@@ -77,13 +77,6 @@ const PostDetail = () => {
     point: 0,
   });
 
-  const getId = async () => {
-    const docRef = doc(dbService, "Posts", docId);
-    const docSnap = await getDoc(docRef);
-    const docID = docSnap.id;
-    setPostId(docID);
-  };
-
   const onImgChange = (i: number) => {
     setImgIdx(i);
   };
@@ -100,7 +93,7 @@ const PostDetail = () => {
     event.preventDefault();
     const newComment = {
       content: comment.content,
-      postId: router.query.postId,
+      postId: postId,
       userId: authService.currentUser?.uid!,
       createdAt: dateForm,
       isEdit: false,
@@ -159,9 +152,7 @@ const PostDetail = () => {
   const deletePost = async (id: string) => {
     await deleteDoc(doc(dbService, "Posts", id));
 
-    const commentId = comments
-      .filter((i) => i.postId === docId)
-      .map((i) => i.id);
+    const commentId = comments.filter((i) => i.postId === id).map((i) => i.id);
 
     commentId.map(async (id) => {
       await deleteDoc(doc(dbService, "Comments", id as string));
@@ -206,11 +197,16 @@ const PostDetail = () => {
     getPost();
   };
   const getPost = async () => {
-    const docRef = doc(dbService, "Posts", docId);
+    const docRef = doc(dbService, "Posts", postId);
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
+    const id = docSnap.id;
+    const newPost = {
+      ...data,
+      id,
+    };
 
-    setPost((prev) => ({ ...prev, ...data }));
+    setPost(newPost);
   };
 
   const getComments = async () => {
@@ -233,7 +229,7 @@ const PostDetail = () => {
   };
 
   const updateView = async () => {
-    const docRef = doc(dbService, "Posts", docId);
+    const docRef = doc(dbService, "Posts", postId);
     const docSnap = await getDoc(docRef);
     const forUpdate = {
       ...docSnap.data(),
@@ -254,20 +250,20 @@ const PostDetail = () => {
     const newPost = {
       ...snapshotdata,
     };
-    if (!newPost.recently.includes(docId)) {
+    if (!newPost.recently.includes(postId)) {
       if (newPost.recently.length === 12) {
         newPost.recently.pop();
       }
-      await newPost.recently.unshift(docId);
+      await newPost.recently.unshift(postId);
       await updateDoc(
         doc(dbService, "Users", authService.currentUser?.uid as string),
         { recently: newPost.recently }
       );
-    } else if (newPost.recently.includes(docId)) {
+    } else if (newPost.recently.includes(postId)) {
       const deletePost = await newPost.recently.filter(
-        (postId: any) => postId !== docId
+        (postId: any) => postId !== postId
       );
-      await deletePost.unshift(docId);
+      await deletePost.unshift(postId);
       await updateDoc(
         doc(dbService, "Users", authService.currentUser?.uid as string),
         { recently: deletePost }
@@ -334,13 +330,12 @@ const PostDetail = () => {
     }
 
     getPost();
-    getId();
     getComments();
-    getCurrentUser();
     updateView();
   }, []);
 
   useEffect(() => {
+    getCurrentUser();
     getUser();
   }, [post]);
 
@@ -522,3 +517,11 @@ const PostDetail = () => {
 };
 
 export default PostDetail;
+
+export const getServerSideProps: GetServerSideProps = async ({
+  params: { postId },
+}: any) => {
+  return {
+    props: { postId },
+  };
+};
