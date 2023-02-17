@@ -69,6 +69,13 @@ const PostDetail = () => {
     imageURL: "",
     point: 0,
   });
+  const [currentUser, setCurrentUser] = useState<UserType>({
+    userId: "",
+    email: "",
+    nickname: "",
+    imageURL: "",
+    point: 0,
+  });
 
   const getId = async () => {
     const docRef = doc(dbService, "Posts", docId);
@@ -151,6 +158,15 @@ const PostDetail = () => {
 
   const deletePost = async (id: string) => {
     await deleteDoc(doc(dbService, "Posts", id));
+
+    const commentId = comments
+      .filter((i) => i.postId === docId)
+      .map((i) => i.id);
+
+    commentId.map(async (id) => {
+      await deleteDoc(doc(dbService, "Comments", id as string));
+    });
+
     router.push("/");
   };
 
@@ -257,6 +273,24 @@ const PostDetail = () => {
     }
   };
 
+  const getCurrentUser = async () => {
+    if (authService.currentUser?.uid) {
+      const userRef = doc(
+        dbService,
+        "Users",
+        authService.currentUser?.uid! as string
+      );
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+
+      const newUser = {
+        ...userData,
+      };
+
+      setCurrentUser(newUser);
+    }
+  };
+
   useEffect(() => {
     // const getComments = async () => {
     //   const first = query(
@@ -286,6 +320,7 @@ const PostDetail = () => {
     getPost();
     getId();
     getComments();
+    getCurrentUser();
     updateView();
   }, []);
 
@@ -419,11 +454,14 @@ const PostDetail = () => {
         <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
           <div className="text-xl font-medium space-x-2">
             <span>댓글</span>
-            <span>123</span>
+            <span>{comments.filter((i) => i.postId === postId).length}</span>
           </div>
           <div className="h-[1px] w-full bg-black mb-6" />
           <form className="w-full flex items-center relative space-x-6">
-            <img className="bg-slate-300 w-12 aspect-square rounded-full" />
+            <img
+              src={currentUser?.imageURL}
+              className="bg-slate-300 w-12 aspect-square rounded-full"
+            />
             <textarea
               disabled={authService.currentUser ? false : true}
               name="content"
@@ -446,11 +484,8 @@ const PostDetail = () => {
             className="mt-10 divide-y-[1px] divide-gray-300"
           >
             {comments?.map((comment) => {
-              if (typeof window !== "undefined") {
-                const docId = window.location.pathname.substring(6);
-                if (docId === comment.postId) {
-                  return <CommentList key={comment.id} comment={comment} />;
-                }
+              if (postId === comment.postId) {
+                return <CommentList key={comment.id} comment={comment} />;
               }
             })}
           </ul>

@@ -1,5 +1,5 @@
 import { authService, dbService } from "@/firebase";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import DeleteModal from "../delete_modal";
 
@@ -12,6 +12,7 @@ const CommentList = ({ comment }: CommentProps) => {
 
   const [editContent, setEditComment] = useState("");
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [user, setUser] = useState<UserType>();
 
   const editToggle = async () => {
     await updateDoc(doc(dbService, "Comments", id as string), {
@@ -23,9 +24,7 @@ const CommentList = ({ comment }: CommentProps) => {
     await updateDoc(doc(dbService, "Comments", id), {
       ...comment,
       content: edit,
-    });
-    await updateDoc(doc(dbService, "Comments", id as string), {
-      isEdit: !isEdit,
+      isEdit: false,
     });
     setEditComment("");
   };
@@ -50,6 +49,19 @@ const CommentList = ({ comment }: CommentProps) => {
   //     },
   //   }
   // );
+  const getUser = async () => {
+    if (comment?.userId) {
+      const userRef = doc(dbService, "Users", comment?.userId! as string);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+
+      const newUser = {
+        ...userData,
+      };
+
+      setUser(newUser);
+    }
+  };
 
   const resetToggle = async () => {
     await updateDoc(doc(dbService, "Comments", id as string), {
@@ -60,6 +72,7 @@ const CommentList = ({ comment }: CommentProps) => {
 
   useEffect(() => {
     resetToggle();
+    getUser();
     return;
   }, []);
 
@@ -67,8 +80,11 @@ const CommentList = ({ comment }: CommentProps) => {
     <li className="flex justify-between py-6">
       <div className="flex space-x-6 w-full">
         <div className="flex flex-col items-center space-y-2">
-          <div className="bg-slate-300 w-[40px] aspect-square rounded-full" />
-          <span className="text-xs">닉네임</span>
+          <img
+            src={user?.imageURL}
+            className="bg-slate-300 w-[40px] aspect-square rounded-full"
+          />
+          <span className="text-xs">{user?.nickname}</span>
         </div>
         <div className="space-y-2 flex flex-col justify-between w-full">
           {isEdit ? (
