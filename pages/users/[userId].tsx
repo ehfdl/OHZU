@@ -64,9 +64,9 @@ const UserPage = () => {
       return accumulator + currentObject.like!.length;
     }, 0);
     setUserLike(totalLike);
+
     const getLikePosts = () => {
       const Posts = [...userPosts!];
-
       const likePosts = Posts?.sort((a: PostType, b: PostType) => {
         if (a.like!.length < b.like!.length) return 1;
         if (a.like!.length > b.like!.length) return -1;
@@ -85,8 +85,10 @@ const UserPage = () => {
       });
       setUserViewPosts(viewPosts);
     };
-    getLikePosts();
-    getViewPosts();
+    if (userPosts) {
+      getLikePosts();
+      getViewPosts();
+    }
   }, [userPosts]);
 
   useEffect(() => {
