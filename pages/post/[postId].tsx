@@ -386,18 +386,25 @@ const PostDetail = () => {
                   </button>
                   <span>{post.like!.length}</span>
                 </div>
-                <button
-                  onClick={() => {
-                    setIsOpen(!isOpen);
-                  }}
-                >
-                  <FiMoreVertical size={24} />
-                </button>
-                {isOpen && (
-                  <div className="absolute top-14 right-0 z-10 bg-white border-black border  flex flex-col space-y-2 items-center p-4">
-                    <Link href={`/post/edit/${postId}`}>게시글 수정하기</Link>
-                    <button onClick={deleteToggle}>게시글 삭제하기</button>
-                  </div>
+                {authService.currentUser?.uid === post.userId && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                    >
+                      <FiMoreVertical size={24} />
+                    </button>
+                    {isOpen && (
+                      <div className="absolute top-14 right-0 z-10 bg-white border-black border flex flex-col space-y-6 items-center px-10 py-6">
+                        <Link href={`/post/edit/${postId}`}>
+                          게시글 수정하기
+                        </Link>
+                        <button onClick={deleteToggle}>게시글 삭제하기</button>
+                        <button onClick={doCopy}>게시글 공유하기</button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -413,7 +420,7 @@ const PostDetail = () => {
               <div className="flex flex-col items-center space-y-2">
                 <img
                   src={user?.imageURL}
-                  className="w-20 aspect-square bg-slate-300 rounded-full"
+                  className="w-20 aspect-square bg-slate-300 rounded-full object-cover"
                 />
                 <div className="flex justify-center items-center space-x-1">
                   <span>{user?.nickname}</span>
@@ -438,17 +445,20 @@ const PostDetail = () => {
               </span>
               <pre className="pl-3 box-content">{post.recipe}</pre>
             </div>
-            <div
-              id="faq"
-              className="absolute right-0 bottom-0 flex items-center space-x-2"
-            >
-              <button onClick={doCopy}>
-                <AiOutlineLink size={24} />
-              </button>
-              <button className="flex flex-col items-center">
-                <AiFillAlert size={24} />
-              </button>
-            </div>
+            {authService.currentUser?.uid !== post.userId && (
+              <div
+                id="faq"
+                className="absolute right-0 bottom-0 flex items-start space-x-2"
+              >
+                <button onClick={doCopy}>
+                  <AiOutlineLink size={24} />
+                </button>
+                <button className="flex flex-col items-center space-y-1">
+                  <AiFillAlert size={24} />
+                  <span className="text-xs">신고하기</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
