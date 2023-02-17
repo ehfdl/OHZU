@@ -32,7 +32,7 @@ const Mypage = () => {
   const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
   const [isOpenFollowingModal, setIsOpenFollowingModal] = useState(false);
-  const [isOpenInforModal, setIsOpenInforModal] = useState(true);
+  const [isOpenInforModal, setIsOpenInforModal] = useState(false);
 
   useEffect(() => {
     const getMyProfile = async () => {
@@ -167,11 +167,11 @@ const Mypage = () => {
                   </div>
                   <div className="text-[20px] flex">
                     <span>999잔</span>
-                    <span className="ml-1 mt-1">
+                    <span className="ml-1 mt-[6px]">
                       <BiInfoCircle
                         onMouseOver={() => setIsOpenInforModal(true)}
                         onMouseOut={() => setIsOpenInforModal(false)}
-                        className="w-6 h-6 text-[#999999]"
+                        className="w-[20px] aspect-auto text-[#999999]"
                       />
                     </span>
                   </div>

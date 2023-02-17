@@ -16,7 +16,7 @@ const UserPostCard = ({ post }: { post: any }) => {
 
         <div className="absolute flex flex-col gap-1  pt-9 pl-10 ">
           <div className="text-white font-bold text-[24px]">{post.title}</div>
-          <div className="text-[12px] bg-[#ffffff] opacity-50 h-6 w-[58px] flex justify-center items-center rounded-[20px]">
+          <div className="text-[12px] bg-[rgba(255,255,255,0.5)] h-6 w-[58px] flex justify-center items-center rounded-[20px]">
             {post.type}
           </div>
         </div>
