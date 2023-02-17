@@ -11,6 +11,7 @@ import {
   query,
   onSnapshot,
   orderBy,
+  where,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
 import MyPostCard from "@/components/sub_page/my_post_card";
@@ -19,7 +20,6 @@ import RankInformationModal from "@/components/sub_page/membership_grade_informa
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
-  const [allPosts, setAllPosts] = useState<PostType[]>();
   const [myPosts, setMyPosts] = useState<PostType[]>();
   const [likePosts, setLikePosts] = useState<PostType[]>();
   const [recentlyPosts, setRecentlyPosts] = useState<PostType[]>();
@@ -43,80 +43,84 @@ const Mypage = () => {
       const newProfile = {
         ...snapshotdata,
       };
+      setMyProfile(newProfile);
+    };
 
+    const getMyPosts = () => {
       const q = query(
         collection(dbService, "Posts"),
+        where("userId", "==", authService.currentUser?.uid as string),
         orderBy("createdAt", "desc")
       );
 
       onSnapshot(q, (snapshot) => {
-        const newPosts = snapshot.docs.map((doc) => {
-          const newPost: PostType = {
+        const newMyPosts = snapshot.docs.map((doc) => {
+          const newMyPost: PostType = {
             postId: doc.id,
             ...doc.data(),
           };
-          return newPost;
+          return newMyPost;
         });
-        setAllPosts(newPosts);
+        setMyPosts(newMyPosts);
       });
+    };
 
-      setMyProfile(newProfile);
+    const getLikePosts = () => {
+      const q = query(
+        collection(dbService, "Posts"),
+        where("like", "array-contains", authService.currentUser?.uid as string),
+        orderBy("createdAt", "desc")
+      );
+
+      onSnapshot(q, (snapshot) => {
+        const newLikePosts = snapshot.docs.map((doc) => {
+          const newLikePost: PostType = {
+            postId: doc.id,
+            ...doc.data(),
+          };
+          return newLikePost;
+        });
+        setLikePosts(newLikePosts);
+      });
     };
 
     getMyProfile();
+    getMyPosts();
+    getLikePosts();
   }, []);
 
   useEffect(() => {
-    const ohjuRecentlyPosts = new Array();
-    const ohjuMyPosts = allPosts?.filter(
-      (post) => post.userId === authService.currentUser?.uid
-    );
-    const ohjuLikePosts = allPosts?.filter((post) =>
-      post.like?.includes(authService.currentUser?.uid as string)
-    );
-    myProfile?.recently.map((id: any) =>
-      allPosts?.map((post) =>
-        post.postId === id ? ohjuRecentlyPosts.push(post) : null
-      )
-    );
+    const getRecentlyPosts = () => {
+      const recentlyArray = myProfile?.recently;
+      const ohjuRecentlyPosts = new Array();
+      if (recentlyArray) {
+        const q = query(
+          collection(dbService, "Posts"),
+          where("createdAt", "in", recentlyArray)
+        );
 
-    setMyPosts(ohjuMyPosts);
-    setLikePosts(ohjuLikePosts);
-    setRecentlyPosts(ohjuRecentlyPosts);
-  }, [allPosts]);
+        onSnapshot(q, (snapshot) => {
+          const newLikePosts = snapshot.docs.map((doc) => {
+            const newLikePost: PostType = {
+              postId: doc.id,
+              ...doc.data(),
+            };
+            return newLikePost;
+          });
 
-  // useEffect(() => {
-  // const getMyProfile = async () => {
-  //   const snapshot = await getDoc(
-  //     doc(dbService, "Users", authService.currentUser?.uid as string)
-  //   );
-  //   const snapshotdata = await snapshot.data();
-  //   const newProfile = {
-  //     ...snapshotdata,
-  //   };
-
-  //     const q = query(
-  //       collection(dbService, "Posts"),
-  //       where("userId", "==", authService.currentUser?.uid as string),
-  //       orderBy("createdAt", "desc")
-  //     );
-
-  //     onSnapshot(q, (snapshot) => {
-  //       const newMyPosts = snapshot.docs.map((doc) => {
-  //         const newMyPost: PostType = {
-  //           postId: doc.id,
-  //           ...doc.data(),
-  //         };
-  //         return newMyPost;
-  //       });
-  //       setMyPosts(newMyPosts);
-  //     });
-
-  //     setMyProfile(newProfile);
-  //   };
-
-  //   getMyProfile();
-  // }, []);
+          recentlyArray.map((id: any) =>
+            newLikePosts?.map((post) =>
+              post.createdAt === id ? ohjuRecentlyPosts.push(post) : null
+            )
+          );
+          setRecentlyPosts(ohjuRecentlyPosts);
+        });
+      }
+    };
+    if (myProfile) {
+      getRecentlyPosts();
+    }
+  }, [myProfile]);
 
   useEffect(() => {
     const getMyProfile = async () => {
