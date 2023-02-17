@@ -1,7 +1,12 @@
 import Layout from "@/components/layout";
 import { dbService, storageService } from "@/firebase";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from "firebase/storage";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -121,6 +126,17 @@ const EditDetail = ({ id }: ParamsPropsType) => {
 
       downloadPreview.forEach((item: any, i) => {
         if (item.value !== savePreview[i]) {
+          const imgId = savePreview[i].split("2F")[1].split("?")[0];
+          const desertRef = ref(storageService, `post/${imgId}`);
+          deleteObject(desertRef)
+            .then(() => {
+              console.log("success", imgId);
+              // File deleted successfully
+            })
+            .catch((error) => {
+              console.log("error", error, imgId);
+              // Uh-oh, an error occurred!
+            });
           savePreview[i] = item.value;
         } else {
           return savePreview[i];
@@ -183,7 +199,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
 
   useEffect(() => {
     setEditPost(post);
-  }, [post]);
+  }, [getPost]);
 
   return (
     <Layout>

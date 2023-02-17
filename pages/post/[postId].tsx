@@ -1,4 +1,4 @@
-import { authService, dbService } from "@/firebase";
+import { authService, dbService, storageService } from "@/firebase";
 import {
   addDoc,
   collection,
@@ -20,10 +20,10 @@ import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import CommentList from "@/components/comment/comment_list";
 import DeleteModal from "@/components/delete_modal";
+import { deleteObject, ref } from "firebase/storage";
 
 const PostDetail = () => {
   const router = useRouter();
-  const ref = useRef();
   const date = new Date();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
@@ -165,6 +165,22 @@ const PostDetail = () => {
 
     commentId.map(async (id) => {
       await deleteDoc(doc(dbService, "Comments", id as string));
+    });
+
+    const postImgId = post.img!.map((item) => {
+      return item.split("2F")[1].split("?")[0];
+    });
+
+    postImgId.map(async (item) => {
+      const desertRef = ref(storageService, `post/${item}`);
+      await deleteObject(desertRef)
+        .then(() => {
+          // File deleted successfully
+        })
+        .catch((error) => {
+          console.log("error", error);
+          // Uh-oh, an error occurred!
+        });
     });
 
     router.push("/");
