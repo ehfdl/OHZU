@@ -13,7 +13,9 @@ import {
   orderBy,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
-import SubPostCard from "@/components/sub_page/sub_post_card";
+import MyPostCard from "@/components/sub_page/my_post_card";
+import { BiInfoCircle } from "react-icons/bi";
+import RankInformationModal from "@/components/sub_page/membership_grade_information";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -30,6 +32,7 @@ const Mypage = () => {
   const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
   const [isOpenFollowingModal, setIsOpenFollowingModal] = useState(false);
+  const [isOpenInforModal, setIsOpenInforModal] = useState(true);
 
   useEffect(() => {
     const getMyProfile = async () => {
@@ -141,7 +144,7 @@ const Mypage = () => {
     <Layout>
       <div className="w-full flex justify-center mb-4 min-h-screen">
         <div className="w-[1200px] flex flex-col justify-start items-center">
-          <div className="mt-[70px] w-[688px] flex gap-11">
+          <div className="mt-[70px] w-[696px] flex gap-12">
             <div className="flex flex-col items-center">
               <div className="bg-[#d9d9d9] rounded-full h-40 w-40 overflow-hidden">
                 <img
@@ -150,41 +153,54 @@ const Mypage = () => {
                 />
               </div>
               <button
-                className="mt-4"
+                className="mt-4 "
                 onClick={() => setIsOpenProfileModal(true)}
               >
                 프로필 편집
               </button>
             </div>
             <div className="flex flex-col">
-              <div className="w-[484px] flex justify-between">
+              <div className="w-[440px] flex justify-between">
                 <div>
                   <div className="font-bold text-[24px]">
-                    {myProfile?.nickname} 🍺
+                    {myProfile?.nickname}
                   </div>
-                  <div className="text-[20px] ml-1">
-                    999잔 <span className="ml-[2px]">ℹ</span>
+                  <div className="text-[20px] flex">
+                    <span>999잔</span>
+                    <span className="ml-1 mt-1">
+                      <BiInfoCircle
+                        onMouseOver={() => setIsOpenInforModal(true)}
+                        onMouseOut={() => setIsOpenInforModal(false)}
+                        className="w-6 h-6 text-[#999999]"
+                      />
+                    </span>
                   </div>
+                  {isOpenInforModal ? <RankInformationModal /> : null}
                 </div>
-                <div className="w-[264px] flex justify-between">
+                <div className="w-72 flex justify-between items-center mt-1">
                   <div className="flex flex-col justify-center items-center">
                     좋아요<div>{myLike}</div>
                   </div>
+                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
                     게시글<div>{myPosts?.length}</div>
                   </div>
+                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div
                     onClick={() => setIsOpenFollowModal(true)}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로워<div>27</div>
                   </div>
+                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
                     팔로잉<div>27</div>
                   </div>
                 </div>
               </div>
-              <pre className="h-14 mt-7 ">{myProfile?.introduce}</pre>
+              <div className="h-[70px] w-[478px] overflow-hidden mt-5 whitespace-pre-wrap ">
+                {myProfile?.introduce}
+              </div>
             </div>
           </div>
           <Ohju_Navbar setOhju={setOhju} />
@@ -192,7 +208,7 @@ const Mypage = () => {
 
           <div className="w-full mt-12 ml-[3px] text-[20px] font-bold">
             게시글{" "}
-            <span className="text-[#c6c6d4]">
+            <span className="text-[#ff6161]">
               {ohju === "my-ohju"
                 ? cate === "전체"
                   ? myPosts?.length
@@ -212,25 +228,25 @@ const Mypage = () => {
             {ohju === "my-ohju"
               ? myPosts?.map((post) =>
                   cate === "전체" ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : cate === post.type ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : null
                 )
               : ohju === "like-ohju"
               ? likePosts?.map((post) =>
                   cate === "전체" ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : cate === post.type ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : null
                 )
               : ohju === "recently-ohju"
               ? recentlyPosts?.map((post) =>
                   cate === "전체" ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : cate === post.type ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : null
                 )
               : null}
