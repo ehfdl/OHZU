@@ -11,13 +11,15 @@ import {
   query,
   onSnapshot,
   orderBy,
+  where,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
-import SubPostCard from "@/components/sub_page/sub_post_card";
+import MyPostCard from "@/components/sub_page/my_post_card";
+import { BiInfoCircle } from "react-icons/bi";
+import RankInformationModal from "@/components/sub_page/membership_grade_information";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
-  const [allPosts, setAllPosts] = useState<PostType[]>();
   const [myPosts, setMyPosts] = useState<PostType[]>();
   const [likePosts, setLikePosts] = useState<PostType[]>();
   const [recentlyPosts, setRecentlyPosts] = useState<PostType[]>();
@@ -30,6 +32,7 @@ const Mypage = () => {
   const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
   const [isOpenFollowingModal, setIsOpenFollowingModal] = useState(false);
+  const [isOpenInforModal, setIsOpenInforModal] = useState(false);
 
   useEffect(() => {
     const getMyProfile = async () => {
@@ -40,80 +43,84 @@ const Mypage = () => {
       const newProfile = {
         ...snapshotdata,
       };
+      setMyProfile(newProfile);
+    };
 
+    const getMyPosts = () => {
       const q = query(
         collection(dbService, "Posts"),
+        where("userId", "==", authService.currentUser?.uid as string),
         orderBy("createdAt", "desc")
       );
 
       onSnapshot(q, (snapshot) => {
-        const newPosts = snapshot.docs.map((doc) => {
-          const newPost: PostType = {
+        const newMyPosts = snapshot.docs.map((doc) => {
+          const newMyPost: PostType = {
             postId: doc.id,
             ...doc.data(),
           };
-          return newPost;
+          return newMyPost;
         });
-        setAllPosts(newPosts);
+        setMyPosts(newMyPosts);
       });
+    };
 
-      setMyProfile(newProfile);
+    const getLikePosts = () => {
+      const q = query(
+        collection(dbService, "Posts"),
+        where("like", "array-contains", authService.currentUser?.uid as string),
+        orderBy("createdAt", "desc")
+      );
+
+      onSnapshot(q, (snapshot) => {
+        const newLikePosts = snapshot.docs.map((doc) => {
+          const newLikePost: PostType = {
+            postId: doc.id,
+            ...doc.data(),
+          };
+          return newLikePost;
+        });
+        setLikePosts(newLikePosts);
+      });
     };
 
     getMyProfile();
+    getMyPosts();
+    getLikePosts();
   }, []);
 
   useEffect(() => {
-    const ohjuRecentlyPosts = new Array();
-    const ohjuMyPosts = allPosts?.filter(
-      (post) => post.userId === authService.currentUser?.uid
-    );
-    const ohjuLikePosts = allPosts?.filter((post) =>
-      post.like?.includes(authService.currentUser?.uid as string)
-    );
-    myProfile?.recently.map((id: any) =>
-      allPosts?.map((post) =>
-        post.postId === id ? ohjuRecentlyPosts.push(post) : null
-      )
-    );
+    const getRecentlyPosts = () => {
+      const recentlyArray = myProfile?.recently;
+      const ohjuRecentlyPosts = new Array();
+      if (recentlyArray) {
+        const q = query(
+          collection(dbService, "Posts"),
+          where("createdAt", "in", recentlyArray)
+        );
 
-    setMyPosts(ohjuMyPosts);
-    setLikePosts(ohjuLikePosts);
-    setRecentlyPosts(ohjuRecentlyPosts);
-  }, [allPosts]);
+        onSnapshot(q, (snapshot) => {
+          const newLikePosts = snapshot.docs.map((doc) => {
+            const newLikePost: PostType = {
+              postId: doc.id,
+              ...doc.data(),
+            };
+            return newLikePost;
+          });
 
-  // useEffect(() => {
-  // const getMyProfile = async () => {
-  //   const snapshot = await getDoc(
-  //     doc(dbService, "Users", authService.currentUser?.uid as string)
-  //   );
-  //   const snapshotdata = await snapshot.data();
-  //   const newProfile = {
-  //     ...snapshotdata,
-  //   };
-
-  //     const q = query(
-  //       collection(dbService, "Posts"),
-  //       where("userId", "==", authService.currentUser?.uid as string),
-  //       orderBy("createdAt", "desc")
-  //     );
-
-  //     onSnapshot(q, (snapshot) => {
-  //       const newMyPosts = snapshot.docs.map((doc) => {
-  //         const newMyPost: PostType = {
-  //           postId: doc.id,
-  //           ...doc.data(),
-  //         };
-  //         return newMyPost;
-  //       });
-  //       setMyPosts(newMyPosts);
-  //     });
-
-  //     setMyProfile(newProfile);
-  //   };
-
-  //   getMyProfile();
-  // }, []);
+          recentlyArray.map((id: any) =>
+            newLikePosts?.map((post) =>
+              post.createdAt === id ? ohjuRecentlyPosts.push(post) : null
+            )
+          );
+          setRecentlyPosts(ohjuRecentlyPosts);
+        });
+      }
+    };
+    if (myProfile) {
+      getRecentlyPosts();
+    }
+  }, [myProfile]);
 
   useEffect(() => {
     const getMyProfile = async () => {
@@ -141,7 +148,7 @@ const Mypage = () => {
     <Layout>
       <div className="w-full flex justify-center mb-4 min-h-screen">
         <div className="w-[1200px] flex flex-col justify-start items-center">
-          <div className="mt-[70px] w-[688px] flex gap-11">
+          <div className="mt-[70px] w-[696px] flex gap-12">
             <div className="flex flex-col items-center">
               <div className="bg-[#d9d9d9] rounded-full h-40 w-40 overflow-hidden">
                 <img
@@ -150,41 +157,54 @@ const Mypage = () => {
                 />
               </div>
               <button
-                className="mt-4"
+                className="mt-4 "
                 onClick={() => setIsOpenProfileModal(true)}
               >
                 프로필 편집
               </button>
             </div>
             <div className="flex flex-col">
-              <div className="w-[484px] flex justify-between">
+              <div className="w-[440px] flex justify-between">
                 <div>
                   <div className="font-bold text-[24px]">
-                    {myProfile?.nickname} 🍺
+                    {myProfile?.nickname}
                   </div>
-                  <div className="text-[20px] ml-1">
-                    999잔 <span className="ml-[2px]">ℹ</span>
+                  <div className="text-[20px] flex">
+                    <span>999잔</span>
+                    <span className="ml-1 mt-[6px]">
+                      <BiInfoCircle
+                        onMouseOver={() => setIsOpenInforModal(true)}
+                        onMouseOut={() => setIsOpenInforModal(false)}
+                        className="w-[20px] aspect-auto text-[#999999]"
+                      />
+                    </span>
                   </div>
+                  {isOpenInforModal ? <RankInformationModal /> : null}
                 </div>
-                <div className="w-[264px] flex justify-between">
+                <div className="w-72 flex justify-between items-center mt-1">
                   <div className="flex flex-col justify-center items-center">
                     좋아요<div>{myLike}</div>
                   </div>
+                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
                     게시글<div>{myPosts?.length}</div>
                   </div>
+                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div
                     onClick={() => setIsOpenFollowModal(true)}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로워<div>27</div>
                   </div>
+                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
                     팔로잉<div>27</div>
                   </div>
                 </div>
               </div>
-              <pre className="h-14 mt-7 ">{myProfile?.introduce}</pre>
+              <div className="h-[70px] w-[478px] overflow-hidden mt-5 whitespace-pre-wrap ">
+                {myProfile?.introduce}
+              </div>
             </div>
           </div>
           <Ohju_Navbar setOhju={setOhju} />
@@ -192,7 +212,7 @@ const Mypage = () => {
 
           <div className="w-full mt-12 ml-[3px] text-[20px] font-bold">
             게시글{" "}
-            <span className="text-[#c6c6d4]">
+            <span className="text-[#ff6161]">
               {ohju === "my-ohju"
                 ? cate === "전체"
                   ? myPosts?.length
@@ -212,25 +232,25 @@ const Mypage = () => {
             {ohju === "my-ohju"
               ? myPosts?.map((post) =>
                   cate === "전체" ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : cate === post.type ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : null
                 )
               : ohju === "like-ohju"
               ? likePosts?.map((post) =>
                   cate === "전체" ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : cate === post.type ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : null
                 )
               : ohju === "recently-ohju"
               ? recentlyPosts?.map((post) =>
                   cate === "전체" ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : cate === post.type ? (
-                    <SubPostCard key={post.postId} post={post} />
+                    <MyPostCard key={post.postId} post={post} />
                   ) : null
                 )
               : null}
