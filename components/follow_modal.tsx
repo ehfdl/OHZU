@@ -17,8 +17,55 @@ const FollowModal = ({
           <FiX className="w-full h-full text-[#acacac]" />
         </button>
 
-        <div className="text-[40px] font-bold mt-[88px]">팔로잉</div>
-        <div className="mt-12 flex flex-col gap-5 justify-start items-center w-[492px] overflow-auto scrollbar-none">
+        <div className="text-[40px] font-bold border-b-4 w-[160px] text-center  border-[#ff6161] mt-[88px]">
+          팔로잉
+        </div>
+        <div className="flex pt-12 flex-col gap-5 justify-start items-center w-[492px] overflow-auto scrollbar-none">
+          <div className="w-full flex justify-start bg-white">
+            <div className="w-[78px] aspect-square rounded-full bg-[#d9d9d9]">
+              <img />
+            </div>
+            <div className="flex flex-col ml-5 my-[2px]">
+              <div className="font-bold">닉네임</div>
+              <div className="text-sm max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
+                거친 안고, 바이며, 그들은 청춘에서만 것은 얼마나 모래뿐일 인간의
+                약동하다.그들은 청춘에서만 것은 얼마나 모래뿐일 인간의 약동하다.
+              </div>
+            </div>
+            <button className="ml-[14px] w-28 h-[30px] rounded-[50px] bg-[#f5f7fa] text-[#d8d8e2]">
+              팔로잉
+            </button>
+          </div>
+          <div className="w-full flex justify-start bg-white">
+            <div className="w-[78px] aspect-square rounded-full bg-[#d9d9d9]">
+              <img />
+            </div>
+            <div className="flex flex-col ml-5 my-[2px]">
+              <div className="font-bold">닉네임</div>
+              <div className="text-sm max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
+                거친 안고, 바이며, 그들은 청춘에서만 것은 얼마나 모래뿐일 인간의
+                약동하다.그들은 청춘에서만 것은 얼마나 모래뿐일 인간의 약동하다.
+              </div>
+            </div>
+            <button className="ml-[14px] w-28 h-[30px] rounded-[50px] bg-[#f5f7fa] text-[#d8d8e2]">
+              팔로잉
+            </button>
+          </div>
+          <div className="w-full flex justify-start bg-white">
+            <div className="w-[78px] aspect-square rounded-full bg-[#d9d9d9]">
+              <img />
+            </div>
+            <div className="flex flex-col ml-5 my-[2px]">
+              <div className="font-bold">닉네임</div>
+              <div className="text-sm max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
+                거친 안고, 바이며, 그들은 청춘에서만 것은 얼마나 모래뿐일 인간의
+                약동하다.그들은 청춘에서만 것은 얼마나 모래뿐일 인간의 약동하다.
+              </div>
+            </div>
+            <button className="ml-[14px] w-28 h-[30px] rounded-[50px] bg-[#f5f7fa] text-[#d8d8e2]">
+              팔로잉
+            </button>
+          </div>
           <div className="w-full flex justify-start bg-white">
             <div className="w-[78px] aspect-square rounded-full bg-[#d9d9d9]">
               <img />

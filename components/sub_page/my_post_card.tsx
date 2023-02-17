@@ -1,14 +1,14 @@
 import Link from "next/link";
 import React from "react";
 
-const SubPostCard = ({ post }: { post: any }) => {
+const MyPostCard = ({ post }: { post: any }) => {
   const defaultImg =
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
 
   return (
     <div
       key={post.postId}
-      className="h-64 bg-slate-200 overflow-hidden relative rounded"
+      className=" aspect-[4/2.6945169712793735] bg-slate-200 overflow-hidden relative rounded"
     >
       <Link href={`/post/${post.postId}`}>
         <div className="w-full h-2/5 bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
@@ -27,4 +27,4 @@ const SubPostCard = ({ post }: { post: any }) => {
   );
 };
 
-export default SubPostCard;
+export default MyPostCard;
