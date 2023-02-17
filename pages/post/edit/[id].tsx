@@ -107,6 +107,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
     let editPreview = [editPreview_01, editPreview_02, editPreview_03];
     // let newEditPreview = editPreview.filter((view) => view != null);
     let savePreview: any = [...editPost.img!];
+    savePreview.filter((i: string) => i !== null);
 
     if (editPreview.length !== 0) {
       let downloadPreview = await Promise.allSettled(
@@ -125,7 +126,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
       // downloadPreview
 
       downloadPreview.forEach((item: any, i) => {
-        if (item.value !== savePreview[i]) {
+        if (item.value !== savePreview[i] && savePreview[i] !== undefined) {
           const imgId = savePreview[i].split("2F")[1].split("?")[0];
           const desertRef = ref(storageService, `post/${imgId}`);
           deleteObject(desertRef)
@@ -138,10 +139,20 @@ const EditDetail = ({ id }: ParamsPropsType) => {
               // Uh-oh, an error occurred!
             });
           savePreview[i] = item.value;
-        } else {
-          return savePreview[i];
         }
       });
+
+      downloadPreview.forEach((item: any, i) => {
+        if (
+          item.value !== null &&
+          item.value !== undefined &&
+          item.value !== savePreview[i]
+        ) {
+          savePreview.push(item.value);
+        }
+      });
+
+      console.log("downloadPreview", downloadPreview);
 
       // downloadPreview.forEach((item: any, i) => savePreview.push(item.value));
 

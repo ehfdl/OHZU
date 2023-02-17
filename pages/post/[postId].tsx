@@ -318,7 +318,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
             newPost.recently.pop();
           }
           await newPost.recently.unshift(postDate);
-          console.log("qoduf", newPost.recently);
+          // console.log("qoduf", newPost.recently);
           await updateDoc(
             doc(dbService, "Users", authService.currentUser?.uid as string),
             { recently: newPost.recently }
