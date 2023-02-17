@@ -1,9 +1,31 @@
+import { authService, dbService } from "@/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const MyPostCard = ({ post }: { post: any }) => {
   const defaultImg =
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
+
+  const like = post.like.includes(authService.currentUser?.uid);
+
+  const onClickLikeBtn = async () => {
+    const likeArray = post.like.includes(authService.currentUser?.uid);
+
+    if (likeArray) {
+      const newLikeArray = post.like.filter(
+        (id: any) => id !== authService.currentUser?.uid
+      );
+      await updateDoc(doc(dbService, "Posts", post.postId), {
+        like: newLikeArray,
+      });
+    } else if (!likeArray) {
+      const newLikeArray = post.like.push(authService.currentUser?.uid);
+      await updateDoc(doc(dbService, "Posts", post.postId), {
+        like: post.like,
+      });
+    }
+  };
 
   return (
     <div
@@ -19,8 +41,15 @@ const MyPostCard = ({ post }: { post: any }) => {
           </div>
         </div>
       </Link>
-      <div className="absolute flex flex-col items-center w-7 h-10 z-10  right-0 mr-6 mt-6">
-        <img src="/like/like-default.png" />
+      <div
+        onClick={onClickLikeBtn}
+        className="absolute flex flex-col items-center w-7 h-10 z-10  right-0 mr-6 mt-6 cursor-pointer"
+      >
+        {like ? (
+          <img src="/like/like-pressed.png" />
+        ) : (
+          <img src="/like/like-default.png" />
+        )}
         <div className="text-[rgba(255,255,255,0.5)] text-[11px]">
           {post.like.length}
         </div>
