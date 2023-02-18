@@ -22,6 +22,9 @@ import Grade from "@/components/grade";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
+  const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
+  const [usersFollowingProfile, setUsersFollowingProfile] = useState<any>();
+
   const [allPosts, setAllPosts] = useState<PostType[]>();
   const [myPosts, setMyPosts] = useState<PostType[]>();
   const [likePosts, setLikePosts] = useState<PostType[]>();
@@ -31,22 +34,62 @@ const Mypage = () => {
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
+  const [follow, setFollow] = useState("follow");
+  //users 불러오기까지함.
 
   const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
-  const [isOpenFollowingModal, setIsOpenFollowingModal] = useState(false);
   const [isOpenInforModal, setIsOpenInforModal] = useState(false);
 
-  useEffect(() => {
-    const getMyProfile = async () => {
-      const snapshot = await getDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string)
-      );
-      const snapshotdata = await snapshot.data();
-      const newProfile = {
-        ...snapshotdata,
-      };
+  const getMyProfile = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "Users", authService.currentUser?.uid as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const newProfile = {
+      ...snapshotdata,
+    };
+    setMyProfile(newProfile);
+  };
 
+  const getFollowingUsersProfile = async () => {
+    if (myProfile) {
+      const userArray = new Array();
+      const promiseUser = Promise.allSettled(
+        myProfile.following.map(async (postId: any) => {
+          const snapshot = await getDoc(doc(dbService, "Users", postId));
+          const snapshotdata = await snapshot.data();
+          const newProfile = {
+            ...snapshotdata,
+          };
+          return newProfile;
+        })
+      );
+      (await promiseUser).forEach((item: any) => userArray.push(item.value));
+      setUsersFollowingProfile(userArray);
+    }
+  };
+
+  const getFollowerUsersProfile = async () => {
+    if (myProfile) {
+      const userArray = new Array();
+      const promiseUser = Promise.allSettled(
+        myProfile.follower.map(async (postId: any) => {
+          const snapshot = await getDoc(doc(dbService, "Users", postId));
+          const snapshotdata = await snapshot.data();
+          const newProfile = {
+            ...snapshotdata,
+          };
+          return newProfile;
+        })
+      );
+      (await promiseUser).forEach((item: any) => userArray.push(item.value));
+      setUsersFollowerProfile(userArray);
+    }
+  };
+
+  useEffect(() => {
+    const getAllPosts = async () => {
       const q = query(
         collection(dbService, "Posts"),
         orderBy("createdAt", "desc")
@@ -62,11 +105,10 @@ const Mypage = () => {
         });
         setAllPosts(newPosts);
       });
-
-      setMyProfile(newProfile);
     };
-
     getMyProfile();
+    // getUsersProfile();
+    getAllPosts();
   }, []);
 
   useEffect(() => {
@@ -89,17 +131,13 @@ const Mypage = () => {
   }, [allPosts]);
 
   useEffect(() => {
-    const getMyProfile = async () => {
-      const snapshot = await getDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string)
-      );
-      const snapshotdata = await snapshot.data();
-      const newProfile = {
-        ...snapshotdata,
-      };
+    if (myProfile) {
+      getFollowerUsersProfile;
+      getFollowingUsersProfile();
+    }
+  }, [myProfile]);
 
-      setMyProfile(newProfile);
-    };
+  useEffect(() => {
     getMyProfile();
   }, [isOpenProfileModal]);
 
@@ -120,7 +158,6 @@ const Mypage = () => {
           );
         };
         updateUserPoint();
-        console.log("update됨");
       }
     }
   }, [myLike]);
@@ -175,14 +212,23 @@ const Mypage = () => {
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div
-                    onClick={() => setIsOpenFollowModal(true)}
+                    onClick={() => {
+                      setIsOpenFollowModal(true);
+                      setFollow("follower");
+                    }}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로워<div>27</div>
+                    팔로워<div>{myProfile?.follower.length}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
-                  <div className="flex flex-col justify-center items-center">
-                    팔로잉<div>27</div>
+                  <div
+                    onClick={() => {
+                      setIsOpenFollowModal(true);
+                      setFollow("following");
+                    }}
+                    className="flex flex-col justify-center items-center cursor-pointer"
+                  >
+                    팔로잉<div>{myProfile?.following.length}</div>
                   </div>
                 </div>
               </div>
@@ -247,7 +293,13 @@ const Mypage = () => {
           />
         ) : null}
         {isOpenFollowModal ? (
-          <FollowModal setIsOpenFollowModal={setIsOpenFollowModal} />
+          <FollowModal
+            setIsOpenFollowModal={setIsOpenFollowModal}
+            follow={follow}
+            setFollow={setFollow}
+            usersFollowerProfile={usersFollowerProfile}
+            usersFollowingProfile={usersFollowingProfile}
+          />
         ) : null}
       </div>
     </Layout>

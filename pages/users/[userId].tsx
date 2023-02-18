@@ -1,7 +1,7 @@
 import Layout from "@/components/layout";
 import UserPostCard from "@/components/sub_page/user_post_card";
 import Cate_Navbar from "@/components/navbar/cate_navbar";
-import { dbService } from "@/firebase";
+import { authService, dbService } from "@/firebase";
 import {
   collection,
   doc,
@@ -19,6 +19,7 @@ import Grade from "@/components/grade";
 const UserPage = () => {
   const userId = window.location.pathname.substring(7);
 
+  const [myProfile, setMyProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<any>();
   const [userPosts, setUserPosts] = useState<PostType[]>();
   const [userLikePosts, setUserLikePosts] = useState<PostType[]>();
@@ -30,14 +31,67 @@ const UserPage = () => {
 
   const [dropOnOff, setDropOnOff] = useState(false);
 
-  useEffect(() => {
-    const getUserProfile = async () => {
-      const snapshot = await getDoc(doc(dbService, "Users", userId));
-      const snapshotdata = await snapshot.data();
-      const newProfile = {
-        ...snapshotdata,
-      };
+  const onClickFollowUpdate = async () => {
+    const FollowerArray = userProfile.follower.includes(
+      authService.currentUser?.uid
+    );
 
+    if (FollowerArray) {
+      const newFollowerArray = userProfile.follower.filter(
+        (id: any) => id !== authService.currentUser?.uid
+      );
+      const newFollowingArray = myProfile.following.filter(
+        (id: any) => id !== userId
+      );
+      await updateDoc(doc(dbService, "Users", userId), {
+        follower: newFollowerArray,
+      });
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        {
+          following: newFollowingArray,
+        }
+      );
+    } else if (!FollowerArray) {
+      const newFollowerArray = userProfile.follower.push(
+        authService.currentUser?.uid
+      );
+      const newFollowingArray = myProfile.following.push(userId);
+      await updateDoc(doc(dbService, "Users", userId), {
+        follower: userProfile.follower,
+      });
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        {
+          following: myProfile.following,
+        }
+      );
+    }
+    getUserProfile();
+    getMyProfile();
+  };
+
+  const getUserProfile = async () => {
+    const snapshot = await getDoc(doc(dbService, "Users", userId));
+    const snapshotdata = await snapshot.data();
+    const newProfile = {
+      ...snapshotdata,
+    };
+    setUserProfile(newProfile);
+  };
+  const getMyProfile = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "Users", authService.currentUser?.uid as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const newProfile = {
+      ...snapshotdata,
+    };
+    setMyProfile(newProfile);
+  };
+
+  useEffect(() => {
+    const getUserPosts = async () => {
       const q = query(
         collection(dbService, "Posts"),
         where("userId", "==", userId),
@@ -54,11 +108,11 @@ const UserPage = () => {
         });
         setUserPosts(newUserPosts);
       });
-
-      setUserProfile(newProfile);
     };
 
     getUserProfile();
+    getMyProfile();
+    getUserPosts();
   }, []);
 
   useEffect(() => {
@@ -106,7 +160,6 @@ const UserPage = () => {
           });
         };
         updateUserPoint();
-        console.log("update됨");
       }
     }
   }, [userLike]);
@@ -123,9 +176,21 @@ const UserPage = () => {
                   className="w-[124px] aspect-square object-cover"
                 />
               </div>
-              <button className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-[#FF6161] text-sm text-white flex justify-center items-center">
-                팔로우
-              </button>
+              {userProfile?.follower.includes(authService.currentUser?.uid) ? (
+                <button
+                  onClick={onClickFollowUpdate}
+                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-[#FFF0f0] text-sm text-[#ff6161] flex justify-center items-center"
+                >
+                  팔로우
+                </button>
+              ) : (
+                <button
+                  onClick={onClickFollowUpdate}
+                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-[#FF6161] text-sm text-white  flex justify-center items-center"
+                >
+                  팔로우
+                </button>
+              )}
             </div>
             <div className="flex flex-col justify-start w-[452px]">
               <div className="w-[440px] flex justify-between">
@@ -151,12 +216,12 @@ const UserPage = () => {
                     // onClick={() => setIsOpenFollowModal(true)}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로워<div>27</div>
+                    팔로워<div>{userProfile?.follower.length}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
 
                   <div className="flex flex-col justify-center items-center">
-                    팔로잉<div>27</div>
+                    팔로잉<div>{userProfile?.following.length}</div>
                   </div>
                 </div>
               </div>
