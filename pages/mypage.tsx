@@ -12,11 +12,13 @@ import {
   onSnapshot,
   orderBy,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
 import MyPostCard from "@/components/sub_page/my_post_card";
 import { BiInfoCircle } from "react-icons/bi";
 import RankInformationModal from "@/components/sub_page/membership_grade_information";
+import Grade from "@/components/grade";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -108,6 +110,21 @@ const Mypage = () => {
     setMyLike(totalLike);
   }, [myPosts]);
 
+  useEffect(() => {
+    if (myLike) {
+      if (myPosts?.length) {
+        const updateUserPoint = async () => {
+          await updateDoc(
+            doc(dbService, "Users", authService.currentUser?.uid as string),
+            { point: myLike + myPosts.length * 5 }
+          );
+        };
+        updateUserPoint();
+        console.log("update됨");
+      }
+    }
+  }, [myLike]);
+
   return (
     <Layout>
       <div className="w-full flex justify-center mb-4 min-h-screen">
@@ -130,11 +147,14 @@ const Mypage = () => {
             <div className="flex flex-col">
               <div className="w-[440px] flex justify-between">
                 <div>
-                  <div className="font-bold text-[24px]">
-                    {myProfile?.nickname}
+                  <div className="font-bold text-[24px] flex justify-start items-center gap-1">
+                    <span>{myProfile?.nickname}</span>
+                    <span>
+                      <Grade score={myLike! + myPosts?.length! * 5} />
+                    </span>
                   </div>
                   <div className="text-[20px] flex">
-                    <span>999잔</span>
+                    <span>{myLike! + myPosts?.length! * 5}잔</span>
                     <span className="ml-1 mt-[6px]">
                       <BiInfoCircle
                         onMouseOver={() => setIsOpenInforModal(true)}

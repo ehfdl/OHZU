@@ -9,10 +9,12 @@ import {
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import UserDropdown from "@/components/sub_page/user_dropdown";
+import Grade from "@/components/grade";
 
 const UserPage = () => {
   const userId = window.location.pathname.substring(7);
@@ -95,6 +97,20 @@ const UserPage = () => {
     setDropOnOff(false);
   }, [cateDrop]);
 
+  useEffect(() => {
+    if (userLike) {
+      if (userPosts?.length) {
+        const updateUserPoint = async () => {
+          await updateDoc(doc(dbService, "Users", userId as string), {
+            point: userLike + userPosts.length * 5,
+          });
+        };
+        updateUserPoint();
+        console.log("update됨");
+      }
+    }
+  }, [userLike]);
+
   return (
     <Layout>
       <div className="w-full flex justify-center mb-4 min-h-screen">
@@ -114,8 +130,11 @@ const UserPage = () => {
             <div className="flex flex-col justify-start w-[452px]">
               <div className="w-[440px] flex justify-between">
                 <div>
-                  <div className="font-bold text-[24px]">
-                    {userProfile?.nickname} 🍺
+                  <div className="font-bold text-[24px] flex justify-start items-center gap-1">
+                    <span>{userProfile?.nickname}</span>
+                    <span>
+                      <Grade score={userLike! + userPosts?.length! * 5} />
+                    </span>
                   </div>
                 </div>
                 <div className="w-72 flex justify-between items-center mt-1">
