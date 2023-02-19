@@ -2,7 +2,7 @@ import Layout from "@/components/layout";
 import Cate_Navbar from "@/components/navbar/cate_navbar";
 import Ohju_Navbar from "@/components/navbar/ohju_navbar";
 import ProfileModal from "@/components/sub_page/profile_modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { authService, dbService } from "@/firebase";
 import {
   doc,
@@ -110,29 +110,30 @@ const Mypage = () => {
     getAllPosts();
   }, []);
 
-  useEffect(() => {
-    const ohjuRecentlyPosts = new Array();
+  useMemo(() => {
     const ohjuMyPosts = allPosts?.filter(
       (post) => post.userId === authService.currentUser?.uid
     );
     const ohjuLikePosts = allPosts?.filter((post) =>
       post.like?.includes(authService.currentUser?.uid as string)
     );
-    myProfile?.recently.map((id: any) =>
-      allPosts?.map((post) =>
-        post.postId === id ? ohjuRecentlyPosts.push(post) : null
-      )
-    );
 
     setMyPosts(ohjuMyPosts);
     setLikePosts(ohjuLikePosts);
-    setRecentlyPosts(ohjuRecentlyPosts);
   }, [allPosts]);
 
   useEffect(() => {
     if (myProfile) {
+      const ohjuRecentlyPosts = new Array();
+      myProfile?.recently.map((id: any) =>
+        allPosts?.map((post) =>
+          post.postId === id ? ohjuRecentlyPosts.push(post) : null
+        )
+      );
+
       getFollowerUsersProfile;
       getFollowingUsersProfile();
+      setRecentlyPosts(ohjuRecentlyPosts);
     }
   }, [myProfile]);
 
