@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { FiX } from "react-icons/fi";
+import FollowModalCard from "./sub_page/follow_modal_card";
 
 const FollowModal = ({
   setIsOpenFollowModal,
@@ -8,14 +9,17 @@ const FollowModal = ({
   follow,
   usersFollowerProfile,
   usersFollowingProfile,
+  myProfile,
+  getMyProfile,
 }: {
   setIsOpenFollowModal: React.Dispatch<React.SetStateAction<boolean>>;
   setFollow: React.Dispatch<React.SetStateAction<string>>;
   follow: string;
   usersFollowerProfile: UserType[];
   usersFollowingProfile: UserType[];
+  myProfile: any;
+  getMyProfile: () => Promise<void>;
 }) => {
-  console.log(usersFollowerProfile);
   return (
     <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center">
       <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)]" />
@@ -62,55 +66,21 @@ const FollowModal = ({
         <div className="flex pt-10 flex-col gap-6 justify-start items-center w-[492px] overflow-auto scrollbar-none">
           {follow === "following" && usersFollowingProfile
             ? usersFollowingProfile.map((profile) => (
-                <div
-                  key={profile?.userId}
-                  className="w-full flex justify-start"
-                >
-                  <Link href={`/users/${profile.userId}`}>
-                    <div className="w-[78px] aspect-square rounded-full bg-[#d9d9d9] overflow-hidden">
-                      {profile.imageURL !== "" ? (
-                        <img
-                          src={profile.imageURL}
-                          className="w-[78px] aspect-square object-cover"
-                        />
-                      ) : null}
-                    </div>
-                  </Link>
-                  <div className="flex flex-col ml-5 my-[2px]">
-                    <Link href={`/users/${profile.userId}`}>
-                      <div className="font-bold">{profile.nickname}</div>
-                    </Link>
-                    <div className="text-sm text-[#8e8e93] max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
-                      {profile.introduce}
-                    </div>
-                  </div>
-                  <button className="ml-[14px] w-28 h-[30px] rounded-[50px] bg-[#f5f7fa] text-[#d8d8e2]">
-                    팔로잉
-                  </button>
-                </div>
+                <FollowModalCard
+                  key={profile.userId}
+                  profile={profile}
+                  myProfile={myProfile}
+                  getMyProfile={getMyProfile}
+                />
               ))
             : follow === "follower" && usersFollowerProfile
             ? usersFollowerProfile.map((profile) => (
-                <div
-                  key={profile?.userId}
-                  className="w-full flex justify-start"
-                >
-                  <div className="w-[78px] aspect-square rounded-full bg-[#d9d9d9] overflow-hidden">
-                    <img
-                      src={profile.imageURL}
-                      className="w-[78px] aspect-square object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col ml-5 my-[2px]">
-                    <div className="font-bold">{profile.nickname}</div>
-                    <div className="text-sm text-[#8e8e93] max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
-                      {profile.introduce}
-                    </div>
-                  </div>
-                  <button className="ml-[14px] w-28 h-[30px] rounded-[50px] bg-[#f5f7fa] text-[#d8d8e2]">
-                    팔로잉
-                  </button>
-                </div>
+                <FollowModalCard
+                  key={profile.userId}
+                  profile={profile}
+                  myProfile={myProfile}
+                  getMyProfile={getMyProfile}
+                />
               ))
             : null}
         </div>

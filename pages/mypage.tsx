@@ -107,7 +107,6 @@ const Mypage = () => {
       });
     };
     getMyProfile();
-    // getUsersProfile();
     getAllPosts();
   }, []);
 
@@ -299,6 +298,8 @@ const Mypage = () => {
             setFollow={setFollow}
             usersFollowerProfile={usersFollowerProfile}
             usersFollowingProfile={usersFollowingProfile}
+            myProfile={myProfile}
+            getMyProfile={getMyProfile}
           />
         ) : null}
       </div>
