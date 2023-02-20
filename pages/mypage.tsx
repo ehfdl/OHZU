@@ -34,7 +34,7 @@ const Mypage = () => {
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
-  const [follow, setFollow] = useState("follow");
+  const [follow, setFollow] = useState("follower");
   //users 불러오기까지함.
 
   const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
@@ -84,6 +84,7 @@ const Mypage = () => {
         })
       );
       (await promiseUser).forEach((item: any) => userArray.push(item.value));
+      console.log(userArray);
       setUsersFollowerProfile(userArray);
     }
   };
@@ -121,6 +122,7 @@ const Mypage = () => {
     setMyPosts(ohjuMyPosts);
     setLikePosts(ohjuLikePosts);
   }, [allPosts]);
+  // console.log("follower", usersFollowerProfile);
 
   useEffect(() => {
     if (myProfile) {
@@ -131,7 +133,7 @@ const Mypage = () => {
         )
       );
 
-      getFollowerUsersProfile;
+      getFollowerUsersProfile();
       getFollowingUsersProfile();
       setRecentlyPosts(ohjuRecentlyPosts);
     }
