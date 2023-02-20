@@ -2,6 +2,7 @@ import { authService, dbService } from "@/firebase";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
@@ -12,12 +13,13 @@ import {
 
 import Layout from "@/components/layout";
 import Link from "next/link";
-import { FiHeart } from "react-icons/fi";
+import { FiHeart, FiMoreVertical } from "react-icons/fi";
 import { FaHeart, FaCrown } from "react-icons/fa";
 import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import CommentList from "@/components/comment/comment_list";
+import DeleteModal from "@/components/delete_modal";
 
 const PostDetail = () => {
   const router = useRouter();
@@ -33,6 +35,11 @@ const PostDetail = () => {
     docId = window.location.pathname.substring(6);
   }
 
+  const [postId, setPostId] = useState("");
+  const [imgIdx, setImgIdx] = useState(0);
+  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const [post, setPost] = useState<Form>({
     userId: "",
     img: [],
@@ -44,6 +51,7 @@ const PostDetail = () => {
     like: [],
     view: 0,
   });
+
   const initialComment = {
     content: "",
     postId: "",
@@ -51,6 +59,7 @@ const PostDetail = () => {
     createdAt: "",
     isEdit: false,
   };
+
   const [comment, setComment] = useState<CommentType>(initialComment);
   const [comments, setComments] = useState<CommentType[]>([]);
   const [user, setUser] = useState<UserType>({
@@ -58,10 +67,22 @@ const PostDetail = () => {
     email: "",
     nickname: "",
     imageURL: "",
-    introduce: "",
     point: 0,
   });
-  const [imgIdx, setImgIdx] = useState(0);
+  const [currentUser, setCurrentUser] = useState<UserType>({
+    userId: "",
+    email: "",
+    nickname: "",
+    imageURL: "",
+    point: 0,
+  });
+
+  const getId = async () => {
+    const docRef = doc(dbService, "Posts", docId);
+    const docSnap = await getDoc(docRef);
+    const docID = docSnap.id;
+    setPostId(docID);
+  };
 
   const onImgChange = (i: number) => {
     setImgIdx(i);
@@ -131,8 +152,25 @@ const PostDetail = () => {
     }
   };
 
-  const likedUser = post?.like!.includes(authService.currentUser?.uid!);
+  const deleteToggle = () => {
+    setDeleteConfirm(!deleteConfirm);
+  };
 
+  const deletePost = async (id: string) => {
+    await deleteDoc(doc(dbService, "Posts", id));
+
+    const commentId = comments
+      .filter((i) => i.postId === docId)
+      .map((i) => i.id);
+
+    commentId.map(async (id) => {
+      await deleteDoc(doc(dbService, "Comments", id as string));
+    });
+
+    router.push("/");
+  };
+
+  const likedUser = post?.like!.includes(authService.currentUser?.uid!);
   const postLike = async (id: string) => {
     if (authService.currentUser) {
       if (likedUser) {
@@ -153,7 +191,6 @@ const PostDetail = () => {
   };
   const getPost = async () => {
     const docRef = doc(dbService, "Posts", docId);
-    // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
 
@@ -192,6 +229,7 @@ const PostDetail = () => {
       alert(error);
     }
   };
+
   const updateUserRecently = async () => {
     const snapshot = await getDoc(
       doc(dbService, "Users", authService.currentUser?.uid as string)
@@ -210,15 +248,35 @@ const PostDetail = () => {
   };
 
   const getUser = async () => {
-    const docRef = doc(dbService, "Users", post.userId as string);
-    // const docRef = doc(dbService, "Posts", docId as string); // 새로고침 시 에러
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    const newUser = {
-      ...data,
-    };
+    if (post?.userId) {
+      const userRef = doc(dbService, "Users", post?.userId! as string);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
 
-    setUser(newUser);
+      const newUser = {
+        ...userData,
+      };
+
+      setUser(newUser);
+    }
+  };
+
+  const getCurrentUser = async () => {
+    if (authService.currentUser?.uid) {
+      const userRef = doc(
+        dbService,
+        "Users",
+        authService.currentUser?.uid! as string
+      );
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+
+      const newUser = {
+        ...userData,
+      };
+
+      setCurrentUser(newUser);
+    }
   };
 
   useEffect(() => {
@@ -247,10 +305,15 @@ const PostDetail = () => {
       updateUserRecently();
     }
     getPost();
+    getId();
     getComments();
+    getCurrentUser();
     updateView();
-    getUser();
   }, []);
+
+  useEffect(() => {
+    getUser();
+  }, [post]);
 
   return (
     <Layout>
@@ -275,6 +338,7 @@ const PostDetail = () => {
             <div className="my-5 flex justify-start space-x-6 items-center w-full">
               {post.img?.map((img, i) => (
                 <button
+                  key={i}
                   className={`${
                     img === post.img![imgIdx]
                       ? "border-2 border-black"
@@ -283,7 +347,6 @@ const PostDetail = () => {
                   onClick={() => onImgChange(i)}
                 >
                   <img
-                    key={i}
                     src={img}
                     className="w-full aspect-square object-cover"
                   />
@@ -299,25 +362,48 @@ const PostDetail = () => {
                   {post.type}
                 </span>
               </div>
-              <div className="flex flex-col items-center">
-                <button onClick={() => postLike(router.query.postId as string)}>
-                  {likedUser ? (
-                    <FaHeart size={24} color={"#ff6161"} />
-                  ) : (
-                    <FiHeart size={24} />
-                  )}
+              <div className="flex justify-end items-start space-x-2">
+                <div className="flex flex-col items-center">
+                  <button onClick={() => postLike(postId as string)}>
+                    {likedUser ? (
+                      <FaHeart size={24} color={"#ff6161"} />
+                    ) : (
+                      <FiHeart size={24} />
+                    )}
+                  </button>
+                  <span>{post.like!.length}</span>
+                </div>
+                <button
+                  onClick={() => {
+                    setIsOpen(!isOpen);
+                  }}
+                >
+                  <FiMoreVertical size={24} />
                 </button>
-                <span>{post.like!.length}</span>
+                {isOpen && (
+                  <div className="absolute top-14 right-0 z-10 bg-white border-black border  flex flex-col space-y-2 items-center p-4">
+                    <Link href={`/post/edit/${postId}`}>게시글 수정하기</Link>
+                    <button onClick={deleteToggle}>게시글 삭제하기</button>
+                  </div>
+                )}
               </div>
             </div>
+            {deleteConfirm && (
+              <DeleteModal
+                deletePost={deletePost}
+                setDeleteConfirm={setDeleteConfirm}
+                id={postId}
+                text="게시글"
+              />
+            )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center space-y-2">
                 <img
-                  src={user.imageURL}
+                  src={user?.imageURL}
                   className="w-20 aspect-square bg-slate-300 rounded-full"
                 />
                 <div className="flex justify-center items-center space-x-1">
-                  <span>{user.nickname}</span>
+                  <span>{user?.nickname}</span>
                   <span>
                     <FaCrown size={16} />
                   </span>
@@ -355,11 +441,14 @@ const PostDetail = () => {
         <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
           <div className="text-xl font-medium space-x-2">
             <span>댓글</span>
-            <span>123</span>
+            <span>{comments.filter((i) => i.postId === postId).length}</span>
           </div>
           <div className="h-[1px] w-full bg-black mb-6" />
           <form className="w-full flex items-center relative space-x-6">
-            <img className="bg-slate-300 w-12 aspect-square rounded-full" />
+            <img
+              src={currentUser?.imageURL}
+              className="bg-slate-300 w-12 aspect-square rounded-full"
+            />
             <textarea
               disabled={authService.currentUser ? false : true}
               name="content"
@@ -382,11 +471,8 @@ const PostDetail = () => {
             className="mt-10 divide-y-[1px] divide-gray-300"
           >
             {comments?.map((comment) => {
-              if (typeof window !== "undefined") {
-                const docId = window.location.pathname.substring(6);
-                if (docId === comment.postId) {
-                  return <CommentList key={comment.id} comment={comment} />;
-                }
+              if (postId === comment.postId) {
+                return <CommentList key={comment.id} comment={comment} />;
               }
             })}
           </ul>

@@ -6,7 +6,7 @@ const Cate_Navbar = ({
   setCate: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
-    <nav className="mt-11 w-[550px] flex justify-around text-[20px]">
+    <nav className="mt-10 w-[550px] flex justify-around text-[20px]">
       <label
         onChange={() => setCate("전체")}
         className="w-[88px] text-slate-500 text-center"
@@ -18,7 +18,7 @@ const Cate_Navbar = ({
           className="hidden peer"
           defaultChecked
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-black peer-checked:text-black cursor-pointer">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer">
           전체
         </span>
       </label>
@@ -32,7 +32,7 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-black peer-checked:text-black cursor-pointer">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer">
           소주
         </span>
       </label>
@@ -46,7 +46,7 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-black peer-checked:text-black cursor-pointer">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer">
           맥주
         </span>
       </label>
@@ -60,7 +60,7 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-black peer-checked:text-black cursor-pointer">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer">
           양주
         </span>
       </label>
@@ -74,7 +74,7 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-black peer-checked:text-black cursor-pointer">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-2 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer">
           기타
         </span>
       </label>

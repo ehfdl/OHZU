@@ -1,82 +1,209 @@
-import React, { useEffect, useState, useRef } from "react";
+import PostCard from "./post_card";
+import { authService, dbService } from "@/firebase";
 import {
   collection,
+  doc,
+  getDoc,
   onSnapshot,
   orderBy,
   query,
-  doc,
-  getDoc,
+  updateDoc,
+  where,
 } from "firebase/firestore";
-import { dbService } from "@/firebase";
-import { getAuth } from "firebase/auth";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import "tailwindcss/tailwind.css";
-import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
+import React, { useEffect, useState, useRef, ReactElement } from "react";
+import Category from "./category";
+import Grade from "@/components/grade";
+import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react"; // basic
+import SwiperCore, { Navigation, Pagination, Scrollbar } from "swiper";
+import "swiper/css"; //basic
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import {
+  SwiperModule,
+  SwiperOptions,
+  NavigationEvents,
+  NavigationMethods,
+  NavigationOptions,
+  SwiperEvents,
+} from "swiper/types";
 
-const PostList = ({ posts, user }: { posts: any; user: any }) => {
-  const router = useRouter();
-  const ref = useRef();
+SwiperCore.use([Navigation, Scrollbar, Pagination]);
 
-  // console.log({ posts });
-  console.log({ user });
+const PostList = () => {
+  // const userId = window.location.pathname.substring(7);
+  const [myProfile, setMyProfile] = useState<any>();
+  const [userProfile, setUserProfile] = useState<any>();
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [user, setUser] = useState<UserType[]>([]);
+  const [cate, setCate] = useState("전체");
+  const [userPosts, setUserPosts] = useState<PostType[]>();
+  const [userLikePosts, setUserLikePosts] = useState<PostType[]>();
+  const [userViewPosts, setUserViewPosts] = useState<PostType[]>();
+  const [userLike, setUserLike] = useState<number>();
+  const swiper = useSwiper();
+
+  const prevRef = useRef<HTMLButtonElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const q = query(
+      collection(dbService, "Posts"),
+      orderBy("createdAt", "desc")
+    );
+    onSnapshot(q, (snapshot) => {
+      const newMyPosts = snapshot.docs.map((doc) => {
+        const newMyPost: PostType = {
+          postId: doc.id,
+          ...doc.data(),
+        };
+        return newMyPost;
+      });
+      setPosts(newMyPosts);
+    });
+  }, []);
+
+  // const getUsers = async () => {
+  //   const snapshot = await getDoc(doc(dbService, "Users", userId));
+  //   const snapshotdata = await snapshot.data(); // 가져온 doc의 객체 내용
+  //   const newProfile = {
+  //     ...snapshotdata,
+  //   };
+  //   setUser(newProfile as any);
+  // };
+
+  // useEffect(() => {
+  //   getUsers();
+  //   return;
+  // }, []);
+
+  const getUser = async () => {
+    const userRef = doc(dbService, "Users", "userId");
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+
+    const newUser = {
+      ...userData,
+    };
+
+    setUser(newUser as any);
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
-    <div className="mt-5">
-      <div className="grid grid-cols-3 gap-4 w-full">
-        {posts?.map((post: any) => (
-          <div
-            key={post.postId}
-            className="border shadow mt-3 overflow-hidden rounded hover:border-red-100 hover:shadow-xl hover:shadow-red-300"
-          >
-            <Link href={`/post/${post.postId}`}>
-              <div className="bg-gray-100">
-                <img
-                  className="flex w-full h-[284px] object-cover"
-                  src={post.img}
-                  alt=""
-                />
-              </div>
-            </Link>
+    <div>
+      {/* <div className="sm:max-w-[1200px] mx-auto justify-center items-center mb-4 ">
+        <p className="float-left font-bold text-xl mt-10">전체 게시글</p>
+        <span className="float-left ml-2 mt-10 pt-0.5 font-base text-base text-gray-400">
+          300
+        </span>
+        <PostList />
 
-            <div className="h-[136px]">
-              <div className="mt-5 ml-3">
-                <div className="flex items-center w-full">
-                  <Link href={`/users/${post.userId}`}>
-                    <div className="">
-                      <img
-                        className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer"
-                        src=""
-                        alt=""
-                      />
-                    </div>
-                  </Link>
+        좋아요 많이 받은 오주 목록
+        <div className="mt-16">
+          <p className="float-left font-bold text-xl">인기 많은 오주</p>
+          <PostList />
+        </div>
 
-                  <div className="float-left">
-                    <div className="text-lg font-semibold">{post.title}</div>
-                    {user?.map((user: any) => (
-                      <div className="text-sm font-thin" key={user.userId}>
-                        <p className="text-gray-900 leading-none">
-                          {user.nickname}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+        조회수 많은 오주 목록
+        <div className="mt-16">
+          <p className="float-left font-bold text-xl">많이 본 오주</p>
+          <PostList />
+        </div>
+      </div> */}
 
-                  <div className="flex float-right">
-                    <IoHeartOutline
-                      size={23}
-                      className="translate-x-[200px] cursor-pointer"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div className="font-base text-black/60 text-sm mx-5 mt-5 mb-2">
-                {post.text}
-              </div>
+      <div className="w-full flex justify-center mb-4 min-h-screen">
+        <div className="w-[1200px] flex flex-col justify-start items-center">
+          <Category setCate={setCate} />
+          <div className="w-full mt-12 flex justify-between">
+            <div className="text-xl font-bold">
+              전체 게시글{" "}
+              <span className="text-[#ff6161]">
+                {cate === "전체"
+                  ? userPosts?.length
+                  : userPosts?.filter((post) => cate === post.type).length}
+              </span>
+              <span className="float-right ml-2 pt-1 font-base text-base text-[#ff6161]">
+                300
+              </span>
             </div>
           </div>
-        ))}
+          <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
+            {posts?.map((post: any) => (
+              <div>
+                <PostCard key={post.postId} post={post} user={user} />
+              </div>
+            ))}
+          </div>
+
+          <div className="w-full mt-16 h-[900px] relative overflow-hidden">
+            <div className="text-xl font-bold mb-3">
+              인기 많은 오주
+              <span className="text-[#ff6161]">
+                {cate === "전체"
+                  ? userPosts?.length
+                  : userPosts?.filter((post) => cate === post.type).length}
+              </span>
+            </div>
+            <>
+              <Swiper
+                spaceBetween={24}
+                slidesPerView={3}
+                scrollbar={{ draggable: true }}
+                navigation
+                pagination={{ clickable: true }}
+                breakpoints={{
+                  768: {
+                    slidesPerView: 3,
+                  },
+                }}
+              >
+                <button onClick={() => swiper.slideNext()}>
+                  slide to the next
+                </button>
+                <div>
+                  {posts?.map((post: any) => (
+                    <SwiperSlide>
+                      <PostCard key={post.postId} post={post} user={user} />
+                    </SwiperSlide>
+                  ))}{" "}
+                </div>
+              </Swiper>
+            </>
+          </div>
+
+          {posts?.map((post: any) => (
+            <div className="w-full mt-4 bg-white grid grid-cols-2 gap-6">
+              {post === "최신순"
+                ? userPosts?.map((post) =>
+                    cate === "전체" ? (
+                      <PostCard key={post.postId} post={post} user={user} />
+                    ) : cate === post.type ? (
+                      <PostCard key={post.postId} post={post} user={user} />
+                    ) : null
+                  )
+                : post === "인기순"
+                ? userLikePosts?.map((post) =>
+                    cate === "전체" ? (
+                      <PostCard key={post.postId} post={post} user={user} />
+                    ) : cate === post.type ? (
+                      <PostCard key={post.postId} post={post} user={user} />
+                    ) : null
+                  )
+                : post === "조회순"
+                ? userViewPosts?.map((post) =>
+                    cate === "전체" ? (
+                      <PostCard key={post.postId} post={post} user={user} />
+                    ) : cate === post.type ? (
+                      <PostCard key={post.postId} post={post} user={user} />
+                    ) : null
+                  )
+                : null}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
