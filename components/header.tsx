@@ -29,12 +29,12 @@ const Header = ({ ...props }: any) => {
   const logOut = () => {
     signOut(authService)
       .then(() => {
+        setCurrentUser(false);
         props.setJoinIsOpen(false);
         props.setIsOpen(false);
-        setCurrentUser(false);
+        console.log("authService.currentUser : ", authService.currentUser);
         console.log("props.joinIsOpen : ", props.joinIsOpen);
         console.log("props.isOpen : ", props.isOpen);
-        console.log("authService.currentUser : ", authService.currentUser);
         alert("로그아웃 되었습니다.");
       })
       .catch((err) => {
@@ -43,7 +43,7 @@ const Header = ({ ...props }: any) => {
   };
 
   return (
-    <div className="flex w-full h-[118px] sticky top-0 z-[99] justify-between items-center border-b-2 border-slate-100 bg-white">
+    <div className="flex w-full h-[118px] sticky top-0 z-[8] justify-between items-center border-b-2 border-slate-100 bg-white">
       <Link legacyBehavior href="/">
         <div className="Logo ml-[32px] w-[200px;] h-[60px] justify-center flex items-center cursor-pointer">
           <Image src={LOGO_Ohju} alt="Ohju LOGO" />
@@ -73,7 +73,7 @@ const Header = ({ ...props }: any) => {
             <input
               type="text"
               id="simple-search"
-              className="w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  "
+              className="w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  "
               placeholder="혼합주 이름 또는 재료를 입력해주세요."
               required
             />
@@ -83,32 +83,32 @@ const Header = ({ ...props }: any) => {
         <div className="flex items-center">
           {authService.currentUser ? (
             <Link legacyBehavior href="/mypage">
-              <button className="w-24 h-[42px] mr-[12px] text-sm  border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200">
+              <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
                 마이페이지
               </button>
             </Link>
           ) : (
             <button
               onClick={loginModalHandler}
-              className="w-20 h-[42px] mr-[12px] text-sm border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
+              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
             >
               로그인
             </button>
           )}
 
-          {authService.currentUser === null ? (
+          {authService.currentUser ? (
             <button
-              onClick={joinModalHandler}
-              className="w-24 h-[42px] mr-[12px] text-sm  border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
+              onClick={logOut}
+              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
             >
-              회원가입
+              로그아웃
             </button>
           ) : (
             <button
-              onClick={logOut}
-              className="w-24 h-[42px] mr-[12px] text-sm border-[1px] rounded-xl duration-150 hover:bg-slate-200 hover:text-red-400 hover:border-slate-200"
+              onClick={joinModalHandler}
+              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
             >
-              로그아웃
+              회원가입
             </button>
           )}
         </div>

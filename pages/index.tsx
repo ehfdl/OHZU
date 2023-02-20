@@ -20,6 +20,9 @@ const Home = () => {
   const [user, setUser] = useState<UserType[]>([]);
 
   useEffect(() => {
+    // 서버 연결 확인용 코드
+    // fetch("http://localhost:3000/api/hello");
+
     const q = query(
       collection(dbService, "Posts"),
       orderBy("createdAt", "desc")
