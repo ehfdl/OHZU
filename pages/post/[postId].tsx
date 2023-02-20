@@ -5,9 +5,13 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
+  startAfter,
+  startAt,
   updateDoc,
 } from "firebase/firestore";
 
@@ -274,29 +278,43 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     }
   };
 
+  // const getComments = async () => {
+  //   const first = query(
+  //     collection(dbService, "Comments"),
+  //     orderBy("createdAt", "desc"),
+  //     limit(3)
+  //   );
+
+  //   const documentSnapshots = await getDocs(first);
+
+  //   const lastVisible =
+  //     documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+  //   const next = query(
+  //     collection(dbService, "Comments"),
+  //     orderBy("createdAt", "desc"),
+  //     startAfter(lastVisible),
+  //     limit(3)
+  //   );
+
+  //   onSnapshot(first, (snapshot) => {
+  //     // q (쿼리)안에 담긴 collection 내의 변화가 생길 때 마다 매번 실행됨
+  //     const newComments = snapshot.docs.map((doc: any) => {
+  //       const newComment = {
+  //         id: doc.id,
+  //         ...doc.data(), // doc.data() : { text, createdAt, ...  }
+  //       };
+  //       return newComment;
+  //     });
+  //     setComments(newComments);
+  //   });
+
+  //   // console.log("first", first);
+  //   // console.log("lastVisible", lastVisible);
+  //   // console.log("next", next);
+  // };
+
   useEffect(() => {
-    // const getComments = async () => {
-    //   const first = query(
-    //     collection(dbService, "comments"),
-    //     orderBy("createdAt", "desc"),
-    //     limit(3)
-    //   );
-
-    //   const documentSnapshots = await getDocs(first);
-
-    //   const lastVisible =
-    //     documentSnapshots.docs[documentSnapshots.docs.length - 1];
-
-    //   const next = query(
-    //     collection(dbService, "comments"),
-    //     orderBy("createdAt", "desc"),
-    //     startAfter(lastVisible),
-    //     limit(3)
-    //   );
-
-    //   console.log(first, lastVisible, next);
-    // };
-
     getPost();
     getComments();
     updateView();
