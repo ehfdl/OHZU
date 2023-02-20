@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   FacebookAuthProvider,
   GoogleAuthProvider,
+  signInWithCustomToken,
   signInWithPopup,
 } from "firebase/auth";
 import {
@@ -23,15 +24,15 @@ import { MdOutlineClose } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
 import { SiNaver } from "react-icons/si";
-import Link from "next/link";
-
-declare global {
-  interface Window {
-    Kakao: any;
-  }
-}
+import axios from "axios";
+import jwt from "jsonwebtoken";
+import { Router } from "next/router";
+import { resolve } from "path";
+import { rejects } from "assert";
 
 const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
+  const jwt = require("jsonwebtoken");
+
   // 이메일, 비밀번호, 비밀번호 확인, 닉네임, 유저 생년월일
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -53,9 +54,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
   const passwordRegEx =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/; // 최소 8자, 대문자 하나 이상, 소문자 하나 및 숫자 하나
-
-  // 카카오 앱 키
-  const kakaoAppKey = process.env.NEXT_PUBLIC_VITE_KAKAO_JAVASCRIPT_KEY;
 
   // 이메일 중복검사 (FireStore <=> email input)
   const isEmail = async (email: any) => {
@@ -91,7 +89,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       })
       .catch((error) => {
         alert(error.message);
-        // setCheckEmail("이메일 중복 확인 중 오류가 발생했습니다.");
       });
   }, [email, setCheckEmail]);
 
@@ -143,7 +140,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       .then((result) => {
         if (nickname) {
           if (result === nickname) {
-            setCheckNickname("사용중인 닉네임입니다.");
+            setCheckNickname("이미 사용중인 닉네임입니다.");
           } else {
             setCheckNickname("사용 가능한 닉네임입니다.");
           }
@@ -203,7 +200,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     console.log("newUserYear : ", newUserYear);
 
     if (newUserYear === 0) {
-      setCheckAdult("출생년도와 태어난 월, 일을 입력해주세요.");
+      setCheckAdult("생년월일을 확인해주세요.");
     } else if (nowYear - newUserYear > 20) {
       setCheckAdult("성인입니다.");
     } else {
@@ -256,7 +253,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
         setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
-          userId: authService.currentUser?.uid,
+          userId: authService.currentUser?.uid, // authService가 아닌 token값 중에 하나로 변경해야함. (구글도)
           email: token, // 실제 값은 이메일이 아닌 token으로 변경.
           nickname: result.user.displayName,
           imageURL: "",
@@ -285,37 +282,196 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   };
 
   // 카카오
-  // const kakaoJoin = () => {
-  //   if (!window.Kakao.isInitialized()) {
-  //     window.Kakao.init(kakaoAppKey);
-  //   }
+  const loginFormWithKakao = () => {
+    window.Kakao.Auth.login({
+      success(authObj: any) {
+        console.log("authObj : ", authObj);
+        window.localStorage.setItem("token", authObj.access_token);
+        axios({
+          method: "POST",
+          url: "http://localhost:3000/api/kakao",
+          data: { authObj },
+        }).then(function (response) {
+          // 서버에서 보낸 jwt토큰을 받음
+          console.log(response);
+          localStorage.setItem("data", JSON.stringify(response.data));
+          console.log("responseData", response.data);
 
-  //   const redirectUri = `${location.origin}/callback/kakaotalk`;
-  // const scope = [
-  //   KAKAO_SCOPE_NICKNAME,
-  //   KAKAO_SCOPE_GENDER,
-  //   KAKAO_SCOPE_BIRTHDAY,
-  // ].join(",");
+          // try {
+          //   const accessToken = await new Promise((resolve, reject) => {
+          //     jwt.sign(
+          //       {
+          //         Id : userItem?.id,  // payload에 담을 ID
+          //         Name : userItem?.name // payload에 담을 Name
+          //       },
+          //       process.env.NEXT_PUBLIC_JWT_SECRET_KEY, // 비밀 키
+          //       {
+          //         expiresIn : "5m" // 유효시간 5분
+          //       });
+          //   })
+          //   res.json({ success : true, accessToken})
+          // }
+          // const secretKey =
 
-  // window.Kakao.Auth.authorize({
-  //   redirectUri,
-  //   scope,
-  // });
-  //   // return alert("실행됩니다.");
+          return signInWithCustomToken(authService, `response.data`)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              console.log("user : ", user);
+              setDoc(doc(dbService, "Users", authObj.access_token), {
+                userId: authObj?.access_token,
+                email: "",
+                nickname: "카카오",
+                imageURL: "",
+                introduce: "",
+                point: "",
+                following: [],
+                follower: [],
+                recently: [],
+              });
+              alert("카카오 간편 회원가입 성공!");
+              setJoinIsOpen(false);
+              setIsOpen(true);
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              alert(errorMessage);
+            });
+        });
+        // .then((userCredential) => {
+        //   setDoc(doc(dbService, "Users", authObj.access_token), {
+        //     userId: authObj?.access_token,
+        //     email: "",
+        //     nickname: "카카오",
+        //     imageURL: "",
+        //     introduce: "",
+        //     point: "",
+        //     following: [],
+        //     follower: [],
+        //     recently: [],
+        //   });
+
+        //   alert("카카오 간편 회원가입 성공!");
+        //   setJoinIsOpen(false);
+        //   setIsOpen(true);
+        // })
+        // .catch((error) => {
+        //   const errorCode = error.code;
+        //   const errorMessage = error.message;
+        //   alert(errorMessage);
+        // });
+      },
+      fail(err: any) {
+        console.log("err :", err);
+      },
+    });
+  };
+
+  // const loginFormWithKakao = () => {
+  //   window.Kakao.Auth.login({
+  //     success(authObj: any) {
+  //       console.log("authObj : ", authObj);
+  //       const token = jwt.sign(
+  //         authObj.access_token,
+  //         // process.env.NEXT_PUBLIC_JWT_SECRET_KEY
+  //         `${process.env.NEXT_PUBLIC_JWT_SECRET_KEY}`
+  //       );
+  //       localStorage.setItem("token", token);
+  //       axios({
+  //         method: "POST",
+  //         url: "http://localhost:3000/api/kakao",
+  //         data: { token },
+  //       }).then(function (response) {
+  //         console.log(response);
+  //         localStorage.setItem("data", JSON.stringify(response.data));
+  //         console.log("responseData", response.data);
+  //         // return authService.signInWithCustomToken(token)
+  //         return signInWithCustomToken(authService, token)
+  //           .then((userCredential: any) => {
+  //             setDoc(doc(dbService, "Users", authObj.access_token), {
+  //               userId: authObj?.access_token,
+  //               email: "",
+  //               nickname: "카카오",
+  //               imageURL: "",
+  //               introduce: "",
+  //               point: "",
+  //               following: [],
+  //               follower: [],
+  //               recently: [],
+  //             });
+  //             alert("카카오 간편 회원가입 성공!");
+  //             setJoinIsOpen(false);
+  //             setIsOpen(true);
+  //           })
+  //           .catch((error: any) => {
+  //             const errorCode = error.code;
+  //             const errorMessage = error.message;
+  //             alert(errorMessage);
+  //           });
+  //       });
+  //     },
+  //   });
+  // };
+
+  // const loginFormWithKakao = () => {
+  //   window.Kakao.Auth.login({
+  //     success(authObj: any) {
+  //       console.log("authObj : ", authObj);
+  //       const token = jwt.sign(
+  //         { access_token: authObj.access_token },
+  //         process.env.NEXT_PUBLIC_JWT_SECRET_KEY
+  //       );
+  //       localStorage.setItem("token", token);
+  //       axios({
+  //         method: "POST",
+  //         url: "http://localhost:3000/api/kakao",
+  //         data: { token },
+  //       }).then(function (response) {
+  //         console.log(response);
+  //         localStorage.setItem("data", JSON.stringify(response.data));
+  //         console.log("responseData", response.data);
+  //         signInWithCustomToken(authService, token)
+  //           .then((userCredential: any) => {
+  //             setDoc(doc(dbService, "Users", authObj.access_token), {
+  //               userId: authObj?.access_token,
+  //               email: "",
+  //               nickname: "카카오",
+  //               imageURL: "",
+  //               introduce: "",
+  //               point: "",
+  //               following: [],
+  //               follower: [],
+  //               recently: [],
+  //             });
+  //             alert("카카오 간편 회원가입 성공!");
+  //             setJoinIsOpen(false);
+  //             setIsOpen(true);
+  //           })
+  //           .catch((error: any) => {
+  //             const errorCode = error.code;
+  //             const errorMessage = error.message;
+  //             alert(errorMessage);
+  //           });
+  //       });
+  //     },
+  //   });
   // };
 
   return (
     <>
-      <div className="w-screen h-screen fixed bg-slate-500 z-[1] opacity-90"></div>
-      <div className="inner w-[588px] h-[880px] bg-[#f2f2f2] z-[10] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div className="w-screen h-screen fixed bg-slate-500 z-[9] opacity-90"></div>
+      <div className="inner w-[588px] h-[900px] bg-white z-[10] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="loginContainer flex-col text-center">
           <MdOutlineClose
             onClick={() => setJoinIsOpen(false)}
-            className="absolute top-[12px] right-[12px] w-8 h-8 cursor-pointer duration-150 hover:text-red-400"
+            className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
           />
-          <h4 className="text-4xl font-bold mt-[72px] mb-[42px]">회원가입</h4>
+          <h1 className="text-[40px] font-bold mt-[50px] mb-[19px]">
+            회원가입
+          </h1>
           <form className="formContainer" onSubmit={signUpForm}>
             <div>
+              <p className="w-[472px] m-auto mb-[6px] text-left">이메일</p>
               <input
                 onChange={(e) => {
                   setEmail(e.target.value);
@@ -323,27 +479,29 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 }}
                 type="text"
                 id="email"
-                placeholder="Email"
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
+                placeholder="ohju@gmail.com"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
               />
-              <p className="w-[472px] m-auto mb-3 text-right text-sm">
+              <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]">
                 {checkEmail ? checkEmail : null}
               </p>
             </div>
             <div>
+              <p className="w-[472px] m-auto mb-[6px] text-left">비밀번호</p>
               <input
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
                 type="password"
                 id="password"
-                placeholder="Password"
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
+                placeholder="비밀번호는 최소 8자리로 입력해주세요."
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
               />
-              <p className="w-[472px] m-auto mb-3 text-right text-sm">
+              <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]">
                 {checkPassword}
               </p>
             </div>
+            <p className="w-[472px] m-auto mb-[6px] text-left">비밀번호 확인</p>
             <div>
               <input
                 onChange={(e) => {
@@ -351,62 +509,65 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 }}
                 type="password"
                 id="pwCheck"
-                placeholder="Confirm Password"
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
+                placeholder="비밀번호 확인"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
               />
-              <p className="w-[472px] m-auto mb-3 text-right text-sm">
+              <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]">
                 {checkPasswordConfirm}
               </p>
             </div>
             <div>
+              <p className="w-[472px] m-auto mb-[6px] text-left">닉네임</p>
               <input
                 onChange={(e) => {
                   setNickname(e.target.value);
                 }}
                 type="text"
                 id="nickname"
-                placeholder="Nickname"
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-gray-300 placeholder:text-[#666]  duration-300 focus:scale-105"
+                placeholder="닉네임"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
               />
-              <p className="w-[472px] m-auto mb-3 text-right text-sm">
+              <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]">
                 {checkNickname}
               </p>
             </div>
             <div className="birth_Container">
-              <div className="birth_input_Wrap w-[472px] m-auto mb-3 flex items-center justify-between">
+              <p className="w-[472px] m-auto mb-[6px] text-left">생년월일</p>
+              <div className="birth_input_Wrap w-[472px] m-auto mb-[2px] flex items-center justify-between">
                 <input
                   onChange={(e) => {
                     setUserYear(e.target.value);
                   }}
                   type="text"
-                  placeholder="출생년도"
-                  className="w-[144px] h-11 text-center"
+                  placeholder="YYYY"
+                  className="w-[144px] h-11 text-center bg-[#F5F5F5]"
                 />
                 <input
                   onChange={(e) => {
                     setUserMonth(e.target.value);
                   }}
                   type="text"
-                  placeholder="월"
-                  className="w-[144px] h-11 text-center"
+                  placeholder="MM"
+                  className="w-[144px] h-11 text-center bg-[#F5F5F5]"
                 />
                 <input
                   onChange={(e) => {
                     setUserDay(e.target.value);
                   }}
                   type="text"
-                  placeholder="일"
-                  className="w-[144px] h-11 text-center"
+                  placeholder="DD"
+                  className="w-[144px] h-11 text-center bg-[#F5F5F5]"
                 />
               </div>
-              <div className="flex w-[472px] m-auto">
-                <label htmlFor="auto_login" className="flex  items-center mb-4">
+              <div className="flex w-[472px] m-auto mb-7 ">
+                <label htmlFor="auto_login" className="flex  items-center ">
                   <div
                     onClick={ageVerification}
                     id="auto_login"
-                    className="px-2 py-1 border-1 bg-[#aaa] text-sm cursor-pointer duration-150 hover:bg-[#333] hover:text-slate-50"
+                    className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-[#FF6161]"
                   >
                     성인 인증하기
+                    <span className="inline-block ml-[4px]">✅</span>
                   </div>
                   <span className="ml-2 text-sm ">
                     {!checkAdult ? " " : checkAdult}
@@ -416,26 +577,24 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
             </div>
             <button
               type="submit"
-              className="w-[472px] h-[52px] mb-[27px] bg-[#333] border-[#aaa] text-slate-100"
+              className="w-[280px] h-[48px] mb-[29px] bg-[#FF6161] text-white rounded"
             >
               회원가입
             </button>
-            <p className="text-2xl font-bold mb-12">간편 회원가입</p>
-            <div className="w-[473px] m-auto mb-[31px] flex items-center  justify-center">
+            <p className="text-2xl font-bold mb-[33px]">소셜계정으로 로그인</p>
+            <div className="w-[200px] m-auto mb-[24px] flex items-center  justify-around">
               <div onClick={googleJoin}>
                 <FcGoogle className="w-10 h-10 border bg-black cursor-pointer" />
               </div>
               <div onClick={facebookJoin}>
-                <GrFacebook className="w-10 h-10 ml-20 mr-20 border border-slate-400 cursor-pointer" />
+                <GrFacebook className="w-10 h-10 ml-20 border border-slate-400 cursor-pointer" />
               </div>
-              <div>
+              {/* 네이버 로그인 구현 전 */}
+              {/* <div>
                 <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
-              </div>
-              <div>
-                <Link href="https://http://localhost:3000/authorize?response_type=code&client_id=${process.env.NEXT_PUBLIC_KAKAO_REST_API}&redirect_uri=https://localhost:3000">
-                  카카오로 회원가입하기
-                </Link>
-              </div>
+              </div> */}
+              {/* 카카오로 로그인 구현 전 */}
+              {/* <div onClick={loginFormWithKakao}>카카오로 회원가입하기</div> */}
             </div>
             <div className="w-[473px] m-auto flex justify-center text-sm">
               <p className="text-slate-400 mr-1">이미 계정이 있으신가요?</p>
