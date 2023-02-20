@@ -74,6 +74,50 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     setImgIdx(i);
   };
 
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setComment({
+      ...comment,
+      [name]: value,
+    });
+  };
+
+  const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const newComment = {
+      content: comment.content,
+      postId: postId,
+      userId: authService.currentUser?.uid!,
+      createdAt: dateForm,
+      isEdit: false,
+    };
+    const newAlarm = {
+      content: comment.content,
+      postId: postId,
+      nickname: currentUser?.nickname,
+      createdAt: Date.now(),
+      isDone: false,
+    };
+    if (comment.content.trim() !== "") {
+      await addDoc(collection(dbService, "Comments"), newComment);
+      const snapshot = await getDoc(
+        doc(dbService, "Users", user?.userId as string)
+      );
+      const snapshotdata = await snapshot.data();
+      const newPost = {
+        ...snapshotdata,
+      };
+      const newA = newPost?.alarm.push(newAlarm);
+
+      await updateDoc(doc(dbService, "Users", user?.userId as string), {
+        alarm: newPost?.alarm,
+      });
+    } else {
+      alert("내용이 없습니다!");
+    }
+    setComment(initialComment);
+  };
+
   // url 공유함수
   const doCopy = () => {
     // 흐음 1.
