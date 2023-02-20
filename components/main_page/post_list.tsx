@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState, useRef, ReactElement } from "react";
-import Category from "./category";
+
 import Grade from "@/components/grade";
 import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react"; // basic
 import SwiperCore, { Navigation, Pagination, Scrollbar } from "swiper";
@@ -26,6 +26,7 @@ import {
   NavigationOptions,
   SwiperEvents,
 } from "swiper/types";
+import Category from "./Category";
 
 SwiperCore.use([Navigation, Scrollbar, Pagination]);
 
@@ -132,8 +133,8 @@ const PostList = () => {
           </div>
           <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
             {posts?.map((post: any) => (
-              <div>
-                <PostCard key={post.postId} post={post} user={user} />
+              <div key={post.postId}>
+                <PostCard post={post} user={user} />
               </div>
             ))}
           </div>
@@ -165,8 +166,8 @@ const PostList = () => {
                 </button>
                 <div>
                   {posts?.map((post: any) => (
-                    <SwiperSlide>
-                      <PostCard key={post.postId} post={post} user={user} />
+                    <SwiperSlide key={post.postId}>
+                      <PostCard post={post} user={user} />
                     </SwiperSlide>
                   ))}{" "}
                 </div>
@@ -175,29 +176,32 @@ const PostList = () => {
           </div>
 
           {posts?.map((post: any) => (
-            <div className="w-full mt-4 bg-white grid grid-cols-2 gap-6">
+            <div
+              key={post.postId}
+              className="w-full mt-4 bg-white grid grid-cols-2 gap-6"
+            >
               {post === "최신순"
                 ? userPosts?.map((post) =>
                     cate === "전체" ? (
-                      <PostCard key={post.postId} post={post} user={user} />
+                      <PostCard post={post} user={user} />
                     ) : cate === post.type ? (
-                      <PostCard key={post.postId} post={post} user={user} />
+                      <PostCard post={post} user={user} />
                     ) : null
                   )
                 : post === "인기순"
                 ? userLikePosts?.map((post) =>
                     cate === "전체" ? (
-                      <PostCard key={post.postId} post={post} user={user} />
+                      <PostCard post={post} user={user} />
                     ) : cate === post.type ? (
-                      <PostCard key={post.postId} post={post} user={user} />
+                      <PostCard post={post} user={user} />
                     ) : null
                   )
                 : post === "조회순"
                 ? userViewPosts?.map((post) =>
                     cate === "전체" ? (
-                      <PostCard key={post.postId} post={post} user={user} />
+                      <PostCard post={post} user={user} />
                     ) : cate === post.type ? (
-                      <PostCard key={post.postId} post={post} user={user} />
+                      <PostCard post={post} user={user} />
                     ) : null
                   )
                 : null}

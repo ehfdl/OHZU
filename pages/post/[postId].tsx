@@ -13,10 +13,12 @@ import {
   startAfter,
   startAt,
   updateDoc,
+  where,
 } from "firebase/firestore";
 
-import Layout from "@/components/layout";
 import Link from "next/link";
+import Layout from "@/components/layout";
+import Grade from "../../components/grade";
 import { FiHeart, FiMoreVertical } from "react-icons/fi";
 import { FaHeart, FaCrown } from "react-icons/fa";
 import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
@@ -26,6 +28,7 @@ import CommentList from "@/components/comment/comment_list";
 import DeleteModal from "@/components/delete_modal";
 import { deleteObject, ref } from "firebase/storage";
 import { GetServerSideProps } from "next";
+import Comments from "@/components/comment/comments";
 
 interface PostDetailPropsType {
   postId: string;
@@ -33,11 +36,6 @@ interface PostDetailPropsType {
 
 const PostDetail = ({ postId }: PostDetailPropsType) => {
   const router = useRouter();
-  const date = new Date();
-  const dateForm = new Intl.DateTimeFormat("ko-KR", {
-    dateStyle: "long",
-    timeStyle: "medium",
-  }).format(date);
 
   const [imgIdx, setImgIdx] = useState(0);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
@@ -56,15 +54,6 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     id: "",
   });
 
-  const initialComment = {
-    content: "",
-    postId: "",
-    userId: "",
-    createdAt: "",
-    isEdit: false,
-  };
-
-  const [comment, setComment] = useState<CommentType>(initialComment);
   const [comments, setComments] = useState<CommentType[]>([]);
   const [user, setUser] = useState<UserType>({
     userId: "",
@@ -128,6 +117,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     }
     setComment(initialComment);
   };
+
   // url 공유함수
   const doCopy = () => {
     // 흐음 1.
@@ -235,7 +225,8 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
   const getComments = async () => {
     const q = query(
       collection(dbService, "Comments"),
-      orderBy("createdAt", "desc") // 해당 collection 내의 docs들을 createdAt 속성을 내림차순 기준으로
+      orderBy("createdAt", "desc"),
+      where("postId", "==", `${postId}`)
     );
 
     onSnapshot(q, (snapshot) => {
@@ -356,11 +347,11 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     }
     getPost();
     getComments();
-    getCurrentUser();
     updateView();
   }, []);
 
   useEffect(() => {
+    getCurrentUser();
     getUser();
   }, [post]);
 
@@ -371,9 +362,11 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           id="breadcrumbs"
           className="w-full space-x-2 flex items-center mb-4"
         >
-          <Link href="/">홈</Link>
+          <Link href="/" className="text-gray-400">
+            홈
+          </Link>
           <span> &#62; </span>
-          <Link href={`/`}>{post.type}</Link>
+          <span className="">{post.type}</span>
         </div>
         <div
           id="post-detail"
@@ -454,16 +447,21 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
             )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center space-y-2">
-                <img
-                  src={user?.imageURL}
-                  className="w-20 aspect-square bg-slate-300 rounded-full object-cover"
-                />
-                <div className="flex justify-center items-center space-x-1">
+                <Link href={`/users/${user.userId}`}>
+                  <img
+                    src={user?.imageURL}
+                    className="w-20 aspect-square bg-slate-300 rounded-full object-cover"
+                  />
+                </Link>
+                <Link
+                  href={`/users/${post.userId}`}
+                  className="flex justify-center items-center space-x-1"
+                >
                   <span>{user?.nickname}</span>
-                  <span>
-                    <FaCrown size={16} />
+                  <span className="w-[12px]">
+                    <Grade score={user.point!} />
                   </span>
-                </div>
+                </Link>
               </div>
               <div>
                 <pre>{post.text}</pre>
@@ -497,45 +495,11 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
             )}
           </div>
         </div>
-        <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
-          <div className="text-xl font-medium space-x-2">
-            <span>댓글</span>
-            <span>{comments.filter((i) => i.postId === postId).length}</span>
-          </div>
-          <div className="h-[1px] w-full bg-black mb-6" />
-          <form className="w-full flex items-center relative space-x-6">
-            <img
-              src={currentUser?.imageURL}
-              className="bg-slate-300 w-12 aspect-square rounded-full"
-            />
-            <textarea
-              disabled={authService.currentUser ? false : true}
-              name="content"
-              value={comment.content}
-              onChange={handleChange}
-              id=""
-              className="w-full p-2 border h-10 resize-none"
-              placeholder="댓글을 입력해주세요."
-            />
-            <button
-              disabled={authService.currentUser ? false : true}
-              onClick={addComment}
-              className="absolute right-0 pr-4 disabled:text-gray-400"
-            >
-              <span className="text-sm font-medium">등록</span>
-            </button>
-          </form>
-          <ul
-            id="comment-list"
-            className="mt-10 divide-y-[1px] divide-gray-300"
-          >
-            {comments?.map((comment) => {
-              if (postId === comment.postId) {
-                return <CommentList key={comment.id} comment={comment} />;
-              }
-            })}
-          </ul>
-        </div>
+        <Comments
+          postId={postId}
+          comments={comments}
+          currentUser={currentUser}
+        />
       </div>
     </Layout>
   );
