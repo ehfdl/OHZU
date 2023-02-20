@@ -72,7 +72,10 @@ const FollowModalCard = ({
         </div>
       </div>
 
-      {profile?.follower!.includes(authService.currentUser?.uid as string) ? (
+      {profile.userId ===
+      authService.currentUser?.uid ? null : profile?.follower!.includes(
+          authService.currentUser?.uid as string
+        ) ? (
         <button
           onClick={onClickFollowUpdate}
           className="ml-[14px] w-[98px] h-[30px] rounded-[50px] bg-[#FFF0f0] text-sm text-[#ff6161] flex justify-center items-center"

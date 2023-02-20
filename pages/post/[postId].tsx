@@ -1,18 +1,24 @@
-import { authService, dbService } from "@/firebase";
+import { authService, dbService, storageService } from "@/firebase";
 import {
   addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
+  limit,
   onSnapshot,
   orderBy,
   query,
+  startAfter,
+  startAt,
   updateDoc,
+  where,
 } from "firebase/firestore";
 
-import Layout from "@/components/layout";
 import Link from "next/link";
+import Layout from "@/components/layout";
+import Grade from "../../components/grade";
 import { FiHeart, FiMoreVertical } from "react-icons/fi";
 import { FaHeart, FaCrown } from "react-icons/fa";
 import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
@@ -20,22 +26,17 @@ import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import CommentList from "@/components/comment/comment_list";
 import DeleteModal from "@/components/delete_modal";
+import { deleteObject, ref } from "firebase/storage";
+import { GetServerSideProps } from "next";
+import Comments from "@/components/comment/comments";
 
-const PostDetail = () => {
+interface PostDetailPropsType {
+  postId: string;
+}
+
+const PostDetail = ({ postId }: PostDetailPropsType) => {
   const router = useRouter();
-  const ref = useRef();
-  const date = new Date();
-  const dateForm = new Intl.DateTimeFormat("ko-KR", {
-    dateStyle: "long",
-    timeStyle: "medium",
-  }).format(date);
 
-  let docId: string;
-  if (typeof window !== "undefined") {
-    docId = window.location.pathname.substring(6);
-  }
-
-  const [postId, setPostId] = useState("");
   const [imgIdx, setImgIdx] = useState(0);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -50,17 +51,9 @@ const PostDetail = () => {
     text: "",
     like: [],
     view: 0,
+    id: "",
   });
 
-  const initialComment = {
-    content: "",
-    postId: "",
-    userId: "",
-    createdAt: "",
-    isEdit: false,
-  };
-
-  const [comment, setComment] = useState<CommentType>(initialComment);
   const [comments, setComments] = useState<CommentType[]>([]);
   const [user, setUser] = useState<UserType>({
     userId: "",
@@ -77,41 +70,10 @@ const PostDetail = () => {
     point: 0,
   });
 
-  const getId = async () => {
-    const docRef = doc(dbService, "Posts", docId);
-    const docSnap = await getDoc(docRef);
-    const docID = docSnap.id;
-    setPostId(docID);
-  };
-
   const onImgChange = (i: number) => {
     setImgIdx(i);
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
-    setComment({
-      ...comment,
-      [name]: value,
-    });
-  };
-
-  const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const newComment = {
-      content: comment.content,
-      postId: router.query.postId,
-      userId: authService.currentUser?.uid!,
-      createdAt: dateForm,
-      isEdit: false,
-    };
-    if (comment.content.trim() !== "") {
-      await addDoc(collection(dbService, "Comments"), newComment);
-    } else {
-      alert("내용이 없습니다!");
-    }
-    setComment(initialComment);
-  };
   // url 공유함수
   const doCopy = () => {
     // 흐음 1.
@@ -159,12 +121,26 @@ const PostDetail = () => {
   const deletePost = async (id: string) => {
     await deleteDoc(doc(dbService, "Posts", id));
 
-    const commentId = comments
-      .filter((i) => i.postId === docId)
-      .map((i) => i.id);
+    const commentId = comments.filter((i) => i.postId === id).map((i) => i.id);
 
     commentId.map(async (id) => {
       await deleteDoc(doc(dbService, "Comments", id as string));
+    });
+
+    const postImgId = post.img!.map((item) => {
+      return item.split("2F")[1].split("?")[0];
+    });
+
+    postImgId.map(async (item) => {
+      const desertRef = ref(storageService, `post/${item}`);
+      await deleteObject(desertRef)
+        .then(() => {
+          // File deleted successfully
+        })
+        .catch((error) => {
+          console.log("error", error);
+          // Uh-oh, an error occurred!
+        });
     });
 
     router.push("/");
@@ -190,17 +166,23 @@ const PostDetail = () => {
     getPost();
   };
   const getPost = async () => {
-    const docRef = doc(dbService, "Posts", docId);
+    const docRef = doc(dbService, "Posts", postId);
     const docSnap = await getDoc(docRef);
     const data = docSnap.data();
+    const id = docSnap.id;
+    const newPost = {
+      ...data,
+      id,
+    };
 
-    setPost((prev) => ({ ...prev, ...data }));
+    setPost(newPost);
   };
 
   const getComments = async () => {
     const q = query(
       collection(dbService, "Comments"),
-      orderBy("createdAt", "desc") // 해당 collection 내의 docs들을 createdAt 속성을 내림차순 기준으로
+      orderBy("createdAt", "desc"),
+      where("postId", "==", `${postId}`)
     );
 
     onSnapshot(q, (snapshot) => {
@@ -217,7 +199,7 @@ const PostDetail = () => {
   };
 
   const updateView = async () => {
-    const docRef = doc(dbService, "Posts", docId);
+    const docRef = doc(dbService, "Posts", postId);
     const docSnap = await getDoc(docRef);
     const forUpdate = {
       ...docSnap.data(),
@@ -238,8 +220,8 @@ const PostDetail = () => {
     const newPost = {
       ...snapshotdata,
     };
-    if (!newPost.recently.includes(docId)) {
-      await newPost.recently.unshift(docId);
+    if (!newPost.recently.includes(postId)) {
+      await newPost.recently.unshift(postId);
       await updateDoc(
         doc(dbService, "Users", authService.currentUser?.uid as string),
         { recently: newPost.recently }
@@ -279,39 +261,53 @@ const PostDetail = () => {
     }
   };
 
+  // const getComments = async () => {
+  //   const first = query(
+  //     collection(dbService, "Comments"),
+  //     orderBy("createdAt", "desc"),
+  //     limit(3)
+  //   );
+
+  //   const documentSnapshots = await getDocs(first);
+
+  //   const lastVisible =
+  //     documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+  //   const next = query(
+  //     collection(dbService, "Comments"),
+  //     orderBy("createdAt", "desc"),
+  //     startAfter(lastVisible),
+  //     limit(3)
+  //   );
+
+  //   onSnapshot(first, (snapshot) => {
+  //     // q (쿼리)안에 담긴 collection 내의 변화가 생길 때 마다 매번 실행됨
+  //     const newComments = snapshot.docs.map((doc: any) => {
+  //       const newComment = {
+  //         id: doc.id,
+  //         ...doc.data(), // doc.data() : { text, createdAt, ...  }
+  //       };
+  //       return newComment;
+  //     });
+  //     setComments(newComments);
+  //   });
+
+  //   // console.log("first", first);
+  //   // console.log("lastVisible", lastVisible);
+  //   // console.log("next", next);
+  // };
+
   useEffect(() => {
-    // const getComments = async () => {
-    //   const first = query(
-    //     collection(dbService, "comments"),
-    //     orderBy("createdAt", "desc"),
-    //     limit(3)
-    //   );
-
-    //   const documentSnapshots = await getDocs(first);
-
-    //   const lastVisible =
-    //     documentSnapshots.docs[documentSnapshots.docs.length - 1];
-
-    //   const next = query(
-    //     collection(dbService, "comments"),
-    //     orderBy("createdAt", "desc"),
-    //     startAfter(lastVisible),
-    //     limit(3)
-    //   );
-
-    //   console.log(first, lastVisible, next);
-    // };
     if (authService.currentUser) {
       updateUserRecently();
     }
     getPost();
-    getId();
     getComments();
-    getCurrentUser();
     updateView();
   }, []);
 
   useEffect(() => {
+    getCurrentUser();
     getUser();
   }, [post]);
 
@@ -322,9 +318,11 @@ const PostDetail = () => {
           id="breadcrumbs"
           className="w-full space-x-2 flex items-center mb-4"
         >
-          <Link href="/">홈</Link>
+          <Link href="/" className="text-gray-400">
+            홈
+          </Link>
           <span> &#62; </span>
-          <Link href={`/`}>{post.type}</Link>
+          <span className="">{post.type}</span>
         </div>
         <div
           id="post-detail"
@@ -373,18 +371,25 @@ const PostDetail = () => {
                   </button>
                   <span>{post.like!.length}</span>
                 </div>
-                <button
-                  onClick={() => {
-                    setIsOpen(!isOpen);
-                  }}
-                >
-                  <FiMoreVertical size={24} />
-                </button>
-                {isOpen && (
-                  <div className="absolute top-14 right-0 z-10 bg-white border-black border  flex flex-col space-y-2 items-center p-4">
-                    <Link href={`/post/edit/${postId}`}>게시글 수정하기</Link>
-                    <button onClick={deleteToggle}>게시글 삭제하기</button>
-                  </div>
+                {authService.currentUser?.uid === post.userId && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                    >
+                      <FiMoreVertical size={24} />
+                    </button>
+                    {isOpen && (
+                      <div className="absolute top-14 right-0 z-10 bg-white border-black border flex flex-col space-y-6 items-center px-10 py-6">
+                        <Link href={`/post/edit/${postId}`}>
+                          게시글 수정하기
+                        </Link>
+                        <button onClick={deleteToggle}>게시글 삭제하기</button>
+                        <button onClick={doCopy}>게시글 공유하기</button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
@@ -398,16 +403,21 @@ const PostDetail = () => {
             )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center space-y-2">
-                <img
-                  src={user?.imageURL}
-                  className="w-20 aspect-square bg-slate-300 rounded-full"
-                />
-                <div className="flex justify-center items-center space-x-1">
+                <Link href={`/users/${user.userId}`}>
+                  <img
+                    src={user?.imageURL}
+                    className="w-20 aspect-square bg-slate-300 rounded-full object-cover"
+                  />
+                </Link>
+                <Link
+                  href={`/users/${post.userId}`}
+                  className="flex justify-center items-center space-x-1"
+                >
                   <span>{user?.nickname}</span>
-                  <span>
-                    <FaCrown size={16} />
+                  <span className="w-[12px]">
+                    <Grade score={user.point!} />
                   </span>
-                </div>
+                </Link>
               </div>
               <div>
                 <pre>{post.text}</pre>
@@ -425,61 +435,39 @@ const PostDetail = () => {
               </span>
               <pre className="pl-3 box-content">{post.recipe}</pre>
             </div>
-            <div
-              id="faq"
-              className="absolute right-0 bottom-0 flex items-center space-x-2"
-            >
-              <button onClick={doCopy}>
-                <AiOutlineLink size={24} />
-              </button>
-              <button className="flex flex-col items-center">
-                <AiFillAlert size={24} />
-              </button>
-            </div>
+            {authService.currentUser?.uid !== post.userId && (
+              <div
+                id="faq"
+                className="absolute right-0 bottom-0 flex items-start space-x-2"
+              >
+                <button onClick={doCopy}>
+                  <AiOutlineLink size={24} />
+                </button>
+                <button className="flex flex-col items-center space-y-1">
+                  <AiFillAlert size={24} />
+                  <span className="text-xs">신고하기</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
-        <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
-          <div className="text-xl font-medium space-x-2">
-            <span>댓글</span>
-            <span>{comments.filter((i) => i.postId === postId).length}</span>
-          </div>
-          <div className="h-[1px] w-full bg-black mb-6" />
-          <form className="w-full flex items-center relative space-x-6">
-            <img
-              src={currentUser?.imageURL}
-              className="bg-slate-300 w-12 aspect-square rounded-full"
-            />
-            <textarea
-              disabled={authService.currentUser ? false : true}
-              name="content"
-              value={comment.content}
-              onChange={handleChange}
-              id=""
-              className="w-full p-2 border h-10 resize-none"
-              placeholder="댓글을 입력해주세요."
-            />
-            <button
-              disabled={authService.currentUser ? false : true}
-              onClick={addComment}
-              className="absolute right-0 pr-4 disabled:text-gray-400"
-            >
-              <span className="text-sm font-medium">등록</span>
-            </button>
-          </form>
-          <ul
-            id="comment-list"
-            className="mt-10 divide-y-[1px] divide-gray-300"
-          >
-            {comments?.map((comment) => {
-              if (postId === comment.postId) {
-                return <CommentList key={comment.id} comment={comment} />;
-              }
-            })}
-          </ul>
-        </div>
+        <Comments
+          postId={postId}
+          comments={comments}
+          currentUser={currentUser}
+          user={user}
+        />
       </div>
     </Layout>
   );
 };
 
 export default PostDetail;
+
+export const getServerSideProps: GetServerSideProps = async ({
+  params: { postId },
+}: any) => {
+  return {
+    props: { postId },
+  };
+};

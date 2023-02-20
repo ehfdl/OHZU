@@ -34,7 +34,7 @@ const Mypage = () => {
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
-  const [follow, setFollow] = useState("follow");
+  const [follow, setFollow] = useState("follower");
   //users 불러오기까지함.
 
   const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
@@ -84,6 +84,7 @@ const Mypage = () => {
         })
       );
       (await promiseUser).forEach((item: any) => userArray.push(item.value));
+      console.log(userArray);
       setUsersFollowerProfile(userArray);
     }
   };
@@ -121,6 +122,7 @@ const Mypage = () => {
     setMyPosts(ohjuMyPosts);
     setLikePosts(ohjuLikePosts);
   }, [allPosts]);
+  // console.log("follower", usersFollowerProfile);
 
   useEffect(() => {
     if (myProfile) {
@@ -131,7 +133,7 @@ const Mypage = () => {
         )
       );
 
-      getFollowerUsersProfile;
+      getFollowerUsersProfile();
       getFollowingUsersProfile();
       setRecentlyPosts(ohjuRecentlyPosts);
     }
@@ -204,11 +206,11 @@ const Mypage = () => {
                 </div>
                 <div className="w-72 flex justify-between items-center mt-1">
                   <div className="flex flex-col justify-center items-center">
-                    좋아요<div>{myLike}</div>
+                    좋아요<div className="font-bold">{myLike}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
-                    게시글<div>{myPosts?.length}</div>
+                    게시글<div className="font-bold">{myPosts?.length}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div
@@ -218,7 +220,10 @@ const Mypage = () => {
                     }}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로워<div>{myProfile?.follower.length}</div>
+                    팔로워
+                    <div className="font-bold">
+                      {myProfile?.follower.length}
+                    </div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div
@@ -228,7 +233,10 @@ const Mypage = () => {
                     }}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로잉<div>{myProfile?.following.length}</div>
+                    팔로잉
+                    <div className="font-bold">
+                      {myProfile?.following.length}
+                    </div>
                   </div>
                 </div>
               </div>
