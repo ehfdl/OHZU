@@ -32,8 +32,6 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
     if (email) {
       if (email.match(emailRegEx) === null) {
         setEmail("이메일 형식을 확인해주세요.");
-      } else {
-        setEmail("");
       }
     }
   }, [email, setEmail]);
