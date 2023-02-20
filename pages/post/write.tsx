@@ -105,7 +105,7 @@ const Post = () => {
       setValidateIntro("소개를 입력해주세요");
       return true;
     } else if (form.type === "") {
-      setValidateCate("카테고리를 선택해주세요.");
+      setValidateCate("카테고리 한 개를 선택해주세요.");
       return true;
     } else if (form.ingredient === "") {
       setValidateIng("재료를 입력해주세요.");
@@ -341,23 +341,21 @@ const Post = () => {
             </span>
           </div>
           <textarea
-            className="h-7 resize-none overflow-hidden"
+            className="h-[118px] border-[1px] border-[#cccccc] py-3 px-3 rounded resize-none overflow-hidden"
             name="text"
             value={form.text}
             onChange={onChangeValue}
             placeholder="Lorem lpsum is simply dummy text..."
           />
 
-          <div className="w-full border-[1px] border-[#d9d9d9] mt-2" />
-
-          <div className="mt-5">
+          <div className="mt-6">
             <span className="font-bold text-[20px]">카테고리</span>
             <span className="ml-2 text-sm text-[red]  w-full">
               {validateCate}
             </span>
           </div>
           <div className="flex w-full justify-center gap-5 my-5 text-[#9e9e9e]">
-            <label className="w-20 h-8  rounded-[16px]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -369,7 +367,7 @@ const Post = () => {
                 소주
               </span>
             </label>
-            <label className="w-20 h-8  rounded-[16px]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -381,7 +379,7 @@ const Post = () => {
                 맥주
               </span>
             </label>
-            <label className="w-20 h-8  rounded-[16px]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -393,7 +391,7 @@ const Post = () => {
                 양주
               </span>
             </label>
-            <label className="w-20 h-8 rounded-[16px]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"

@@ -1,6 +1,5 @@
 import Layout from "@/components/layout";
 import UserPostCard from "@/components/sub_page/user_post_card";
-import Cate_Navbar from "@/components/navbar/cate_navbar";
 import { authService, dbService } from "@/firebase";
 import {
   collection,
@@ -16,6 +15,7 @@ import React, { useEffect, useState } from "react";
 import UserDropdown from "@/components/sub_page/user_dropdown";
 import Grade from "@/components/grade";
 import FollowModal from "@/components/follow_modal";
+import UserCateNavbar from "@/components/navbar/user_cate_navbar";
 
 const UserPage = () => {
   const userId = window.location.pathname.substring(7);
@@ -252,11 +252,11 @@ const UserPage = () => {
                 </div>
                 <div className="w-72 flex justify-between items-center mt-1">
                   <div className="flex flex-col justify-center items-center">
-                    좋아요<div>{userLike}</div>
+                    좋아요<div className="font-bold">{userLike}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
-                    게시글<div>{userPosts?.length}</div>
+                    게시글<div className="font-bold">{userPosts?.length}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
 
@@ -267,7 +267,10 @@ const UserPage = () => {
                     }}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로워<div>{userProfile?.follower.length}</div>
+                    팔로워
+                    <div className="font-bold">
+                      {userProfile?.follower.length}
+                    </div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
 
@@ -278,7 +281,10 @@ const UserPage = () => {
                     }}
                     className="flex flex-col justify-center items-center"
                   >
-                    팔로잉<div>{userProfile?.following.length}</div>
+                    팔로잉
+                    <div className="font-bold">
+                      {userProfile?.following.length}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -287,7 +293,7 @@ const UserPage = () => {
               </div>
             </div>
           </div>
-          <Cate_Navbar setCate={setCate} />
+          <UserCateNavbar setCate={setCate} />
           <div className="w-full mt-12 flex justify-between">
             <div className="ml-[3px] text-[20px] font-bold">
               게시글{" "}
@@ -315,7 +321,7 @@ const UserPage = () => {
             </div>
           </div>
 
-          <div className="w-full mt-4 bg-white grid grid-cols-2 gap-6">
+          <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
             {cateDrop === "최신순"
               ? userPosts?.map((post) =>
                   cate === "전체" ? (
