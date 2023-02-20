@@ -20,6 +20,8 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
 
   const [preview, setPreview] = useState<string | null>();
 
+  const [validateNickName, setValidateNickName] = useState("");
+
   const onChangeValue = (
     event:
       | React.ChangeEvent<HTMLInputElement>
@@ -40,24 +42,33 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
     }
   };
 
+  const validateChangeNickName = () => {
+    if (form.nickname!.length > 5) {
+      setValidateNickName("닉네임을 5자 이하로 입력해 주세요.");
+    } else if (form.nickname!.length <= 5) {
+      setValidateNickName("");
+    }
+  };
+
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     let imgFileUrl = "";
+    if (validateNickName === "") {
+      if (preview !== null) {
+        const previewRef = ref(storageService, `profile/${uuidv4()}`);
+        await uploadString(previewRef, preview as string, "data_url");
+        imgFileUrl = await getDownloadURL(previewRef);
+        let newForm = {
+          ...form,
+          imageURL: imgFileUrl,
+        };
+        await updateDoc(doc(dbService, "Users", myProfile.userId), newForm);
+      } else {
+        await updateDoc(doc(dbService, "Users", myProfile.userId), form);
+      }
 
-    if (preview !== null) {
-      const previewRef = ref(storageService, `profile/${uuidv4()}`);
-      await uploadString(previewRef, preview as string, "data_url");
-      imgFileUrl = await getDownloadURL(previewRef);
-      let newForm = {
-        ...form,
-        imageURL: imgFileUrl,
-      };
-      await updateDoc(doc(dbService, "Users", myProfile.userId), newForm);
-    } else {
-      await updateDoc(doc(dbService, "Users", myProfile.userId), form);
+      setIsOpenProfileModal(false);
     }
-
-    setIsOpenProfileModal(false);
   };
 
   useEffect(() => {
@@ -72,10 +83,14 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
     }
   }, [imgFile]);
 
+  useEffect(() => {
+    validateChangeNickName();
+  }, [form]);
+
   return (
     <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
       <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)]" />
-      <div className="w-[588px] h-[820px] bg-white z-40 flex flex-col justify-start items-center">
+      <div className="w-[588px] h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
           className="w-10 aspect-square absolute mt-7 ml-[500px]"
           onClick={() => setIsOpenProfileModal(false)}
@@ -83,7 +98,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
           <FiX className="w-full h-full text-[#acacac]" />
         </button>
 
-        <div className="text-[40px] font-bold mt-[88px]">프로필 편집</div>
+        <div className="text-[32px] font-bold mt-[88px]">프로필 편집</div>
         <div className="w-40 aspect-square mt-8 bg-[#d9d9d9] rounded-full overflow-hidden">
           {preview !== null ? (
             <img
@@ -108,7 +123,12 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
           <span>프로필 이미지 수정</span>
         </label>
         <div className="w-[472px]">
-          <div className="font-bold text-[24px]">닉네임</div>
+          <div className=" ">
+            <span className="font-bold text-[24px]">닉네임</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateNickName}
+            </span>
+          </div>
           <input
             name="nickname"
             value={form.nickname}
@@ -125,9 +145,9 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
         </div>
         <button
           onClick={onSubmit}
-          className="w-[472px] h-12 bg-black text-white mt-9"
+          className="w-[280px] h-12 bg-[#ff6161] text-white mt-10"
         >
-          수정완료
+          저장
         </button>
       </div>
     </div>

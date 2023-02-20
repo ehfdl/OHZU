@@ -246,6 +246,23 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     }
   };
 
+  const updateUserRecently = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "Users", authService.currentUser?.uid as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const newPost = {
+      ...snapshotdata,
+    };
+    if (!newPost.recently.includes(postId)) {
+      await newPost.recently.unshift(postId);
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        { recently: newPost.recently }
+      );
+    }
+  };
+
   const getUser = async () => {
     if (post?.userId) {
       const userRef = doc(dbService, "Users", post?.userId! as string);
@@ -315,50 +332,16 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
   // };
 
   useEffect(() => {
+    if (authService.currentUser) {
+      updateUserRecently();
+    }
     getPost();
     getComments();
+    getCurrentUser();
     updateView();
   }, []);
 
   useEffect(() => {
-    const updateUserRecently = async () => {
-      const postDate = post?.createdAt as string;
-      const snapshot = await getDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string)
-      );
-      const snapshotdata = await snapshot.data();
-      const newPost = {
-        ...snapshotdata,
-      };
-      if (postDate !== undefined) {
-        if (!newPost.recently.includes(postDate)) {
-          if (newPost.recently.length === 12) {
-            newPost.recently.pop();
-          }
-          await newPost.recently.unshift(postDate);
-          // console.log("qoduf", newPost.recently);
-          await updateDoc(
-            doc(dbService, "Users", authService.currentUser?.uid as string),
-            { recently: newPost.recently }
-          );
-        } else if (newPost.recently.includes(post?.createdAt as string)) {
-          const deletePost = await newPost.recently.filter(
-            (createAt: any) => createAt !== post.createdAt
-          );
-          await deletePost.unshift(post.createdAt as string);
-          await updateDoc(
-            doc(dbService, "Users", authService.currentUser?.uid as string),
-            { recently: deletePost }
-          );
-        }
-      }
-    };
-    if (post) {
-      if (authService.currentUser) {
-        updateUserRecently();
-      }
-    }
-    getCurrentUser();
     getUser();
   }, [post]);
 

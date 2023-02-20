@@ -43,7 +43,7 @@ const Header = ({ ...props }: any) => {
   };
 
   return (
-    <div className="flex w-full h-[118px] sticky top-0 z-[99] justify-between items-center border-b-2 border-slate-100 bg-white">
+    <div className="flex w-full h-[118px] sticky top-0 z-10 justify-between items-center border-b-2 border-slate-100 bg-white">
       <Link legacyBehavior href="/">
         <div className="Logo ml-[32px] w-[200px;] h-[60px] justify-center flex items-center cursor-pointer">
           <Image src={LOGO_Ohju} alt="Ohju LOGO" />

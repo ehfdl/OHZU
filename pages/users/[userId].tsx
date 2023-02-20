@@ -9,32 +9,89 @@ import {
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import UserDropdown from "@/components/sub_page/user_dropdown";
+import Grade from "@/components/grade";
 
 const UserPage = () => {
-  const router = useRouter();
+  const userId = window.location.pathname.substring(7);
 
+  const [myProfile, setMyProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<any>();
   const [userPosts, setUserPosts] = useState<PostType[]>();
+  const [userLikePosts, setUserLikePosts] = useState<PostType[]>();
+  const [userViewPosts, setUserViewPosts] = useState<PostType[]>();
   const [userLike, setUserLike] = useState<number>();
 
   const [cate, setCate] = useState("전체");
   const [cateDrop, setCateDrop] = useState("최신순");
 
+  const [dropOnOff, setDropOnOff] = useState(false);
+
+  const onClickFollowUpdate = async () => {
+    const FollowerArray = userProfile.follower.includes(
+      authService.currentUser?.uid
+    );
+
+    if (FollowerArray) {
+      const newFollowerArray = userProfile.follower.filter(
+        (id: any) => id !== authService.currentUser?.uid
+      );
+      const newFollowingArray = myProfile.following.filter(
+        (id: any) => id !== userId
+      );
+      await updateDoc(doc(dbService, "Users", userId), {
+        follower: newFollowerArray,
+      });
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        {
+          following: newFollowingArray,
+        }
+      );
+    } else if (!FollowerArray) {
+      const newFollowerArray = userProfile.follower.push(
+        authService.currentUser?.uid
+      );
+      const newFollowingArray = myProfile.following.push(userId);
+      await updateDoc(doc(dbService, "Users", userId), {
+        follower: userProfile.follower,
+      });
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        {
+          following: myProfile.following,
+        }
+      );
+    }
+    getUserProfile();
+    getMyProfile();
+  };
+
+  const getUserProfile = async () => {
+    const snapshot = await getDoc(doc(dbService, "Users", userId));
+    const snapshotdata = await snapshot.data();
+    const newProfile = {
+      ...snapshotdata,
+    };
+    setUserProfile(newProfile);
+  };
+  const getMyProfile = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "Users", authService.currentUser?.uid as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const newProfile = {
+      ...snapshotdata,
+    };
+    setMyProfile(newProfile);
+  };
+
   useEffect(() => {
-    const userId = window.location.pathname.substring(7);
-
-    const getUserProfile = async () => {
-      const snapshot = await getDoc(doc(dbService, "Users", userId));
-      const snapshotdata = await snapshot.data();
-      const newProfile = {
-        ...snapshotdata,
-      };
-
+    const getUserPosts = async () => {
       const q = query(
         collection(dbService, "Posts"),
         where("userId", "==", userId),
@@ -51,11 +108,11 @@ const UserPage = () => {
         });
         setUserPosts(newUserPosts);
       });
-
-      setUserProfile(newProfile);
     };
 
     getUserProfile();
+    getMyProfile();
+    getUserPosts();
   }, []);
 
   useEffect(() => {
@@ -63,7 +120,49 @@ const UserPage = () => {
       return accumulator + currentObject.like!.length;
     }, 0);
     setUserLike(totalLike);
+
+    const getLikePosts = () => {
+      const Posts = [...userPosts!];
+      const likePosts = Posts?.sort((a: PostType, b: PostType) => {
+        if (a.like!.length < b.like!.length) return 1;
+        if (a.like!.length > b.like!.length) return -1;
+        return 0;
+      });
+      setUserLikePosts(likePosts);
+    };
+
+    const getViewPosts = () => {
+      const Posts = [...userPosts!];
+
+      const viewPosts = Posts?.sort((a: PostType, b: PostType) => {
+        if (a.view! < b.view!) return 1;
+        if (a.view! > b.view!) return -1;
+        return 0;
+      });
+      setUserViewPosts(viewPosts);
+    };
+    if (userPosts) {
+      getLikePosts();
+      getViewPosts();
+    }
   }, [userPosts]);
+
+  useEffect(() => {
+    setDropOnOff(false);
+  }, [cateDrop]);
+
+  useEffect(() => {
+    if (userLike) {
+      if (userPosts?.length) {
+        const updateUserPoint = async () => {
+          await updateDoc(doc(dbService, "Users", userId as string), {
+            point: userLike + userPosts.length * 5,
+          });
+        };
+        updateUserPoint();
+      }
+    }
+  }, [userLike]);
 
   return (
     <Layout>
@@ -77,15 +176,30 @@ const UserPage = () => {
                   className="w-[124px] aspect-square object-cover"
                 />
               </div>
-              <button className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-[#FF6161] text-sm text-white flex justify-center items-center">
-                팔로우
-              </button>
+              {userProfile?.follower.includes(authService.currentUser?.uid) ? (
+                <button
+                  onClick={onClickFollowUpdate}
+                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-[#FFF0f0] text-sm text-[#ff6161] flex justify-center items-center"
+                >
+                  팔로우
+                </button>
+              ) : (
+                <button
+                  onClick={onClickFollowUpdate}
+                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-[#FF6161] text-sm text-white  flex justify-center items-center"
+                >
+                  팔로우
+                </button>
+              )}
             </div>
             <div className="flex flex-col justify-start w-[452px]">
               <div className="w-[440px] flex justify-between">
                 <div>
-                  <div className="font-bold text-[24px]">
-                    {userProfile?.nickname} 🍺
+                  <div className="font-bold text-[24px] flex justify-start items-center gap-1">
+                    <span>{userProfile?.nickname}</span>
+                    <span>
+                      <Grade score={userLike! + userPosts?.length! * 5} />
+                    </span>
                   </div>
                 </div>
                 <div className="w-72 flex justify-between items-center mt-1">
@@ -102,12 +216,12 @@ const UserPage = () => {
                     // onClick={() => setIsOpenFollowModal(true)}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로워<div>27</div>
+                    팔로워<div>{userProfile?.follower.length}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
 
                   <div className="flex flex-col justify-center items-center">
-                    팔로잉<div>27</div>
+                    팔로잉<div>{userProfile?.following.length}</div>
                   </div>
                 </div>
               </div>
@@ -126,17 +240,50 @@ const UserPage = () => {
                   : userPosts?.filter((post) => cate === post.type).length}
               </span>
             </div>
-            <UserDropdown setCateDrop={setCateDrop} cateDrop={cateDrop} />
+            <div>
+              <div
+                onClick={() => setDropOnOff(!dropOnOff)}
+                className="w-[111px] h-[33px] text-[#828293] flex justify-center items-center cursor-pointer"
+              >
+                {cateDrop}
+                {dropOnOff ? (
+                  <img src="/arrow/up-arrow.png" className="absolute ml-20" />
+                ) : (
+                  <img src="/arrow/down-arrow.png" className="absolute ml-20" />
+                )}
+              </div>
+              {dropOnOff ? (
+                <UserDropdown setCateDrop={setCateDrop} cateDrop={cateDrop} />
+              ) : null}
+            </div>
           </div>
 
           <div className="w-full mt-4 bg-white grid grid-cols-2 gap-6">
-            {userPosts?.map((post) =>
-              cate === "전체" ? (
-                <UserPostCard key={post.postId} post={post} />
-              ) : cate === post.type ? (
-                <UserPostCard key={post.postId} post={post} />
-              ) : null
-            )}
+            {cateDrop === "최신순"
+              ? userPosts?.map((post) =>
+                  cate === "전체" ? (
+                    <UserPostCard key={post.postId} post={post} />
+                  ) : cate === post.type ? (
+                    <UserPostCard key={post.postId} post={post} />
+                  ) : null
+                )
+              : cateDrop === "인기순"
+              ? userLikePosts?.map((post) =>
+                  cate === "전체" ? (
+                    <UserPostCard key={post.postId} post={post} />
+                  ) : cate === post.type ? (
+                    <UserPostCard key={post.postId} post={post} />
+                  ) : null
+                )
+              : cateDrop === "조회순"
+              ? userViewPosts?.map((post) =>
+                  cate === "전체" ? (
+                    <UserPostCard key={post.postId} post={post} />
+                  ) : cate === post.type ? (
+                    <UserPostCard key={post.postId} post={post} />
+                  ) : null
+                )
+              : null}
           </div>
         </div>
       </div>

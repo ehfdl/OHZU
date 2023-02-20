@@ -26,7 +26,7 @@ const RankInformationModal = () => {
         <img src="/badge/badge-bronze.png" className="w-[9.5px] h-3" />
         <div className="flex justify-between text-[12px] w-[120px]">
           <span className="font-bold">Bronze</span>
-          <span>100~300잔</span>
+          <span>0~300잔</span>
         </div>
       </div>
     </div>

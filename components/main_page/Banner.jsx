@@ -5,13 +5,19 @@ import { RxDotFilled } from "react-icons/rx";
 function Banner() {
   const slides = [
     {
-      url: "https://upload.wikimedia.org/wikipedia/commons/4/47/Cocktail_02.jpg",
+      url: "https://github.com/HanuKim/coding_test/blob/main/7.png?raw=true",
     },
     {
-      url: "https://img.delicious.com.au/CKMUcpx-/w1200/del/2015/11/summer-cocktails-24374-3.jpg",
+      url: "https://github.com/HanuKim/coding_test/blob/main/1.png?raw=true",
     },
     {
-      url: "https://img.taste.com.au/v31qR-vt/taste/2021/12/choc-mint-mudslide-cocktail-175833-2.jpg",
+      url: "https://raw.githubusercontent.com/HanuKim/coding_test/1baf4b575cf61e0e1232e92610e15f1d38271def/3.png",
+    },
+    {
+      url: "https://raw.githubusercontent.com/HanuKim/coding_test/1baf4b575cf61e0e1232e92610e15f1d38271def/2.png",
+    },
+    {
+      url: "https://raw.githubusercontent.com/HanuKim/coding_test/0b3344927f7f35e77b51bf5f24dc28be33154e87/Variant6.png",
     },
   ];
 
@@ -35,18 +41,17 @@ function Banner() {
   return (
     <form>
       <div className="relative">
-        <p className="font-bold text-3xl">⭐️ 오주가 추천하는 레시피</p>
-        <div className="max-w-[1920px] h-[400px] w-full mt-[-40px] py-16 relative group">
+        <div className=" h-[500px] w-full mt-[-40px] py-16 relative group">
           <div
             style={{ backgroundImage: `url(${slides[currentIndex].url})` }}
             className="w-full h-full bg-center bg-cover duration-500"
           >
-            <div className="absolute flex space-x-3 -translate-x-1/2 bottom-16 left-1/2">
+            <div className="absolute flex space-x-2 -translate-x-1/2 bottom-16 left-1/2">
               {slides.map((slide, slideIndex) => (
                 <div
                   key={slideIndex}
                   onClick={() => goToSlide(slideIndex)}
-                  className="text-5xl cursor-pointer text-gray-200/60 hover:text-white focus:text-white "
+                  className="text-3xl cursor-pointer text-gray-200/60 hover:text-[#ff6161]/60 focus:text-white "
                 >
                   <RxDotFilled />
                 </div>

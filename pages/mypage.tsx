@@ -2,7 +2,7 @@ import Layout from "@/components/layout";
 import Cate_Navbar from "@/components/navbar/cate_navbar";
 import Ohju_Navbar from "@/components/navbar/ohju_navbar";
 import ProfileModal from "@/components/sub_page/profile_modal";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { authService, dbService } from "@/firebase";
 import {
   doc,
@@ -12,14 +12,20 @@ import {
   onSnapshot,
   orderBy,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";
 import MyPostCard from "@/components/sub_page/my_post_card";
 import { BiInfoCircle } from "react-icons/bi";
 import RankInformationModal from "@/components/sub_page/membership_grade_information";
+import Grade from "@/components/grade";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
+  const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
+  const [usersFollowingProfile, setUsersFollowingProfile] = useState<any>();
+
+  const [allPosts, setAllPosts] = useState<PostType[]>();
   const [myPosts, setMyPosts] = useState<PostType[]>();
   const [likePosts, setLikePosts] = useState<PostType[]>();
   const [recentlyPosts, setRecentlyPosts] = useState<PostType[]>();
@@ -28,112 +34,110 @@ const Mypage = () => {
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
+  const [follow, setFollow] = useState("follow");
+  //users 불러오기까지함.
 
   const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
-  const [isOpenFollowingModal, setIsOpenFollowingModal] = useState(false);
   const [isOpenInforModal, setIsOpenInforModal] = useState(false);
 
+  const getMyProfile = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "Users", authService.currentUser?.uid as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const newProfile = {
+      ...snapshotdata,
+    };
+    setMyProfile(newProfile);
+  };
+
+  const getFollowingUsersProfile = async () => {
+    if (myProfile) {
+      const userArray = new Array();
+      const promiseUser = Promise.allSettled(
+        myProfile.following.map(async (postId: any) => {
+          const snapshot = await getDoc(doc(dbService, "Users", postId));
+          const snapshotdata = await snapshot.data();
+          const newProfile = {
+            ...snapshotdata,
+          };
+          return newProfile;
+        })
+      );
+      (await promiseUser).forEach((item: any) => userArray.push(item.value));
+      setUsersFollowingProfile(userArray);
+    }
+  };
+
+  const getFollowerUsersProfile = async () => {
+    if (myProfile) {
+      const userArray = new Array();
+      const promiseUser = Promise.allSettled(
+        myProfile.follower.map(async (postId: any) => {
+          const snapshot = await getDoc(doc(dbService, "Users", postId));
+          const snapshotdata = await snapshot.data();
+          const newProfile = {
+            ...snapshotdata,
+          };
+          return newProfile;
+        })
+      );
+      (await promiseUser).forEach((item: any) => userArray.push(item.value));
+      setUsersFollowerProfile(userArray);
+    }
+  };
+
   useEffect(() => {
-    const getMyProfile = async () => {
-      const snapshot = await getDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string)
-      );
-      const snapshotdata = await snapshot.data();
-      const newProfile = {
-        ...snapshotdata,
-      };
-      setMyProfile(newProfile);
-    };
-
-    const getMyPosts = () => {
+    const getAllPosts = async () => {
       const q = query(
         collection(dbService, "Posts"),
-        where("userId", "==", authService.currentUser?.uid as string),
         orderBy("createdAt", "desc")
       );
 
       onSnapshot(q, (snapshot) => {
-        const newMyPosts = snapshot.docs.map((doc) => {
-          const newMyPost: PostType = {
+        const newPosts = snapshot.docs.map((doc) => {
+          const newPost: PostType = {
             postId: doc.id,
             ...doc.data(),
           };
-          return newMyPost;
+          return newPost;
         });
-        setMyPosts(newMyPosts);
+        setAllPosts(newPosts);
       });
     };
-
-    const getLikePosts = () => {
-      const q = query(
-        collection(dbService, "Posts"),
-        where("like", "array-contains", authService.currentUser?.uid as string),
-        orderBy("createdAt", "desc")
-      );
-
-      onSnapshot(q, (snapshot) => {
-        const newLikePosts = snapshot.docs.map((doc) => {
-          const newLikePost: PostType = {
-            postId: doc.id,
-            ...doc.data(),
-          };
-          return newLikePost;
-        });
-        setLikePosts(newLikePosts);
-      });
-    };
-
     getMyProfile();
-    getMyPosts();
-    getLikePosts();
+    getAllPosts();
   }, []);
 
+  useMemo(() => {
+    const ohjuMyPosts = allPosts?.filter(
+      (post) => post.userId === authService.currentUser?.uid
+    );
+    const ohjuLikePosts = allPosts?.filter((post) =>
+      post.like?.includes(authService.currentUser?.uid as string)
+    );
+
+    setMyPosts(ohjuMyPosts);
+    setLikePosts(ohjuLikePosts);
+  }, [allPosts]);
+
   useEffect(() => {
-    const getRecentlyPosts = () => {
-      const recentlyArray = myProfile?.recently;
-      const ohjuRecentlyPosts = new Array();
-      if (recentlyArray) {
-        const q = query(
-          collection(dbService, "Posts"),
-          where("createdAt", "in", recentlyArray)
-        );
-
-        onSnapshot(q, (snapshot) => {
-          const newLikePosts = snapshot.docs.map((doc) => {
-            const newLikePost: PostType = {
-              postId: doc.id,
-              ...doc.data(),
-            };
-            return newLikePost;
-          });
-
-          recentlyArray.map((id: any) =>
-            newLikePosts?.map((post) =>
-              post.createdAt === id ? ohjuRecentlyPosts.push(post) : null
-            )
-          );
-          setRecentlyPosts(ohjuRecentlyPosts);
-        });
-      }
-    };
     if (myProfile) {
-      getRecentlyPosts();
+      const ohjuRecentlyPosts = new Array();
+      myProfile?.recently.map((id: any) =>
+        allPosts?.map((post) =>
+          post.postId === id ? ohjuRecentlyPosts.push(post) : null
+        )
+      );
+
+      getFollowerUsersProfile;
+      getFollowingUsersProfile();
+      setRecentlyPosts(ohjuRecentlyPosts);
     }
   }, [myProfile]);
 
   useEffect(() => {
-    const getMyProfile = async () => {
-      const snapshot = await getDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string)
-      );
-      const snapshotdata = await snapshot.data();
-      const newProfile = {
-        ...snapshotdata,
-      };
-
-      setMyProfile(newProfile);
-    };
     getMyProfile();
   }, [isOpenProfileModal]);
 
@@ -143,6 +147,20 @@ const Mypage = () => {
     }, 0);
     setMyLike(totalLike);
   }, [myPosts]);
+
+  useEffect(() => {
+    if (myLike) {
+      if (myPosts?.length) {
+        const updateUserPoint = async () => {
+          await updateDoc(
+            doc(dbService, "Users", authService.currentUser?.uid as string),
+            { point: myLike + myPosts.length * 5 }
+          );
+        };
+        updateUserPoint();
+      }
+    }
+  }, [myLike]);
 
   return (
     <Layout>
@@ -166,11 +184,14 @@ const Mypage = () => {
             <div className="flex flex-col">
               <div className="w-[440px] flex justify-between">
                 <div>
-                  <div className="font-bold text-[24px]">
-                    {myProfile?.nickname}
+                  <div className="font-bold text-[24px] flex justify-start items-center gap-1">
+                    <span>{myProfile?.nickname}</span>
+                    <span>
+                      <Grade score={myLike! + myPosts?.length! * 5} />
+                    </span>
                   </div>
                   <div className="text-[20px] flex">
-                    <span>999잔</span>
+                    <span>{myLike! + myPosts?.length! * 5}잔</span>
                     <span className="ml-1 mt-[6px]">
                       <BiInfoCircle
                         onMouseOver={() => setIsOpenInforModal(true)}
@@ -191,14 +212,23 @@ const Mypage = () => {
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div
-                    onClick={() => setIsOpenFollowModal(true)}
+                    onClick={() => {
+                      setIsOpenFollowModal(true);
+                      setFollow("follower");
+                    }}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로워<div>27</div>
+                    팔로워<div>{myProfile?.follower.length}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
-                  <div className="flex flex-col justify-center items-center">
-                    팔로잉<div>27</div>
+                  <div
+                    onClick={() => {
+                      setIsOpenFollowModal(true);
+                      setFollow("following");
+                    }}
+                    className="flex flex-col justify-center items-center cursor-pointer"
+                  >
+                    팔로잉<div>{myProfile?.following.length}</div>
                   </div>
                 </div>
               </div>
@@ -263,7 +293,15 @@ const Mypage = () => {
           />
         ) : null}
         {isOpenFollowModal ? (
-          <FollowModal setIsOpenFollowModal={setIsOpenFollowModal} />
+          <FollowModal
+            setIsOpenFollowModal={setIsOpenFollowModal}
+            follow={follow}
+            setFollow={setFollow}
+            usersFollowerProfile={usersFollowerProfile}
+            usersFollowingProfile={usersFollowingProfile}
+            myProfile={myProfile}
+            getMyProfile={getMyProfile}
+          />
         ) : null}
       </div>
     </Layout>
