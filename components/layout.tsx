@@ -45,7 +45,9 @@ const Layout = ({ children }: { children: any }) => {
         setJoinIsOpen={setJoinIsOpen}
       />
       {children}
-      {pageUrl === "/" ? (
+      {pageUrl === "/" ||
+      pageUrl.includes("/users") ||
+      pageUrl === "/mypage" ? (
         <>
           {authService.currentUser ? (
             <Link href="/post/write">

@@ -31,21 +31,21 @@ const UserPostCard = ({ post }: { post: any }) => {
   return (
     <div
       key={post.postId}
-      className=" aspect-[1/0.92] bg-slate-200 overflow-hidden relative rounded"
+      className=" aspect-square bg-slate-200 overflow-hidden relative rounded"
     >
       <Link href={`/post/${post.postId}`}>
-        <div className="w-full h-1/3 bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
+        <div className="w-full h-[180px] bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
 
-        <div className="absolute flex flex-col gap-1  pt-9 pl-10 ">
+        <div className="absolute flex flex-col gap-1  pt-9 pl-9 ">
           <div className="text-white font-bold text-[24px]">{post.title}</div>
-          <div className="text-[12px] bg-[rgba(255,255,255,0.5)] h-6 w-[58px] flex justify-center items-center rounded-[20px]">
+          <div className="text-[12px] text-[#333333] bg-[rgba(255,255,255,0.5)] h-6 w-[58px] flex justify-center items-center rounded-[20px]">
             {post.type}
           </div>
         </div>
       </Link>
       <div
         onClick={onClickLikeBtn}
-        className="absolute flex flex-col items-center w-7 h-7 z-10  right-0 mr-6 mt-9 cursor-pointer"
+        className="absolute flex flex-col items-center w-7 h-7 z-10  right-0 mr-9 mt-[42px] cursor-pointer"
       >
         {like ? (
           <img src="/like/like-pressed.png" />
