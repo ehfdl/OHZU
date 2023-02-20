@@ -28,9 +28,9 @@ const TopButton = () => {
   return (
     <>
       {showButton && (
-        <div className="scroll__container fixed right-[5%] bottom-[15%] z-0">
+        <div className="scroll__container fixed right-[5%] bottom-[14%] z-0">
           <button
-            className="rounded-full w-16 h-16 font-thin text-sm text-white/80 bg-black hover:text-white hover:font-normal hover:drop-shadow-xl"
+            className="rounded-full w-16 h-16 font-thin text-sm text-black/80 bg-white border border-black/50 hover:text-[#ff6161] hover:border-[#ff9999]/50 hover:shadow-[3px_5px_8px_#ff9999]"
             id="top"
             onClick={scrollToTop}
             type="button"
