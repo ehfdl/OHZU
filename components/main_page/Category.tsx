@@ -1,44 +1,84 @@
-import React, { useEffect, useState } from "react";
-import {
-  collection,
-  onSnapshot,
-  orderBy,
-  query,
-  doc,
-  getDoc,
-} from "firebase/firestore";
-import { useNavigate } from "react-router-dom";
-import "tailwindcss/tailwind.css";
+import React from "react";
 
-const Category = () => {
+const Category = ({
+  setCate,
+}: {
+  setCate: React.Dispatch<React.SetStateAction<string>>;
+}) => {
   return (
-    <div className="max-w-full flex items-center text-lg mb-2 font-thin justify-center">
-      <div className="hover:border-black hover:border-b-4 pb-2 mr-7">
-        <button className="bg-transparent hover:bg-transparent text-black px-7 border border-none hover:font-bold hover:border-black hover:border-b-2 ">
+    <nav className="mt-0 w-[550px] flex justify-around text-[20px]">
+      <label
+        onChange={() => setCate("전체")}
+        className="w-[88px] text-slate-500 text-center"
+      >
+        <input
+          type="radio"
+          name="type"
+          value="my-ohju"
+          className="hidden peer"
+          defaultChecked
+        />
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2">
           전체
-        </button>
-      </div>
-      <div className="hover:border-black hover:border-b-4 pb-2 mr-7">
-        <button className="bg-transparent hover:bg-transparent text-black px-7 border border-none hover:font-bold hover:border-black hover:border-b-2 ">
+        </span>
+      </label>
+      <label
+        onChange={() => setCate("소주")}
+        className="w-[88px] text-slate-500 text-center"
+      >
+        <input
+          type="radio"
+          name="type"
+          value="my-ohju"
+          className="hidden peer"
+        />
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2 ">
           소주
-        </button>
-      </div>
-      <div className="hover:border-black hover:border-b-4 pb-2 mr-7">
-        <button className="bg-transparent hover:bg-transparent text-black px-7 border border-none hover:font-bold hover:border-black hover:border-b-2 ">
+        </span>
+      </label>
+      <label
+        onChange={() => setCate("맥주")}
+        className="w-[88px] text-slate-500 text-center"
+      >
+        <input
+          type="radio"
+          name="type"
+          value="my-ohju"
+          className="hidden peer"
+        />
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2">
           맥주
-        </button>
-      </div>
-      <div className="hover:border-black hover:border-b-4 pb-2 mr-7">
-        <button className="bg-transparent hover:bg-transparent text-black px-7 border border-none hover:font-bold hover:border-black hover:border-b-2 ">
+        </span>
+      </label>
+      <label
+        onChange={() => setCate("양주")}
+        className="w-[88px] text-slate-500 text-center"
+      >
+        <input
+          type="radio"
+          name="type"
+          value="my-ohju"
+          className="hidden peer"
+        />
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2">
           양주
-        </button>
-      </div>
-      <div className="hover:border-black hover:border-b-4 pb-2 mr-7">
-        <button className="bg-transparent hover:bg-transparent text-black px-7 border border-none hover:font-bold hover:border-black hover:border-b-2 ">
+        </span>
+      </label>
+      <label
+        onChange={() => setCate("기타")}
+        className="w-[88px] text-slate-500 text-center"
+      >
+        <input
+          type="radio"
+          name="type"
+          value="my-ohju"
+          className="hidden peer"
+        />
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2">
           기타
-        </button>
-      </div>
-    </div>
+        </span>
+      </label>
+    </nav>
   );
 };
 
