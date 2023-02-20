@@ -40,3 +40,20 @@ next-env.d.ts
 package.json
 package.json.json
 
+
+# 이하 아래는 기본 성능 구현 완료 후, 카카오 로그인 및 네이버 로그인 기능 작동할 시 풀어서 Git에 파일 올릴 것
+# 회원가입(카카오)
+kakao.ts
+
+# FB SDK
+service-account.json
+
+#FB Setting
+firebase.tsbuildinfo
+.firebaserc
+database.rules.json
+firebase.json
+firestore.indexes.json
+firestore.rules
+next.config.js
+yarn.lock
