@@ -1,7 +1,9 @@
 import { authService, dbService } from "@/firebase";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import DeleteModal from "../delete_modal";
+import Grade from "../grade";
 
 interface CommentProps {
   comment: CommentType;
@@ -79,13 +81,21 @@ const CommentList = ({ comment }: CommentProps) => {
   return (
     <li className="flex justify-between py-6">
       <div className="flex space-x-6 w-full">
-        <div className="flex flex-col items-center space-y-2">
+        <Link
+          href={`/users/${comment.userId}`}
+          className="flex flex-col items-center space-y-2 w-[13%]"
+        >
           <img
             src={user?.imageURL}
             className="bg-slate-300 w-[40px] aspect-square rounded-full"
           />
-          <span className="text-xs">{user?.nickname}</span>
-        </div>
+          <div className="flex justify-start space-x-1">
+            <span className="text-xs">{user?.nickname}</span>
+            <span className="w-[12px]">
+              <Grade score={user?.point!} />
+            </span>
+          </div>
+        </Link>
         <div className="space-y-2 flex flex-col justify-between w-full">
           {isEdit ? (
             <div className="w-full flex items-center relative space-x-6">
@@ -123,6 +133,7 @@ const CommentList = ({ comment }: CommentProps) => {
           <button onClick={editToggle}>수정</button>
           {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
           <button onClick={deleteToggle}>삭제</button>
+          <button onClick={() => {}}>답글달기</button>
         </div>
       ) : (
         <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
