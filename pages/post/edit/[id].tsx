@@ -1,44 +1,27 @@
 import Layout from "@/components/layout";
 import { dbService, storageService } from "@/firebase";
 import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from "firebase/storage";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BsFillXCircleFill, BsPlusLg } from "react-icons/bs";
-import { FaRegEdit } from "react-icons/fa";
-import { FiEdit2 } from "react-icons/fi";
 import { v4 as uuidv4 } from "uuid";
 
 interface ParamsPropsType {
   id: string;
+  post: Form;
 }
-const EditDetail = ({ id }: ParamsPropsType) => {
+const EditDetail = ({ id, post }: ParamsPropsType) => {
   const router = useRouter();
-  const [post, setPost] = useState<Form>({
-    userId: "",
-    img: [],
-    title: "",
-    type: "",
-    ingredient: "",
-    recipe: "",
-    text: "",
-    like: [],
-    view: 0,
-  });
 
-  const [editPost, setEditPost] = useState<Form>({
-    userId: "",
-    img: [],
-    title: "",
-    type: "",
-    ingredient: "",
-    recipe: "",
-    text: "",
-    like: [],
-    view: 0,
-  });
+  const [editPost, setEditPost] = useState<Form>(post);
 
   const [editImgFile_01, setEditImgFile_01] = useState<File | null>();
   const [editImgFile_02, setEditImgFile_02] = useState<File | null>();
@@ -85,17 +68,6 @@ const EditDetail = ({ id }: ParamsPropsType) => {
     }
   };
 
-  const getPost = async () => {
-    const docRef = doc(dbService, "Posts", id);
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    const newPost = {
-      ...data,
-    };
-
-    setPost(newPost);
-  };
-
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     let imgFileUrl = "";
@@ -111,8 +83,6 @@ const EditDetail = ({ id }: ParamsPropsType) => {
             await uploadString(editPreviewRef, view as string, "data_url");
             imgFileUrl = await getDownloadURL(editPreviewRef);
             return imgFileUrl;
-          } else {
-            return savePreview[i];
           }
         })
       );
@@ -120,18 +90,54 @@ const EditDetail = ({ id }: ParamsPropsType) => {
       // downloadPreview
 
       downloadPreview.forEach((item: any, i) => {
-        if (item.value !== savePreview[i]) {
+        if (
+          item.value !== savePreview[i] &&
+          item.status !== "rejected" &&
+          savePreview[i] !== null &&
+          savePreview[i] !== undefined
+        ) {
+          const imgId = savePreview[i].split("2F")[1].split("?")[0];
+          const desertRef = ref(storageService, `post/${imgId}`);
+          deleteObject(desertRef)
+            .then(() => {
+              console.log("success", imgId);
+              // File deleted successfully
+            })
+            .catch((error) => {
+              console.log("error", error, imgId);
+              // Uh-oh, an error occurred!
+            });
+          savePreview[i] = item.value;
+        } else if (
+          item.value !== null &&
+          item.value !== undefined &&
+          item.value !== savePreview[i]
+        ) {
           savePreview[i] = item.value;
         } else {
           return savePreview[i];
         }
       });
 
+      // downloadPreview.forEach((item: any, i) => {
+      //   if (
+      //     item.value !== null &&
+      //     item.value !== undefined &&
+      //     item.value !== savePreview[i]
+      //   ) {
+      //     savePreview[i] = item.value;
+      //   }
+      // });
+
+      const newPreview = savePreview.filter(
+        (i: any) => i !== null && i !== undefined
+      );
+
       // downloadPreview.forEach((item: any, i) => savePreview.push(item.value));
 
       let newEditPost = {
         ...editPost,
-        img: savePreview,
+        img: newPreview,
       };
 
       await updateDoc(doc(dbService, "Posts", id), newEditPost);
@@ -178,12 +184,22 @@ const EditDetail = ({ id }: ParamsPropsType) => {
   }, [editImgFile_03]);
 
   useEffect(() => {
-    getPost();
+    if (editPost.img![0]) {
+      setEditPreview_01(editPost.img![0]);
+    } else {
+      setEditPreview_01(null);
+    }
+    if (editPost.img![1]) {
+      setEditPreview_02(editPost.img![1]);
+    } else {
+      setEditPreview_02(null);
+    }
+    if (editPost.img![2]) {
+      setEditPreview_03(editPost.img![2]);
+    } else {
+      setEditPreview_03(null);
+    }
   }, []);
-
-  useEffect(() => {
-    setEditPost(post);
-  }, [post]);
 
   return (
     <Layout>
@@ -197,11 +213,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
             <div className="w-[186px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
               {editPreview_01 === null ? (
                 <>
-                  <img
-                    src={post.img![0]}
-                    className="w-[186px] aspect-square object-cover"
-                  />
-                  <label className="w-12 h-12 bg-black bg-opacity-40 flex justify-center items-center absolute rounded-full cursor-pointer group">
+                  <label className="w-12 h-12 bg-[#f2f2f2] flex justify-center items-center absolute">
                     <input
                       name="img"
                       type="file"
@@ -209,10 +221,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                       onChange={onChangeImg_01}
                       className="hidden"
                     />
-                    <FiEdit2
-                      size={24}
-                      className=" text-white group-hover:text-[#ff6161]"
-                    />
+                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
                   </label>
                 </>
               ) : (
@@ -236,11 +245,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
               <div className="w-[88px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
                 {editPreview_02 === null ? (
                   <>
-                    <img
-                      src={post.img![1]}
-                      className="w-[186px] aspect-square object-cover"
-                    />
-                    <label className="w-12 h-12 bg-black bg-opacity-40 flex justify-center items-center absolute rounded-full cursor-pointer group">
+                    <label className="w-12 h-12 bg-[#f2f2f2] flex justify-center items-center absolute">
                       <input
                         name="img"
                         type="file"
@@ -248,10 +253,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                         onChange={onChangeImg_02}
                         className="hidden"
                       />
-                      <FiEdit2
-                        size={24}
-                        className=" text-white group-hover:text-[#ff6161]"
-                      />
+                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
                     </label>
                   </>
                 ) : (
@@ -274,11 +276,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
               <div className="w-[88px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
                 {editPreview_03 === null ? (
                   <>
-                    <img
-                      src={post.img![2]}
-                      className="w-[186px] aspect-square object-cover"
-                    />
-                    <label className="w-12 h-12 bg-black bg-opacity-40 flex justify-center items-center absolute rounded-full cursor-pointer group">
+                    <label className="w-12 h-12 bg-[#f2f2f2] flex justify-center items-center absolute">
                       <input
                         name="img"
                         type="file"
@@ -286,10 +284,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                         onChange={onChangeImg_03}
                         className="hidden"
                       />
-                      <FiEdit2
-                        size={24}
-                        className=" text-white group-hover:text-[#ff6161]"
-                      />
+                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
                     </label>
                   </>
                 ) : (
@@ -343,6 +338,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                   value="소주"
                   onChange={onChangeValue}
                   className="hidden peer"
+                  checked={editPost.type === "소주" ? true : false}
                 />
                 <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
                   소주
@@ -355,6 +351,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                   value="맥주"
                   onChange={onChangeValue}
                   className="hidden peer"
+                  checked={editPost.type === "맥주" ? true : false}
                 />
                 <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
                   맥주
@@ -367,6 +364,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                   value="양주"
                   onChange={onChangeValue}
                   className="hidden peer"
+                  checked={editPost.type === "양주" ? true : false}
                 />
                 <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
                   양주
@@ -379,6 +377,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                   value="Etc"
                   onChange={onChangeValue}
                   className="hidden peer"
+                  checked={editPost.type === "Etc" ? true : false}
                 />
                 <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
                   Etc
@@ -430,7 +429,14 @@ export default EditDetail;
 export const getServerSideProps: GetServerSideProps = async ({
   params: { id },
 }: any) => {
+  const docRef = doc(dbService, "Posts", id);
+  const docSnap = await getDoc(docRef);
+  const data = docSnap.data();
+  const post: Form = {
+    ...data,
+  };
+
   return {
-    props: { id },
+    props: { id, post },
   };
 };

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import LOGO_Ohju from "../public/LOGO_Ohju.png";
 import Image from "next/image";
 import Search from "./search";
+import Alarm from "./sub_page/alarm";
 
 const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
@@ -85,11 +86,14 @@ const Header = ({ ...props }: any) => {
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
         <div className="flex items-center">
           {authService.currentUser ? (
-            <Link legacyBehavior href="/mypage">
-              <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
-                마이페이지
-              </button>
-            </Link>
+            <>
+              <Alarm />
+              <Link legacyBehavior href="/mypage">
+                <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
+                  마이페이지
+                </button>
+              </Link>
+            </>
           ) : (
             <button
               onClick={loginModalHandler}

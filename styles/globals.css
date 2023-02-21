@@ -5,3 +5,9 @@
 body {
   font-family: "Poppins", "Noto Sans", sans-serif;
 }
+
+@layer base {
+  button[aria-current="page"] {
+    @apply text-[#FF6161];
+  }
+}
