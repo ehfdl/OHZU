@@ -223,6 +223,7 @@ const Post = () => {
         let newForm = {
           ...form,
           img: savePreview,
+          ingredient: filterIngre,
         };
 
         await addDoc(collection(dbService, "Posts"), newForm);

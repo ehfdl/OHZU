@@ -79,14 +79,22 @@ const Header = ({ ...props }: any) => {
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
         <div className="flex items-center">
           {authService.currentUser ? (
-            <>
-              <Alarm />
-              <Link legacyBehavior href="/mypage">
+            authService.currentUser?.uid === "r9TWnAGKsxgOoKmZf4IfCLxf0Ry2" ? (
+              <Link legacyBehavior href="/ohzu">
                 <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
-                  마이페이지
+                  관리페이지
                 </button>
               </Link>
-            </>
+            ) : (
+              <>
+                <Alarm />
+                <Link legacyBehavior href="/mypage">
+                  <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
+                    마이페이지
+                  </button>
+                </Link>
+              </>
+            )
           ) : (
             <button
               onClick={loginModalHandler}
