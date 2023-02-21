@@ -9,6 +9,20 @@ declare interface Form {
   like?: string[];
   view?: number;
   createdAt?: string;
+  id?: string;
+}
+declare interface WriteForm {
+  userId?: string;
+  img?: string[] | null;
+  title?: string;
+  type?: string;
+  ingredient?: string[];
+  recipe?: string;
+  text?: string;
+  like?: string[];
+  view?: number;
+  createdAt?: string;
+  id?: string;
 }
 declare interface PostType extends Form {
   postId: string;
@@ -16,11 +30,12 @@ declare interface PostType extends Form {
 
 declare interface CommentType {
   content: string;
-  postId: string;
+  postId?: string;
   userId: string;
   createdAt: string;
   id?: string;
   isEdit: boolean;
+  commentId?: string;
 }
 
 declare interface UserType {
@@ -38,4 +53,12 @@ declare interface UserType {
 declare interface ModalType {
   setIsOpenProfileModal: React.Dispatch<React.SetStateAction<boolean>>;
   myProfile: any;
+}
+
+declare interface AlarmType {
+  content?: string;
+  postId?: string;
+  nickname?: string;
+  createdAt?: string;
+  isDone?: boolean;
 }

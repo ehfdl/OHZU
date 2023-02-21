@@ -12,6 +12,7 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState, useRef, ReactElement } from "react";
 import Category from "./Category";
+
 import Grade from "@/components/grade";
 import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react"; // basic
 import SwiperCore, {
@@ -291,6 +292,7 @@ const PostList = () => {
                 </div>
               </Swiper>
               <div></div>
+
             </div>
           </div>
         </div>
