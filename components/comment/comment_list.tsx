@@ -54,6 +54,14 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
 
   const deleteComment = async (id: string) => {
     await deleteDoc(doc(dbService, "Comments", id));
+
+    const recommentId = recomments
+      .filter((i) => i.commentId === id)
+      .map((i) => i.id);
+
+    recommentId.map(async (id) => {
+      await deleteDoc(doc(dbService, "Recomments", id as string));
+    });
   };
 
   const getCommentUser = async () => {
