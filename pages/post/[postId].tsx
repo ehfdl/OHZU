@@ -182,7 +182,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     const q = query(
       collection(dbService, "Comments"),
       orderBy("createdAt", "desc"),
-      where("postId", "==", `${postId}`)
+      where("postId", "==", postId as string)
     );
 
     onSnapshot(q, (snapshot) => {
@@ -326,7 +326,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
         </div>
         <div
           id="post-detail"
-          className="w-full flex justify-between items-stretch space-x-10"
+          className="w-full flex justify-between items-stretch space-x-10 mb-32"
         >
           <div id="images-column" className="w-2/5">
             <img
@@ -402,7 +402,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               />
             )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
-              <div className="flex flex-col items-center space-y-2">
+              <div className="flex flex-col items-center justify-start space-y-2 w-[15%]">
                 <Link href={`/users/${user.userId}`}>
                   <img
                     src={user?.imageURL}
@@ -419,26 +419,26 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                   </span>
                 </Link>
               </div>
-              <div>
-                <pre>{post.text}</pre>
+              <div className="w-4/5">
+                <pre className="whitespace-pre-wrap">{post.text}</pre>
               </div>
             </div>
             <div id="ingredient" className="mt-12 mb-16">
               <span className="inline-block px-5 py-2 bg-red-300 text-white mb-5 rounded-full">
                 준비물
               </span>
-              <p className="pl-3 box-content">{post.ingredient}</p>
+              <p className="pl-3">{post.ingredient}</p>
             </div>
             <div id="recipe">
               <span className="inline-block px-5 py-2 bg-red-300 text-white mb-5 rounded-full">
                 만드는 방법
               </span>
-              <pre className="pl-3 box-content">{post.recipe}</pre>
+              <pre className="pl-3 whitespace-pre-wrap">{post.recipe}</pre>
             </div>
             {authService.currentUser?.uid !== post.userId && (
               <div
                 id="faq"
-                className="absolute right-0 bottom-0 flex items-start space-x-2"
+                className="absolute right-0 -bottom-20 flex items-start space-x-2"
               >
                 <button onClick={doCopy}>
                   <AiOutlineLink size={24} />

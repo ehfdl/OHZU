@@ -76,7 +76,7 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
     }
     setComment(initialComment);
   };
-  console.log(comments);
+
   return (
     <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
       <div className="text-xl font-medium space-x-2">
@@ -87,7 +87,7 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
       <form className="w-full flex items-center relative space-x-6">
         <img
           src={currentUser?.imageURL}
-          className="bg-slate-300 w-12 aspect-square rounded-full"
+          className="bg-slate-300 w-12 aspect-square rounded-full object-cover"
         />
         <textarea
           disabled={authService.currentUser ? false : true}
@@ -108,37 +108,44 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
       </form>
       <ul id="comment-list" className="mt-10 divide-y-[1px] divide-gray-300">
         {comments?.slice(offset, offset + limit).map((comment) => (
-          <CommentList key={comment.id} comment={comment} />
+          <CommentList
+            key={comment.id}
+            comment={comment}
+            currentUser={currentUser}
+            dateForm={dateForm}
+          />
         ))}
       </ul>
-      <nav className="w-full flex justify-center items-center space-x-9">
-        <button
-          className="text-[#FF6161] hover:text-[#D2373F] active:text-[#D2373F] disabled:text-gray-300"
-          onClick={() => setPage(page - 1)}
-          disabled={page === 1}
-        >
-          <BsChevronLeft size={20} />
-        </button>
-        {Array(pagesNumber)
-          .fill(pagesNumber)
-          .map((_, i) => (
-            <button
-              className="text-gray-400"
-              key={i}
-              onClick={() => setPage(i + 1)}
-              aria-current={page === i + 1 ? "page" : false}
-            >
-              {i + 1}
-            </button>
-          ))}
-        <button
-          onClick={() => setPage(page + 1)}
-          disabled={page === pagesNumber}
-          className="text-[#FF6161] hover:text-[#D2373F] active:text-[#D2373F] disabled:text-gray-300"
-        >
-          <BsChevronRight size={20} />
-        </button>
-      </nav>
+      {comments.length !== 0 && (
+        <nav className="w-full flex justify-center items-center space-x-9">
+          <button
+            className="text-[#FF6161] hover:text-[#D2373F] active:text-[#D2373F] disabled:text-gray-300"
+            onClick={() => setPage(page - 1)}
+            disabled={page === 1}
+          >
+            <BsChevronLeft size={20} />
+          </button>
+          {Array(pagesNumber)
+            .fill(pagesNumber)
+            .map((_, i) => (
+              <button
+                className="text-gray-400"
+                key={i}
+                onClick={() => setPage(i + 1)}
+                aria-current={page === i + 1 ? "page" : false}
+              >
+                {i + 1}
+              </button>
+            ))}
+          <button
+            onClick={() => setPage(page + 1)}
+            disabled={page === pagesNumber}
+            className="text-[#FF6161] hover:text-[#D2373F] active:text-[#D2373F] disabled:text-gray-300"
+          >
+            <BsChevronRight size={20} />
+          </button>
+        </nav>
+      )}
     </div>
   );
 };

@@ -5,6 +5,7 @@ interface DeleteModalProps {
   setDeleteConfirm: React.Dispatch<React.SetStateAction<boolean>>;
   deleteComment?: (id: string) => Promise<void>;
   deletePost?: (id: string) => Promise<void>;
+  deleteRecomment?: (id: string) => Promise<void>;
   id: string | undefined;
   text: string;
 }
@@ -13,6 +14,7 @@ const DeleteModal = ({
   setDeleteConfirm,
   deleteComment,
   deletePost,
+  deleteRecomment,
   id,
   text,
 }: DeleteModalProps) => {
@@ -49,6 +51,13 @@ const DeleteModal = ({
             <button
               className="py-3 px-40 bg-black text-white"
               onClick={() => deletePost!(id!)}
+            >
+              삭제
+            </button>
+          ) : text === "답글" ? (
+            <button
+              className="py-3 px-40 bg-black text-white"
+              onClick={() => deleteRecomment!(id!)}
             >
               삭제
             </button>
