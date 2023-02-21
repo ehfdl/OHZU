@@ -1,9 +1,19 @@
 import { authService, dbService } from "@/firebase";
-import { doc, updateDoc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
+import Grade from "../grade";
 
-const PostCard = ({ post, user }: { post: any; user: any }) => {
+const PostCard = ({ post }: { post: any }) => {
   const defaultImg =
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
 
@@ -27,6 +37,44 @@ const PostCard = ({ post, user }: { post: any; user: any }) => {
     }
   };
 
+  let docId: string;
+  if (typeof window !== "undefined") {
+    docId = window.location.pathname.substring(6);
+  }
+  const [user, setUser] = useState<UserType>({
+    userId: "",
+    email: "",
+    nickname: "",
+    imageURL: "",
+    point: 0,
+  });
+  const [postId, setPostId] = useState("");
+  const getId = async () => {
+    const docRef = doc(dbService, "Posts", docId);
+    const docSnap = await getDoc(docRef);
+    const docID = docSnap.id;
+    setPostId(docID);
+  };
+  const [userProfile, setUserProfile] = useState<any>();
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const getUser = async () => {
+    if (post?.userId) {
+      const userRef = doc(dbService, "Users", post?.userId! as string);
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+
+      const userProfile = {
+        ...userData,
+      };
+
+      setUser(userProfile);
+    }
+  };
+  useEffect(() => {
+    getUser();
+    return;
+  }, [user]);
+
   return (
     <div>
       <div
@@ -47,9 +95,9 @@ const PostCard = ({ post, user }: { post: any; user: any }) => {
               <Link href="/mypage">
                 <div className="">
                   <img
-                    className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer"
-                    src={user?.imageURL}
+                    className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
                     alt=""
+                    src={user?.imageURL}
                   />
                 </div>
               </Link>
@@ -57,25 +105,31 @@ const PostCard = ({ post, user }: { post: any; user: any }) => {
               <Link href={`/users/${post.userId}`}>
                 <div className="">
                   <img
-                    className="w-8 h-8 rounded-full mx-2 bg-black cursor-pointer"
-                    src={user?.imageURL}
+                    className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
+                    src={defaultImg}
                   />
                 </div>
               </Link>
             )}
 
             <div className="float-left">
-              <div className="text-xl font-semibold w-[180px]">
-                {post.title}
-              </div>
+              <Link href={`/post/${post.postId}`}>
+                <div className="text-xl font-semibold w-[185px]">
+                  {post.title}
+                </div>
+              </Link>
 
-              <div className="text-sm font-thin" key={user.userId}>
+              <div className="text-sm font-thin " key={user.userId}>
                 <p className="text-gray-900 leading-none">{user?.nickname}</p>
+                <span className="float-left ml-8 w-[10px] h-[10px] translate-y-[-13px]">
+                  <Grade score={user?.point as number} />
+                </span>
               </div>
             </div>
+
             <div
               onClick={onClickLikeBtn}
-              className="float-right translate-x-[98px] translate-y-[10px] w-6 mb-2"
+              className="float-right translate-x-[80px] translate-y-[8px] w-6 mb-2"
             >
               {like ? (
                 <img src="/like/like-pressed.png" />
@@ -88,7 +142,7 @@ const PostCard = ({ post, user }: { post: any; user: any }) => {
             </div>
           </div>
 
-          <div className="font-base text-black/60 text-sm mx-5 mt-5 mb-2">
+          <div className="font-base text-black/60 text-sm mx-6 mt-2 mb-2 w-[340px]">
             {post.text}
           </div>
         </div>
