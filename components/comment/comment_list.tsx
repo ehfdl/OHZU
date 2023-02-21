@@ -162,24 +162,44 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                   <button onClick={editToggle}>수정</button>
                   {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
                   <button onClick={deleteToggle}>삭제</button>
-                  <button
-                    onClick={() => {
-                      setIsOpen(!isOpen);
-                    }}
-                  >
-                    답글달기
-                  </button>
+                  {recomments.length === 0 ? (
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                    >
+                      답글달기
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                    >
+                      답글 {recomments.length}
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
                   <button>신고</button>
-                  <button
-                    onClick={() => {
-                      setIsOpen(!isOpen);
-                    }}
-                  >
-                    답글달기
-                  </button>
+                  {recomments.length === 0 ? (
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                    >
+                      답글달기
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                    >
+                      답글 {recomments.length}
+                    </button>
+                  )}
                 </div>
               )}
             </div>
