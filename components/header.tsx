@@ -10,8 +10,10 @@ const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
   const [currentUser, setCurrentUser] = useState(false);
 
-  // console.log("authService.currentUser.uid : ", authService.currentUser?.uid);
-  console.log("authService : ", authService);
+  console.log("====================================");
+  console.log("프롭스", props);
+  console.log("====================================");
+  // console.log("authService : ", authService);
 
   // 로그인&회원가입 모달창 show/hidden
   const loginModalHandler = () => {

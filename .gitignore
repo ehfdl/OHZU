@@ -38,8 +38,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-package.json
-package.json.json
 components/dropdown.jsx
-package.json
