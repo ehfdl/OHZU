@@ -11,10 +11,17 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState, useRef, ReactElement } from "react";
+import Category from "./Category";
 
 import Grade from "@/components/grade";
 import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react"; // basic
-import SwiperCore, { Navigation, Pagination, Scrollbar } from "swiper";
+import SwiperCore, {
+  Navigation,
+  Pagination,
+  Scrollbar,
+  EffectCoverflow,
+  Mousewheel,
+} from "swiper";
 import "swiper/css"; //basic
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -26,13 +33,17 @@ import {
   NavigationOptions,
   SwiperEvents,
 } from "swiper/types";
-import Category from "./Category";
-
-SwiperCore.use([Navigation, Scrollbar, Pagination]);
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 const PostList = () => {
-  // const userId = window.location.pathname.substring(7);
-  const [myProfile, setMyProfile] = useState<any>();
+  SwiperCore.use([
+    EffectCoverflow,
+    Navigation,
+    Mousewheel,
+    Scrollbar,
+    Pagination,
+  ]);
+
   const [userProfile, setUserProfile] = useState<any>();
   const [posts, setPosts] = useState<PostType[]>([]);
   const [user, setUser] = useState<UserType[]>([]);
@@ -43,24 +54,40 @@ const PostList = () => {
   const [userLike, setUserLike] = useState<number>();
   const swiper = useSwiper();
 
-  const prevRef = useRef<HTMLButtonElement>(null);
-  const nextRef = useRef<HTMLButtonElement>(null);
+  const navigationNextRef = useRef(null);
+  const navigationPrevRef = useRef(null);
+  const nextRef = useRef(null);
+  const prevRef = useRef(null);
+
+  const getUserProfile = async () => {
+    const snapshot = await getDoc(doc(dbService, "Users", "nickname"));
+    const snapshotdata = await snapshot.data();
+    const newProfile = {
+      ...snapshotdata,
+    };
+    setUserProfile(newProfile);
+  };
 
   useEffect(() => {
-    const q = query(
-      collection(dbService, "Posts"),
-      orderBy("createdAt", "desc")
-    );
-    onSnapshot(q, (snapshot) => {
-      const newMyPosts = snapshot.docs.map((doc) => {
-        const newMyPost: PostType = {
-          postId: doc.id,
-          ...doc.data(),
-        };
-        return newMyPost;
+    const getUserPosts = async () => {
+      const q = query(
+        collection(dbService, "Posts"),
+        orderBy("createdAt", "desc")
+      );
+      onSnapshot(q, (snapshot) => {
+        const newMyPosts = snapshot.docs.map((doc) => {
+          const newMyPost: PostType = {
+            postId: doc.id,
+            ...doc.data(),
+          };
+          return newMyPost;
+        });
+        setPosts(newMyPosts);
       });
-      setPosts(newMyPosts);
-    });
+    };
+    getUserProfile();
+    // getMyProfile();
+    getUserPosts();
   }, []);
 
   // const getUsers = async () => {
@@ -77,44 +104,53 @@ const PostList = () => {
   //   return;
   // }, []);
 
-  const getUser = async () => {
-    const userRef = doc(dbService, "Users", "userId");
-    const userSnap = await getDoc(userRef);
-    const userData = userSnap.data();
+  useEffect(() => {
+    const totalLike = userPosts?.reduce((accumulator, currentObject) => {
+      return accumulator + currentObject.like!.length;
+    }, 0);
+    setUserLike(totalLike);
 
-    const newUser = {
-      ...userData,
+    const getLikePosts = () => {
+      const Posts = [...posts!];
+      const likePosts = Posts?.sort((a: PostType, b: PostType) => {
+        if (a.like!.length < b.like!.length) return 1;
+        if (a.like!.length > b.like!.length) return -1;
+        return 0;
+      });
+      setUserLikePosts(likePosts);
     };
 
-    setUser(newUser as any);
-  };
+    const getViewPosts = () => {
+      const Posts = [...posts!];
+
+      const viewPosts = Posts?.sort((a: PostType, b: PostType) => {
+        if (a.view! < b.view!) return 1;
+        if (a.view! > b.view!) return -1;
+        return 0;
+      });
+      setUserViewPosts(viewPosts);
+    };
+    if (posts) {
+      getLikePosts();
+      getViewPosts();
+    }
+  }, [posts]);
 
   useEffect(() => {
-    getUser();
-  }, []);
+    if (userLike) {
+      if (userPosts?.length) {
+        const updateUserPoint = async () => {
+          await updateDoc(doc(dbService, "Users", "nickname"), {
+            point: userLike + userPosts.length * 5,
+          });
+        };
+        updateUserPoint();
+      }
+    }
+  }, [userLike]);
 
   return (
     <div>
-      {/* <div className="sm:max-w-[1200px] mx-auto justify-center items-center mb-4 ">
-        <p className="float-left font-bold text-xl mt-10">전체 게시글</p>
-        <span className="float-left ml-2 mt-10 pt-0.5 font-base text-base text-gray-400">
-          300
-        </span>
-        <PostList />
-
-        좋아요 많이 받은 오주 목록
-        <div className="mt-16">
-          <p className="float-left font-bold text-xl">인기 많은 오주</p>
-          <PostList />
-        </div>
-
-        조회수 많은 오주 목록
-        <div className="mt-16">
-          <p className="float-left font-bold text-xl">많이 본 오주</p>
-          <PostList />
-        </div>
-      </div> */}
-
       <div className="w-full flex justify-center mb-4 min-h-screen">
         <div className="w-[1200px] flex flex-col justify-start items-center">
           <Category setCate={setCate} />
@@ -127,19 +163,21 @@ const PostList = () => {
                   : userPosts?.filter((post) => cate === post.type).length}
               </span>
               <span className="float-right ml-2 pt-1 font-base text-base text-[#ff6161]">
-                300
+                {posts?.length}
               </span>
             </div>
           </div>
           <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
-            {posts?.map((post: any) => (
-              <div key={post.postId}>
-                <PostCard post={post} user={user} />
-              </div>
-            ))}
+            {posts?.map((post: any) =>
+              cate === "전체" ? (
+                <PostCard key={post.postId} post={post} />
+              ) : cate === post.type ? (
+                <PostCard key={post.postId} post={post} />
+              ) : null
+            )}
           </div>
 
-          <div className="w-full mt-16 h-[900px] relative overflow-hidden">
+          <div className="w-full mt-16 relative z-0">
             <div className="text-xl font-bold mb-3">
               인기 많은 오주
               <span className="text-[#ff6161]">
@@ -148,65 +186,115 @@ const PostList = () => {
                   : userPosts?.filter((post) => cate === post.type).length}
               </span>
             </div>
-            <>
+            <div className="group">
               <Swiper
                 spaceBetween={24}
                 slidesPerView={3}
                 scrollbar={{ draggable: true }}
-                navigation
-                pagination={{ clickable: true }}
+                navigation={{
+                  prevEl: navigationPrevRef.current,
+                  nextEl: navigationNextRef.current,
+                }}
+                breakpoints={{
+                  768: {
+                    slidesPerView: 3,
+                  },
+                }}
+                modules={[EffectCoverflow, Navigation, Mousewheel]}
+                grabCursor={true}
+                mousewheel={true}
+              >
+                <div className="">
+                  {userLikePosts?.map((post: any) => (
+                    <SwiperSlide>
+                      <PostCard key={post.postId} post={post} />
+                    </SwiperSlide>
+                  ))}{" "}
+                </div>
+                <div className="">
+                  <button
+                    ref={navigationPrevRef}
+                    className="absolute p-1.5 hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[15px] translate-y-[20px] z-20 top-[190px] rounded-full"
+                  >
+                    <BsChevronLeft size={25} />
+                  </button>
+                </div>
+                <div className="">
+                  <button
+                    ref={navigationNextRef}
+                    className="p-2 absolute hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[1140px] translate-y-[-50px] z-20 top-[260px] rounded-full"
+                  >
+                    <BsChevronRight size={25} />
+                  </button>
+                </div>
+              </Swiper>
+            </div>
+          </div>
+
+          <div className="w-full mt-16 relative z-0">
+            <div className="text-xl font-bold mb-3">
+              많이 본 오주
+              <span className="text-[#ff6161]">
+                {cate === "전체"
+                  ? userPosts?.length
+                  : userPosts?.filter((post) => cate === post.type).length}
+              </span>
+            </div>
+            <div className="group">
+              <Swiper
+                modules={[EffectCoverflow, Navigation, Mousewheel]}
+                effect={"coverflow"}
+                grabCursor={true}
+                centeredSlides={true}
+                spaceBetween={40}
+                slidesPerView={3}
+                scrollbar={{ draggable: true }}
+                navigation={{
+                  prevEl: prevRef.current!,
+                  nextEl: nextRef.current!,
+                }}
+                coverflowEffect={{
+                  rotate: 10, // 회전각도
+                  stretch: 0,
+                  depth: 100, // 깊이감도
+                  modifier: 2, //
+                  slideShadows: true, //선택한 부분 밝게 나머지는 그늘지게 해준다.
+                }}
+                mousewheel={true}
                 breakpoints={{
                   768: {
                     slidesPerView: 3,
                   },
                 }}
               >
-                <button onClick={() => swiper.slideNext()}>
-                  slide to the next
-                </button>
                 <div>
-                  {posts?.map((post: any) => (
-                    <SwiperSlide key={post.postId}>
-                      <PostCard post={post} user={user} />
+                  {userViewPosts?.map((post: any) => (
+                    <SwiperSlide>
+                      <PostCard key={post.postId} post={post} />
                     </SwiperSlide>
                   ))}{" "}
                 </div>
+                <div>
+                  <button
+                    ref={prevRef}
+                    className="absolute p-1.5 hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[20px] translate-y-[-10px] z-20 top-[210px] rounded-full"
+                  >
+                    <BsChevronLeft size={25} />
+                  </button>
+                </div>
+                <div>
+                  <button
+                    ref={nextRef}
+                    className="absolute p-2 hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[1140px] translate-y-[-100px] z-20 top-[300px] rounded-full"
+                  >
+                    <BsChevronRight size={25} />
+                  </button>
+                </div>
               </Swiper>
-            </>
-          </div>
+              <div></div>
 
-          {posts?.map((post: any) => (
-            <div
-              key={post.postId}
-              className="w-full mt-4 bg-white grid grid-cols-2 gap-6"
-            >
-              {post === "최신순"
-                ? userPosts?.map((post) =>
-                    cate === "전체" ? (
-                      <PostCard post={post} user={user} />
-                    ) : cate === post.type ? (
-                      <PostCard post={post} user={user} />
-                    ) : null
-                  )
-                : post === "인기순"
-                ? userLikePosts?.map((post) =>
-                    cate === "전체" ? (
-                      <PostCard post={post} user={user} />
-                    ) : cate === post.type ? (
-                      <PostCard post={post} user={user} />
-                    ) : null
-                  )
-                : post === "조회순"
-                ? userViewPosts?.map((post) =>
-                    cate === "전체" ? (
-                      <PostCard post={post} user={user} />
-                    ) : cate === post.type ? (
-                      <PostCard post={post} user={user} />
-                    ) : null
-                  )
-                : null}
             </div>
-          ))}
+          </div>
         </div>
       </div>
     </div>
