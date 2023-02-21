@@ -131,8 +131,7 @@ const UserPage = () => {
       setUsersFollowerProfile(userArray);
     }
   };
-  console.log(usersFollowerProfile);
-  console.log("following", usersFollowingProfile);
+
   useEffect(() => {
     const getUserPosts = async () => {
       const q = query(
