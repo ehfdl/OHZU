@@ -4,7 +4,7 @@ import Footer from "@/components/footer";
 import Category from "@/components/main_page/Category";
 import Dropdown from "@/components/dropdown";
 
-export default function Search_page(props: any) {
+export default function Searchword(props: any) {
   const [cate, setCate] = useState("");
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function Search_page(props: any) {
     };
   }, [props.search]);
 
-  const temp_html = `
+  const card = `
   <div className="card-wrap">
             <div className="card w-[384px] h-[420px] bg-slate-300 rounded">
               <div className="card-pic w-[384px] h-[284px] bg-green-300 rounded">

@@ -72,8 +72,7 @@ const PostCard = ({ post }: { post: any }) => {
   };
   useEffect(() => {
     getUser();
-    return;
-  }, [user]);
+  }, []);
 
   return (
     <div>
