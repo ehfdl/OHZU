@@ -17,11 +17,12 @@ declare interface PostType extends Form {
 
 declare interface CommentType {
   content: string;
-  postId: string;
+  postId?: string;
   userId: string;
   createdAt: string;
   id?: string;
   isEdit: boolean;
+  commentId?: string;
 }
 
 declare interface UserType {
