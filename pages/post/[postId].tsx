@@ -10,6 +10,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   startAfter,
   startAt,
   updateDoc,
@@ -261,6 +262,34 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     }
   };
 
+  const onClickReportPost = async () => {
+    const snapshot = await getDoc(doc(dbService, "ReportPosts", postId));
+    const snapshotdata = await snapshot.data();
+    const pastPost = {
+      ...snapshotdata,
+    };
+
+    if (pastPost.reporter) {
+      if (pastPost.reporter.includes(authService.currentUser?.uid)) {
+        console.log("이미신고했습니당");
+        return;
+      } else {
+        pastPost.reporter.push(authService.currentUser?.uid);
+        await updateDoc(doc(dbService, "ReportPosts", postId), {
+          reporter: pastPost.reporter,
+        });
+        console.log("새로운 신고자!");
+      }
+    } else if (!pastPost.reporter) {
+      const newPost = {
+        ...post,
+        reporter: [authService.currentUser?.uid],
+      };
+      await setDoc(doc(dbService, "ReportPosts", postId), newPost);
+      console.log("신고 완료");
+    }
+  };
+
   // const getComments = async () => {
   //   const first = query(
   //     collection(dbService, "Comments"),
@@ -443,7 +472,10 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 <button onClick={doCopy}>
                   <AiOutlineLink size={24} />
                 </button>
-                <button className="flex flex-col items-center space-y-1">
+                <button
+                  onClick={onClickReportPost}
+                  className="flex flex-col items-center space-y-1"
+                >
                   <AiFillAlert size={24} />
                   <span className="text-xs">신고하기</span>
                 </button>

@@ -8,6 +8,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -96,6 +97,38 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
     });
   };
 
+  const onClickReportComment = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "ReportComments", id as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const pastComment = {
+      ...snapshotdata,
+    };
+
+    if (pastComment.reporter) {
+      if (pastComment.reporter.includes(authService.currentUser?.uid)) {
+        console.log("이미신고했습니당");
+        return;
+      } else {
+        pastComment.reporter.push(authService.currentUser?.uid);
+        await updateDoc(doc(dbService, "ReportComments", id as string), {
+          reporter: pastComment.reporter,
+        });
+        console.log("새로운 신고자!");
+      }
+    } else if (!pastComment.reporter) {
+      const newComments = {
+        commentId: id,
+        postId: comment.postId,
+        content: comment.content,
+        reporter: [authService.currentUser?.uid],
+      };
+      await setDoc(doc(dbService, "ReportComments", id as string), newComments);
+      console.log("신고 완료");
+    }
+  };
+
   useEffect(() => {
     resetToggle();
     getCommentUser();
@@ -172,7 +205,7 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                 </div>
               ) : (
                 <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
-                  <button>신고</button>
+                  <button onClick={onClickReportComment}>신고</button>
                   <button
                     onClick={() => {
                       setIsOpen(!isOpen);
