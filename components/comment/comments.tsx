@@ -1,5 +1,5 @@
 import { authService, dbService } from "@/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import CommentList from "./comment_list";
@@ -8,8 +8,9 @@ interface CommentsProps {
   postId: string;
   comments: CommentType[];
   currentUser: UserType;
+  user: UserType;
 }
-const Comments = ({ postId, comments, currentUser }: CommentsProps) => {
+const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
   const date = new Date();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
@@ -45,18 +46,37 @@ const Comments = ({ postId, comments, currentUser }: CommentsProps) => {
     const newComment = {
       content: comment.content,
       postId: postId,
-      userId: currentUser?.userId,
+      userId: authService.currentUser?.uid!,
       createdAt: dateForm,
       isEdit: false,
     };
+    const newAlarm = {
+      content: comment.content,
+      postId: postId,
+      nickname: currentUser?.nickname,
+      createdAt: Date.now(),
+      isDone: false,
+    };
     if (comment.content.trim() !== "") {
       await addDoc(collection(dbService, "Comments"), newComment);
+      const snapshot = await getDoc(
+        doc(dbService, "Users", user?.userId as string)
+      );
+      const snapshotdata = await snapshot.data();
+      const newPost = {
+        ...snapshotdata,
+      };
+      const newA = newPost?.alarm.push(newAlarm);
+
+      await updateDoc(doc(dbService, "Users", user?.userId as string), {
+        alarm: newPost?.alarm,
+      });
     } else {
       alert("내용이 없습니다!");
     }
     setComment(initialComment);
   };
-
+  console.log(comments);
   return (
     <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
       <div className="text-xl font-medium space-x-2">

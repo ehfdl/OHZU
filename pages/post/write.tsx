@@ -16,23 +16,33 @@ const Post = () => {
     timeStyle: "medium",
   }).format(date);
 
-  const [form, setForm] = useState<Form>({
+  const [form, setForm] = useState<WriteForm>({
     userId: authService.currentUser?.uid as string,
     img: [""],
     title: "",
     type: "",
-    ingredient: "",
+    ingredient: [""],
     recipe: "",
     text: "",
     like: [],
     createdAt: dateForm,
     view: 0,
   });
+  const [ingre, setIngre] = useState({
+    ing_01: "",
+    ing_02: "",
+    ing_03: "",
+    ing_04: "",
+    ing_05: "",
+    ing_06: "",
+  });
+
+  const [plusIng, setPlusIng] = useState(false);
 
   const [validateTitle, setValidateTitle] = useState("");
   const [validateIntro, setValidateIntro] = useState("");
   const [validateCate, setValidateCate] = useState("");
-  const [validateIng, setValidateIng] = useState("");
+  const [validateIng, setValidateIng] = useState("최대 6개까지 작성 가능");
   const [validateRecipe, setValidateRecipe] = useState("");
 
   const [imgFile_01, setImgFile_01] = useState<File | null>();
@@ -77,6 +87,19 @@ const Post = () => {
       }
     }
   };
+  const onChangeIngre = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setIngre((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+  const onChangePlusIngre = () => {
+    if (ingre.ing_01 !== "" && ingre.ing_02 !== "" && ingre.ing_03 !== "") {
+      setPlusIng(true);
+    } else {
+      setValidateIng("재료를 입력해주세요.");
+    }
+  };
 
   const validateChangePost = () => {
     if (form.title!.length > 10) {
@@ -90,7 +113,14 @@ const Post = () => {
     if (form.type !== "") {
       setValidateCate("");
     }
-    if (form.ingredient !== "") {
+    if (
+      ingre.ing_01 !== "" ||
+      ingre.ing_02 !== "" ||
+      ingre.ing_03 !== "" ||
+      ingre.ing_04 !== "" ||
+      ingre.ing_05 !== "" ||
+      ingre.ing_06 !== ""
+    ) {
       setValidateIng("");
     }
     if (form.recipe !== "") {
@@ -105,10 +135,17 @@ const Post = () => {
       setValidateIntro("소개를 입력해주세요");
       return true;
     } else if (form.type === "") {
-      setValidateCate("카테고리를 선택해주세요.");
+      setValidateCate("카테고리 한 개를 선택해주세요.");
       return true;
-    } else if (form.ingredient === "") {
-      setValidateIng("재료를 입력해주세요.");
+    } else if (
+      ingre.ing_01 === "" &&
+      ingre.ing_02 === "" &&
+      ingre.ing_03 === "" &&
+      ingre.ing_04 === "" &&
+      ingre.ing_05 === "" &&
+      ingre.ing_06 === ""
+    ) {
+      setValidateIng("재료를 한가지 이상 입력해주세요.");
       return true;
     } else if (form.recipe === "") {
       setValidateRecipe("방법을 입력해주세요.");
@@ -119,14 +156,25 @@ const Post = () => {
   useEffect(() => {
     validateChangePost();
   }, [form]);
+  useEffect(() => {
+    validateChangePost();
+  }, [ingre]);
 
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
+    let totalIngre = [
+      ingre.ing_01,
+      ingre.ing_02,
+      ingre.ing_03,
+      ingre.ing_04,
+      ingre.ing_05,
+      ingre.ing_06,
+    ];
+    let filterIngre = totalIngre.filter((ing) => ing !== "");
     if (validateClickPost()) {
       return;
     }
-
     let imgFileUrl = "";
     let preview = [preview_01, preview_02, preview_03];
     let newPreview = preview.filter((view) => view != null);
@@ -165,6 +213,7 @@ const Post = () => {
         let newForm = {
           ...form,
           img: savePreview,
+          ingredient: filterIngre,
         };
 
         await addDoc(collection(dbService, "Posts"), newForm);
@@ -221,11 +270,13 @@ const Post = () => {
 
   return (
     <Layout>
-      <div className="w-full h-screen flex justify-center">
+      <div className="w-full flex justify-center">
         <form className="w-[588px] flex flex-col">
           <div className="flex gap-3">
             <div className="font-bold text-[20px] mt-5">사진</div>
-            <div className="text-[12px] mt-7">최대 3장까지 업로드 가능</div>
+            <div className="text-[12px] text-[#8e8e93] mt-7">
+              최대 3장까지 업로드 가능
+            </div>
           </div>
           <div className="flex w-full mt-[18px] gap-[10px] justify-center">
             <div className="w-[186px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
@@ -341,23 +392,21 @@ const Post = () => {
             </span>
           </div>
           <textarea
-            className="h-7 resize-none overflow-hidden"
+            className="h-[118px] border-[1px] border-[#cccccc] py-3 px-3 rounded resize-none overflow-hidden"
             name="text"
             value={form.text}
             onChange={onChangeValue}
-            placeholder="Lorem lpsum is simply dummy text..."
+            placeholder="간단한 소개글을 작성하세요."
           />
 
-          <div className="w-full border-[1px] border-[#d9d9d9] mt-2" />
-
-          <div className="mt-5">
+          <div className="mt-6">
             <span className="font-bold text-[20px]">카테고리</span>
             <span className="ml-2 text-sm text-[red]  w-full">
               {validateCate}
             </span>
           </div>
-          <div className="flex w-full justify-center gap-5 my-5 text-[#9e9e9e]">
-            <label className="w-20 h-8  rounded-[16px]">
+          <div className="flex w-full justify-center gap-6 my-4 text-[#9e9e9e]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -369,7 +418,7 @@ const Post = () => {
                 소주
               </span>
             </label>
-            <label className="w-20 h-8  rounded-[16px]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -381,7 +430,7 @@ const Post = () => {
                 맥주
               </span>
             </label>
-            <label className="w-20 h-8  rounded-[16px]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -393,7 +442,7 @@ const Post = () => {
                 양주
               </span>
             </label>
-            <label className="w-20 h-8 rounded-[16px]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -411,18 +460,72 @@ const Post = () => {
 
           <div className=" my-5">
             <span className="font-bold text-[20px]">재료</span>
-            <span className="ml-2 text-sm text-[red]  w-full">
-              {validateIng}
-            </span>
+
+            {validateIng === "최대 6개까지 작성 가능" ? (
+              <span className="ml-2 text-sm text-[#8e8e93]  w-full">
+                {validateIng}
+              </span>
+            ) : (
+              <span className="ml-2 text-sm text-[red]  w-full">
+                {validateIng}
+              </span>
+            )}
           </div>
-          <textarea
-            className="h-7 resize-none overflow-hidden"
-            name="ingredient"
-            value={form.ingredient}
-            onChange={onChangeValue}
-            placeholder="ex) 소주잔/소주/크랜베리주스/오렌지주스"
-          />
-          <div className="w-full border-[1px] border-[#d9d9d9] mt-2" />
+          <div className="flex justify-between">
+            <input
+              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              name="ing_01"
+              value={ingre.ing_01}
+              onChange={onChangeIngre}
+              placeholder="재료 1"
+            />
+            <input
+              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              name="ing_02"
+              value={ingre.ing_02}
+              onChange={onChangeIngre}
+              placeholder="재료 2"
+            />
+            <input
+              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              name="ing_03"
+              value={ingre.ing_03}
+              onChange={onChangeIngre}
+              placeholder="재료 3"
+            />
+          </div>
+          {plusIng ? (
+            <div className="flex justify-between mt-5">
+              <input
+                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+                name="ing_04"
+                value={ingre.ing_04}
+                onChange={onChangeIngre}
+                placeholder="재료 4"
+              />
+              <input
+                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+                name="ing_05"
+                value={ingre.ing_05}
+                onChange={onChangeIngre}
+                placeholder="재료 5"
+              />
+              <input
+                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+                name="ing_06"
+                value={ingre.ing_06}
+                onChange={onChangeIngre}
+                placeholder="재료 6"
+              />
+            </div>
+          ) : (
+            <div
+              onClick={onChangePlusIngre}
+              className="my-5 ml-1 text-[14px] text-[#acacac] flex justify-start items-center gap-2 cursor-pointer w-[92px]"
+            >
+              <BsPlusLg className="mb-[3px]" />더 추가하기
+            </div>
+          )}
 
           <div className=" my-5">
             <span className="font-bold text-[20px]">만드는 방법</span>
@@ -430,17 +533,19 @@ const Post = () => {
               {validateRecipe}
             </span>
           </div>
-
           <textarea
-            className="h-24 resize-none overflow-hidden"
+            className="h-[170px] px-3 py-3 border-[1.5px] border-[#cccccc] rounded resize-none overflow-hidden"
             name="recipe"
             value={form.recipe}
             onChange={onChangeValue}
             placeholder="1. Lorem Ipsum is simply dummy text of the..."
           />
           <div className="w-full flex justify-center items-center">
-            <button onClick={onSubmit} className="bg-[#ff6161] w-[280px] h-12">
-              작성
+            <button
+              onClick={onSubmit}
+              className=" mt-8 mb-20 text-white bg-[#ff6161] w-[280px] h-12 rounded"
+            >
+              등록하기
             </button>
           </div>
         </form>

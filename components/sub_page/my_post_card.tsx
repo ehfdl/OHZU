@@ -33,10 +33,10 @@ const MyPostCard = ({ post }: { post: any }) => {
       className=" aspect-[4/2.6945169712793735] bg-slate-200 overflow-hidden relative rounded"
     >
       <Link href={`/post/${post.postId}`}>
-        <div className="w-full h-2/5 bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
+        <div className="w-full h-[92px] bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
         <div className="absolute flex flex-col gap-1  pt-6 pl-8 ">
           <div className="text-white font-bold text-[24px]">{post.title}</div>
-          <div className="text-[12px] bg-[rgba(255,255,255,0.5)] h-7 w-[54px] flex justify-center items-center rounded-[20px]">
+          <div className="text-[12px] bg-[rgba(255,255,255,0.5)] py-1 text-[#333333] w-[58px] flex justify-center  rounded-[20px]">
             {post.type}
           </div>
         </div>

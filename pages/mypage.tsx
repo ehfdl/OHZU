@@ -206,11 +206,11 @@ const Mypage = () => {
                 </div>
                 <div className="w-72 flex justify-between items-center mt-1">
                   <div className="flex flex-col justify-center items-center">
-                    좋아요<div>{myLike}</div>
+                    좋아요<div className="font-bold">{myLike}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
-                    게시글<div>{myPosts?.length}</div>
+                    게시글<div className="font-bold">{myPosts?.length}</div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div
@@ -220,7 +220,10 @@ const Mypage = () => {
                     }}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로워<div>{myProfile?.follower.length}</div>
+                    팔로워
+                    <div className="font-bold">
+                      {myProfile?.follower.length}
+                    </div>
                   </div>
                   <div className="h-8 border-[1px] border-[#c9c5c5]" />
                   <div
@@ -230,7 +233,10 @@ const Mypage = () => {
                     }}
                     className="flex flex-col justify-center items-center cursor-pointer"
                   >
-                    팔로잉<div>{myProfile?.following.length}</div>
+                    팔로잉
+                    <div className="font-bold">
+                      {myProfile?.following.length}
+                    </div>
                   </div>
                 </div>
               </div>
