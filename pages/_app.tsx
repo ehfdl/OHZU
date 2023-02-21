@@ -9,6 +9,7 @@ declare global {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
+  console.log("_app---------------------");
   useEffect(() => {
     try {
       if (!window.Kakao.isInitialized() && window.Kakao) {
