@@ -2,11 +2,14 @@ import { dbService } from "@/firebase";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import Fuse from "fuse.js";
-import Search_page from "@/pages/search_page";
+import Searchinclude from "@/pages/search/include/[search_include]";
+import Searchword from "@/pages/search/[search_word]";
+import { useRouter } from "next/router";
 
 const Search = () => {
   const [search, setSearch] = useState("");
   const [posts, setPosts] = useState<PostType[]>([]);
+  const router = useRouter();
 
   // 검색 기능 함수
   const searchTitle = async (search: any) => {
@@ -41,6 +44,9 @@ const Search = () => {
       <form
         className="mr-[20px] flex items-center"
         onSubmit={() => alert("검색!")}
+        onClick={() => {
+          router.push("/pages/search_page.tsx");
+        }}
       >
         <label htmlFor="simple-search" className=""></label>
         <div className="relative w-full">

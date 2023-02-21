@@ -174,6 +174,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           following: [],
           follower: [],
           recently: [],
+          alarm: [],
         });
         alert("회원가입 성공 !");
         setJoinIsOpen(false);
@@ -194,7 +195,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
 
     if (newUserYear === 0) {
       setCheckAdult("생년월일을 확인해주세요.");
-    } else if (nowYear - newUserYear > 20) {
+    } else if (nowYear - newUserYear >= 19) {
       setCheckAdult("성인입니다.");
     } else {
       setCheckAdult("성인이 아닙니다. 서비스 이용이 불가합니다.");
