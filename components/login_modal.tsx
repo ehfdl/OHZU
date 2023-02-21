@@ -48,9 +48,6 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
     }
   }, [setEmail]);
 
-  console.log("email", email);
-  console.log("password", password);
-
   // 간편 로그인
   // 구글 -> uid 생성 후, setDoc으로 document 생성하여 유저 추가.
   const googleJoin = () => {

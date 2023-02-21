@@ -11,11 +11,6 @@ const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
   const [currentUser, setCurrentUser] = useState(false);
 
-  console.log("====================================");
-  console.log("프롭스", props);
-  console.log("====================================");
-  // console.log("authService : ", authService);
-
   // 로그인&회원가입 모달창 show/hidden
   const loginModalHandler = () => {
     if (props.isOpen === false) {
@@ -60,9 +55,7 @@ const Header = ({ ...props }: any) => {
         setCurrentUser(false);
         props.setJoinIsOpen(false);
         props.setIsOpen(false);
-        console.log("authService.currentUser : ", authService.currentUser);
-        console.log("props.joinIsOpen : ", props.joinIsOpen);
-        console.log("props.isOpen : ", props.isOpen);
+
         alert("로그아웃 되었습니다.");
       })
       .catch((err) => {

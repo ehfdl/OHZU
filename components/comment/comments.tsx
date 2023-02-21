@@ -76,7 +76,7 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
     }
     setComment(initialComment);
   };
-
+  console.log(comments);
   return (
     <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
       <div className="text-xl font-medium space-x-2">

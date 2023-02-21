@@ -181,7 +181,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       })
       .catch((error) => {
         // alert("다시 확인해주세요.");
-        // console.log("error.massage : ", error.massage);
         alert(error.massage);
       });
   };
@@ -220,6 +219,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           following: [],
           follower: [],
           recently: [],
+          alarm: [],
         });
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
@@ -256,6 +256,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           following: [],
           follower: [],
           recently: [],
+          alarm: [],
         });
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
