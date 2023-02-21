@@ -57,6 +57,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
         setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
+          alarm: [],
           userId: authService.currentUser?.uid,
           email: token, // 실제 값은 이메일이 아닌 token으로 변경.
           nickname: result.user.displayName,

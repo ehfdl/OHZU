@@ -60,7 +60,7 @@ const Recomments = ({
     <div className="w-11/12 ml-auto">
       <ul className="divide-y-[1px] divide-gray-300 w-full">
         {recomments.map((item) => (
-          <RecommentList recomment={item} />
+          <RecommentList key={item.id} recomment={item} />
         ))}
       </ul>
       <form className="w-full flex items-center relative space-x-6 mt-6">
