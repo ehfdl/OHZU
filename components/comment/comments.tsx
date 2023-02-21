@@ -9,8 +9,15 @@ interface CommentsProps {
   comments: CommentType[];
   currentUser: UserType;
   user: UserType;
+  post?: Form;
 }
-const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
+const Comments = ({
+  postId,
+  comments,
+  currentUser,
+  user,
+  post,
+}: CommentsProps) => {
   const date = new Date();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
@@ -54,23 +61,26 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
       content: comment.content,
       postId: postId,
       nickname: currentUser?.nickname,
+      title: post?.title,
       createdAt: Date.now(),
       isDone: false,
     };
     if (comment.content.trim() !== "") {
       await addDoc(collection(dbService, "Comments"), newComment);
-      const snapshot = await getDoc(
-        doc(dbService, "Users", user?.userId as string)
-      );
-      const snapshotdata = await snapshot.data();
-      const newPost = {
-        ...snapshotdata,
-      };
-      const newA = newPost?.alarm.push(newAlarm);
+      if (post?.userId !== authService.currentUser?.uid) {
+        const snapshot = await getDoc(
+          doc(dbService, "Users", user?.userId as string)
+        );
+        const snapshotdata = await snapshot.data();
+        const newPost = {
+          ...snapshotdata,
+        };
+        const newA = newPost?.alarm.push(newAlarm);
 
-      await updateDoc(doc(dbService, "Users", user?.userId as string), {
-        alarm: newPost?.alarm,
-      });
+        await updateDoc(doc(dbService, "Users", user?.userId as string), {
+          alarm: newPost?.alarm,
+        });
+      }
     } else {
       alert("내용이 없습니다!");
     }
