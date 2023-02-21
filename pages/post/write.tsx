@@ -172,6 +172,7 @@ const Post = () => {
       ingre.ing_06,
     ];
     let filterIngre = totalIngre.filter((ing) => ing !== "");
+
     if (validateClickPost()) {
       return;
     }

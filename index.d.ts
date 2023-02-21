@@ -3,7 +3,7 @@ declare interface Form {
   img?: string[] | null;
   title?: string;
   type?: string;
-  ingredient?: string;
+  ingredient?: string[];
   recipe?: string;
   text?: string;
   like?: string[];

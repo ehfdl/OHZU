@@ -47,7 +47,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     img: [],
     title: "",
     type: "",
-    ingredient: "",
+    ingredient: [],
     recipe: "",
     text: "",
     like: [],
@@ -126,22 +126,38 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
 
     commentId.map(async (id) => {
       await deleteDoc(doc(dbService, "Comments", id as string));
+      await deleteDoc(doc(dbService, "Recomments", id as string));
     });
 
-    const postImgId = post.img!.map((item) => {
-      return item.split("2F")[1].split("?")[0];
+    const postImgId = post.img?.map((item) => {
+      if (
+        item !==
+          "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800" &&
+        item !==
+          "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe" &&
+        item !==
+          "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg" &&
+        item !== "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330"
+      ) {
+        return item.split("2F")[1].split("?")[0];
+      } else {
+        return null;
+      }
     });
 
-    postImgId.map(async (item) => {
-      const desertRef = ref(storageService, `post/${item}`);
-      await deleteObject(desertRef)
-        .then(() => {
-          // File deleted successfully
-        })
-        .catch((error) => {
-          console.log("error", error);
-          // Uh-oh, an error occurred!
-        });
+    postImgId?.map(async (item) => {
+      if (item !== null && item !== undefined) {
+        const desertRef = ref(storageService, `post/${item}`);
+
+        await deleteObject(desertRef)
+          .then(() => {
+            // File deleted successfully
+          })
+          .catch((error) => {
+            console.log("error", error);
+            // Uh-oh, an error occurred!
+          });
+      }
     });
 
     router.push("/");
@@ -290,42 +306,6 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     }
   };
 
-  // const getComments = async () => {
-  //   const first = query(
-  //     collection(dbService, "Comments"),
-  //     orderBy("createdAt", "desc"),
-  //     limit(3)
-  //   );
-
-  //   const documentSnapshots = await getDocs(first);
-
-  //   const lastVisible =
-  //     documentSnapshots.docs[documentSnapshots.docs.length - 1];
-
-  //   const next = query(
-  //     collection(dbService, "Comments"),
-  //     orderBy("createdAt", "desc"),
-  //     startAfter(lastVisible),
-  //     limit(3)
-  //   );
-
-  //   onSnapshot(first, (snapshot) => {
-  //     // q (쿼리)안에 담긴 collection 내의 변화가 생길 때 마다 매번 실행됨
-  //     const newComments = snapshot.docs.map((doc: any) => {
-  //       const newComment = {
-  //         id: doc.id,
-  //         ...doc.data(), // doc.data() : { text, createdAt, ...  }
-  //       };
-  //       return newComment;
-  //     });
-  //     setComments(newComments);
-  //   });
-
-  //   // console.log("first", first);
-  //   // console.log("lastVisible", lastVisible);
-  //   // console.log("next", next);
-  // };
-
   useEffect(() => {
     if (authService.currentUser) {
       updateUserRecently();
@@ -453,13 +433,22 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               </div>
             </div>
             <div id="ingredient" className="mt-12 mb-16">
-              <span className="inline-block px-5 py-2 bg-red-300 text-white mb-5 rounded-full">
+              <span className="inline-block px-5 py-2 bg-primary text-white mb-5 rounded-full">
                 준비물
               </span>
-              <p className="pl-3">{post.ingredient}</p>
+              <div className="pl-3 flex justify-start flex-wrap">
+                {post.ingredient?.map((ing, i) => (
+                  <span
+                    key={i}
+                    className="inline-block mr-6 mb-6 py-1.5 px-6 rounded-full border border-gray-700"
+                  >
+                    {ing}
+                  </span>
+                ))}
+              </div>
             </div>
             <div id="recipe">
-              <span className="inline-block px-5 py-2 bg-red-300 text-white mb-5 rounded-full">
+              <span className="inline-block px-5 py-2 bg-primary text-white mb-5 rounded-full">
                 만드는 방법
               </span>
               <pre className="pl-3 whitespace-pre-wrap">{post.recipe}</pre>
@@ -470,13 +459,13 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 className="absolute right-0 -bottom-20 flex items-start space-x-2"
               >
                 <button onClick={doCopy}>
-                  <AiOutlineLink size={24} />
+                  <AiOutlineLink size={24} className="text-iconDefault" />
                 </button>
                 <button
                   onClick={onClickReportPost}
                   className="flex flex-col items-center space-y-1"
                 >
-                  <AiFillAlert size={24} />
+                  <AiFillAlert size={24} className="text-iconDefault" />
                   <span className="text-xs">신고하기</span>
                 </button>
               </div>

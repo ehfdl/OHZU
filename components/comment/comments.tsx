@@ -40,8 +40,36 @@ const Comments = ({
   const total = comments.length;
   const pagesNumber = Math.ceil(total / limit);
 
+  const [resizeTextArea, setResizeTextArea] = useState({
+    rows: 1,
+    minRows: 1,
+    maxRows: 10,
+  });
+
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
+    const textareaLineHeight = 24;
+    const { minRows, maxRows } = resizeTextArea;
+
+    const previousRows = event.target.rows;
+    event.target.rows = minRows;
+
+    const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+    if (currentRows === previousRows) {
+      event.target.rows = currentRows;
+    }
+
+    if (currentRows >= maxRows) {
+      event.target.rows = maxRows;
+      event.target.scrollTop = event.target.scrollHeight;
+    }
+
+    setResizeTextArea({
+      ...resizeTextArea,
+      rows: currentRows < maxRows ? currentRows : maxRows,
+    });
+
     setComment({
       ...comment,
       [name]: value,
@@ -85,6 +113,10 @@ const Comments = ({
       alert("내용이 없습니다!");
     }
     setComment(initialComment);
+    setResizeTextArea({
+      ...resizeTextArea,
+      rows: 1,
+    });
   };
 
   return (
@@ -105,13 +137,14 @@ const Comments = ({
           value={comment.content}
           onChange={handleChange}
           id=""
-          className="w-full p-2 border h-10 resize-none scrollbar-none"
+          className="w-full p-2 border h-auto scrollbar-none"
           placeholder="댓글을 입력해주세요."
+          rows={resizeTextArea.rows}
         />
         <button
           disabled={authService.currentUser ? false : true}
           onClick={addComment}
-          className="absolute right-0 pr-4 disabled:text-gray-400"
+          className="absolute right-0 bottom-3 pr-4 disabled:text-gray-400"
         >
           <span className="text-sm font-medium">등록</span>
         </button>
