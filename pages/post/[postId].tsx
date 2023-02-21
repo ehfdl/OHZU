@@ -456,6 +456,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           comments={comments}
           currentUser={currentUser}
           user={user}
+          post={post}
         />
       </div>
     </Layout>

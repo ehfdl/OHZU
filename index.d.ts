@@ -60,5 +60,6 @@ declare interface AlarmType {
   postId?: string;
   nickname?: string;
   createdAt?: string;
+  title?: string;
   isDone?: boolean;
 }
