@@ -25,7 +25,7 @@ declare interface WriteForm {
   id?: string;
 }
 declare interface PostType extends Form {
-  postId: string;
+  postId?: string;
 }
 
 declare interface CommentType {
@@ -60,5 +60,17 @@ declare interface AlarmType {
   postId?: string;
   nickname?: string;
   createdAt?: string;
+  title?: string;
   isDone?: boolean;
+}
+
+declare interface ReportPost extends PostType {
+  reporter?: string[];
+}
+
+declare interface ReportComment {
+  commentId?: string;
+  postId?: string;
+  content?: string;
+  reporter?: string[];
 }

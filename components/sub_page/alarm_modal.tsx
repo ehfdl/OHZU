@@ -6,13 +6,14 @@ import AlarmCard from "./alarm_card";
 const AlarmModal = ({
   alarm,
   getAlarm,
+  setIsAlarmOpenModal,
 }: {
   alarm: AlarmType[];
   getAlarm: () => Promise<void>;
+  setIsAlarmOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const onClickAllReadDelete = async () => {
     const filterAlarm = alarm.filter((content) => content.isDone === false);
-
     await updateDoc(
       doc(dbService, "Users", authService.currentUser?.uid as string),
       {
@@ -37,23 +38,35 @@ const AlarmModal = ({
   };
 
   return (
-    <div className="w-[250px] h-[260px] mt-12 left-12 rounded bg-white border-[#ff6161] border-[1px] z-10 flex flex-col justify-start items-center absolute">
-      <div onClick={onClickAllReadDelete} className="bg-slate-400">
-        일괄삭제
-      </div>
-      <div onClick={onClickAllRead} className="bg-slate-400">
-        {" "}
-        모두 읽음
-      </div>
-      <div className=" overflow-scroll w-full">
-        {alarm?.map((post) => (
-          <AlarmCard
-            key={post.createdAt}
-            post={post}
-            alarm={alarm}
-            getAlarm={getAlarm}
-          />
-        ))}
+    <div>
+      <div
+        onClick={() => setIsAlarmOpenModal(false)}
+        className="w-full h-full fixed left-0 top-0 z-10"
+      />
+      <div className="w-[348px] h-[480px] py-3 px-3 mt-6 left-0 rounded bg-white border-[#ff6161] border-[1px] z-20 flex flex-col justify-start items-center absolute">
+        <div className="w-full py-3 px-3 text-[14px] flex justify-between">
+          <div className="font-bold">전체 알림</div>
+          <div className="flex gap-6 text-[#8e8e93]">
+            <div onClick={onClickAllReadDelete} className="cursor-pointer">
+              읽은 알림 삭제
+            </div>
+            <div onClick={onClickAllRead} className="cursor-pointer">
+              모두 읽음
+            </div>
+          </div>
+        </div>
+        <div className="border-[1px] border-[#f2f2f2] w-full"></div>
+
+        <div className="w-full overflow-y-auto scrollbar-none">
+          {alarm?.map((post) => (
+            <AlarmCard
+              key={post.createdAt}
+              post={post}
+              alarm={alarm}
+              getAlarm={getAlarm}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
