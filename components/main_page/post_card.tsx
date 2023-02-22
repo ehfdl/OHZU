@@ -76,17 +76,16 @@ const PostCard = ({ post }: { post: any }) => {
   }, []);
 
   return (
-    <div className="">
-      <div
-        key={post.postId}
-        className="border shadow mt-3  rounded hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70"
-      >
-        <div>
+    <div className="flex">
+      <div key={post.postId} className=" border shadow mt-3  rounded ">
+        {/* hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70 */}
+        <div className="w-full h-[284px]">
           <Link href={`/post/${post.postId}`}>
             <img
               src={post.img[0] || defaultImg}
               className="flex w-full h-[284px] object-cover"
             />
+            <div className=" bg-black/0 w-full h-[284px] object-cover translate-y-[-285px] hover:bg-gray-300/30 hover:block"></div>
           </Link>
         </div>
         <div className="h-[160px] bg-white overflow-hidden ">
