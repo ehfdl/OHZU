@@ -15,7 +15,7 @@ import React, { SetStateAction, useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
 import { MdOutlineClose } from "react-icons/md";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { SiNaver, SiKakaotalk } from "react-icons/si";
 import axios from "axios";
 
@@ -51,22 +51,35 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
   // 구글 -> uid 생성 후, setDoc으로 document 생성하여 유저 추가.
   const googleJoin = () => {
     signInWithPopup(authService, providerGoogle)
-      .then((result: any) => {
+      .then(async (result: any) => {
         // 다음은 구글 액세스 토큰을 발급하는 코드입니다. 이 토큰을 사용하여 구글 API에 접근할 수 있습니다.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
-        setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
-          alarm: [],
-          userId: authService.currentUser?.uid,
-          email: token, // 실제 값은 이메일이 아닌 token으로 변경.
-          nickname: result.user.displayName,
-          imageURL: "",
-          introduce: "",
-          point: "",
-          following: [],
-          follower: [],
-          recently: [],
-        });
+
+        const snapshot = await getDoc(
+          doc(dbService, "Users", authService.currentUser?.uid as string)
+        );
+        const snapshotdata = await snapshot.data();
+        const newProfile = {
+          ...snapshotdata,
+        };
+
+        if (!newProfile.userId) {
+          setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
+            alarm: [],
+            userId: authService.currentUser?.uid,
+            email: token, // 실제 값은 이메일이 아닌 token으로 변경.
+            nickname: result.user.displayName,
+            imageURL:
+              "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
+            introduce: "",
+            point: "",
+            following: [],
+            follower: [],
+            recently: [],
+          });
+        }
+
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
@@ -86,21 +99,33 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
   // 페이스북
   const facebookJoin = () => {
     signInWithPopup(authService, providerFacebook)
-      .then((result) => {
+      .then(async (result) => {
         // 다음은 구글 액세스 토큰을 발급하는 코드입니다. 이 토큰을 사용하여 구글 API에 접근할 수 있습니다.
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
-        setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
-          userId: authService.currentUser?.uid, // authService가 아닌 token값 중에 하나로 변경해야함. (구글도)
-          email: token, // 실제 값은 이메일이 아닌 token으로 변경.
-          nickname: result.user.displayName,
-          imageURL: "",
-          introduce: "",
-          point: "",
-          following: [],
-          follower: [],
-          recently: [],
-        });
+
+        const snapshot = await getDoc(
+          doc(dbService, "Users", authService.currentUser?.uid as string)
+        );
+        const snapshotdata = await snapshot.data();
+        const newProfile = {
+          ...snapshotdata,
+        };
+
+        if (!newProfile.userId) {
+          setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
+            userId: authService.currentUser?.uid, // authService가 아닌 token값 중에 하나로 변경해야함. (구글도)
+            email: token, // 실제 값은 이메일이 아닌 token으로 변경.
+            nickname: result.user.displayName,
+            imageURL:
+              "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
+            introduce: "",
+            point: "",
+            following: [],
+            follower: [],
+            recently: [],
+          });
+        }
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
@@ -139,26 +164,41 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
             authService,
             `${response.data.firebaseToken}`
           )
-            .then((userCredential: any) => {
+            .then(async (userCredential: any) => {
               const user = userCredential.user;
-              // 카카오 로그인 유저 조회 콘솔
-              // console.log("user : ", user);
-              setDoc(
-                doc(dbService, "Users", authService.currentUser?.uid as string),
-                {
-                  userId: authService.currentUser?.uid,
-                  email: "",
-                  nickname: "카카오",
-                  imageURL: "",
-                  introduce: "",
-                  point: "",
-                  following: [],
-                  follower: [],
-                  recently: [],
-                  alarm: [],
-                }
+
+              const snapshot = await getDoc(
+                doc(dbService, "Users", authService.currentUser?.uid as string)
               );
-              alert("카카오 간편 회원가입 성공!");
+              const snapshotdata = await snapshot.data();
+              const newProfile = {
+                ...snapshotdata,
+              };
+
+              if (!newProfile.userId) {
+                setDoc(
+                  doc(
+                    dbService,
+                    "Users",
+                    authService.currentUser?.uid as string
+                  ),
+                  {
+                    userId: authService.currentUser?.uid,
+                    email: "",
+                    nickname: "카카오",
+                    imageURL:
+                      "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
+                    introduce: "",
+                    point: "",
+                    following: [],
+                    follower: [],
+                    recently: [],
+                    alarm: [],
+                  }
+                );
+                alert("카카오 간편 회원가입 성공!");
+              }
+
               setIsOpen(false);
             })
             .catch((error: any) => {
