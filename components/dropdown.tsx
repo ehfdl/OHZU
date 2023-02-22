@@ -7,8 +7,6 @@ function classNames(...classes: any) {
 }
 
 export default function Dropdown({ drop, setDrop }: any) {
-  console.log("드랍박스 state", drop);
-
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
@@ -32,20 +30,6 @@ export default function Dropdown({ drop, setDrop }: any) {
             <Menu.Item>
               {({ active }) => (
                 <a
-                  onClick={() => setDrop("인기순")}
-                  href="#"
-                  className={classNames(
-                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
-                  )}
-                >
-                  인기순
-                </a>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <a
                   onClick={() => setDrop("최신순")}
                   href="#"
                   className={classNames(
@@ -54,6 +38,20 @@ export default function Dropdown({ drop, setDrop }: any) {
                   )}
                 >
                   최신순
+                </a>
+              )}
+            </Menu.Item>
+            <Menu.Item>
+              {({ active }) => (
+                <a
+                  onClick={() => setDrop("인기순")}
+                  href="#"
+                  className={classNames(
+                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
+                  )}
+                >
+                  인기순
                 </a>
               )}
             </Menu.Item>

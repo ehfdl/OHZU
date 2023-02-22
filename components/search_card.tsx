@@ -4,7 +4,6 @@ import { doc, updateDoc } from "firebase/firestore";
 import { authService, dbService } from "@/firebase";
 
 export const SearchCard = ({ card }: any) => {
-  console.log("card.item.postId : ", card.item.postId);
   const like = card.item.like?.includes(authService.currentUser?.uid);
 
   const onClickLikeBtn = async () => {
