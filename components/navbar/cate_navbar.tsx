@@ -2,8 +2,10 @@ import React from "react";
 
 const Cate_Navbar = ({
   setCate,
+  cate,
 }: {
   setCate: React.Dispatch<React.SetStateAction<string>>;
+  cate: string;
 }) => {
   return (
     <nav className="mt-6 w-[524px] flex justify-between text-[20px]">
@@ -16,7 +18,8 @@ const Cate_Navbar = ({
           name="type"
           value="my-ohju"
           className="hidden peer"
-          defaultChecked
+          checked={cate === "전체"}
+          defaultChecked={cate === "전체"}
         />
         <span className="block peer-checked:font-bold  peer-checked:text-primary cursor-pointer">
           전체

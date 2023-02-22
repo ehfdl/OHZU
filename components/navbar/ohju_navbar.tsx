@@ -2,13 +2,18 @@ import React from "react";
 
 const Ohju_Navbar = ({
   setOhju,
+  setCate,
 }: {
   setOhju: React.Dispatch<React.SetStateAction<string>>;
+  setCate: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
     <nav className="w-[900px] border-b-[1px] h-14 border-iconDefault text-[28px] mt-14 flex justify-between">
       <label
-        onChange={() => setOhju("my-ohju")}
+        onChange={() => {
+          setOhju("my-ohju");
+          setCate("전체");
+        }}
         className="w-[300px]  text-textGray text-center"
       >
         <input
@@ -23,7 +28,10 @@ const Ohju_Navbar = ({
         </span>
       </label>
       <label
-        onChange={() => setOhju("like-ohju")}
+        onChange={() => {
+          setOhju("like-ohju");
+          setCate("전체");
+        }}
         className="w-[300px]  text-textGray text-center"
       >
         <input
@@ -37,7 +45,10 @@ const Ohju_Navbar = ({
         </span>
       </label>
       <label
-        onChange={() => setOhju("recently-ohju")}
+        onChange={() => {
+          setOhju("recently-ohju");
+          setCate("전체");
+        }}
         className="w-[300px]  text-textGray text-center"
       >
         <input

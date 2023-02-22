@@ -84,7 +84,6 @@ const Mypage = () => {
         })
       );
       (await promiseUser).forEach((item: any) => userArray.push(item.value));
-      console.log(userArray);
       setUsersFollowerProfile(userArray);
     }
   };
@@ -245,8 +244,8 @@ const Mypage = () => {
               </div>
             </div>
           </div>
-          <Ohju_Navbar setOhju={setOhju} />
-          <Cate_Navbar setCate={setCate} />
+          <Ohju_Navbar setOhju={setOhju} setCate={setCate} />
+          <Cate_Navbar setCate={setCate} cate={cate} />
 
           <div className="w-full mt-12 ml-[3px] text-[20px] font-bold">
             게시글{" "}
