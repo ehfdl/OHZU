@@ -86,41 +86,50 @@ const AlarmCard = ({
   };
 
   return (
-    <div className="w-full px-3 py-2 border-b-[1px] text-textGray border-[#f2f2f2] flex flex-col">
+    <div className="w-full px-3 py-2 border-b-[1px]  border-[#f2f2f2] flex flex-col">
       {post.isDone ? (
-        <div className="my-2 text-[12px]  flex w-full justify-between">
-          <div onClick={onClickIsDone}>
-            <span className="font-bold">{post.nickname}</span>
-            님이
-            <Link href={`/post/${post.postId}`}>
-              <span className="font-bold"> {post.title}</span>에 작성한 댓글
-            </Link>
-          </div>
-          <RxCross2
-            className="text-iconDefault cursor-pointer"
-            onClick={onClickDelete}
-          />
-        </div>
-      ) : (
-        <div className="my-2 text-[12px] flex w-full justify-between">
-          <div onClick={onClickIsDone}>
-            <span className="font-bold">{post.nickname}</span>
-            님이
-            <Link href={`/post/${post.postId}`}>
-              <span className="font-bold"> {post.title}</span>에 작성한 댓글
-            </Link>
-          </div>
-          <RxCross2
-            className="text-iconDefault cursor-pointer"
-            onClick={onClickDelete}
-          />
-        </div>
-      )}
+        <>
+          <div className="my-2 text-[12px] text-textGray flex w-full justify-between">
+            <div onClick={onClickIsDone}>
+              <Link href={`/post/${post.postId}`}>
+                <span className="font-bold text-textGray">{post.nickname}</span>
+                님이
+                <span className="font-bold text-textGray"> {post.title}</span>에
+                작성한 댓글
+              </Link>
+            </div>
 
-      <div className="text-[12px] leading-5">
-        <div className=" line-clamp-2">{post.content}</div>
-        <div>{ResultTime}</div>
-      </div>
+            <RxCross2
+              className="text-iconDefault cursor-pointer "
+              onClick={onClickDelete}
+            />
+          </div>
+          <div className="text-[12px] leading-5 text-textGray">
+            <div className=" line-clamp-2 text-textGray">{post.content}</div>
+            <div>{ResultTime}</div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div className="my-2 text-[12px] flex w-full justify-between">
+            <div onClick={onClickIsDone}>
+              <Link href={`/post/${post.postId}`}>
+                <span className="font-bold">{post.nickname}</span>
+                님이
+                <span className="font-bold"> {post.title}</span>에 작성한 댓글
+              </Link>
+            </div>
+            <RxCross2
+              className="text-iconDefault cursor-pointer"
+              onClick={onClickDelete}
+            />
+          </div>
+          <div className="text-[12px] leading-5">
+            <div className=" line-clamp-2">{post.content}</div>
+            <div>{ResultTime}</div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
