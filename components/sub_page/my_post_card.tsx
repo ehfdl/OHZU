@@ -59,6 +59,7 @@ const MyPostCard = ({ post }: { post: any }) => {
           src={post.img[0] || defaultImg}
           className="w-full h-full object-cover"
         />
+        <div className=" bg-black/0 w-full h-[284px] object-cover translate-y-[-285px] hover:bg-gray-300/30 hover:block"></div>
       </Link>
     </div>
   );
