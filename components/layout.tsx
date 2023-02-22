@@ -14,6 +14,7 @@ const Layout = ({ children }: { children: any }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [joinIsOpen, setJoinIsOpen] = useState(false);
   const [pageUrl, setPageUrl] = useState("/");
+  const [search, setSearch] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -43,8 +44,10 @@ const Layout = ({ children }: { children: any }) => {
         setIsOpen={setIsOpen}
         joinIsOpen={joinIsOpen}
         setJoinIsOpen={setJoinIsOpen}
+        search={search}
+        setSearch={setSearch}
       />
-      {children}
+      <div>{children}</div>
       {pageUrl === "/" ||
       pageUrl.includes("/users") ||
       pageUrl === "/mypage" ? (
