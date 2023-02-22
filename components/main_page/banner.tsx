@@ -44,18 +44,20 @@ const MainBanner = () => {
 
   const swiper = useSwiper();
 
-  const navigationNextRef = useRef(null);
-  const navigationPrevRef = useRef(null);
+  const bannerNextRef = useRef(null);
+  const bannerPrevRef = useRef(null);
 
   return (
-    <div className="group h-[500px] w-full mt-[-40px] py-16 flex mb-10 ">
+    <div className="group w-full mt-[-62px] py-16 flex mb-10 ">
       <Swiper
+        observer={true}
+        observeParents={true}
         spaceBetween={24}
         slidesPerView={1}
         scrollbar={{ draggable: true }}
         navigation={{
-          prevEl: navigationPrevRef.current,
-          nextEl: navigationNextRef.current,
+          prevEl: bannerNextRef.current,
+          nextEl: bannerPrevRef.current,
         }}
         breakpoints={{
           768: {
@@ -89,7 +91,7 @@ const MainBanner = () => {
         </div>
         <div className="w-full">
           <button
-            ref={navigationPrevRef}
+            ref={bannerPrevRef}
             className="p-2 absolute hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer left-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
           >
             <BsChevronLeft size={25} />
@@ -97,7 +99,7 @@ const MainBanner = () => {
         </div>
         <div className="">
           <button
-            ref={navigationNextRef}
+            ref={bannerNextRef}
             className="p-2 absolute hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer right-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
           >
             <BsChevronRight size={25} />
