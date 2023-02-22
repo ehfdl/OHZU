@@ -37,7 +37,7 @@ const Alarm = () => {
         className="w-5 h-5 cursor-pointer"
       />
       {alarm.filter((content) => content.isDone === false).length !== 0 ? (
-        <div className="w-3 h-3 rounded-full bg-[#ff6161] text-[8px] text-white flex justify-center items-center pt-[1px] absolute top-7 ml-3 ">
+        <div className="w-3 h-3 rounded-full bg-primary text-[8px] text-white flex justify-center items-center pt-[1px] absolute top-7 ml-3 ">
           {alarm.filter((content) => content.isDone === false).length}
         </div>
       ) : (

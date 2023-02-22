@@ -9,7 +9,7 @@ const Cate_Navbar = ({
     <nav className="mt-6 w-[524px] flex justify-between text-[20px]">
       <label
         onChange={() => setCate("전체")}
-        className=" text-[#8e8e93] text-center"
+        className=" text-textGray text-center"
       >
         <input
           type="radio"
@@ -18,13 +18,13 @@ const Cate_Navbar = ({
           className="hidden peer"
           defaultChecked
         />
-        <span className="block peer-checked:font-bold  peer-checked:text-[#ff6161] cursor-pointer">
+        <span className="block peer-checked:font-bold  peer-checked:text-primary cursor-pointer">
           전체
         </span>
       </label>
       <label
         onChange={() => setCate("소주")}
-        className=" text-[#8e8e93] text-center"
+        className=" text-textGray text-center"
       >
         <input
           type="radio"
@@ -32,13 +32,13 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="block peer-checked:font-bold  peer-checked:text-[#ff6161] cursor-pointer">
+        <span className="block peer-checked:font-bold  peer-checked:text-primary cursor-pointer">
           소주
         </span>
       </label>
       <label
         onChange={() => setCate("맥주")}
-        className=" text-[#8e8e93] text-center"
+        className=" text-textGray text-center"
       >
         <input
           type="radio"
@@ -46,13 +46,13 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="block peer-checked:font-bold  peer-checked:text-[#ff6161] cursor-pointer">
+        <span className="block peer-checked:font-bold  peer-checked:text-primary cursor-pointer">
           맥주
         </span>
       </label>
       <label
         onChange={() => setCate("양주")}
-        className=" text-[#8e8e93] text-center"
+        className=" text-textGray text-center"
       >
         <input
           type="radio"
@@ -60,13 +60,13 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="block peer-checked:font-bold  peer-checked:text-[#ff6161] cursor-pointer">
+        <span className="block peer-checked:font-bold  peer-checked:text-primary cursor-pointer">
           양주
         </span>
       </label>
       <label
         onChange={() => setCate("기타")}
-        className=" text-[#8e8e93] text-center"
+        className=" text-textGray text-center"
       >
         <input
           type="radio"
@@ -74,7 +74,7 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className=" block peer-checked:font-bold  peer-checked:text-[#ff6161] cursor-pointer">
+        <span className=" block peer-checked:font-bold  peer-checked:text-primary cursor-pointer">
           기타
         </span>
       </label>

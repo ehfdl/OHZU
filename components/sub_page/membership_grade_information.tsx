@@ -2,7 +2,7 @@ import React from "react";
 
 const RankInformationModal = () => {
   return (
-    <div className="w-[272px] h-[180px] mt-3 pt-[15px] pl-[17px] rounded bg-white border-[#ff6161] border-[1px] z-10 flex flex-col justify-start absolute">
+    <div className="w-[272px] h-[180px] mt-3 pt-[15px] pl-[17px] rounded bg-white border-primary border-[1px] z-10 flex flex-col justify-start absolute">
       <div className="text-[14px] font-bold ">회원등급 안내</div>
       <div className="ml-5 mt-2 flex flex-col gap-1">
         <div className="flex gap-[10px] items-center">

@@ -276,7 +276,7 @@ const Post = () => {
         <form className="w-[588px] flex flex-col">
           <div className="flex gap-3">
             <div className="font-bold text-[20px] mt-5">사진</div>
-            <div className="text-[12px] text-[#8e8e93] mt-7">
+            <div className="text-[12px] text-textGray mt-7">
               최대 3장까지 업로드 가능
             </div>
           </div>
@@ -300,7 +300,7 @@ const Post = () => {
                       onClick={() => {
                         setImgFile_01(null);
                       }}
-                      className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                      className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
                     />
                   </label>
                   <img
@@ -330,7 +330,7 @@ const Post = () => {
                         onClick={() => {
                           setImgFile_02(null);
                         }}
-                        className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
                       />
                     </label>
                     <img
@@ -359,7 +359,7 @@ const Post = () => {
                         onClick={() => {
                           setImgFile_03(null);
                         }}
-                        className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
                       />
                     </label>
                     <img
@@ -394,7 +394,7 @@ const Post = () => {
             </span>
           </div>
           <textarea
-            className="h-[118px] border-[1px] border-[#cccccc] py-3 px-3 rounded resize-none overflow-hidden"
+            className="h-[118px] border-[1px] border-iconDefault py-3 px-3 rounded resize-none overflow-hidden"
             name="text"
             value={form.text}
             onChange={onChangeValue}
@@ -464,7 +464,7 @@ const Post = () => {
             <span className="font-bold text-[20px]">재료</span>
 
             {validateIng === "최대 6개까지 작성 가능" ? (
-              <span className="ml-2 text-sm text-[#8e8e93]  w-full">
+              <span className="ml-2 text-sm text-textGray  w-full">
                 {validateIng}
               </span>
             ) : (
@@ -523,7 +523,7 @@ const Post = () => {
           ) : (
             <div
               onClick={onChangePlusIngre}
-              className="my-5 ml-1 text-[14px] text-[#acacac] flex justify-start items-center gap-2 cursor-pointer w-[92px]"
+              className="my-5 ml-1 text-[14px] text-phGray flex justify-start items-center gap-2 cursor-pointer w-[92px]"
             >
               <BsPlusLg className="mb-[3px]" />더 추가하기
             </div>
@@ -536,7 +536,7 @@ const Post = () => {
             </span>
           </div>
           <textarea
-            className="h-[170px] px-3 py-3 border-[1.5px] border-[#cccccc] rounded resize-none overflow-hidden"
+            className="h-[170px] px-3 py-3 border-[1.5px] border-iconDefault rounded resize-none overflow-hidden"
             name="recipe"
             value={form.recipe}
             onChange={onChangeValue}
@@ -545,7 +545,7 @@ const Post = () => {
           <div className="w-full flex justify-center items-center">
             <button
               onClick={onSubmit}
-              className=" mt-8 mb-20 text-white bg-[#ff6161] w-[280px] h-12 rounded"
+              className=" mt-8 mb-20 text-white bg-primary w-[280px] h-12 rounded"
             >
               등록하기
             </button>

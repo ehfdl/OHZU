@@ -88,7 +88,7 @@ const AlarmCard = ({
   return (
     <div className="w-full px-3 py-2 border-b-[1px] border-[#f2f2f2] flex flex-col">
       {post.isDone ? (
-        <div className="my-2 text-[12px] text-[#8e8e93] flex w-full justify-between">
+        <div className="my-2 text-[12px] text-textGray flex w-full justify-between">
           <div onClick={onClickIsDone}>
             <span className="font-bold">{post.nickname}</span>
             님이
@@ -97,7 +97,7 @@ const AlarmCard = ({
             </Link>
           </div>
           <RxCross2
-            className="text-[#cccccc] cursor-pointer"
+            className="text-iconDefault cursor-pointer"
             onClick={onClickDelete}
           />
         </div>
@@ -111,7 +111,7 @@ const AlarmCard = ({
             </Link>
           </div>
           <RxCross2
-            className="text-[#cccccc] cursor-pointer"
+            className="text-iconDefault cursor-pointer"
             onClick={onClickDelete}
           />
         </div>

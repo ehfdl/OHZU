@@ -67,7 +67,7 @@ const FollowModalCard = ({
         <Link href={`/users/${profile.userId}`}>
           <div className="font-bold">{profile.nickname}</div>
         </Link>
-        <div className="text-sm text-[#8e8e93] max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
+        <div className="text-sm text-textGray max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
           {profile.introduce}
         </div>
       </div>
@@ -78,14 +78,14 @@ const FollowModalCard = ({
         ) ? (
         <button
           onClick={onClickFollowUpdate}
-          className="ml-[14px] w-[98px] h-[30px] rounded-[50px] bg-[#FFF0f0] text-sm text-[#ff6161] flex justify-center items-center"
+          className="ml-[14px] w-[98px] h-[30px] rounded-[50px] bg-second text-sm text-primary flex justify-center items-center"
         >
           팔로우
         </button>
       ) : (
         <button
           onClick={onClickFollowUpdate}
-          className="ml-[14px] w-[98px] h-[30px] rounded-[50px] bg-[#FF6161] text-sm text-white  flex justify-center items-center"
+          className="ml-[14px] w-[98px] h-[30px] rounded-[50px] bg-primary text-sm text-white  flex justify-center items-center"
         >
           팔로우
         </button>

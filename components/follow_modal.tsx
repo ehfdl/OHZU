@@ -28,7 +28,7 @@ const FollowModal = ({
           className="w-10 aspect-square absolute mt-8 ml-[500px]"
           onClick={() => setIsOpenFollowModal(false)}
         >
-          <FiX className="w-full h-full text-[#acacac]" />
+          <FiX className="w-full h-full text-phGray" />
         </button>
         <div className="w-full flex justify-around mt-10 text-[24px]">
           <label
@@ -42,7 +42,7 @@ const FollowModal = ({
               defaultChecked={follow === "follower"}
               className="hidden peer"
             />
-            <span className="w-full block cursor-pointer py-5 border-b-[1px] border-[#fff0f0] peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-[#ff6161] peer-checked:border-[#ff6161]">
+            <span className="w-full block cursor-pointer py-5 border-b-[1px] border-second peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-primary peer-checked:border-primary">
               팔로워
             </span>
           </label>
@@ -57,7 +57,7 @@ const FollowModal = ({
               className="hidden peer"
               defaultChecked={follow === "following"}
             />
-            <span className="w-full block cursor-pointer py-5 border-b-[1px] border-[#fff0f0] peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-[#ff6161] peer-checked:border-[#ff6161]">
+            <span className="w-full block cursor-pointer py-5 border-b-[1px] border-second peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-primary peer-checked:border-primary">
               팔로잉
             </span>
           </label>
