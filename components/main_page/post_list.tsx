@@ -155,7 +155,7 @@ const PostList = () => {
           <div className="w-full mt-12 flex justify-between">
             <div className="text-xl font-bold">
               전체 게시글{" "}
-              <span className="float-right ml-2 pt-1 text-base font-normal text-primary">
+              <span className="float-right ml-2 text-xl font-normal text-primary">
                 {cate === "전체"
                   ? posts?.length
                   : posts?.filter((post) => cate === post.type).length}
