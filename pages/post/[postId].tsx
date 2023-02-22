@@ -453,7 +453,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
               <span className="inline-block px-7 py-2 bg-primary text-white text-xl rounded-full">
                 만드는 방법
               </span>
-              <pre className="pt-6 whitespace-pre-wrap break-all leading-10">
+              <pre className="pt-6 whitespace-pre-wrap break-all leading-10 pl-2">
                 {post.recipe}
               </pre>
             </div>

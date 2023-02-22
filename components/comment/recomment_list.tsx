@@ -1,7 +1,7 @@
 import { authService, dbService } from "@/firebase";
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DeleteModal from "../delete_modal";
 import Grade from "../grade";
 
@@ -14,6 +14,56 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   const [recommentUser, setRecommentUser] = useState<UserType>();
   const [editRecommentContent, setEditRecommentContent] = useState<string>();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+
+  const [resizeTextArea, setResizeTextArea] = useState({
+    rows: 1,
+    minRows: 1,
+    maxRows: 3,
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    const textareaLineHeight = 24;
+    const { minRows, maxRows } = resizeTextArea;
+
+    const previousRows = event.target.rows;
+    event.target.rows = minRows;
+
+    const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+    if (currentRows === previousRows) {
+      event.target.rows = currentRows;
+    }
+
+    if (currentRows >= maxRows) {
+      event.target.rows = maxRows;
+      event.target.scrollTop = event.target.scrollHeight;
+    }
+
+    setResizeTextArea({
+      ...resizeTextArea,
+      rows: currentRows < maxRows ? currentRows : maxRows,
+    });
+
+    setEditRecommentContent(value);
+  };
+
+  useMemo(() => {
+    if (editRecommentContent) {
+      const editDefaultLength = editRecommentContent.split("\n").length;
+      if (editDefaultLength > 3) {
+        setResizeTextArea({
+          ...resizeTextArea,
+          rows: 3,
+        });
+      } else {
+        setResizeTextArea({
+          ...resizeTextArea,
+          rows: editDefaultLength,
+        });
+      }
+    }
+  }, [editRecommentContent]);
 
   const deleteToggle = () => {
     setDeleteConfirm(!deleteConfirm);
@@ -88,6 +138,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
 
   useEffect(() => {
     getRecommentUser();
+    setEditRecommentContent(content);
   }, []);
   return (
     <>
@@ -112,10 +163,9 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             <textarea
               name="editContent"
               value={editRecommentContent}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                setEditRecommentContent(e.target.value);
-              }}
-              className="w-full p-2 border h-10 resize-none placeholder:text-sm scrollbar-none"
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+              rows={resizeTextArea.rows}
               placeholder={content}
             />
           ) : (

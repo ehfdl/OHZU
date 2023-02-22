@@ -100,7 +100,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
     ) {
       setEditPlusIng(true);
     } else {
-      setValidateIng("재료를 입력해주세요.");
+      setValidateIng("준비물를 입력해주세요.");
     }
   };
 
@@ -131,7 +131,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       editIng.editIng_05!.length > 8 ||
       editIng.editIng_06!.length > 8
     ) {
-      setValidateIng("재료를 8자 이하로 입력해 주세요.");
+      setValidateIng("준비물를 8자 이하로 입력해 주세요.");
     }
     if (
       editIng.editIng_01!.length <= 8 &&
@@ -163,7 +163,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       editIng.editIng_05!.length > 8 ||
       editIng.editIng_06!.length > 8
     ) {
-      setValidateIng("재료를 8자 이하로 입력해 주세요.");
+      setValidateIng("준비물를 8자 이하로 입력해 주세요.");
       return true;
     } else if (
       editIng.editIng_01 === "" &&
@@ -173,7 +173,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       editIng.editIng_05 === "" &&
       editIng.editIng_06 === ""
     ) {
-      setValidateIng("재료를 한가지 이상 입력해주세요.");
+      setValidateIng("준비물를 한가지 이상 입력해주세요.");
       return true;
     } else if (editPost.recipe === "") {
       setValidateRecipe("방법을 입력해주세요.");
@@ -609,7 +609,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           <div className="w-full border-[1px] border-[#d9d9d9]" />
 
           <div className=" my-5">
-            <span className="font-bold text-[20px]">재료</span>
+            <span className="font-bold text-[20px]">준비물</span>
 
             {validateIng === "최대 6개까지 작성 가능" ? (
               <span className="ml-2 text-sm text-textGray  w-full">
@@ -630,7 +630,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
               placeholder={`${
                 editPost.ingredient![0] !== undefined
                   ? editPost.ingredient![0]
-                  : "재료 1"
+                  : "준비물 1"
               }`}
             />
             <input
@@ -641,7 +641,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
               placeholder={`${
                 editPost.ingredient![1] !== undefined
                   ? editPost.ingredient![1]
-                  : "재료 2"
+                  : "준비물 2"
               }`}
             />
             <input
@@ -652,7 +652,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
               placeholder={`${
                 editPost.ingredient![2] !== undefined
                   ? editPost.ingredient![2]
-                  : "재료 3"
+                  : "준비물 3"
               }`}
             />
           </div>
@@ -666,7 +666,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                 placeholder={`${
                   editPost.ingredient![3] !== undefined
                     ? editPost.ingredient![3]
-                    : "재료 4"
+                    : "준비물 4"
                 }`}
               />
               <input
@@ -677,7 +677,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                 placeholder={`${
                   editPost.ingredient![4] !== undefined
                     ? editPost.ingredient![4]
-                    : "재료 5"
+                    : "준비물 5"
                 }`}
               />
               <input
@@ -688,7 +688,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                 placeholder={`${
                   editPost.ingredient![5] !== undefined
                     ? editPost.ingredient![5]
-                    : "재료 6"
+                    : "준비물 6"
                 }`}
               />
             </div>

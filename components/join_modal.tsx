@@ -174,7 +174,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           userId: authService.currentUser?.uid,
           email: email,
           nickname: nickname,
-          imageURL: "",
+          imageURL:
+            "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=c3cb48e1-a28e-4ba9-ace7-4ba5f1133415",
           introduce: "",
           point: "",
           following: [],

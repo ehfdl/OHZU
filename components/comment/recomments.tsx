@@ -5,7 +5,6 @@ import RecommentList from "./recomment_list";
 
 interface RecommentPropsType {
   id: string;
-  dateForm: string;
   currentUser: UserType;
   recomments: CommentType[];
   isOpen: boolean;
@@ -14,11 +13,15 @@ interface RecommentPropsType {
 
 const Recomments = ({
   id,
-  dateForm,
   recomments,
   setIsOpen,
   isOpen,
 }: RecommentPropsType) => {
+  const date = Date.now();
+  const dateForm = new Intl.DateTimeFormat("ko-KR", {
+    dateStyle: "long",
+    timeStyle: "medium",
+  }).format(date);
   const initialRecomment = {
     content: "",
     commentId: "",
@@ -31,7 +34,7 @@ const Recomments = ({
   const [resizeTextArea, setResizeTextArea] = useState({
     rows: 1,
     minRows: 1,
-    maxRows: 10,
+    maxRows: 3,
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {

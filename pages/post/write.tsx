@@ -97,7 +97,7 @@ const Post = () => {
     if (ingre.ing_01 !== "" && ingre.ing_02 !== "" && ingre.ing_03 !== "") {
       setPlusIng(true);
     } else {
-      setValidateIng("재료를 입력해주세요.");
+      setValidateIng("준비물를 입력해주세요.");
     }
   };
 
@@ -127,7 +127,7 @@ const Post = () => {
       ingre.ing_05!.length > 8 ||
       ingre.ing_06!.length > 8
     ) {
-      setValidateIng("재료를 8자 이하로 입력해 주세요.");
+      setValidateIng("준비물를 8자 이하로 입력해 주세요.");
     }
     if (
       ingre.ing_01!.length <= 8 &&
@@ -159,7 +159,7 @@ const Post = () => {
       ingre.ing_05!.length > 8 ||
       ingre.ing_06!.length > 8
     ) {
-      setValidateIng("재료를 8자 이하로 입력해 주세요.");
+      setValidateIng("준비물를 8자 이하로 입력해 주세요.");
       return true;
     } else if (
       ingre.ing_01 === "" &&
@@ -169,7 +169,7 @@ const Post = () => {
       ingre.ing_05 === "" &&
       ingre.ing_06 === ""
     ) {
-      setValidateIng("재료를 한가지 이상 입력해주세요.");
+      setValidateIng("준비물를 한가지 이상 입력해주세요.");
       return true;
     } else if (form.recipe === "") {
       setValidateRecipe("방법을 입력해주세요.");
@@ -397,7 +397,7 @@ const Post = () => {
             </div>
           </div>
           <div className=" my-5">
-            <span className="font-bold text-[20px]">제목</span>
+            <span className="font-bold text-[20px]">이름</span>
             <span className="ml-2 text-sm text-[red]  w-full">
               {validateTitle}
             </span>
@@ -406,7 +406,7 @@ const Post = () => {
             name="title"
             value={form.title}
             onChange={onChangeValue}
-            placeholder="커피칵테일"
+            placeholder="이름을 작성해주세요."
             className="w-full"
           />
 
@@ -486,7 +486,7 @@ const Post = () => {
           <div className="w-full border-[1px] border-[#d9d9d9]" />
 
           <div className=" my-5">
-            <span className="font-bold text-[20px]">재료</span>
+            <span className="font-bold text-[20px]">준비물</span>
 
             {validateIng === "최대 6개까지 작성 가능" ? (
               <span className="ml-2 text-sm text-textGray  w-full">

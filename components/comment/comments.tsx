@@ -18,7 +18,7 @@ const Comments = ({
   user,
   post,
 }: CommentsProps) => {
-  const date = new Date();
+  const date = Date.now();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
     timeStyle: "medium",
@@ -43,7 +43,7 @@ const Comments = ({
   const [resizeTextArea, setResizeTextArea] = useState({
     rows: 1,
     minRows: 1,
-    maxRows: 10,
+    maxRows: 3,
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -150,7 +150,7 @@ const Comments = ({
         </button>
       </form>
 
-      <div className="w-full mt-6 border-b-[1px] border-borderGray" />
+      <div className="w-full mt-6 border-[1px] border-[#d9d9d9]" />
 
       <ul id="comment-list" className="mb-6">
         {comments?.slice(offset, offset + limit).map((comment) => (
@@ -158,7 +158,6 @@ const Comments = ({
             key={comment.id}
             comment={comment}
             currentUser={currentUser}
-            dateForm={dateForm}
           />
         ))}
       </ul>
