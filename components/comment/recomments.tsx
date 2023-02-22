@@ -1,7 +1,6 @@
 import { authService, dbService } from "@/firebase";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
-import Link from "next/link";
-import { SetStateAction, useState } from "react";
+import { addDoc, collection } from "firebase/firestore";
+import { SetStateAction, useEffect, useState } from "react";
 import RecommentList from "./recomment_list";
 
 interface RecommentPropsType {
@@ -74,7 +73,7 @@ const Recomments = ({
       isEdit: false,
     };
     if (recomment.content.trim() !== "") {
-      await setDoc(doc(dbService, "Recomments", id), newRecomment);
+      await addDoc(collection(dbService, "Recomments"), newRecomment);
     } else {
       alert("내용이 없습니다!");
     }
@@ -86,8 +85,8 @@ const Recomments = ({
   };
 
   return (
-    <div className="w-11/12 ml-auto">
-      <ul className="divide-y-[1px] divide-gray-300 w-full">
+    <div className="w-10/12 ml-auto">
+      <ul className="w-full">
         {recomments.map((item) => (
           <RecommentList key={item.id} recomment={item} />
         ))}
@@ -98,24 +97,25 @@ const Recomments = ({
           name="content"
           value={recomment.content}
           onChange={handleChange}
-          id=""
-          className="w-full p-2 border h-auto scrollbar-none"
-          placeholder="댓글을 입력해주세요."
+          className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+          placeholder="답글을 입력해주세요."
           rows={resizeTextArea.rows}
         />
         <button
           disabled={authService.currentUser ? false : true}
           onClick={addRecomment}
-          className="absolute right-0 bottom-2.5 pr-4 disabled:text-gray-400"
+          className="absolute right-0 bottom-3 pr-4 disabled:text-gray-400"
         >
-          <span className="text-sm font-medium">등록</span>
+          <span className="text-sm font-bold text-phGray hover:text-black">
+            등록
+          </span>
         </button>
       </form>
       <button
         onClick={() => {
           setIsOpen(false);
         }}
-        className="block mx-auto my-6 p-2"
+        className="block mx-auto mt-6 p-2 text-sm font-bold text-textGray"
       >
         답글 접기
       </button>

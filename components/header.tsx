@@ -136,7 +136,7 @@ const Header = ({ ...props }: any) => {
           {authService.currentUser ? (
             authService.currentUser?.uid === "r9TWnAGKsxgOoKmZf4IfCLxf0Ry2" ? (
               <Link legacyBehavior href="/ohzu">
-                <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
+                <button className="w-20 h-[42px]  duration-150 hover:text-primary">
                   관리페이지
                 </button>
               </Link>
@@ -144,7 +144,7 @@ const Header = ({ ...props }: any) => {
               <>
                 <Alarm />
                 <Link legacyBehavior href="/mypage">
-                  <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
+                  <button className="w-20 h-[42px]  duration-150 hover:text-primary">
                     마이페이지
                   </button>
                 </Link>
@@ -153,7 +153,7 @@ const Header = ({ ...props }: any) => {
           ) : (
             <button
               onClick={loginModalHandler}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px]  duration-150 hover:text-primary"
             >
               로그인
             </button>
@@ -162,14 +162,14 @@ const Header = ({ ...props }: any) => {
           {authService.currentUser ? (
             <button
               onClick={logOut}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px]  duration-150 hover:text-primary"
             >
               로그아웃
             </button>
           ) : (
             <button
               onClick={joinModalHandler}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px]  duration-150 hover:text-primary"
             >
               회원가입
             </button>
