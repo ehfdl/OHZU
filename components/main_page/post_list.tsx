@@ -240,6 +240,7 @@ const PostList = () => {
                 }}
                 modules={[EffectCoverflow, Navigation, Mousewheel]}
                 grabCursor={true}
+                slidesPerGroup={3}
               >
                 <div className="">
                   {userLikePosts?.map((post: any) => (
@@ -279,29 +280,21 @@ const PostList = () => {
             </div>
             <div className="group overflow-visible">
               <Swiper
-                modules={[EffectCoverflow, Navigation, Mousewheel]}
-                effect={"coverflow"}
-                grabCursor={true}
-                centeredSlides={true}
-                spaceBetween={40}
+                spaceBetween={24}
                 slidesPerView={3}
                 scrollbar={{ draggable: true }}
                 navigation={{
-                  prevEl: prevRef.current!,
-                  nextEl: nextRef.current!,
-                }}
-                coverflowEffect={{
-                  rotate: 10, // 회전각도
-                  stretch: 0,
-                  depth: 100, // 깊이감도
-                  modifier: 2, //
-                  slideShadows: true, //선택한 부분 밝게 나머지는 그늘지게 해준다.
+                  prevEl: prevRef.current,
+                  nextEl: nextRef.current,
                 }}
                 breakpoints={{
                   768: {
                     slidesPerView: 3,
                   },
                 }}
+                modules={[EffectCoverflow, Navigation, Mousewheel]}
+                grabCursor={true}
+                slidesPerGroup={3}
               >
                 <div>
                   {userViewPosts?.map((post: any) => (
