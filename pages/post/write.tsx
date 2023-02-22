@@ -172,6 +172,7 @@ const Post = () => {
       ingre.ing_06,
     ];
     let filterIngre = totalIngre.filter((ing) => ing !== "");
+
     if (validateClickPost()) {
       return;
     }
@@ -223,6 +224,7 @@ const Post = () => {
         let newForm = {
           ...form,
           img: savePreview,
+          ingredient: filterIngre,
         };
 
         await addDoc(collection(dbService, "Posts"), newForm);

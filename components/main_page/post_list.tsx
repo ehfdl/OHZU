@@ -244,7 +244,9 @@ const PostList = () => {
                 <div className="">
                   {userLikePosts?.map((post: any) => (
                     <SwiperSlide key={post.postId}>
+
                       <PostCard key={post.postId} post={post} />
+
                     </SwiperSlide>
                   ))}{" "}
                 </div>
@@ -306,7 +308,9 @@ const PostList = () => {
                 <div>
                   {userViewPosts?.map((post: any) => (
                     <SwiperSlide key={post.postId}>
+
                       <PostCard key={post.postId} post={post} />
+
                     </SwiperSlide>
                   ))}{" "}
                 </div>

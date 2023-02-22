@@ -43,11 +43,12 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   const [checkNickname, setCheckNickname] = useState("");
   const [checkAdult, setCheckAdult] = useState("");
 
-  // email, password 정규식
+  // email, password, nickname 정규식
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
   const passwordRegEx =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/; // 최소 8자, 대문자 하나 이상, 소문자 하나 및 숫자 하나
+  const nicknameRegEx = "^[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힣]*$";
 
   // 이메일 중복검사 (FireStore <=> email input)
   const isEmail = async (email: any) => {
@@ -135,6 +136,10 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         if (nickname) {
           if (result === nickname) {
             setCheckNickname("이미 사용중인 닉네임입니다.");
+          } else if (nickname.length > 5) {
+            setCheckNickname("닉네임은 최대 다섯 글자입니다.");
+          } else if (!nickname.match(nicknameRegEx)) {
+            setCheckNickname("닉네임에 공백과 특수문자는 불가능합니다.");
           } else {
             setCheckNickname("사용 가능한 닉네임입니다.");
           }
@@ -143,10 +148,11 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         }
       })
       .catch((error) => {
-        alert(error.message);
+        // alert(error.message)
       });
   }, [nickname, setNickname]);
 
+  // 회원가입 빈칸 유효성
   const signUpForm = (e: any) => {
     e.preventDefault();
 
@@ -162,6 +168,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       return alert("빈칸을 채워주세요.");
     }
 
+    // 회원가입 함수
     createUserWithEmailAndPassword(authService, email, password)
       .then((userCredential) => {
         setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
@@ -335,7 +342,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   return (
     <>
       <div className="w-screen h-screen fixed bg-slate-500 z-[9] opacity-90"></div>
-      <div className="inner w-[588px] h-[900px] bg-white z-[10] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+      <div className="inner w-[588px] h-[920px] bg-white z-[10] fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
         <div className="loginContainer flex-col text-center">
           <MdOutlineClose
             onClick={() => setJoinIsOpen(false)}

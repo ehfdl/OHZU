@@ -25,18 +25,18 @@ export default function Dropdown() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute  z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+        <Menu.Items className="absolute  z-10 mt-2 w-[111px] text-center origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="py-1">
             <Menu.Item>
               {({ active }) => (
                 <a
                   href="#"
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
                   )}
                 >
-                  좋아요 순
+                  인기순
                 </a>
               )}
             </Menu.Item>
@@ -45,11 +45,11 @@ export default function Dropdown() {
                 <a
                   href="#"
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
                   )}
                 >
-                  조회수 순
+                  최신순
                 </a>
               )}
             </Menu.Item>
@@ -58,11 +58,11 @@ export default function Dropdown() {
                 <a
                   href="#"
                   className={classNames(
-                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm"
+                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
                   )}
                 >
-                  최신 순
+                  조회순
                 </a>
               )}
             </Menu.Item>
@@ -72,11 +72,11 @@ export default function Dropdown() {
                   <button
                     type="submit"
                     className={classNames(
-                      active ? "bg-gray-100 text-gray-900" : "text-gray-700",
-                      "block w-full px-4 py-2 text-left text-sm"
+                      active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
+                      "block w-full px-4 py-2 text-left text-sm text-center active:bg-white active:text-[#FF6161]"
                     )}
                   >
-                    댓글 순
+                    댓글순
                   </button>
                 )}
               </Menu.Item>
