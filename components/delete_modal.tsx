@@ -8,6 +8,7 @@ interface DeleteModalProps {
   deleteRecomment?: (id: string) => Promise<void>;
   id: string | undefined;
   text: string;
+  content: string;
 }
 
 const DeleteModal = ({
@@ -17,6 +18,7 @@ const DeleteModal = ({
   deleteRecomment,
   id,
   text,
+  content,
 }: DeleteModalProps) => {
   useEffect(() => {
     document.body.style.cssText = `
@@ -32,13 +34,10 @@ const DeleteModal = ({
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center z-10">
-      <div className="relative w-[590px] aspect-[4/3] bg-white flex flex-col justify-center items-center px-12 py-20">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center !m-0 z-10">
+      <div className="relative w-[590px] bg-white flex flex-col justify-center items-center px-12 py-20">
         <h2 className="font-bold text-3xl">{text}을 삭제하시겠어요?</h2>
-        <p className="text-2xl font-light text-center my-12">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Non quisquam
-          itaque saepe esse laudantium.
-        </p>
+        <p className="text-center text-textGray mt-6 mb-11">{content}</p>
         <div className="flex justify-between space-x-5">
           <button
             className="py-3 px-24 border border-primary text-primary rounded"
@@ -53,7 +52,7 @@ const DeleteModal = ({
             >
               삭제
             </button>
-          ) : text === "게시글" ? (
+          ) : text === "게시물" ? (
             <button
               className="py-3 px-24 bg-primary text-white rounded"
               onClick={() => deletePost!(id!)}

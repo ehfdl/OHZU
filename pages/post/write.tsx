@@ -316,7 +316,7 @@ const Post = () => {
                     onChange={onChangeImg_01}
                     className="hidden"
                   />
-                  <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                  <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                 </label>
               ) : (
                 <>
@@ -325,7 +325,7 @@ const Post = () => {
                       onClick={() => {
                         setImgFile_01(null);
                       }}
-                      className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                      className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                     />
                   </label>
                   <img
@@ -346,7 +346,7 @@ const Post = () => {
                       onChange={onChangeImg_02}
                       className="hidden"
                     />
-                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                   </label>
                 ) : (
                   <>
@@ -355,7 +355,7 @@ const Post = () => {
                         onClick={() => {
                           setImgFile_02(null);
                         }}
-                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
                     <img
@@ -375,7 +375,7 @@ const Post = () => {
                       onChange={onChangeImg_03}
                       className="hidden"
                     />
-                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                   </label>
                 ) : (
                   <>
@@ -384,7 +384,7 @@ const Post = () => {
                         onClick={() => {
                           setImgFile_03(null);
                         }}
-                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
                     <img

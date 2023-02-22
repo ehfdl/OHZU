@@ -76,12 +76,10 @@ const PostCard = ({ post }: { post: any }) => {
   }, []);
 
   return (
-
     <div className="flex">
       <div key={post.postId} className=" border shadow mt-3  rounded ">
         {/* hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70 */}
         <div className="w-full h-[284px]">
-
           <Link href={`/post/${post.postId}`}>
             <img
               src={post.img[0] || defaultImg}
@@ -132,14 +130,14 @@ const PostCard = ({ post }: { post: any }) => {
 
             <div
               onClick={onClickLikeBtn}
-              className="float-right translate-x-[80px] translate-y-[8px] w-6 mb-2 cursor-pointer"
+              className="absolute flex flex-col float-right translate-x-[330px] -translate-y-[10px] items-center w-[18px] z-[5] mr-6 mt-6 mb-3 cursor-pointer"
             >
               {like ? (
                 <img src="/like/like-pressed.png" />
               ) : (
                 <img src="/like/like-default.png" />
               )}
-              <div className="text-[rgba(255,255,255,0.5)] text-[11px]">
+              <div className="text-[rgba(87,86,86,0.5)] text-[11px]">
                 {post.like.length}
               </div>
             </div>

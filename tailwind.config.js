@@ -14,6 +14,7 @@ module.exports = {
         iconHover: "#666666",
         textGray: "#8E8E93",
         phGray: "#ACACAC",
+        borderGray: "#E6E6E6",
       },
     },
   },

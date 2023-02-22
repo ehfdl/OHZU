@@ -38,22 +38,22 @@ const AlarmCard = ({
     if (difference < seconds) {
       ResultTime = "바로"; // 1초보다 작으면 바로 전
     } else if (difference < minute) {
-      ResultTime = Math.trunc(difference / seconds) + "초 ";
+      ResultTime = Math.trunc(difference / seconds) + "초전";
       //분보다 작으면 몇초전인지
     } else if (difference < hour) {
       ResultTime = Math.trunc(difference / minute) + "분전 ";
       //시보다 작으면 몇분전인지
     } else if (difference < day) {
-      ResultTime = Math.trunc(difference / hour) + "시 ";
+      ResultTime = Math.trunc(difference / hour) + "시간전 ";
       //일보다 작으면 몇시간전인지
     } else if (difference < mon) {
-      ResultTime = Math.trunc(difference / day) + "일 ";
+      ResultTime = Math.trunc(difference / day) + "일전 ";
       //달보다 작으면 몇일 전인지
     } else if (difference < year) {
-      ResultTime = Math.trunc(difference / mon) + "달 ";
+      ResultTime = Math.trunc(difference / mon) + "달전 ";
       //년보다 작으면 몇달전인지
     } else {
-      ResultTime = Math.trunc(difference / year) + "년 ";
+      ResultTime = Math.trunc(difference / year) + "년전 ";
     }
   }
 
@@ -86,9 +86,9 @@ const AlarmCard = ({
   };
 
   return (
-    <div className="w-full px-3 py-2 border-b-[1px] border-[#f2f2f2] flex flex-col">
+    <div className="w-full px-3 py-2 border-b-[1px] text-textGray border-[#f2f2f2] flex flex-col">
       {post.isDone ? (
-        <div className="my-2 text-[12px] text-textGray flex w-full justify-between">
+        <div className="my-2 text-[12px]  flex w-full justify-between">
           <div onClick={onClickIsDone}>
             <span className="font-bold">{post.nickname}</span>
             님이

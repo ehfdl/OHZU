@@ -8,14 +8,18 @@ const WriteButton = () => {
       {/* {showButton && ( */}
       <div className="scroll__container fixed right-[5%] bottom-[5%] z-50">
         <button
-          className="rounded-full w-16 h-16 font-thin text-sm  text-white bg-[#ff6161]/90 hover:shadow-[3px_5px_8px_#ff9999]  "
+          className="group rounded-full w-16 h-16 font-thin text-sm  bg-[#ff6161]/90 hover:bg-[#FFF0F0]  "
           id="write"
           // onClick={scrollToTop}
           type="button"
         >
           <img
-            src="/write/write.svg"
-            className="ml-5 cursor-pointer hover:fill-[#ff6161]"
+            src="/write/write-default.png"
+            className="relative ml-5 cursor-pointer block group-hover:hidden"
+          />
+          <img
+            src="/write/write-pressed.png"
+            className="absolute -translate-x-3 -translate-y-3 cursor-pointer hidden group-hover:inline-block"
           />
         </button>
       </div>

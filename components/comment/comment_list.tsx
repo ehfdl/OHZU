@@ -146,7 +146,7 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
 
   return (
     <>
-      <li className="flex flex-col items-center justify-center py-6 border-b border-iconDefault last:border-b-0">
+      <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0">
         <div className="flex space-x-6 justify-between w-full">
           <Link
             href={`/users/${comment.userId}`}
@@ -273,6 +273,7 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
             setDeleteConfirm={setDeleteConfirm}
             id={id}
             text="댓글"
+            content="삭제한 댓글은 복원이 불가합니다."
           />
         )}
         {isOpen && (
