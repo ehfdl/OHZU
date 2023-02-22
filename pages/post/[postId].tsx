@@ -1,18 +1,14 @@
 import { authService, dbService, storageService } from "@/firebase";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
-  limit,
   onSnapshot,
   orderBy,
   query,
   setDoc,
-  startAfter,
-  startAt,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -21,16 +17,17 @@ import Link from "next/link";
 import Layout from "@/components/layout";
 import Grade from "../../components/grade";
 import { FiHeart, FiMoreVertical } from "react-icons/fi";
-import { FaHeart, FaCrown } from "react-icons/fa";
-import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
-import { SyntheticEvent, useEffect, useRef, useState } from "react";
+import { FaHeart } from "react-icons/fa";
+import { TfiTrash } from "react-icons/tfi";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import CommentList from "@/components/comment/comment_list";
 import DeleteModal from "@/components/delete_modal";
 import { deleteObject, ref } from "firebase/storage";
 import { GetServerSideProps } from "next";
 import Comments from "@/components/comment/comments";
 import { BsShareFill } from "react-icons/bs";
+import { RiAlarmWarningLine } from "react-icons/ri";
+import { MdOutlineEditNote } from "react-icons/md";
 
 interface PostDetailPropsType {
   postId: string;
@@ -363,7 +360,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                       <FiHeart className="text-primary" size={24} />
                     )}
                   </button>
-                  <span>{post.like!.length}</span>
+                  <span className="text-textGray">{post.like!.length}</span>
                 </div>
                 {authService.currentUser?.uid === post.userId && (
                   <>
@@ -376,11 +373,27 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                     </button>
                     {isOpen && (
                       <div className="absolute top-14 right-0 z-10 bg-white border-black border flex flex-col space-y-6 items-center px-10 py-6">
-                        <Link href={`/post/edit/${postId}`}>
-                          게시글 수정하기
+                        <Link
+                          href={`/post/edit/${postId}`}
+                          className="flex items-center space-x-5"
+                        >
+                          <span> 게시글 수정하기</span>{" "}
+                          <MdOutlineEditNote size={18} />
                         </Link>
-                        <button onClick={deleteToggle}>게시글 삭제하기</button>
-                        <button onClick={doCopy}>게시글 공유하기</button>
+                        <button
+                          className="flex items-center space-x-5"
+                          onClick={deleteToggle}
+                        >
+                          <span>게시글 삭제하기</span>
+                          <TfiTrash size={18} />
+                        </button>
+                        <button
+                          className="flex items-center space-x-5"
+                          onClick={doCopy}
+                        >
+                          <span>게시글 공유하기</span>
+                          <BsShareFill size={18} className="p-0.5" />
+                        </button>
                       </div>
                     )}
                   </>
@@ -392,7 +405,8 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                 deletePost={deletePost}
                 setDeleteConfirm={setDeleteConfirm}
                 id={postId}
-                text="게시글"
+                text="게시물"
+                content="삭제한 게시물은 복원이 불가합니다."
               />
             )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
@@ -417,21 +431,21 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                 <pre className="whitespace-pre-wrap break-all">{post.text}</pre>
               </div>
             </div>
-            <div
-              id="ingredient"
-              className="mt-10 mb-9 border-b border-[#F2F2F2]"
-            >
+            <div id="ingredient" className="mt-10 mb-9">
               <span className="inline-block px-7 py-2 bg-primary text-white text-xl rounded-full">
                 준비물
               </span>
               <div className="pt-6 flex justify-start flex-wrap">
                 {post.ingredient?.map((ing, i) => (
-                  <span
+                  <button
                     key={i}
-                    className="inline-block mr-6 mb-6 py-1.5 px-6 rounded-full border border-gray-700"
+                    onClick={() => {
+                      router.push(`/search/${ing}`);
+                    }}
+                    className="inline-block mr-6 mb-6 py-1.5 px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition"
                   >
                     {ing}
-                  </span>
+                  </button>
                 ))}
               </div>
             </div>
@@ -449,14 +463,22 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                 className="absolute right-0 -bottom-16 flex items-start space-x-6"
               >
                 <button onClick={doCopy}>
-                  <BsShareFill size={24} className="text-iconDefault mt-1" />
+                  <BsShareFill
+                    size={24}
+                    className="text-iconDefault mt-1 hover:text-primary"
+                  />
                 </button>
                 <button
                   onClick={onClickReportPost}
-                  className="flex flex-col items-center space-y-1"
+                  className="flex flex-col items-center space-y-0.5 group"
                 >
-                  <AiFillAlert size={24} className="text-iconDefault" />
-                  <span className="text-[10px] text-iconDefault">신고하기</span>
+                  <RiAlarmWarningLine
+                    size={24}
+                    className="text-iconDefault group-hover:text-primary"
+                  />
+                  <span className="text-[10px] text-iconDefault group-hover:text-primary">
+                    신고
+                  </span>
                 </button>
               </div>
             )}

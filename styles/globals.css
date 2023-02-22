@@ -13,4 +13,8 @@ pre {
   button[aria-current="page"] {
     @apply text-primary;
   }
+  input,
+  textarea {
+    @apply focus:outline-none;
+  }
 }

@@ -116,23 +116,37 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
     if (editPost.type !== "") {
       setValidateCate("");
     }
-    if (
-      editIng.editIng_01 !== "" ||
-      editIng.editIng_02 !== "" ||
-      editIng.editIng_03 !== "" ||
-      editIng.editIng_04 !== "" ||
-      editIng.editIng_05 !== "" ||
-      editIng.editIng_06 !== ""
-    ) {
-      setValidateIng("");
-    }
+
     if (editPost.recipe !== "") {
       setValidateRecipe("");
     }
   };
 
+  const validateChangeIng = () => {
+    if (
+      editIng.editIng_01!.length > 8 ||
+      editIng.editIng_02!.length > 8 ||
+      editIng.editIng_03!.length > 8 ||
+      editIng.editIng_04!.length > 8 ||
+      editIng.editIng_05!.length > 8 ||
+      editIng.editIng_06!.length > 8
+    ) {
+      setValidateIng("재료를 8자 이하로 입력해 주세요.");
+    }
+    if (
+      editIng.editIng_01!.length <= 8 &&
+      editIng.editIng_02!.length <= 8 &&
+      editIng.editIng_03!.length <= 8 &&
+      editIng.editIng_04!.length <= 8 &&
+      editIng.editIng_05!.length <= 8 &&
+      editIng.editIng_06!.length <= 8
+    ) {
+      setValidateIng("");
+    }
+  };
+
   const validateClickPost = () => {
-    if (editPost.title === "") {
+    if (editPost.title === "" || editPost.title!.length > 10) {
       setValidateTitle("이름을 10자 이하로 입력해 주세요.");
       return true;
     } else if (editPost.text === "") {
@@ -140,6 +154,16 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       return true;
     } else if (editPost.type === "") {
       setValidateCate("카테고리 한 개를 선택해주세요.");
+      return true;
+    } else if (
+      editIng.editIng_01!.length > 8 ||
+      editIng.editIng_02!.length > 8 ||
+      editIng.editIng_03!.length > 8 ||
+      editIng.editIng_04!.length > 8 ||
+      editIng.editIng_05!.length > 8 ||
+      editIng.editIng_06!.length > 8
+    ) {
+      setValidateIng("재료를 8자 이하로 입력해 주세요.");
       return true;
     } else if (
       editIng.editIng_01 === "" &&
@@ -160,8 +184,9 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
   useEffect(() => {
     validateChangePost();
   }, [editPost]);
+
   useEffect(() => {
-    validateChangePost();
+    validateChangeIng();
   }, [editIng]);
 
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -376,14 +401,14 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       });
     }
 
-    if (editPost.ingredient?.length! >= 3) {
+    if (editPost.ingredient?.length! > 3) {
       setEditPlusIng(true);
     }
   }, []);
 
   return (
     <Layout>
-      <div className="w-full h-screen flex justify-center pb-16">
+      <div className="w-full flex justify-center pb-16">
         <form className="w-[588px] flex flex-col">
           <div className="flex gap-3">
             <div className="font-bold text-[20px] mt-5">사진</div>
@@ -512,7 +537,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             </span>
           </div>
           <textarea
-            className="h-[118px] border-[1px] border-iconDefault py-3 px-3 rounded resize-none overflow-hidden"
+            className="w-full h-[118px] px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
             name="text"
             value={editPost.text}
             onChange={onChangeValue}
@@ -684,13 +709,13 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           </div>
 
           <textarea
-            className="h-24 resize-none overflow-hidden"
+            className="w-full h-[170px] px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
             name="recipe"
             value={editPost.recipe}
             onChange={onChangeValue}
             placeholder={post.recipe}
           />
-          <div className="w-full flex justify-between items-center">
+          <div className="w-full flex justify-between items-center mt-10">
             <Link
               className="border border-primary text-primary rounded px-32 py-3 font-bold text-center"
               href={`/post/${id}`}

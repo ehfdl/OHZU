@@ -91,7 +91,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   }, []);
   return (
     <>
-      <li className="py-6 flex space-x-6 justify-end w-full border-b border-iconDefault">
+      <li className="py-6 flex space-x-6 justify-end w-full border-b border-borderGray">
         <Link
           href={`/users/${recomment.userId}`}
           className="flex flex-col items-center space-y-2 w-[13%]"
@@ -164,6 +164,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             setDeleteConfirm={setDeleteConfirm}
             id={id}
             text="답글"
+            content="삭제한 답글은 복원이 불가합니다."
           />
         )}
       </li>
