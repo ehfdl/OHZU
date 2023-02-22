@@ -79,7 +79,7 @@ const PostCard = ({ post }: { post: any }) => {
     <div className="">
       <div
         key={post.postId}
-        className="border shadow mt-3  rounded hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70"
+        className="border shadow mt-3  rounded hover:border-primary/20 hover:shadow-xl hover:shadow-[#FF9999]/70"
       >
         <div>
           <Link href={`/post/${post.postId}`}>

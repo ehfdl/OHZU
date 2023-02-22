@@ -14,7 +14,7 @@ const ReportCommentCard = ({ comment }: { comment: ReportComment }) => {
   return (
     <div
       key={comment.commentId}
-      className="border-b-2 border-[#cccccc] py-2 px-2"
+      className="border-b-2 border-iconDefault py-2 px-2"
     >
       <div>카드아이디 : {comment.commentId}</div>
       <div>신고횟수 : {comment.reporter?.length}</div>

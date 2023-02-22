@@ -2,7 +2,7 @@ import React from "react";
 
 const ReportPostCard = ({ post }: { post: ReportPost }) => {
   return (
-    <div key={post.id} className="border-b-2 border-[#cccccc] py-2 px-2">
+    <div key={post.id} className="border-b-2 border-iconDefault py-2 px-2">
       <div>카드아이디 : {post.id}</div>
       <div>신고횟수 : {post.reporter?.length}</div>
       <div>이미지 </div>

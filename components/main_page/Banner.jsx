@@ -51,7 +51,7 @@ function Banner() {
                 <div
                   key={slideIndex}
                   onClick={() => goToSlide(slideIndex)}
-                  className="text-3xl cursor-pointer text-gray-200/60 hover:text-[#ff6161]/60 focus:text-white "
+                  className="text-3xl cursor-pointer text-gray-200/60 hover:text-primary/60 focus:text-white "
                 >
                   <RxDotFilled />
                 </div>

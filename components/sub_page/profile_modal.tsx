@@ -95,7 +95,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
           className="w-10 aspect-square absolute mt-7 ml-[500px]"
           onClick={() => setIsOpenProfileModal(false)}
         >
-          <FiX className="w-full h-full text-[#acacac]" />
+          <FiX className="w-full h-full text-phGray" />
         </button>
 
         <div className="text-[32px] font-bold mt-[88px]">프로필 편집</div>
@@ -145,7 +145,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
         </div>
         <button
           onClick={onSubmit}
-          className="w-[280px] h-12 bg-[#ff6161] text-white mt-10"
+          className="w-[280px] h-12 bg-primary text-white mt-10"
         >
           저장
         </button>
