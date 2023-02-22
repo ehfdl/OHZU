@@ -45,7 +45,7 @@ const UserPostCard = ({ post }: { post: any }) => {
       </Link>
       <div
         onClick={onClickLikeBtn}
-        className="absolute flex flex-col items-center w-7 h-7 z-10  right-0 mr-9 mt-[42px] cursor-pointer"
+        className="absolute flex flex-col items-center w-7 h-7 z-[5]  right-0 mr-9 mt-[42px] cursor-pointer"
       >
         {like ? (
           <img src="/like/like-pressed.png" />

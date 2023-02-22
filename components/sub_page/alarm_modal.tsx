@@ -12,6 +12,9 @@ const AlarmModal = ({
   getAlarm: () => Promise<void>;
   setIsAlarmOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
+  const alarmFalse = alarm.filter((content) => content.isDone === false);
+  const alarmTrue = alarm.filter((content) => content.isDone === true);
+
   const onClickAllReadDelete = async () => {
     const filterAlarm = alarm.filter((content) => content.isDone === false);
     await updateDoc(
@@ -47,12 +50,31 @@ const AlarmModal = ({
         <div className="w-full py-3 px-3 text-[14px] flex justify-between">
           <div className="font-bold">전체 알림</div>
           <div className="flex gap-6 text-textGray">
-            <div onClick={onClickAllReadDelete} className="cursor-pointer">
-              읽은 알림 삭제
-            </div>
-            <div onClick={onClickAllRead} className="cursor-pointer">
-              모두 읽음
-            </div>
+            {alarmTrue.length === 0 ? (
+              <div onClick={onClickAllReadDelete} className="cursor-pointer">
+                읽은 알림 삭제
+              </div>
+            ) : (
+              <div
+                onClick={onClickAllReadDelete}
+                className="text-primary cursor-pointer"
+              >
+                읽은 알림 삭제
+              </div>
+            )}
+
+            {alarmFalse.length === 0 ? (
+              <div onClick={onClickAllRead} className="cursor-pointer">
+                모두 읽음
+              </div>
+            ) : (
+              <div
+                onClick={onClickAllRead}
+                className=" text-primary cursor-pointer"
+              >
+                모두 읽음
+              </div>
+            )}
           </div>
         </div>
         <div className="border-[1px] border-[#f2f2f2] w-full"></div>
