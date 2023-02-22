@@ -113,22 +113,36 @@ const Post = () => {
     if (form.type !== "") {
       setValidateCate("");
     }
-    if (
-      ingre.ing_01 !== "" ||
-      ingre.ing_02 !== "" ||
-      ingre.ing_03 !== "" ||
-      ingre.ing_04 !== "" ||
-      ingre.ing_05 !== "" ||
-      ingre.ing_06 !== ""
-    ) {
-      setValidateIng("");
-    }
+
     if (form.recipe !== "") {
       setValidateRecipe("");
     }
   };
+  const validateChangeIng = () => {
+    if (
+      ingre.ing_01!.length > 8 ||
+      ingre.ing_02!.length > 8 ||
+      ingre.ing_03!.length > 8 ||
+      ingre.ing_04!.length > 8 ||
+      ingre.ing_05!.length > 8 ||
+      ingre.ing_06!.length > 8
+    ) {
+      setValidateIng("재료를 8자 이하로 입력해 주세요.");
+    }
+    if (
+      ingre.ing_01!.length <= 8 &&
+      ingre.ing_02!.length <= 8 &&
+      ingre.ing_03!.length <= 8 &&
+      ingre.ing_04!.length <= 8 &&
+      ingre.ing_05!.length <= 8 &&
+      ingre.ing_06!.length <= 8
+    ) {
+      setValidateIng("");
+    }
+  };
+
   const validateClickPost = () => {
-    if (form.title === "") {
+    if (form.title === "" || form.title!.length > 10) {
       setValidateTitle("이름을 10자 이하로 입력해 주세요.");
       return true;
     } else if (form.text === "") {
@@ -136,6 +150,16 @@ const Post = () => {
       return true;
     } else if (form.type === "") {
       setValidateCate("카테고리 한 개를 선택해주세요.");
+      return true;
+    } else if (
+      ingre.ing_01!.length > 8 ||
+      ingre.ing_02!.length > 8 ||
+      ingre.ing_03!.length > 8 ||
+      ingre.ing_04!.length > 8 ||
+      ingre.ing_05!.length > 8 ||
+      ingre.ing_06!.length > 8
+    ) {
+      setValidateIng("재료를 8자 이하로 입력해 주세요.");
       return true;
     } else if (
       ingre.ing_01 === "" &&
@@ -156,8 +180,9 @@ const Post = () => {
   useEffect(() => {
     validateChangePost();
   }, [form]);
+
   useEffect(() => {
-    validateChangePost();
+    validateChangeIng();
   }, [ingre]);
 
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -479,21 +504,21 @@ const Post = () => {
               name="ing_01"
               value={ingre.ing_01}
               onChange={onChangeIngre}
-              placeholder="재료 1"
+              placeholder="준비물 1"
             />
             <input
               className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
               name="ing_02"
               value={ingre.ing_02}
               onChange={onChangeIngre}
-              placeholder="재료 2"
+              placeholder="준비물 2"
             />
             <input
               className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
               name="ing_03"
               value={ingre.ing_03}
               onChange={onChangeIngre}
-              placeholder="재료 3"
+              placeholder="준비물 3"
             />
           </div>
           {plusIng ? (
@@ -503,21 +528,21 @@ const Post = () => {
                 name="ing_04"
                 value={ingre.ing_04}
                 onChange={onChangeIngre}
-                placeholder="재료 4"
+                placeholder="준비물 4"
               />
               <input
                 className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
                 name="ing_05"
                 value={ingre.ing_05}
                 onChange={onChangeIngre}
-                placeholder="재료 5"
+                placeholder="준비물 5"
               />
               <input
                 className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
                 name="ing_06"
                 value={ingre.ing_06}
                 onChange={onChangeIngre}
-                placeholder="재료 6"
+                placeholder="준비물 6"
               />
             </div>
           ) : (
