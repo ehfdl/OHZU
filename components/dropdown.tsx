@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 
@@ -6,13 +6,15 @@ function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Dropdown() {
+export default function Dropdown({ drop, setDrop }: any) {
+  console.log("드랍박스 state", drop);
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center rounded border border-gray-300 bg-white px-2 py-1.5 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
-          정렬
-          <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+        <Menu.Button className="inline-flex w-full justify-center  bg-white text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+          {drop}
+          <ChevronDownIcon className="-mr-1  h-5 w-5" aria-hidden="true" />
         </Menu.Button>
       </div>
 
@@ -30,6 +32,7 @@ export default function Dropdown() {
             <Menu.Item>
               {({ active }) => (
                 <a
+                  onClick={() => setDrop("인기순")}
                   href="#"
                   className={classNames(
                     active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
@@ -43,6 +46,7 @@ export default function Dropdown() {
             <Menu.Item>
               {({ active }) => (
                 <a
+                  onClick={() => setDrop("최신순")}
                   href="#"
                   className={classNames(
                     active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
@@ -56,6 +60,7 @@ export default function Dropdown() {
             <Menu.Item>
               {({ active }) => (
                 <a
+                  onClick={() => setDrop("조화순")}
                   href="#"
                   className={classNames(
                     active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
@@ -66,21 +71,6 @@ export default function Dropdown() {
                 </a>
               )}
             </Menu.Item>
-            <form method="POST" action="#">
-              <Menu.Item>
-                {({ active }) => (
-                  <button
-                    type="submit"
-                    className={classNames(
-                      active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
-                      "block w-full px-4 py-2 text-left text-sm text-center active:bg-white active:text-[#FF6161]"
-                    )}
-                  >
-                    댓글순
-                  </button>
-                )}
-              </Menu.Item>
-            </form>
           </div>
         </Menu.Items>
       </Transition>
