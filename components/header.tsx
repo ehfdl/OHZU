@@ -91,15 +91,7 @@ const Header = ({ ...props }: any) => {
         </div>
       </Link>
       <div className="iconWrap h-[80px] mr-[32px] flex justify-end items-center relative ">
-        {/* 검색 Input */}
-<<<<<<< HEAD
-        <form
-          className="mr-[20px] flex items-center"
-          onSubmit={onSubmitHandler}
-        >
-=======
-        <form className="mr-9 flex items-center">
->>>>>>> b161179fb31cd67d9a9c62ed178535fba466a22b
+        <form className="mr-9 flex items-center" onSubmit={onSubmitHandler}>
           <label htmlFor="simple-search" className=""></label>
           <div className="relative w-full">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -123,7 +115,7 @@ const Header = ({ ...props }: any) => {
               value={search}
               type="text"
               id="simple-search"
-              className="w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  "
+              className="w-[419px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  "
               placeholder="혼합주 이름 또는 재료를 입력해주세요."
               required
             />
@@ -167,7 +159,7 @@ const Header = ({ ...props }: any) => {
           ) : (
             <button
               onClick={joinModalHandler}
-              className="w-20 h-[42px]  duration-150 hover:text-primary"
+              className="w-20 h-[42px]  text-[18px] duration-150 hover:text-primary"
             >
               회원가입
             </button>
