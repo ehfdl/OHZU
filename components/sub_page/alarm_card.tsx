@@ -1,8 +1,8 @@
 import { authService, dbService } from "@/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { now } from "jquery";
 import Link from "next/link";
 import React from "react";
+import { RxCross2 } from "react-icons/rx";
 
 const AlarmCard = ({
   post,
@@ -86,30 +86,41 @@ const AlarmCard = ({
   };
 
   return (
-    <div className="w-full px-3 py-2 border-b-[1px] border-[gray] flex flex-col">
+    <div className="w-full px-3 py-2 border-b-[1px] border-[#f2f2f2] flex flex-col">
       {post.isDone ? (
-        <div className="text-sm text-gray-200">
-          <span className="font-bold">댓글 : </span>
-          <Link href={`/post/${post.postId}`}>
-            <span>{post.content}</span>
-          </Link>
+        <div className="my-2 text-[12px] text-textGray flex w-full justify-between">
+          <div onClick={onClickIsDone}>
+            <span className="font-bold">{post.nickname}</span>
+            님이
+            <Link href={`/post/${post.postId}`}>
+              <span className="font-bold"> {post.title}</span>에 작성한 댓글
+            </Link>
+          </div>
+          <RxCross2
+            className="text-iconDefault cursor-pointer"
+            onClick={onClickDelete}
+          />
         </div>
       ) : (
-        <div onClick={onClickIsDone} className="font-bold text-sm">
-          <span className="font-bold">댓글 : </span>
-          <Link href={`/post/${post.postId}`}>
-            <span>{post.content}</span>
-          </Link>
+        <div className="my-2 text-[12px] flex w-full justify-between">
+          <div onClick={onClickIsDone}>
+            <span className="font-bold">{post.nickname}</span>
+            님이
+            <Link href={`/post/${post.postId}`}>
+              <span className="font-bold"> {post.title}</span>에 작성한 댓글
+            </Link>
+          </div>
+          <RxCross2
+            className="text-iconDefault cursor-pointer"
+            onClick={onClickDelete}
+          />
         </div>
       )}
 
-      <div className="text-[12px]">
-        <span>by </span>
-        <span>{post.nickname} </span>
-        <span>{ResultTime}</span>
+      <div className="text-[12px] leading-5">
+        <div className=" line-clamp-2">{post.content}</div>
+        <div>{ResultTime}</div>
       </div>
-
-      <div onClick={onClickDelete}> 삭제</div>
     </div>
   );
 };

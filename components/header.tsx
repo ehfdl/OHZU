@@ -92,10 +92,14 @@ const Header = ({ ...props }: any) => {
       </Link>
       <div className="iconWrap h-[80px] mr-[32px] flex justify-end items-center relative ">
         {/* 검색 Input */}
+<<<<<<< HEAD
         <form
           className="mr-[20px] flex items-center"
           onSubmit={onSubmitHandler}
         >
+=======
+        <form className="mr-9 flex items-center">
+>>>>>>> b161179fb31cd67d9a9c62ed178535fba466a22b
           <label htmlFor="simple-search" className=""></label>
           <div className="relative w-full">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -126,20 +130,28 @@ const Header = ({ ...props }: any) => {
           </div>
         </form>
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-6">
           {authService.currentUser ? (
-            <>
-              <Alarm />
-              <Link legacyBehavior href="/mypage">
-                <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
-                  마이페이지
+            authService.currentUser?.uid === "r9TWnAGKsxgOoKmZf4IfCLxf0Ry2" ? (
+              <Link legacyBehavior href="/ohzu">
+                <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
+                  관리페이지
                 </button>
               </Link>
-            </>
+            ) : (
+              <>
+                <Alarm />
+                <Link legacyBehavior href="/mypage">
+                  <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
+                    마이페이지
+                  </button>
+                </Link>
+              </>
+            )
           ) : (
             <button
               onClick={loginModalHandler}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px] text-[18px] duration-150 hover:text-primary"
             >
               로그인
             </button>
@@ -148,14 +160,14 @@ const Header = ({ ...props }: any) => {
           {authService.currentUser ? (
             <button
               onClick={logOut}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px] text-[18px] duration-150 hover:text-primary"
             >
               로그아웃
             </button>
           ) : (
             <button
               onClick={joinModalHandler}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px]  duration-150 hover:text-primary"
             >
               회원가입
             </button>

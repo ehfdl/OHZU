@@ -205,7 +205,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 placeholder="비밀번호를 입력해주세요."
                 className="w-[472px] h-[44px] p-2 pl-4 mb-3 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
               />
-              <p className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-[#FF6161]">
+              <p className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary">
                 비밀번호 찾기
               </p>
               <div className="flex w-[472px] m-auto">
@@ -219,7 +219,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
               </div>
             </div>
             <div className="buttonWrap mb-4">
-              <button className="w-[280px] h-[48px] mb-[29px] bg-[#FF6161] text-white rounded   ">
+              <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded   ">
                 로그인
               </button>
             </div>

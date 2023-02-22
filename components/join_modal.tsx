@@ -442,7 +442,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   <div
                     onClick={ageVerification}
                     id="auto_login"
-                    className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-[#FF6161]"
+                    className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary"
                   >
                     성인 인증하기
                     <span className="inline-block ml-[4px]">✅</span>
@@ -455,7 +455,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
             </div>
             <button
               type="submit"
-              className="w-[280px] h-[48px] mb-[29px] bg-[#FF6161] text-white rounded"
+              className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded"
             >
               회원가입
             </button>

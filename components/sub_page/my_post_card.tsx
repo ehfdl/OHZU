@@ -43,7 +43,7 @@ const MyPostCard = ({ post }: { post: any }) => {
       </Link>
       <div
         onClick={onClickLikeBtn}
-        className="absolute flex flex-col items-center w-7 h-10 z-10  right-0 mr-6 mt-6 cursor-pointer"
+        className="absolute flex flex-col items-center w-7 h-10 z-[5]  right-0 mr-6 mt-6 cursor-pointer"
       >
         {like ? (
           <img src="/like/like-pressed.png" />
@@ -59,6 +59,7 @@ const MyPostCard = ({ post }: { post: any }) => {
           src={post.img[0] || defaultImg}
           className="w-full h-full object-cover"
         />
+        <div className=" bg-black/0 w-full h-[284px] object-cover translate-y-[-285px] hover:bg-gray-300/30 hover:block"></div>
       </Link>
     </div>
   );

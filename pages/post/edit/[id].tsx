@@ -31,6 +31,23 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
   const [editPreview_02, setEditPreview_02] = useState<string | null>();
   const [editPreview_03, setEditPreview_03] = useState<string | null>();
 
+  const [editIng, setEditIng] = useState({
+    editIng_01: "",
+    editIng_02: "",
+    editIng_03: "",
+    editIng_04: "",
+    editIng_05: "",
+    editIng_06: "",
+  });
+
+  const [editPlusIng, setEditPlusIng] = useState(false);
+
+  const [validateTitle, setValidateTitle] = useState("");
+  const [validateIntro, setValidateIntro] = useState("");
+  const [validateCate, setValidateCate] = useState("");
+  const [validateIng, setValidateIng] = useState("최대 6개까지 작성 가능");
+  const [validateRecipe, setValidateRecipe] = useState("");
+
   const onChangeValue = (
     event:
       | React.ChangeEvent<HTMLInputElement>
@@ -68,8 +85,103 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
     }
   };
 
+  const onChangeIngre = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setEditIng((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const onChangePlusIngre = () => {
+    if (
+      editIng.editIng_01 !== "" &&
+      editIng.editIng_02 !== "" &&
+      editIng.editIng_03 !== ""
+    ) {
+      setEditPlusIng(true);
+    } else {
+      setValidateIng("재료를 입력해주세요.");
+    }
+  };
+
+  const validateChangePost = () => {
+    if (editPost.title!.length > 10) {
+      setValidateTitle("이름을 10자 이하로 입력해 주세요.");
+    } else if (editPost.title!.length <= 10) {
+      setValidateTitle("");
+    }
+    if (editPost.text !== "") {
+      setValidateIntro("");
+    }
+    if (editPost.type !== "") {
+      setValidateCate("");
+    }
+    if (
+      editIng.editIng_01 !== "" ||
+      editIng.editIng_02 !== "" ||
+      editIng.editIng_03 !== "" ||
+      editIng.editIng_04 !== "" ||
+      editIng.editIng_05 !== "" ||
+      editIng.editIng_06 !== ""
+    ) {
+      setValidateIng("");
+    }
+    if (editPost.recipe !== "") {
+      setValidateRecipe("");
+    }
+  };
+
+  const validateClickPost = () => {
+    if (editPost.title === "") {
+      setValidateTitle("이름을 10자 이하로 입력해 주세요.");
+      return true;
+    } else if (editPost.text === "") {
+      setValidateIntro("소개를 입력해주세요");
+      return true;
+    } else if (editPost.type === "") {
+      setValidateCate("카테고리 한 개를 선택해주세요.");
+      return true;
+    } else if (
+      editIng.editIng_01 === "" &&
+      editIng.editIng_02 === "" &&
+      editIng.editIng_03 === "" &&
+      editIng.editIng_04 === "" &&
+      editIng.editIng_05 === "" &&
+      editIng.editIng_06 === ""
+    ) {
+      setValidateIng("재료를 한가지 이상 입력해주세요.");
+      return true;
+    } else if (editPost.recipe === "") {
+      setValidateRecipe("방법을 입력해주세요.");
+      return true;
+    }
+  };
+
+  useEffect(() => {
+    validateChangePost();
+  }, [editPost]);
+  useEffect(() => {
+    validateChangePost();
+  }, [editIng]);
+
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
+
+    let totalIngre = [
+      editIng.editIng_01,
+      editIng.editIng_02,
+      editIng.editIng_03,
+      editIng.editIng_04,
+      editIng.editIng_05,
+      editIng.editIng_06,
+    ];
+
+    let filterIngre = totalIngre.filter((ing) => ing !== "");
+
+    if (validateClickPost()) {
+      return;
+    }
+
     let imgFileUrl = "";
     let editPreview = [editPreview_01, editPreview_02, editPreview_03];
     // let newEditPreview = editPreview.filter((view) => view != null);
@@ -96,17 +208,28 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           savePreview[i] !== null &&
           savePreview[i] !== undefined
         ) {
-          const imgId = savePreview[i].split("2F")[1].split("?")[0];
-          const desertRef = ref(storageService, `post/${imgId}`);
-          deleteObject(desertRef)
-            .then(() => {
-              console.log("success", imgId);
-              // File deleted successfully
-            })
-            .catch((error) => {
-              console.log("error", error, imgId);
-              // Uh-oh, an error occurred!
-            });
+          if (
+            savePreview[i] !==
+              "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800" &&
+            savePreview[i] !==
+              "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe" &&
+            savePreview[i] !==
+              "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg" &&
+            savePreview[i] !==
+              "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330"
+          ) {
+            const imgId = savePreview[i].split("2F")[1].split("?")[0];
+            const desertRef = ref(storageService, `post/${imgId}`);
+            deleteObject(desertRef)
+              .then(() => {
+                console.log("success", imgId);
+                // File deleted successfully
+              })
+              .catch((error) => {
+                console.log("error", error, imgId);
+                // Uh-oh, an error occurred!
+              });
+          }
           savePreview[i] = item.value;
         } else if (
           item.value !== null &&
@@ -114,20 +237,41 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           item.value !== savePreview[i]
         ) {
           savePreview[i] = item.value;
+        } else if (
+          (savePreview.includes(
+            "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800"
+          ) ||
+            savePreview.includes(
+              "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe"
+            ) ||
+            savePreview.includes(
+              "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg"
+            ) ||
+            savePreview.includes(
+              "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330"
+            ) ||
+            savePreview.filter((i: any) => i === undefined).length ===
+              savePreview.length) &&
+          downloadPreview.filter((i: any) => i.value === undefined).length ===
+            downloadPreview.length
+        ) {
+          if (editPost.type === "소주") {
+            savePreview[0] =
+              "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800";
+          } else if (editPost.type === "맥주") {
+            savePreview[0] =
+              "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe";
+          } else if (editPost.type === "양주") {
+            savePreview[0] =
+              "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg";
+          } else if (editPost.type === "기타") {
+            savePreview[0] =
+              "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330";
+          }
         } else {
           return savePreview[i];
         }
       });
-
-      // downloadPreview.forEach((item: any, i) => {
-      //   if (
-      //     item.value !== null &&
-      //     item.value !== undefined &&
-      //     item.value !== savePreview[i]
-      //   ) {
-      //     savePreview[i] = item.value;
-      //   }
-      // });
 
       const newPreview = savePreview.filter(
         (i: any) => i !== null && i !== undefined
@@ -138,6 +282,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       let newEditPost = {
         ...editPost,
         img: newPreview,
+        ingredient: filterIngre,
       };
 
       await updateDoc(doc(dbService, "Posts", id), newEditPost);
@@ -199,15 +344,52 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
     } else {
       setEditPreview_03(null);
     }
+
+    if (editPost.ingredient![0]) {
+      setEditIng((prev) => {
+        return { ...prev, editIng_01: editPost.ingredient![0] };
+      });
+    }
+    if (editPost.ingredient![1]) {
+      setEditIng((prev) => {
+        return { ...prev, editIng_02: editPost.ingredient![1] };
+      });
+    }
+    if (editPost.ingredient![2]) {
+      setEditIng((prev) => {
+        return { ...prev, editIng_03: editPost.ingredient![2] };
+      });
+    }
+    if (editPost.ingredient![3]) {
+      setEditIng((prev) => {
+        return { ...prev, editIng_04: editPost.ingredient![3] };
+      });
+    }
+    if (editPost.ingredient![4]) {
+      setEditIng((prev) => {
+        return { ...prev, editIng_05: editPost.ingredient![4] };
+      });
+    }
+    if (editPost.ingredient![5]) {
+      setEditIng((prev) => {
+        return { ...prev, editIng_06: editPost.ingredient![5] };
+      });
+    }
+
+    if (editPost.ingredient?.length! >= 3) {
+      setEditPlusIng(true);
+    }
   }, []);
 
   return (
     <Layout>
-      <div className="w-full h-screen flex justify-center">
+      <div className="w-full h-screen flex justify-center pb-16">
         <form className="w-[588px] flex flex-col">
           <div className="flex gap-3">
             <div className="font-bold text-[20px] mt-5">사진</div>
-            <div className="text-[12px] mt-7">최대 3장까지 업로드 가능</div>
+            <div className="text-[12px] mt-7 text-textGray">
+              최대 3장까지 업로드 가능
+            </div>
           </div>
           <div className="flex w-full mt-[18px] gap-[10px] justify-center">
             <div className="w-[186px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
@@ -221,7 +403,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                       onChange={onChangeImg_01}
                       className="hidden"
                     />
-                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                   </label>
                 </>
               ) : (
@@ -231,7 +413,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                       onClick={() => {
                         setEditImgFile_01(null);
                       }}
-                      className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                      className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                     />
                   </label>
                   <img
@@ -253,7 +435,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onChange={onChangeImg_02}
                         className="hidden"
                       />
-                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                     </label>
                   </>
                 ) : (
@@ -263,7 +445,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onClick={() => {
                           setEditImgFile_02(null);
                         }}
-                        className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
                     <img
@@ -284,7 +466,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onChange={onChangeImg_03}
                         className="hidden"
                       />
-                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                     </label>
                   </>
                 ) : (
@@ -294,7 +476,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onClick={() => {
                           setEditImgFile_03(null);
                         }}
-                        className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
                     <img
@@ -307,7 +489,12 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             </div>
           </div>
 
-          <div className="font-bold text-[20px] my-5">제목</div>
+          <div className=" my-5">
+            <span className="font-bold text-[20px]">제목</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateTitle}
+            </span>
+          </div>
           <input
             name="title"
             value={editPost.title}
@@ -318,87 +505,183 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
 
           <div className="w-full border-[1px] border-[#d9d9d9] mt-[10px]" />
 
-          <div className="font-bold text-[20px] my-5">소개</div>
+          <div className=" my-5">
+            <span className="font-bold text-[20px]">소개</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateIntro}
+            </span>
+          </div>
           <textarea
-            className="h-7 resize-none overflow-hidden"
+            className="h-[118px] border-[1px] border-iconDefault py-3 px-3 rounded resize-none overflow-hidden"
             name="text"
             value={editPost.text}
             onChange={onChangeValue}
             placeholder={post.text}
           />
 
-          <div className="w-full border-[1px] border-[#d9d9d9] mt-2" />
-          <div className="flex gap-7">
-            <div className="font-bold text-[20px] my-5">카테고리</div>
-            <div className="flex  gap-5 my-5 text-[#9e9e9e]">
-              <label className="w-20 h-8  rounded-[16px]">
-                <input
-                  type="radio"
-                  name="type"
-                  value="소주"
-                  onChange={onChangeValue}
-                  className="hidden peer"
-                  checked={editPost.type === "소주" ? true : false}
-                />
-                <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
-                  소주
-                </span>
-              </label>
-              <label className="w-20 h-8  rounded-[16px]">
-                <input
-                  type="radio"
-                  name="type"
-                  value="맥주"
-                  onChange={onChangeValue}
-                  className="hidden peer"
-                  checked={editPost.type === "맥주" ? true : false}
-                />
-                <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
-                  맥주
-                </span>
-              </label>
-              <label className="w-20 h-8  rounded-[16px]">
-                <input
-                  type="radio"
-                  name="type"
-                  value="양주"
-                  onChange={onChangeValue}
-                  className="hidden peer"
-                  checked={editPost.type === "양주" ? true : false}
-                />
-                <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
-                  양주
-                </span>
-              </label>
-              <label className="w-20 h-8 rounded-[16px]">
-                <input
-                  type="radio"
-                  name="type"
-                  value="Etc"
-                  onChange={onChangeValue}
-                  className="hidden peer"
-                  checked={editPost.type === "Etc" ? true : false}
-                />
-                <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
-                  Etc
-                </span>
-              </label>
-            </div>
+          <div className="mt-6">
+            <span className="font-bold text-[20px]">카테고리</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateCate}
+            </span>
+          </div>
+
+          <div className="flex w-full justify-center gap-6 my-4 text-[#9e9e9e]">
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
+              <input
+                type="radio"
+                name="type"
+                value="소주"
+                onChange={onChangeValue}
+                className="hidden peer"
+                checked={editPost.type === "소주" ? true : false}
+              />
+              <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
+                소주
+              </span>
+            </label>
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
+              <input
+                type="radio"
+                name="type"
+                value="맥주"
+                onChange={onChangeValue}
+                className="hidden peer"
+                checked={editPost.type === "맥주" ? true : false}
+              />
+              <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
+                맥주
+              </span>
+            </label>
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
+              <input
+                type="radio"
+                name="type"
+                value="양주"
+                onChange={onChangeValue}
+                className="hidden peer"
+                checked={editPost.type === "양주" ? true : false}
+              />
+              <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
+                양주
+              </span>
+            </label>
+            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
+              <input
+                type="radio"
+                name="type"
+                value="기타"
+                onChange={onChangeValue}
+                className="hidden peer"
+                checked={editPost.type === "기타" ? true : false}
+              />
+              <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
+                기타
+              </span>
+            </label>
           </div>
 
           <div className="w-full border-[1px] border-[#d9d9d9]" />
 
-          <div className="font-bold text-[20px] my-5">재료</div>
-          <textarea
-            className="h-7 resize-none overflow-hidden"
-            name="ingredient"
-            value={editPost.ingredient}
-            onChange={onChangeValue}
-            placeholder={post.ingredient}
-          />
-          <div className="w-full border-[1px] border-[#d9d9d9] mt-2" />
+          <div className=" my-5">
+            <span className="font-bold text-[20px]">재료</span>
 
-          <div className="font-bold text-[20px] my-5">만드는 방법</div>
+            {validateIng === "최대 6개까지 작성 가능" ? (
+              <span className="ml-2 text-sm text-textGray  w-full">
+                {validateIng}
+              </span>
+            ) : (
+              <span className="ml-2 text-sm text-[red]  w-full">
+                {validateIng}
+              </span>
+            )}
+          </div>
+          <div className="flex justify-between">
+            <input
+              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              name="editIng_01"
+              value={editIng.editIng_01}
+              onChange={onChangeIngre}
+              placeholder={`${
+                editPost.ingredient![0] !== undefined
+                  ? editPost.ingredient![0]
+                  : "재료 1"
+              }`}
+            />
+            <input
+              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              name="editIng_02"
+              value={editIng.editIng_02}
+              onChange={onChangeIngre}
+              placeholder={`${
+                editPost.ingredient![1] !== undefined
+                  ? editPost.ingredient![1]
+                  : "재료 2"
+              }`}
+            />
+            <input
+              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              name="editIng_03"
+              value={editIng.editIng_03}
+              onChange={onChangeIngre}
+              placeholder={`${
+                editPost.ingredient![2] !== undefined
+                  ? editPost.ingredient![2]
+                  : "재료 3"
+              }`}
+            />
+          </div>
+          {editPlusIng ? (
+            <div className="flex justify-between mt-5">
+              <input
+                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+                name="editIng_04"
+                value={editIng.editIng_04}
+                onChange={onChangeIngre}
+                placeholder={`${
+                  editPost.ingredient![3] !== undefined
+                    ? editPost.ingredient![3]
+                    : "재료 4"
+                }`}
+              />
+              <input
+                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+                name="editIng_05"
+                value={editIng.editIng_05}
+                onChange={onChangeIngre}
+                placeholder={`${
+                  editPost.ingredient![4] !== undefined
+                    ? editPost.ingredient![4]
+                    : "재료 5"
+                }`}
+              />
+              <input
+                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+                name="editIng_06"
+                value={editIng.editIng_06}
+                onChange={onChangeIngre}
+                placeholder={`${
+                  editPost.ingredient![5] !== undefined
+                    ? editPost.ingredient![5]
+                    : "재료 6"
+                }`}
+              />
+            </div>
+          ) : (
+            <div
+              onClick={onChangePlusIngre}
+              className="my-5 ml-1 text-[14px] text-phGray flex justify-start items-center gap-2 cursor-pointer w-[92px]"
+            >
+              <BsPlusLg className="mb-[3px]" />더 추가하기
+            </div>
+          )}
+
+          <div className=" my-5">
+            <span className="font-bold text-[20px]">만드는 방법</span>
+            <span className="ml-2 text-sm text-[red]  w-full">
+              {validateRecipe}
+            </span>
+          </div>
 
           <textarea
             className="h-24 resize-none overflow-hidden"
@@ -407,16 +690,19 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             onChange={onChangeValue}
             placeholder={post.recipe}
           />
-          <div className="w-full flex justify-center items-center space-x-2">
-            <button onClick={onSubmit} className="bg-[#ff6161] px-14 py-2 h-12">
-              수정
-            </button>
+          <div className="w-full flex justify-between items-center">
             <Link
-              className="bg-[#ff6161] px-14 py-2 h-12 flex justify-center items-center text-center"
+              className="border border-primary text-primary rounded px-32 py-3 font-bold text-center"
               href={`/post/${id}`}
             >
               취소
             </Link>
+            <button
+              onClick={onSubmit}
+              className="bg-primary rounded px-32 py-3 font-bold text-white"
+            >
+              저장
+            </button>
           </div>
         </form>
       </div>

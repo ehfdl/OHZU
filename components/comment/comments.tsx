@@ -9,8 +9,15 @@ interface CommentsProps {
   comments: CommentType[];
   currentUser: UserType;
   user: UserType;
+  post?: Form;
 }
-const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
+const Comments = ({
+  postId,
+  comments,
+  currentUser,
+  user,
+  post,
+}: CommentsProps) => {
   const date = new Date();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
@@ -33,8 +40,35 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
   const total = comments.length;
   const pagesNumber = Math.ceil(total / limit);
 
+  const [resizeTextArea, setResizeTextArea] = useState({
+    rows: 1,
+    minRows: 1,
+    maxRows: 10,
+  });
+
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
+    const textareaLineHeight = 24;
+    const { minRows, maxRows } = resizeTextArea;
+
+    const previousRows = event.target.rows;
+    event.target.rows = minRows;
+
+    const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+    if (currentRows === previousRows) {
+      event.target.rows = currentRows;
+    }
+
+    if (currentRows >= maxRows) {
+      event.target.rows = maxRows;
+      event.target.scrollTop = event.target.scrollHeight;
+    }
+
+    setResizeTextArea({
+      ...resizeTextArea,
+      rows: currentRows < maxRows ? currentRows : maxRows,
+    });
     setComment({
       ...comment,
       [name]: value,
@@ -44,7 +78,7 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
   const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newComment = {
-      content: comment.content,
+      content: comment.content.trim(),
       postId: postId,
       userId: authService.currentUser?.uid!,
       createdAt: dateForm,
@@ -54,31 +88,38 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
       content: comment.content,
       postId: postId,
       nickname: currentUser?.nickname,
+      title: post?.title,
       createdAt: Date.now(),
       isDone: false,
     };
     if (comment.content.trim() !== "") {
       await addDoc(collection(dbService, "Comments"), newComment);
-      const snapshot = await getDoc(
-        doc(dbService, "Users", user?.userId as string)
-      );
-      const snapshotdata = await snapshot.data();
-      const newPost = {
-        ...snapshotdata,
-      };
-      const newA = newPost?.alarm.push(newAlarm);
+      if (post?.userId !== authService.currentUser?.uid) {
+        const snapshot = await getDoc(
+          doc(dbService, "Users", user?.userId as string)
+        );
+        const snapshotdata = await snapshot.data();
+        const newPost = {
+          ...snapshotdata,
+        };
+        const newA = newPost?.alarm.push(newAlarm);
 
-      await updateDoc(doc(dbService, "Users", user?.userId as string), {
-        alarm: newPost?.alarm,
-      });
+        await updateDoc(doc(dbService, "Users", user?.userId as string), {
+          alarm: newPost?.alarm,
+        });
+      }
     } else {
       alert("내용이 없습니다!");
     }
     setComment(initialComment);
+    setResizeTextArea({
+      ...resizeTextArea,
+      rows: 1,
+    });
   };
 
   return (
-    <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
+    <div id="comments" className="max-w-[768px] w-full mx-auto">
       <div className="text-xl font-medium space-x-2">
         <span>댓글</span>
         <span>{comments.length}</span>
@@ -87,26 +128,31 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
       <form className="w-full flex items-center relative space-x-6">
         <img
           src={currentUser?.imageURL}
-          className="bg-slate-300 w-12 aspect-square rounded-full object-cover"
+          className="bg-slate-300 w-[45px] aspect-square rounded-full object-cover"
         />
         <textarea
           disabled={authService.currentUser ? false : true}
           name="content"
           value={comment.content}
           onChange={handleChange}
-          id=""
-          className="w-full p-2 border h-10 resize-none scrollbar-none"
+          className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
           placeholder="댓글을 입력해주세요."
+          rows={resizeTextArea.rows}
         />
         <button
           disabled={authService.currentUser ? false : true}
           onClick={addComment}
-          className="absolute right-0 pr-4 disabled:text-gray-400"
+          className="absolute right-0 bottom-3 pr-4 disabled:text-gray-400"
         >
-          <span className="text-sm font-medium">등록</span>
+          <span className="text-sm font-bold text-phGray hover:text-black">
+            등록
+          </span>
         </button>
       </form>
-      <ul id="comment-list" className="mt-10 divide-y-[1px] divide-gray-300">
+
+      <div className="w-full mt-6 border-[1px] border-[#d9d9d9]" />
+
+      <ul id="comment-list" className="mb-6">
         {comments?.slice(offset, offset + limit).map((comment) => (
           <CommentList
             key={comment.id}
@@ -119,7 +165,7 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
       {comments.length !== 0 && (
         <nav className="w-full flex justify-center items-center space-x-9">
           <button
-            className="text-[#FF6161] hover:text-[#D2373F] active:text-[#D2373F] disabled:text-gray-300"
+            className="text-primary hover:text-hover active:text-hover disabled:text-gray-300"
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
           >
@@ -140,7 +186,7 @@ const Comments = ({ postId, comments, currentUser, user }: CommentsProps) => {
           <button
             onClick={() => setPage(page + 1)}
             disabled={page === pagesNumber}
-            className="text-[#FF6161] hover:text-[#D2373F] active:text-[#D2373F] disabled:text-gray-300"
+            className="text-primary hover:text-hover active:text-hover disabled:text-gray-300"
           >
             <BsChevronRight size={20} />
           </button>

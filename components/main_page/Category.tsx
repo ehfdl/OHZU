@@ -18,7 +18,7 @@ const Category = ({
           className="hidden peer"
           defaultChecked
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-primary peer-checked:text-primary cursor-pointer pb-2">
           전체
         </span>
       </label>
@@ -32,7 +32,7 @@ const Category = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2 ">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-primary peer-checked:text-primary cursor-pointer pb-2 ">
           소주
         </span>
       </label>
@@ -46,7 +46,7 @@ const Category = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-primary peer-checked:text-primary cursor-pointer pb-2">
           맥주
         </span>
       </label>
@@ -60,7 +60,7 @@ const Category = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-primary peer-checked:text-primary cursor-pointer pb-2">
           양주
         </span>
       </label>
@@ -74,7 +74,7 @@ const Category = ({
           value="my-ohju"
           className="hidden peer"
         />
-        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-[#ff6161] peer-checked:text-[#ff6161] cursor-pointer pb-2">
+        <span className="w-full block peer-checked:font-bold peer-checked:border-b-4 peer-checked:border-primary peer-checked:text-primary cursor-pointer pb-2">
           기타
         </span>
       </label>

@@ -8,6 +8,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -53,6 +54,14 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
 
   const deleteComment = async (id: string) => {
     await deleteDoc(doc(dbService, "Comments", id));
+
+    const recommentId = recomments
+      .filter((i) => i.commentId === id)
+      .map((i) => i.id);
+
+    recommentId.map(async (id) => {
+      await deleteDoc(doc(dbService, "Recomments", id as string));
+    });
   };
 
   const getCommentUser = async () => {
@@ -96,6 +105,38 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
     });
   };
 
+  const onClickReportComment = async () => {
+    const snapshot = await getDoc(
+      doc(dbService, "ReportComments", id as string)
+    );
+    const snapshotdata = await snapshot.data();
+    const pastComment = {
+      ...snapshotdata,
+    };
+
+    if (pastComment.reporter) {
+      if (pastComment.reporter.includes(authService.currentUser?.uid)) {
+        console.log("이미신고했습니당");
+        return;
+      } else {
+        pastComment.reporter.push(authService.currentUser?.uid);
+        await updateDoc(doc(dbService, "ReportComments", id as string), {
+          reporter: pastComment.reporter,
+        });
+        console.log("새로운 신고자!");
+      }
+    } else if (!pastComment.reporter) {
+      const newComments = {
+        commentId: id,
+        postId: comment.postId,
+        content: comment.content,
+        reporter: [authService.currentUser?.uid],
+      };
+      await setDoc(doc(dbService, "ReportComments", id as string), newComments);
+      console.log("신고 완료");
+    }
+  };
+
   useEffect(() => {
     resetToggle();
     getCommentUser();
@@ -105,11 +146,11 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
 
   return (
     <>
-      <li className="flex justify-between py-6">
-        <div className="flex space-x-6 w-full">
+      <li className="flex flex-col items-center justify-center py-6 border-b border-iconDefault last:border-b-0">
+        <div className="flex space-x-6 justify-between w-full">
           <Link
             href={`/users/${comment.userId}`}
-            className="flex flex-col items-center space-y-2 w-[13%]"
+            className="flex flex-col items-center space-y-2 w-[11%]"
           >
             <img
               src={user?.imageURL}
@@ -122,7 +163,7 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
               </span>
             </div>
           </Link>
-          <div className="space-y-2 flex flex-col justify-between w-full">
+          <div className="space-y-6 flex flex-col justify-between w-full">
             {isEdit ? (
               <textarea
                 name="editContent"
@@ -134,19 +175,22 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                 placeholder={content}
               />
             ) : (
-              <pre className="whitespace-pre-wrap">{content}</pre>
+              <pre className="whitespace-pre-wrap break-all">{content}</pre>
             )}
             <div className="flex justify-between">
               <span className="text-xs text-gray-500 flex items-end">
                 {createdAt}
               </span>
               {isEdit && (
-                <div className="flex justify-end items-end space-x-2">
-                  <button className="text-xs font-medium" onClick={editToggle}>
+                <div className="flex justify-end items-end space-x-4">
+                  <button
+                    className="text-xs font-medium hover:text-black text-textGray"
+                    onClick={editToggle}
+                  >
                     취소
                   </button>
                   <button
-                    className="text-xs font-medium"
+                    className="text-xs font-medium hover:text-black text-textGray"
                     onClick={() => editComment(id as string, editContent)}
                   >
                     완료
@@ -157,29 +201,67 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                 <div
                   className={`${
                     isEdit ? "hidden" : "flex"
-                  } flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6`}
+                  } flex justify-end items-end space-x-4 text-xs`}
                 >
-                  <button onClick={editToggle}>수정</button>
-                  {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
-                  <button onClick={deleteToggle}>삭제</button>
                   <button
-                    onClick={() => {
-                      setIsOpen(!isOpen);
-                    }}
+                    onClick={editToggle}
+                    className="hover:text-black text-textGray"
                   >
-                    답글달기
+                    수정
                   </button>
+                  {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
+                  <button
+                    onClick={deleteToggle}
+                    className="hover:text-black text-textGray"
+                  >
+                    삭제
+                  </button>
+                  {recomments.length === 0 ? (
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                      className={`${
+                        isOpen ? "text-black" : "text-textGray"
+                      } hover:text-black`}
+                    >
+                      답글달기
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                      className={`${
+                        isOpen ? "text-black" : "text-textGray"
+                      } hover:text-black`}
+                    >
+                      답글 {recomments.length}
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
-                  <button>신고</button>
-                  <button
-                    onClick={() => {
-                      setIsOpen(!isOpen);
-                    }}
-                  >
-                    답글달기
-                  </button>
+                  <button onClick={onClickReportComment}>신고</button>
+                  {recomments.length === 0 ? (
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                      className={`${isOpen ? "text-black" : "text-textGray"}`}
+                    >
+                      답글달기
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setIsOpen(!isOpen);
+                      }}
+                      className={`${isOpen ? "text-black" : "text-textGray"}`}
+                    >
+                      답글 {recomments.length}
+                    </button>
+                  )}
                 </div>
               )}
             </div>
@@ -193,17 +275,17 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
             text="댓글"
           />
         )}
+        {isOpen && (
+          <Recomments
+            id={id!}
+            dateForm={dateForm}
+            currentUser={currentUser}
+            recomments={recomments}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+          />
+        )}
       </li>
-      {isOpen && (
-        <Recomments
-          id={id!}
-          dateForm={dateForm}
-          currentUser={currentUser}
-          recomments={recomments}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        />
-      )}
     </>
   );
 };
