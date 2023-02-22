@@ -119,7 +119,7 @@ const PostCard = ({ post }: { post: any }) => {
               </Link>
 
               <div className="text-sm font-thin " key={user.userId}>
-                <p className="float-left text-gray-900 leading-none">
+                <p className="float-left text-black leading-none">
                   {user?.nickname}
                 </p>
                 <span className="float-left w-[10px] h-[10px] ml-1 translate-y-[0px]">
