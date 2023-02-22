@@ -10,7 +10,7 @@ import {
   where,
 } from "firebase/firestore";
 import Link from "next/link";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Grade from "../grade";
 
 const PostCard = ({ post }: { post: any }) => {
@@ -18,7 +18,6 @@ const PostCard = ({ post }: { post: any }) => {
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
 
   const like = post.like.includes(authService.currentUser?.uid);
-  // const [user, setUser] = useState<UserType>();
   const onClickLikeBtn = async () => {
     const likeArray = post.like.includes(authService.currentUser?.uid);
 
@@ -34,6 +33,8 @@ const PostCard = ({ post }: { post: any }) => {
       await updateDoc(doc(dbService, "Posts", post.postId), {
         like: post.like,
       });
+    } else if (authService.currentUser?.uid === null) {
+      alert("로그인이 필요한 서비스입니다.");
     }
   };
 
@@ -75,10 +76,10 @@ const PostCard = ({ post }: { post: any }) => {
   }, []);
 
   return (
-    <div>
+    <div className="">
       <div
         key={post.postId}
-        className="border shadow mt-3 overflow-hidden rounded hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70"
+        className="border shadow mt-3  rounded hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70"
       >
         <div>
           <Link href={`/post/${post.postId}`}>
@@ -88,7 +89,7 @@ const PostCard = ({ post }: { post: any }) => {
             />
           </Link>
         </div>
-        <div className="h-[136px]">
+        <div className="h-[160px] bg-white overflow-hidden ">
           <div className="mt-5 ml-3 flex items-center w-full">
             {post.userId === authService.currentUser?.uid ? (
               <Link href="/mypage">
@@ -105,22 +106,24 @@ const PostCard = ({ post }: { post: any }) => {
                 <div className="">
                   <img
                     className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
-                    src={defaultImg}
+                    src={user?.imageURL}
                   />
                 </div>
               </Link>
             )}
 
-            <div className="float-left">
+            <div className="mb-2">
               <Link href={`/post/${post.postId}`}>
-                <div className="text-xl font-semibold w-[185px]">
+                <div className="float-left text-xl font-semibold w-[185px]">
                   {post.title}
                 </div>
               </Link>
 
               <div className="text-sm font-thin " key={user.userId}>
-                <p className="text-gray-900 leading-none">{user?.nickname}</p>
-                <span className="float-left ml-8 w-[10px] h-[10px] translate-y-[-13px]">
+                <p className="float-left text-gray-900 leading-none">
+                  {user?.nickname}
+                </p>
+                <span className="float-left w-[10px] h-[10px] ml-1 translate-y-[0px]">
                   <Grade score={user?.point as number} />
                 </span>
               </div>
@@ -128,7 +131,7 @@ const PostCard = ({ post }: { post: any }) => {
 
             <div
               onClick={onClickLikeBtn}
-              className="float-right translate-x-[80px] translate-y-[8px] w-6 mb-2"
+              className="float-right translate-x-[80px] translate-y-[8px] w-6 mb-2 cursor-pointer"
             >
               {like ? (
                 <img src="/like/like-pressed.png" />
@@ -140,8 +143,7 @@ const PostCard = ({ post }: { post: any }) => {
               </div>
             </div>
           </div>
-
-          <div className="font-base text-black/60 text-sm mx-6 mt-2 mb-2 w-[340px]">
+          <div className="font-base text-black/60 text-sm mx-6 mt-2 mb-2 w-[335px] line-clamp-3 text-ellipsis break-all">
             {post.text}
           </div>
         </div>

@@ -12,7 +12,6 @@ import {
 } from "firebase/firestore";
 import React, { useEffect, useState, useRef, ReactElement } from "react";
 import Category from "./Category";
-
 import Grade from "@/components/grade";
 import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react"; // basic
 import SwiperCore, {
@@ -86,23 +85,8 @@ const PostList = () => {
       });
     };
     getUserProfile();
-    // getMyProfile();
     getUserPosts();
   }, []);
-
-  // const getUsers = async () => {
-  //   const snapshot = await getDoc(doc(dbService, "Users", userId));
-  //   const snapshotdata = await snapshot.data(); // 가져온 doc의 객체 내용
-  //   const newProfile = {
-  //     ...snapshotdata,
-  //   };
-  //   setUser(newProfile as any);
-  // };
-
-  // useEffect(() => {
-  //   getUsers();
-  //   return;
-  // }, []);
 
   useEffect(() => {
     const totalLike = userPosts?.reduce((accumulator, currentObject) => {
@@ -149,6 +133,20 @@ const PostList = () => {
     }
   }, [userLike]);
 
+  //더보기 기능
+  const [isVisible, setIsVisible] = useState(false);
+  const [resArr, setRestArr] = useState(posts.slice(0, 6));
+  const [slicenumber, setSliceNumber] = useState(0);
+
+  const handleOnClick = () => {
+    setIsVisible(!isVisible);
+    if (isVisible) {
+      setRestArr(() => [...posts.slice(0, 6)]);
+    } else {
+      setRestArr(() => [...posts]);
+    }
+  };
+
   return (
     <div>
       <div className="w-full flex justify-center mb-4 min-h-screen">
@@ -157,17 +155,17 @@ const PostList = () => {
           <div className="w-full mt-12 flex justify-between">
             <div className="text-xl font-bold">
               전체 게시글{" "}
-              <span className="text-[#ff6161]">
+              <span className="float-right ml-2 pt-1 text-base font-normal text-[#ff6161]">
                 {cate === "전체"
-                  ? userPosts?.length
-                  : userPosts?.filter((post) => cate === post.type).length}
+                  ? posts?.length
+                  : posts?.filter((post) => cate === post.type).length}
               </span>
-              <span className="float-right ml-2 pt-1 font-base text-base text-[#ff6161]">
+              {/* <span className="float-right ml-2 pt-1 font-base text-base text-[#ff6161]">
                 {posts?.length}
-              </span>
+              </span> */}
             </div>
           </div>
-          <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
+          {/* <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
             {posts?.map((post: any) =>
               cate === "전체" ? (
                 <PostCard key={post.postId} post={post} />
@@ -175,9 +173,49 @@ const PostList = () => {
                 <PostCard key={post.postId} post={post} />
               ) : null
             )}
-          </div>
+          </div> */}
 
-          <div className="w-full mt-16 relative z-0">
+          <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
+            {cate === "전체"
+              ? posts
+                  ?.map((post: any) => (
+                    <PostCard key={post.postId} post={post} />
+                  ))
+                  .slice(0, 6 + slicenumber)
+              : posts
+                  ?.filter((post) => cate === post.type)
+                  .map((post: any) => (
+                    <PostCard key={post.postId} post={post} />
+                  ))
+                  .slice(0, 6 + slicenumber)}
+            {/* {posts?.length > 6 &&
+              posts
+                ?.map((post: any) =>
+                  cate === "전체" ? (
+                    <PostCard key={post.postId} post={post} />
+                  ) : cate === post.type ? (
+                    <PostCard key={post.postId} post={post} />
+                  ) : null
+                )
+                .slice(0, 6 + slicenumber)} */}
+          </div>
+          {posts.length > slicenumber + 6 ? (
+            <button
+              className="w-[100px] h-[40px] mt-6 bg-transparent border border-[#FF6161]/50 text-[#FF6161] font-thin hover:bg-[#FFF0F0] hover:border-none rounded-3xl hover:text-[#FF6161] hover:font-bold"
+              onClick={() => setSliceNumber(slicenumber + 6)}
+            >
+              더보기
+            </button>
+          ) : (
+            <button
+              className="w-[100px] h-[40px] mt-6 bg-transparent border border-[#FF6161]/50 text-[#FF6161] font-thin hover:bg-[#FFF0F0] hover:border-none rounded-3xl hover:text-[#FF6161] hover:font-bold"
+              onClick={() => setSliceNumber(0)}
+            >
+              접기
+            </button>
+          )}
+
+          <div className="w-full  mt-16 relative z-0">
             <div className="text-xl font-bold mb-3">
               인기 많은 오주
               <span className="text-[#ff6161]">
@@ -202,12 +240,13 @@ const PostList = () => {
                 }}
                 modules={[EffectCoverflow, Navigation, Mousewheel]}
                 grabCursor={true}
-                mousewheel={true}
               >
                 <div className="">
                   {userLikePosts?.map((post: any) => (
                     <SwiperSlide key={post.postId}>
-                      <PostCard post={post} />
+
+                      <PostCard key={post.postId} post={post} />
+
                     </SwiperSlide>
                   ))}{" "}
                 </div>
@@ -231,7 +270,7 @@ const PostList = () => {
             </div>
           </div>
 
-          <div className="w-full mt-16 relative z-0">
+          <div className="w-full mt-[90px] relative z-0 overflow-hidden">
             <div className="text-xl font-bold mb-3">
               많이 본 오주
               <span className="text-[#ff6161]">
@@ -240,7 +279,7 @@ const PostList = () => {
                   : userPosts?.filter((post) => cate === post.type).length}
               </span>
             </div>
-            <div className="group">
+            <div className="group overflow-visible">
               <Swiper
                 modules={[EffectCoverflow, Navigation, Mousewheel]}
                 effect={"coverflow"}
@@ -260,7 +299,6 @@ const PostList = () => {
                   modifier: 2, //
                   slideShadows: true, //선택한 부분 밝게 나머지는 그늘지게 해준다.
                 }}
-                mousewheel={true}
                 breakpoints={{
                   768: {
                     slidesPerView: 3,
@@ -270,7 +308,9 @@ const PostList = () => {
                 <div>
                   {userViewPosts?.map((post: any) => (
                     <SwiperSlide key={post.postId}>
-                      <PostCard post={post} />
+
+                      <PostCard key={post.postId} post={post} />
+
                     </SwiperSlide>
                   ))}{" "}
                 </div>
