@@ -43,7 +43,7 @@ const MyPostCard = ({ post }: { post: any }) => {
       </Link>
       <div
         onClick={onClickLikeBtn}
-        className="absolute flex flex-col items-center w-7 h-10 z-10  right-0 mr-6 mt-6 cursor-pointer"
+        className="absolute flex flex-col items-center w-7 h-10 z-[5]  right-0 mr-6 mt-6 cursor-pointer"
       >
         {like ? (
           <img src="/like/like-pressed.png" />

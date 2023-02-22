@@ -98,8 +98,8 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
           <FiX className="w-full h-full text-phGray" />
         </button>
 
-        <div className="text-[32px] font-bold mt-[88px]">프로필 편집</div>
-        <div className="w-40 aspect-square mt-8 bg-[#d9d9d9] rounded-full overflow-hidden">
+        <div className="text-[32px] font-bold mt-[84px]">프로필 편집</div>
+        <div className="w-40 aspect-square mt-6 bg-[#d9d9d9] rounded-full overflow-hidden">
           {preview !== null ? (
             <img
               src={preview as string}
@@ -112,7 +112,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
             />
           )}
         </div>
-        <label className="mt-3 cursor-pointer">
+        <label className="mt-[30px] cursor-pointer">
           <input
             onChange={onChangeImg}
             name="img"
@@ -122,7 +122,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
           />
           <span>프로필 이미지 수정</span>
         </label>
-        <div className="w-[472px]">
+        <div className="w-[472px] mt-3">
           <div className=" ">
             <span className="font-bold text-[24px]">닉네임</span>
             <span className="ml-2 text-sm text-[red]  w-full">
@@ -145,7 +145,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
         </div>
         <button
           onClick={onSubmit}
-          className="w-[280px] h-12 bg-primary text-white mt-10"
+          className="w-[280px] h-12 bg-primary text-white mt-9"
         >
           저장
         </button>
