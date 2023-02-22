@@ -13,7 +13,7 @@ import {
   where,
 } from "firebase/firestore";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import DeleteModal from "../delete_modal";
 import Grade from "../grade";
 import Recomments from "./recomments";
@@ -21,13 +21,12 @@ import Recomments from "./recomments";
 interface CommentProps {
   comment: CommentType;
   currentUser: UserType;
-  dateForm: string;
 }
 
-const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
+const CommentList = ({ comment, currentUser }: CommentProps) => {
   const { content, createdAt, userId, id, isEdit } = comment;
 
-  const [editContent, setEditComment] = useState("");
+  const [editContent, setEditContent] = useState(content);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<UserType>();
@@ -40,13 +39,65 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
   };
 
   const editComment = async (id: string, edit: any) => {
-    await updateDoc(doc(dbService, "Comments", id), {
-      ...comment,
-      content: edit,
-      isEdit: false,
-    });
-    setEditComment("");
+    if (edit.trim() !== "") {
+      await updateDoc(doc(dbService, "Comments", id), {
+        ...comment,
+        content: edit,
+        isEdit: false,
+      });
+      setEditContent("");
+    }
   };
+
+  const [resizeTextArea, setResizeTextArea] = useState({
+    rows: 1,
+    minRows: 1,
+    maxRows: 3,
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    const textareaLineHeight = 24;
+    const { minRows, maxRows } = resizeTextArea;
+
+    const previousRows = event.target.rows;
+    event.target.rows = minRows;
+
+    const currentRows = ~~(event.target.scrollHeight / textareaLineHeight);
+
+    if (currentRows === previousRows) {
+      event.target.rows = currentRows;
+    }
+
+    if (currentRows >= maxRows) {
+      event.target.rows = maxRows;
+      event.target.scrollTop = event.target.scrollHeight;
+    }
+
+    setResizeTextArea({
+      ...resizeTextArea,
+      rows: currentRows < maxRows ? currentRows : maxRows,
+    });
+
+    setEditContent(value);
+  };
+
+  useMemo(() => {
+    if (editContent) {
+      const editDefaultLength = editContent.split("\n").length;
+      if (editDefaultLength > 3) {
+        setResizeTextArea({
+          ...resizeTextArea,
+          rows: 3,
+        });
+      } else {
+        setResizeTextArea({
+          ...resizeTextArea,
+          rows: editDefaultLength,
+        });
+      }
+    }
+  }, [editContent]);
 
   const deleteToggle = () => {
     setDeleteConfirm(!deleteConfirm);
@@ -88,7 +139,7 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
   const getRecomments = async () => {
     const q = query(
       collection(dbService, "Recomments"),
-      orderBy("createdAt", "desc"),
+      orderBy("createdAt", "asc"),
       where("commentId", "==", id as string)
     );
 
@@ -168,10 +219,9 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
               <textarea
                 name="editContent"
                 value={editContent}
-                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                  setEditComment(e.target.value);
-                }}
-                className="w-full p-2 border h-10 resize-none placeholder:text-sm scrollbar-none"
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+                rows={resizeTextArea.rows}
                 placeholder={content}
               />
             ) : (
@@ -279,7 +329,6 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
         {isOpen && (
           <Recomments
             id={id!}
-            dateForm={dateForm}
             currentUser={currentUser}
             recomments={recomments}
             isOpen={isOpen}
