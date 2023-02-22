@@ -175,7 +175,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           email: email,
           nickname: nickname,
           imageURL:
-            "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=c3cb48e1-a28e-4ba9-ace7-4ba5f1133415",
+            "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
           introduce: "",
           point: "",
           following: [],
@@ -220,7 +220,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           userId: authService.currentUser?.uid,
           email: token, // 실제 값은 이메일이 아닌 token으로 변경.
           nickname: result.user.displayName,
-          imageURL: "",
+          imageURL:
+            "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
           introduce: "",
           point: "",
           following: [],
@@ -255,7 +256,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           userId: authService.currentUser?.uid, // authService가 아닌 token값 중에 하나로 변경해야함. (구글도)
           email: token, // 실제 값은 이메일이 아닌 token으로 변경.
           nickname: result.user.displayName,
-          imageURL: "",
+          imageURL:
+            "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
           introduce: "",
           point: "",
           following: [],
@@ -310,7 +312,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   userId: authService.currentUser?.uid,
                   email: "",
                   nickname: "카카오",
-                  imageURL: "",
+                  imageURL:
+                    "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
                   introduce: "",
                   point: "",
                   following: [],
@@ -321,7 +324,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
               );
               alert("카카오 간편 회원가입 성공!");
               setJoinIsOpen(false);
-              setIsOpen(true);
             })
             .catch((error) => {
               const errorCode = error.code;
