@@ -56,8 +56,8 @@ const MainBanner = () => {
         slidesPerView={1}
         scrollbar={{ draggable: true }}
         navigation={{
-          prevEl: bannerNextRef.current,
-          nextEl: bannerPrevRef.current,
+          prevEl: bannerPrevRef.current,
+          nextEl: bannerNextRef.current,
         }}
         breakpoints={{
           768: {

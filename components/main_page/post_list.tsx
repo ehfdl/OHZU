@@ -216,8 +216,8 @@ const PostList = () => {
           )}
 
           <div className="w-full  mt-16 relative z-0">
-            <div className="text-xl font-bold mb-3">
-              인기 많은 오주
+            <div className="text-2xl font-bold mb-3">
+              인기 많은 OHZU
               <span className="text-primary">
                 {cate === "전체"
                   ? userPosts?.length
@@ -270,8 +270,8 @@ const PostList = () => {
           </div>
 
           <div className="w-full mt-[90px] relative z-0 overflow-hidden">
-            <div className="text-xl font-bold mb-3">
-              많이 본 오주
+            <div className="text-2xl font-bold mb-3">
+              많이 본 OHZU
               <span className="text-primary">
                 {cate === "전체"
                   ? userPosts?.length
