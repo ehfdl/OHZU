@@ -76,10 +76,12 @@ const PostCard = ({ post }: { post: any }) => {
   }, []);
 
   return (
+
     <div className="flex">
       <div key={post.postId} className=" border shadow mt-3  rounded ">
         {/* hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70 */}
         <div className="w-full h-[284px]">
+
           <Link href={`/post/${post.postId}`}>
             <img
               src={post.img[0] || defaultImg}

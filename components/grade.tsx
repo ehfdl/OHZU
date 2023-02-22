@@ -1,11 +1,11 @@
 import React from "react";
 
 const Grade = ({ score }: { score: number }) => {
-  if (score < 11) {
+  if (score < 301) {
     const rank = "/badge/badge-bronze.png";
 
     return <img src={rank} />;
-  } else if (score < 21) {
+  } else if (score < 501) {
     const rank = "/badge/badge-silver.png";
 
     return <img src={rank} />;

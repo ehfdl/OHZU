@@ -8,6 +8,7 @@ interface DeleteModalProps {
   deleteRecomment?: (id: string) => Promise<void>;
   id: string | undefined;
   text: string;
+  content: string;
 }
 
 const DeleteModal = ({
@@ -17,6 +18,7 @@ const DeleteModal = ({
   deleteRecomment,
   id,
   text,
+  content,
 }: DeleteModalProps) => {
   useEffect(() => {
     document.body.style.cssText = `
@@ -32,48 +34,45 @@ const DeleteModal = ({
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-full h-screen bg-black bg-opacity-50 flex justify-center items-center z-10">
-      <div className="relative w-5/6 md:w-4/5 lg:w-3/5  xl:w-2/5 2xl:w-2/6 aspect-vedio bg-white flex flex-col justify-center items-center p-20 space-y-16">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center !m-0 z-10">
+      <div className="relative w-[590px] bg-white flex flex-col justify-center items-center px-12 py-20">
         <h2 className="font-bold text-3xl">{text}을 삭제하시겠어요?</h2>
-        <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Non quisquam
-          itaque saepe esse laudantium.
-        </p>
-        <div className="flex flex-col space-y-6">
+        <p className="text-center text-textGray mt-6 mb-11">{content}</p>
+        <div className="flex justify-between space-x-5">
+          <button
+            className="py-3 px-24 border border-primary text-primary rounded"
+            onClick={() => setDeleteConfirm(false)}
+          >
+            취소
+          </button>
           {text === "댓글" ? (
             <button
-              className="py-3 px-40 bg-black text-white"
+              className="py-3 px-24 bg-primary text-white rounded"
               onClick={() => deleteComment!(id!)}
             >
               삭제
             </button>
-          ) : text === "게시글" ? (
+          ) : text === "게시물" ? (
             <button
-              className="py-3 px-40 bg-black text-white"
+              className="py-3 px-24 bg-primary text-white rounded"
               onClick={() => deletePost!(id!)}
             >
               삭제
             </button>
           ) : text === "답글" ? (
             <button
-              className="py-3 px-40 bg-black text-white"
+              className="py-3 px-24 bg-primary text-white rounded"
               onClick={() => deleteRecomment!(id!)}
             >
               삭제
             </button>
           ) : null}
-          <button
-            className="py-3 px-40 bg-black text-white"
-            onClick={() => setDeleteConfirm(false)}
-          >
-            취소
-          </button>
         </div>
         <button
           onClick={() => setDeleteConfirm(false)}
-          className="absolute top-0 right-0 !mt-0 p-7"
+          className="absolute top-0 right-0 !mt-0 p-8"
         >
-          <AiOutlineClose size={40} />
+          <AiOutlineClose size={24} />
         </button>
       </div>
     </div>

@@ -155,7 +155,7 @@ const PostList = () => {
           <div className="w-full mt-12 flex justify-between">
             <div className="text-xl font-bold">
               전체 게시글{" "}
-              <span className="float-right ml-2 pt-1 text-base font-normal text-[#ff6161]">
+              <span className="float-right ml-2 pt-1 text-base font-normal text-primary">
                 {cate === "전체"
                   ? posts?.length
                   : posts?.filter((post) => cate === post.type).length}
@@ -218,7 +218,7 @@ const PostList = () => {
           <div className="w-full  mt-16 relative z-0">
             <div className="text-xl font-bold mb-3">
               인기 많은 오주
-              <span className="text-[#ff6161]">
+              <span className="text-primary">
                 {cate === "전체"
                   ? userPosts?.length
                   : userPosts?.filter((post) => cate === post.type).length}
@@ -252,7 +252,7 @@ const PostList = () => {
                 <div className="">
                   <button
                     ref={navigationPrevRef}
-                    className="absolute p-1.5 hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[15px] translate-y-[20px] z-20 top-[190px] rounded-full"
+                    className="absolute p-1.5 hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[15px] translate-y-[20px] z-20 top-[190px] rounded-full"
                   >
                     <BsChevronLeft size={25} />
                   </button>
@@ -260,7 +260,7 @@ const PostList = () => {
                 <div className="">
                   <button
                     ref={navigationNextRef}
-                    className="p-2 absolute hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[1140px] translate-y-[-50px] z-20 top-[260px] rounded-full"
+                    className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[1140px] translate-y-[-50px] z-20 top-[260px] rounded-full"
                   >
                     <BsChevronRight size={25} />
                   </button>
@@ -272,7 +272,7 @@ const PostList = () => {
           <div className="w-full mt-[90px] relative z-0 overflow-hidden">
             <div className="text-xl font-bold mb-3">
               많이 본 오주
-              <span className="text-[#ff6161]">
+              <span className="text-primary">
                 {cate === "전체"
                   ? userPosts?.length
                   : userPosts?.filter((post) => cate === post.type).length}
@@ -306,7 +306,7 @@ const PostList = () => {
                 <div>
                   <button
                     ref={prevRef}
-                    className="absolute p-1.5 hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[20px] translate-y-[-10px] z-20 top-[210px] rounded-full"
+                    className="absolute p-1.5 hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[20px] translate-y-[-10px] z-20 top-[210px] rounded-full"
                   >
                     <BsChevronLeft size={25} />
                   </button>
@@ -314,7 +314,7 @@ const PostList = () => {
                 <div>
                   <button
                     ref={nextRef}
-                    className="absolute p-2 hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[1140px] translate-y-[-100px] z-20 top-[300px] rounded-full"
+                    className="absolute p-2 hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[1140px] translate-y-[-100px] z-20 top-[300px] rounded-full"
                   >
                     <BsChevronRight size={25} />
                   </button>

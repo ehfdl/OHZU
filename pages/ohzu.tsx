@@ -62,19 +62,19 @@ const Ohzu = () => {
         <div className="w-[600px] h-[800px] flex flex-col overflow-y-auto">
           <div className="flex justify-between  text-3xl">
             <div
-              className="bg-[#fff0f0] text-[#ff6161] px-4 py-2 rounded cursor-pointer"
+              className="bg-second text-primary px-4 py-2 rounded cursor-pointer"
               onClick={() => setCate("posts")}
             >
               posts
             </div>
             <div
-              className="bg-[#fff0f0] text-[#ff6161] px-4 py-2 rounded cursor-pointer"
+              className="bg-second text-primary px-4 py-2 rounded cursor-pointer"
               onClick={() => setCate("comments")}
             >
               comments
             </div>
             <div
-              className="bg-[#fff0f0] text-[#ff6161] px-4 py-2 rounded cursor-pointer"
+              className="bg-second text-primary px-4 py-2 rounded cursor-pointer"
               onClick={() => setCate("recomments")}
             >
               recomments

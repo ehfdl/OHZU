@@ -91,6 +91,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       return { ...prev, [name]: value };
     });
   };
+
   const onChangePlusIngre = () => {
     if (
       editIng.editIng_01 !== "" &&
@@ -115,23 +116,37 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
     if (editPost.type !== "") {
       setValidateCate("");
     }
-    if (
-      editIng.editIng_01 !== "" ||
-      editIng.editIng_02 !== "" ||
-      editIng.editIng_03 !== "" ||
-      editIng.editIng_04 !== "" ||
-      editIng.editIng_05 !== "" ||
-      editIng.editIng_06 !== ""
-    ) {
-      setValidateIng("");
-    }
+
     if (editPost.recipe !== "") {
       setValidateRecipe("");
     }
   };
 
+  const validateChangeIng = () => {
+    if (
+      editIng.editIng_01!.length > 8 ||
+      editIng.editIng_02!.length > 8 ||
+      editIng.editIng_03!.length > 8 ||
+      editIng.editIng_04!.length > 8 ||
+      editIng.editIng_05!.length > 8 ||
+      editIng.editIng_06!.length > 8
+    ) {
+      setValidateIng("재료를 8자 이하로 입력해 주세요.");
+    }
+    if (
+      editIng.editIng_01!.length <= 8 &&
+      editIng.editIng_02!.length <= 8 &&
+      editIng.editIng_03!.length <= 8 &&
+      editIng.editIng_04!.length <= 8 &&
+      editIng.editIng_05!.length <= 8 &&
+      editIng.editIng_06!.length <= 8
+    ) {
+      setValidateIng("");
+    }
+  };
+
   const validateClickPost = () => {
-    if (editPost.title === "") {
+    if (editPost.title === "" || editPost.title!.length > 10) {
       setValidateTitle("이름을 10자 이하로 입력해 주세요.");
       return true;
     } else if (editPost.text === "") {
@@ -139,6 +154,16 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       return true;
     } else if (editPost.type === "") {
       setValidateCate("카테고리 한 개를 선택해주세요.");
+      return true;
+    } else if (
+      editIng.editIng_01!.length > 8 ||
+      editIng.editIng_02!.length > 8 ||
+      editIng.editIng_03!.length > 8 ||
+      editIng.editIng_04!.length > 8 ||
+      editIng.editIng_05!.length > 8 ||
+      editIng.editIng_06!.length > 8
+    ) {
+      setValidateIng("재료를 8자 이하로 입력해 주세요.");
       return true;
     } else if (
       editIng.editIng_01 === "" &&
@@ -159,8 +184,9 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
   useEffect(() => {
     validateChangePost();
   }, [editPost]);
+
   useEffect(() => {
-    validateChangePost();
+    validateChangeIng();
   }, [editIng]);
 
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -375,18 +401,20 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       });
     }
 
-    if (editPost.ingredient?.length! >= 3) {
+    if (editPost.ingredient?.length! > 3) {
       setEditPlusIng(true);
     }
   }, []);
 
   return (
     <Layout>
-      <div className="w-full h-screen flex justify-center">
+      <div className="w-full flex justify-center pb-16">
         <form className="w-[588px] flex flex-col">
           <div className="flex gap-3">
             <div className="font-bold text-[20px] mt-5">사진</div>
-            <div className="text-[12px] mt-7">최대 3장까지 업로드 가능</div>
+            <div className="text-[12px] mt-7 text-textGray">
+              최대 3장까지 업로드 가능
+            </div>
           </div>
           <div className="flex w-full mt-[18px] gap-[10px] justify-center">
             <div className="w-[186px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
@@ -400,7 +428,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                       onChange={onChangeImg_01}
                       className="hidden"
                     />
-                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                   </label>
                 </>
               ) : (
@@ -410,7 +438,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                       onClick={() => {
                         setEditImgFile_01(null);
                       }}
-                      className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                      className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                     />
                   </label>
                   <img
@@ -432,7 +460,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onChange={onChangeImg_02}
                         className="hidden"
                       />
-                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                     </label>
                   </>
                 ) : (
@@ -442,7 +470,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onClick={() => {
                           setEditImgFile_02(null);
                         }}
-                        className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
                     <img
@@ -463,7 +491,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onChange={onChangeImg_03}
                         className="hidden"
                       />
-                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2]" />
+                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
                     </label>
                   </>
                 ) : (
@@ -473,7 +501,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onClick={() => {
                           setEditImgFile_03(null);
                         }}
-                        className=" text-[#666666] scale-150 bg-white rounded-full hover:scale-[1.6] box-border"
+                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
                     <img
@@ -509,7 +537,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             </span>
           </div>
           <textarea
-            className="h-[118px] border-[1px] border-[#cccccc] py-3 px-3 rounded resize-none overflow-hidden"
+            className="w-full h-[118px] px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
             name="text"
             value={editPost.text}
             onChange={onChangeValue}
@@ -584,7 +612,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             <span className="font-bold text-[20px]">재료</span>
 
             {validateIng === "최대 6개까지 작성 가능" ? (
-              <span className="ml-2 text-sm text-[#8e8e93]  w-full">
+              <span className="ml-2 text-sm text-textGray  w-full">
                 {validateIng}
               </span>
             ) : (
@@ -667,7 +695,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           ) : (
             <div
               onClick={onChangePlusIngre}
-              className="my-5 ml-1 text-[14px] text-[#acacac] flex justify-start items-center gap-2 cursor-pointer w-[92px]"
+              className="my-5 ml-1 text-[14px] text-phGray flex justify-start items-center gap-2 cursor-pointer w-[92px]"
             >
               <BsPlusLg className="mb-[3px]" />더 추가하기
             </div>
@@ -681,22 +709,25 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           </div>
 
           <textarea
-            className="h-24 resize-none overflow-hidden"
+            className="w-full h-[170px] px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
             name="recipe"
             value={editPost.recipe}
             onChange={onChangeValue}
             placeholder={post.recipe}
           />
-          <div className="w-full flex justify-center items-center space-x-2">
-            <button onClick={onSubmit} className="bg-[#ff6161] px-14 py-2 h-12">
-              수정
-            </button>
+          <div className="w-full flex justify-between items-center mt-10">
             <Link
-              className="bg-[#ff6161] px-14 py-2 h-12 flex justify-center items-center text-center"
+              className="border border-primary text-primary rounded px-32 py-3 font-bold text-center"
               href={`/post/${id}`}
             >
               취소
             </Link>
+            <button
+              onClick={onSubmit}
+              className="bg-primary rounded px-32 py-3 font-bold text-white"
+            >
+              저장
+            </button>
           </div>
         </form>
       </div>

@@ -250,7 +250,7 @@ const Mypage = () => {
 
           <div className="w-full mt-12 ml-[3px] text-[20px] font-bold">
             게시글{" "}
-            <span className="text-[#ff6161]">
+            <span className="text-primary">
               {ohju === "my-ohju"
                 ? cate === "전체"
                   ? myPosts?.length

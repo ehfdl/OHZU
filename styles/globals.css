@@ -5,9 +5,16 @@
 body {
   font-family: "Poppins", "Noto Sans", sans-serif;
 }
+pre {
+  font-family: "Poppins", "Noto Sans", sans-serif !important;
+}
 
 @layer base {
   button[aria-current="page"] {
-    @apply text-[#FF6161];
+    @apply text-primary;
+  }
+  input,
+  textarea {
+    @apply focus:outline-none;
   }
 }

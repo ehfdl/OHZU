@@ -33,7 +33,6 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
 
     signInWithEmailAndPassword(authService, email, password).then(
       (userCredential) => {
-        console.log("로그인 성공!");
         setIsOpen(false);
       }
     );
@@ -72,7 +71,6 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
         setIsOpen(false);
-        console.log("result : ", result);
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -82,7 +80,6 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         const email = error.customData.email;
         // AuthCredential 타입 제공됩니다.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        console.log("error : ", error);
       });
   };
 
@@ -108,7 +105,6 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
         setIsOpen(false);
-        console.log("result : ", result);
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -126,7 +122,8 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
   const loginFormWithKakao = () => {
     window.Kakao.Auth.login({
       success(authObj: any) {
-        console.log("authObj : ", authObj);
+        // 카카오 엑세스 토큰 조회
+        // console.log("로그인 모달 authObj : ", authObj);
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
@@ -134,9 +131,9 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
           data: { authObj },
         }).then(function (response: any) {
           // 서버에서 보낸 jwt토큰을 받음
-          console.log(response);
+          // console.log("로그인 모달 : ", response);
           localStorage.setItem("data", JSON.stringify(response.data));
-          console.log("responseData", response.data);
+          // console.log("로그인 모달 responseData", response.data);
 
           return signInWithCustomToken(
             authService,
@@ -144,7 +141,8 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
           )
             .then((userCredential: any) => {
               const user = userCredential.user;
-              console.log("user : ", user);
+              // 카카오 로그인 유저 조회 콘솔
+              // console.log("user : ", user);
               setDoc(
                 doc(dbService, "Users", authService.currentUser?.uid as string),
                 {
@@ -207,7 +205,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 placeholder="비밀번호를 입력해주세요."
                 className="w-[472px] h-[44px] p-2 pl-4 mb-3 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
               />
-              <p className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-[#FF6161]">
+              <p className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary">
                 비밀번호 찾기
               </p>
               <div className="flex w-[472px] m-auto">
@@ -221,7 +219,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
               </div>
             </div>
             <div className="buttonWrap mb-4">
-              <button className="w-[280px] h-[48px] mb-[29px] bg-[#FF6161] text-white rounded   ">
+              <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded   ">
                 로그인
               </button>
             </div>

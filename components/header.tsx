@@ -8,6 +8,7 @@ import Alarm from "./sub_page/alarm";
 import { useRouter } from "next/router";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import Router from "next/router";
+import { SearchCard } from "./search_card";
 
 const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
@@ -18,7 +19,6 @@ const Header = ({ ...props }: any) => {
   // 로그인&회원가입 모달창 show/hidden
   const loginModalHandler = () => {
     if (props.isOpen === false) {
-      console.log("Open");
       props.setIsOpen(true);
       setCurrentUser(true);
     }
@@ -26,7 +26,6 @@ const Header = ({ ...props }: any) => {
 
   const joinModalHandler = () => {
     if (props.joinIsOpen === false) {
-      console.log("Open");
       props.setJoinIsOpen(true);
     }
   };
@@ -69,28 +68,21 @@ const Header = ({ ...props }: any) => {
 
   // 검색 실행 함수
   const SearchHanlder = (keyword: any) => {
-    console.log("keyword : ", keyword);
     setSearch(keyword);
-    if (keyword) {
+  };
+
+  const onSubmitHandler = (e: any) => {
+    e.preventDefault();
+    if (search) {
       router.push({
-        pathname: `/search/${keyword}`,
+        pathname: `/search/${search}`,
       });
-    } else if (keyword == false) {
+    } else if (!search) {
       router.push({
         pathname: `/search/-`,
       });
     }
   };
-
-  // 디바운스 함수
-  // const debounceFunc = useCallback(
-  //   () => {
-  //     setSearch(e.target.value);
-  //     return;
-  //   },
-  //   [search]
-  // );
-
   return (
     <div className="flex w-full h-[118px] sticky top-0 z-[8] justify-between items-center bg-white">
       <Link legacyBehavior href="/">
@@ -99,8 +91,7 @@ const Header = ({ ...props }: any) => {
         </div>
       </Link>
       <div className="iconWrap h-[80px] mr-[32px] flex justify-end items-center relative ">
-        {/* 검색 Input */}
-        <form className="mr-[20px] flex items-center">
+        <form className="mr-9 flex items-center" onSubmit={onSubmitHandler}>
           <label htmlFor="simple-search" className=""></label>
           <div className="relative w-full">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -120,23 +111,22 @@ const Header = ({ ...props }: any) => {
             <input
               onChange={(e) => {
                 SearchHanlder(e.target.value);
-                // debounceFunc(e.target.value);
               }}
               value={search}
               type="text"
               id="simple-search"
-              className="w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  "
+              className="w-80 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5  "
               placeholder="혼합주 이름 또는 재료를 입력해주세요."
               required
             />
           </div>
         </form>
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-6">
           {authService.currentUser ? (
             authService.currentUser?.uid === "r9TWnAGKsxgOoKmZf4IfCLxf0Ry2" ? (
               <Link legacyBehavior href="/ohzu">
-                <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
+                <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
                   관리페이지
                 </button>
               </Link>
@@ -144,7 +134,7 @@ const Header = ({ ...props }: any) => {
               <>
                 <Alarm />
                 <Link legacyBehavior href="/mypage">
-                  <button className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]">
+                  <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
                     마이페이지
                   </button>
                 </Link>
@@ -153,7 +143,7 @@ const Header = ({ ...props }: any) => {
           ) : (
             <button
               onClick={loginModalHandler}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px] text-[18px] duration-150 hover:text-primary"
             >
               로그인
             </button>
@@ -162,14 +152,14 @@ const Header = ({ ...props }: any) => {
           {authService.currentUser ? (
             <button
               onClick={logOut}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px] text-[18px] duration-150 hover:text-primary"
             >
               로그아웃
             </button>
           ) : (
             <button
               onClick={joinModalHandler}
-              className="w-20 h-[42px]  duration-150 hover:text-[#FF6161]"
+              className="w-20 h-[42px]  duration-150 hover:text-primary"
             >
               회원가입
             </button>

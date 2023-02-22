@@ -125,7 +125,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     querySnapshot.forEach((doc) => {
       isCheckNickname = doc.data().nickname;
     });
-    console.log("checkNickname", checkNickname);
     return isCheckNickname;
   };
 
@@ -198,7 +197,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     const nowTime = new Date();
     const nowYear = nowTime.getFullYear();
     let newUserYear = Number(userYear);
-    console.log("newUserYear : ", newUserYear);
 
     if (newUserYear === 0) {
       setCheckAdult("생년월일을 확인해주세요.");
@@ -233,7 +231,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
         setJoinIsOpen(false);
-        console.log("result : ", result);
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -243,7 +240,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         const email = error.customData.email;
         // AuthCredential 타입 제공됩니다.
         const credential = GoogleAuthProvider.credentialFromError(error);
-        console.log("error : ", error);
       });
   };
 
@@ -270,7 +266,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
         setJoinIsOpen(false);
-        console.log("result : ", result);
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -288,7 +283,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   const loginFormWithKakao = () => {
     window.Kakao.Auth.login({
       success(authObj: any) {
-        console.log("authObj : ", authObj);
+        // 카카오 엑세스 토큰 확인용..
+        // console.log("authObj : ", authObj);
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
@@ -446,7 +442,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   <div
                     onClick={ageVerification}
                     id="auto_login"
-                    className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-[#FF6161]"
+                    className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary"
                   >
                     성인 인증하기
                     <span className="inline-block ml-[4px]">✅</span>
@@ -459,7 +455,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
             </div>
             <button
               type="submit"
-              className="w-[280px] h-[48px] mb-[29px] bg-[#FF6161] text-white rounded"
+              className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded"
             >
               회원가입
             </button>

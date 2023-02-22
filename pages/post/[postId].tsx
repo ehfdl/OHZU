@@ -1,18 +1,14 @@
 import { authService, dbService, storageService } from "@/firebase";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
   getDoc,
   getDocs,
-  limit,
   onSnapshot,
   orderBy,
   query,
   setDoc,
-  startAfter,
-  startAt,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -21,48 +17,35 @@ import Link from "next/link";
 import Layout from "@/components/layout";
 import Grade from "../../components/grade";
 import { FiHeart, FiMoreVertical } from "react-icons/fi";
-import { FaHeart, FaCrown } from "react-icons/fa";
-import { AiOutlineLink, AiFillAlert } from "react-icons/ai";
-import { SyntheticEvent, useEffect, useRef, useState } from "react";
+import { FaHeart } from "react-icons/fa";
+import { TfiTrash } from "react-icons/tfi";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import CommentList from "@/components/comment/comment_list";
 import DeleteModal from "@/components/delete_modal";
 import { deleteObject, ref } from "firebase/storage";
 import { GetServerSideProps } from "next";
 import Comments from "@/components/comment/comments";
+import { BsShareFill } from "react-icons/bs";
+import { RiAlarmWarningLine } from "react-icons/ri";
+import { MdOutlineEditNote } from "react-icons/md";
 
 interface PostDetailPropsType {
   postId: string;
+  newPost: Form;
+  newUser: UserType;
 }
 
-const PostDetail = ({ postId }: PostDetailPropsType) => {
+const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
   const router = useRouter();
 
   const [imgIdx, setImgIdx] = useState(0);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const [post, setPost] = useState<Form>({
-    userId: "",
-    img: [],
-    title: "",
-    type: "",
-    ingredient: [],
-    recipe: "",
-    text: "",
-    like: [],
-    view: 0,
-    id: "",
-  });
+  const [post, setPost] = useState<Form>(newPost);
 
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [user, setUser] = useState<UserType>({
-    userId: "",
-    email: "",
-    nickname: "",
-    imageURL: "",
-    point: 0,
-  });
+  const [user, setUser] = useState<UserType>(newUser);
   const [currentUser, setCurrentUser] = useState<UserType>({
     userId: "",
     email: "",
@@ -126,7 +109,24 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
 
     commentId.map(async (id) => {
       await deleteDoc(doc(dbService, "Comments", id as string));
-      await deleteDoc(doc(dbService, "Recomments", id as string));
+      const q = query(
+        collection(dbService, "Recomments"),
+        where("commentId", "==", id) // 해당 collection 내의 docs들을 createdAt 속성을 내림차순 기준으로
+      );
+      const querySnapshot = await getDocs(q);
+      // doc.id는 DB가 자체적으로 생성하는 값으로, id도 함께 포함시키기 위해 객체 재구성
+      const newRecomment: any = [];
+      querySnapshot.forEach((doc) => {
+        const newObj = {
+          id: doc.id,
+          ...doc.data(),
+        };
+        newRecomment.push(newObj.id);
+      });
+
+      newRecomment.map(async (id: string) => {
+        await deleteDoc(doc(dbService, "Recomments", id as string));
+      });
     });
 
     const postImgId = post.img?.map((item) => {
@@ -172,27 +172,24 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
             (prev) => prev !== authService.currentUser?.uid
           ),
         });
+        setPost({
+          ...post,
+          like: post?.like!.filter(
+            (prev) => prev !== authService.currentUser?.uid
+          ),
+        });
       } else {
         await updateDoc(doc(dbService, "Posts", id), {
+          like: [...post?.like!, authService.currentUser?.uid],
+        });
+        setPost({
+          ...post,
           like: [...post?.like!, authService.currentUser?.uid],
         });
       }
     } else {
       alert("로그인이 필요한 서비스입니다.");
     }
-    getPost();
-  };
-  const getPost = async () => {
-    const docRef = doc(dbService, "Posts", postId);
-    const docSnap = await getDoc(docRef);
-    const data = docSnap.data();
-    const id = docSnap.id;
-    const newPost = {
-      ...data,
-      id,
-    };
-
-    setPost(newPost);
   };
 
   const getComments = async () => {
@@ -246,20 +243,6 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     }
   };
 
-  const getUser = async () => {
-    if (post?.userId) {
-      const userRef = doc(dbService, "Users", post?.userId! as string);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data();
-
-      const newUser = {
-        ...userData,
-      };
-
-      setUser(newUser);
-    }
-  };
-
   const getCurrentUser = async () => {
     if (authService.currentUser?.uid) {
       const userRef = doc(
@@ -310,28 +293,27 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     if (authService.currentUser) {
       updateUserRecently();
     }
-    getPost();
+
     getComments();
     updateView();
   }, []);
 
   useEffect(() => {
     getCurrentUser();
-    getUser();
-  }, [post]);
+  }, [authService.currentUser?.uid]);
 
   return (
     <Layout>
       <div className="sm:max-w-[1200px] mx-auto py-20">
         <div
           id="breadcrumbs"
-          className="w-full space-x-2 flex items-center mb-4"
+          className="w-full space-x-2 flex items-center mb-10 text-sm"
         >
-          <Link href="/" className="text-gray-400">
+          <Link href="/" className="text-textGray">
             홈
           </Link>
-          <span> &#62; </span>
-          <span className="">{post.type}</span>
+          <span className="text-textGray"> &#62; </span>
+          <span className="text-textBlack">{post.type}</span>
         </div>
         <div
           id="post-detail"
@@ -340,17 +322,17 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           <div id="images-column" className="w-2/5">
             <img
               src={post.img === null ? "" : post.img![imgIdx]}
-              className="w-full bg-slate-300 aspect-square object-cover rounded"
+              className="w-full aspect-square object-cover rounded"
             />
-            <div className="my-5 flex justify-start space-x-6 items-center w-full">
+            <div className="mt-6 grid grid-cols-3 gap-6 items-center w-full">
               {post.img?.map((img, i) => (
                 <button
                   key={i}
                   className={`${
                     img === post.img![imgIdx]
-                      ? "border-2 border-black"
+                      ? "border-2 border-primary"
                       : "border-0"
-                  } w-[30%] bg-slate-300 aspect-square object-cover rounded overflow-hidden`}
+                  } w-full aspect-square object-cover rounded overflow-hidden`}
                   onClick={() => onImgChange(i)}
                 >
                   <img
@@ -363,9 +345,9 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           </div>
           <div id="detail-info-column" className="w-1/2 relative">
             <div id="title-column" className="flex justify-between items-start">
-              <div className="flex flex-col items-start space-y-2">
-                <h4 className="text-2xl font-medium">{post.title}</h4>
-                <span className="block py-1 px-3 rounded-full text-sm bg-gray-200">
+              <div className="flex flex-col items-start">
+                <h4 className="text-2xl font-bold mb-2">{post.title}</h4>
+                <span className="block py-1 px-5 rounded-full text-sm text-primary bg-second">
                   {post.type}
                 </span>
               </div>
@@ -373,12 +355,12 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 <div className="flex flex-col items-center">
                   <button onClick={() => postLike(postId as string)}>
                     {likedUser ? (
-                      <FaHeart size={24} color={"#ff6161"} />
+                      <FaHeart className="text-primary" size={24} />
                     ) : (
-                      <FiHeart size={24} />
+                      <FiHeart className="text-primary" size={24} />
                     )}
                   </button>
-                  <span>{post.like!.length}</span>
+                  <span className="text-textGray">{post.like!.length}</span>
                 </div>
                 {authService.currentUser?.uid === post.userId && (
                   <>
@@ -391,11 +373,27 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                     </button>
                     {isOpen && (
                       <div className="absolute top-14 right-0 z-10 bg-white border-black border flex flex-col space-y-6 items-center px-10 py-6">
-                        <Link href={`/post/edit/${postId}`}>
-                          게시글 수정하기
+                        <Link
+                          href={`/post/edit/${postId}`}
+                          className="flex items-center space-x-5"
+                        >
+                          <span> 게시글 수정하기</span>{" "}
+                          <MdOutlineEditNote size={18} />
                         </Link>
-                        <button onClick={deleteToggle}>게시글 삭제하기</button>
-                        <button onClick={doCopy}>게시글 공유하기</button>
+                        <button
+                          className="flex items-center space-x-5"
+                          onClick={deleteToggle}
+                        >
+                          <span>게시글 삭제하기</span>
+                          <TfiTrash size={18} />
+                        </button>
+                        <button
+                          className="flex items-center space-x-5"
+                          onClick={doCopy}
+                        >
+                          <span>게시글 공유하기</span>
+                          <BsShareFill size={18} className="p-0.5" />
+                        </button>
                       </div>
                     )}
                   </>
@@ -407,7 +405,8 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 deletePost={deletePost}
                 setDeleteConfirm={setDeleteConfirm}
                 id={postId}
-                text="게시글"
+                text="게시물"
+                content="삭제한 게시물은 복원이 불가합니다."
               />
             )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
@@ -420,53 +419,66 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 </Link>
                 <Link
                   href={`/users/${post.userId}`}
-                  className="flex justify-center items-center space-x-1"
+                  className="flex justify-center items-center"
                 >
-                  <span>{user?.nickname}</span>
+                  <span className="font-bold mr-1">{user?.nickname}</span>
                   <span className="w-[12px]">
                     <Grade score={user.point!} />
                   </span>
                 </Link>
               </div>
-              <div className="w-4/5">
-                <pre className="whitespace-pre-wrap">{post.text}</pre>
+              <div className="w-4/5 pt-1">
+                <pre className="whitespace-pre-wrap break-all">{post.text}</pre>
               </div>
             </div>
-            <div id="ingredient" className="mt-12 mb-16">
-              <span className="inline-block px-5 py-2 bg-primary text-white mb-5 rounded-full">
+            <div id="ingredient" className="mt-10 mb-9">
+              <span className="inline-block px-7 py-2 bg-primary text-white text-xl rounded-full">
                 준비물
               </span>
-              <div className="pl-3 flex justify-start flex-wrap">
+              <div className="pt-6 flex justify-start flex-wrap">
                 {post.ingredient?.map((ing, i) => (
-                  <span
+                  <button
                     key={i}
-                    className="inline-block mr-6 mb-6 py-1.5 px-6 rounded-full border border-gray-700"
+                    onClick={() => {
+                      router.push(`/search/${ing}`);
+                    }}
+                    className="inline-block mr-6 mb-6 py-1.5 px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition"
                   >
                     {ing}
-                  </span>
+                  </button>
                 ))}
               </div>
             </div>
             <div id="recipe">
-              <span className="inline-block px-5 py-2 bg-primary text-white mb-5 rounded-full">
+              <span className="inline-block px-7 py-2 bg-primary text-white text-xl rounded-full">
                 만드는 방법
               </span>
-              <pre className="pl-3 whitespace-pre-wrap">{post.recipe}</pre>
+              <pre className="pt-6 whitespace-pre-wrap break-all leading-10">
+                {post.recipe}
+              </pre>
             </div>
             {authService.currentUser?.uid !== post.userId && (
               <div
                 id="faq"
-                className="absolute right-0 -bottom-20 flex items-start space-x-2"
+                className="absolute right-0 -bottom-16 flex items-start space-x-6"
               >
                 <button onClick={doCopy}>
-                  <AiOutlineLink size={24} className="text-iconDefault" />
+                  <BsShareFill
+                    size={24}
+                    className="text-iconDefault mt-1 hover:text-primary"
+                  />
                 </button>
                 <button
                   onClick={onClickReportPost}
-                  className="flex flex-col items-center space-y-1"
+                  className="flex flex-col items-center space-y-0.5 group"
                 >
-                  <AiFillAlert size={24} className="text-iconDefault" />
-                  <span className="text-xs">신고하기</span>
+                  <RiAlarmWarningLine
+                    size={24}
+                    className="text-iconDefault group-hover:text-primary"
+                  />
+                  <span className="text-[10px] text-iconDefault group-hover:text-primary">
+                    신고
+                  </span>
                 </button>
               </div>
             )}
@@ -489,7 +501,22 @@ export default PostDetail;
 export const getServerSideProps: GetServerSideProps = async ({
   params: { postId },
 }: any) => {
+  const docRef = doc(dbService, "Posts", postId);
+  const docSnap = await getDoc(docRef);
+  const data = docSnap.data();
+  const newPost = {
+    ...data,
+  };
+
+  const userRef = doc(dbService, "Users", newPost?.userId! as string);
+  const userSnap = await getDoc(userRef);
+  const userData = userSnap.data();
+
+  const newUser = {
+    ...userData,
+  };
+
   return {
-    props: { postId },
+    props: { postId, newPost, newUser },
   };
 };

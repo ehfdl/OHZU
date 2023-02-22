@@ -69,7 +69,6 @@ const Comments = ({
       ...resizeTextArea,
       rows: currentRows < maxRows ? currentRows : maxRows,
     });
-
     setComment({
       ...comment,
       [name]: value,
@@ -79,7 +78,7 @@ const Comments = ({
   const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newComment = {
-      content: comment.content,
+      content: comment.content.trim(),
       postId: postId,
       userId: authService.currentUser?.uid!,
       createdAt: dateForm,
@@ -120,7 +119,7 @@ const Comments = ({
   };
 
   return (
-    <div id="comments" className="max-w-[768px] w-full mx-auto mt-20">
+    <div id="comments" className="max-w-[768px] w-full mx-auto">
       <div className="text-xl font-medium space-x-2">
         <span>댓글</span>
         <span>{comments.length}</span>
@@ -129,15 +128,14 @@ const Comments = ({
       <form className="w-full flex items-center relative space-x-6">
         <img
           src={currentUser?.imageURL}
-          className="bg-slate-300 w-12 aspect-square rounded-full object-cover"
+          className="bg-slate-300 w-[45px] aspect-square rounded-full object-cover"
         />
         <textarea
           disabled={authService.currentUser ? false : true}
           name="content"
           value={comment.content}
           onChange={handleChange}
-          id=""
-          className="w-full p-2 border h-auto scrollbar-none"
+          className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
           placeholder="댓글을 입력해주세요."
           rows={resizeTextArea.rows}
         />
@@ -146,10 +144,15 @@ const Comments = ({
           onClick={addComment}
           className="absolute right-0 bottom-3 pr-4 disabled:text-gray-400"
         >
-          <span className="text-sm font-medium">등록</span>
+          <span className="text-sm font-bold text-phGray hover:text-black">
+            등록
+          </span>
         </button>
       </form>
-      <ul id="comment-list" className="mt-10 divide-y-[1px] divide-gray-300">
+
+      <div className="w-full mt-6 border-b-[1px] border-borderGray" />
+
+      <ul id="comment-list" className="mb-6">
         {comments?.slice(offset, offset + limit).map((comment) => (
           <CommentList
             key={comment.id}
@@ -162,7 +165,7 @@ const Comments = ({
       {comments.length !== 0 && (
         <nav className="w-full flex justify-center items-center space-x-9">
           <button
-            className="text-[#FF6161] hover:text-[#D2373F] active:text-[#D2373F] disabled:text-gray-300"
+            className="text-primary hover:text-hover active:text-hover disabled:text-gray-300"
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
           >
@@ -183,7 +186,7 @@ const Comments = ({
           <button
             onClick={() => setPage(page + 1)}
             disabled={page === pagesNumber}
-            className="text-[#FF6161] hover:text-[#D2373F] active:text-[#D2373F] disabled:text-gray-300"
+            className="text-primary hover:text-hover active:text-hover disabled:text-gray-300"
           >
             <BsChevronRight size={20} />
           </button>

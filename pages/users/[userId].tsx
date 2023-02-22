@@ -226,14 +226,14 @@ const UserPage = () => {
               {userProfile?.follower.includes(authService.currentUser?.uid) ? (
                 <button
                   onClick={onClickFollowUpdate}
-                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-[#FFF0f0] text-sm text-[#ff6161] flex justify-center items-center"
+                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-second text-sm text-primary flex justify-center items-center"
                 >
                   팔로우
                 </button>
               ) : (
                 <button
                   onClick={onClickFollowUpdate}
-                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-[#FF6161] text-sm text-white  flex justify-center items-center"
+                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-primary text-sm text-white  flex justify-center items-center"
                 >
                   팔로우
                 </button>
@@ -296,7 +296,7 @@ const UserPage = () => {
           <div className="w-full mt-12 flex justify-between">
             <div className="ml-[3px] text-[20px] font-bold">
               게시글{" "}
-              <span className="text-[#ff6161]">
+              <span className="text-primary">
                 {cate === "전체"
                   ? userPosts?.length
                   : userPosts?.filter((post) => cate === post.type).length}

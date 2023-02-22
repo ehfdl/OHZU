@@ -91,7 +91,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   }, []);
   return (
     <>
-      <li className="py-6 flex space-x-6 justify-end w-full">
+      <li className="py-6 flex space-x-6 justify-end w-full border-b border-borderGray">
         <Link
           href={`/users/${recomment.userId}`}
           className="flex flex-col items-center space-y-2 w-[13%]"
@@ -107,7 +107,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             </span>
           </div>
         </Link>
-        <div className="space-y-2 flex flex-col justify-between w-full">
+        <div className="space-y-6 flex flex-col justify-between w-full">
           {isEdit ? (
             <textarea
               name="editContent"
@@ -119,7 +119,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               placeholder={content}
             />
           ) : (
-            <pre className="whitespace-pre-wrap">{content}</pre>
+            <pre className="whitespace-pre-wrap break-all">{content}</pre>
           )}
           <div className="flex justify-between">
             <span className="text-xs text-gray-500 flex items-end">
@@ -144,7 +144,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               <div
                 className={`${
                   isEdit ? "hidden" : "flex"
-                } flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6`}
+                } flex justify-end items-end space-x-4 text-gray-500 text-xs`}
               >
                 <button onClick={editToggle}>수정</button>
                 {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
@@ -164,6 +164,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             setDeleteConfirm={setDeleteConfirm}
             id={id}
             text="답글"
+            content="삭제한 답글은 복원이 불가합니다."
           />
         )}
       </li>

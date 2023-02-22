@@ -146,11 +146,11 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
 
   return (
     <>
-      <li className="flex justify-between py-6">
-        <div className="flex space-x-6 w-full">
+      <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0">
+        <div className="flex space-x-6 justify-between w-full">
           <Link
             href={`/users/${comment.userId}`}
-            className="flex flex-col items-center space-y-2 w-[13%]"
+            className="flex flex-col items-center space-y-2 w-[11%]"
           >
             <img
               src={user?.imageURL}
@@ -163,7 +163,7 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
               </span>
             </div>
           </Link>
-          <div className="space-y-2 flex flex-col justify-between w-full">
+          <div className="space-y-6 flex flex-col justify-between w-full">
             {isEdit ? (
               <textarea
                 name="editContent"
@@ -175,19 +175,22 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                 placeholder={content}
               />
             ) : (
-              <pre className="whitespace-pre-wrap">{content}</pre>
+              <pre className="whitespace-pre-wrap break-all">{content}</pre>
             )}
             <div className="flex justify-between">
               <span className="text-xs text-gray-500 flex items-end">
                 {createdAt}
               </span>
               {isEdit && (
-                <div className="flex justify-end items-end space-x-2">
-                  <button className="text-xs font-medium" onClick={editToggle}>
+                <div className="flex justify-end items-end space-x-4">
+                  <button
+                    className="text-xs font-medium hover:text-black text-textGray"
+                    onClick={editToggle}
+                  >
                     취소
                   </button>
                   <button
-                    className="text-xs font-medium"
+                    className="text-xs font-medium hover:text-black text-textGray"
                     onClick={() => editComment(id as string, editContent)}
                   >
                     완료
@@ -198,16 +201,29 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                 <div
                   className={`${
                     isEdit ? "hidden" : "flex"
-                  } flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6`}
+                  } flex justify-end items-end space-x-4 text-xs`}
                 >
-                  <button onClick={editToggle}>수정</button>
+                  <button
+                    onClick={editToggle}
+                    className="hover:text-black text-textGray"
+                  >
+                    수정
+                  </button>
                   {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
-                  <button onClick={deleteToggle}>삭제</button>
+                  <button
+                    onClick={deleteToggle}
+                    className="hover:text-black text-textGray"
+                  >
+                    삭제
+                  </button>
                   {recomments.length === 0 ? (
                     <button
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
+                      className={`${
+                        isOpen ? "text-black" : "text-textGray"
+                      } hover:text-black`}
                     >
                       답글달기
                     </button>
@@ -216,6 +232,9 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
+                      className={`${
+                        isOpen ? "text-black" : "text-textGray"
+                      } hover:text-black`}
                     >
                       답글 {recomments.length}
                     </button>
@@ -229,6 +248,7 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
+                      className={`${isOpen ? "text-black" : "text-textGray"}`}
                     >
                       답글달기
                     </button>
@@ -237,6 +257,7 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
+                      className={`${isOpen ? "text-black" : "text-textGray"}`}
                     >
                       답글 {recomments.length}
                     </button>
@@ -252,19 +273,20 @@ const CommentList = ({ comment, currentUser, dateForm }: CommentProps) => {
             setDeleteConfirm={setDeleteConfirm}
             id={id}
             text="댓글"
+            content="삭제한 댓글은 복원이 불가합니다."
+          />
+        )}
+        {isOpen && (
+          <Recomments
+            id={id!}
+            dateForm={dateForm}
+            currentUser={currentUser}
+            recomments={recomments}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
           />
         )}
       </li>
-      {isOpen && (
-        <Recomments
-          id={id!}
-          dateForm={dateForm}
-          currentUser={currentUser}
-          recomments={recomments}
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-        />
-      )}
     </>
   );
 };
