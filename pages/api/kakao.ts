@@ -1,10 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import { app } from "@/firebase";
-
-// import necessary modules
-// const request = require("axios");
 
 // 파이어베이스 설정
 const firebaseAdmin = require("firebase-admin");
