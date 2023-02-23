@@ -103,36 +103,40 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   };
 
   const onClickReportComment = async () => {
-    const snapshot = await getDoc(
-      doc(dbService, "ReportReComments", id as string)
-    );
-    const snapshotdata = await snapshot.data();
-    const pastComment = {
-      ...snapshotdata,
-    };
-
-    if (pastComment.reporter) {
-      if (pastComment.reporter.includes(authService.currentUser?.uid)) {
-        console.log("이미신고했습니당");
-        return;
-      } else {
-        pastComment.reporter.push(authService.currentUser?.uid);
-        await updateDoc(doc(dbService, "ReportReComments", id as string), {
-          reporter: pastComment.reporter,
-        });
-        console.log("새로운 신고자!");
-      }
-    } else if (!pastComment.reporter) {
-      const newComments = {
-        commentId: id,
-        content: content,
-        reporter: [authService.currentUser?.uid],
-      };
-      await setDoc(
-        doc(dbService, "ReportReComments", id as string),
-        newComments
+    if (authService.currentUser?.uid) {
+      const snapshot = await getDoc(
+        doc(dbService, "ReportReComments", id as string)
       );
-      console.log("신고 완료");
+      const snapshotdata = await snapshot.data();
+      const pastComment = {
+        ...snapshotdata,
+      };
+
+      if (pastComment.reporter) {
+        if (pastComment.reporter.includes(authService.currentUser?.uid)) {
+          alert("이미 신고한 답글입니다.");
+          return;
+        } else {
+          pastComment.reporter.push(authService.currentUser?.uid);
+          await updateDoc(doc(dbService, "ReportReComments", id as string), {
+            reporter: pastComment.reporter,
+          });
+          alert("새로운 신고자!");
+        }
+      } else if (!pastComment.reporter) {
+        const newComments = {
+          commentId: id,
+          content: content,
+          reporter: [authService.currentUser?.uid],
+        };
+        await setDoc(
+          doc(dbService, "ReportReComments", id as string),
+          newComments
+        );
+        alert("신고 완료");
+      }
+    } else {
+      alert("로그인이 필요한 서비스입니다.");
     }
   };
 
