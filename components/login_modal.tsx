@@ -1,4 +1,5 @@
 import {
+  apiKey,
   authService,
   dbService,
   providerFacebook,
@@ -33,6 +34,10 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
 
     signInWithEmailAndPassword(authService, email, password).then(
       (userCredential) => {
+        sessionStorage.setItem(
+          apiKey as string,
+          authService.currentUser?.uid as string
+        );
         setIsOpen(false);
       }
     );
@@ -55,6 +60,11 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         // 다음은 구글 액세스 토큰을 발급하는 코드입니다. 이 토큰을 사용하여 구글 API에 접근할 수 있습니다.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
+
+        sessionStorage.setItem(
+          apiKey as string,
+          authService.currentUser?.uid as string
+        );
 
         const snapshot = await getDoc(
           doc(dbService, "Users", authService.currentUser?.uid as string)
@@ -103,6 +113,11 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         // 다음은 구글 액세스 토큰을 발급하는 코드입니다. 이 토큰을 사용하여 구글 API에 접근할 수 있습니다.
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
+
+        sessionStorage.setItem(
+          apiKey as string,
+          authService.currentUser?.uid as string
+        );
 
         const snapshot = await getDoc(
           doc(dbService, "Users", authService.currentUser?.uid as string)
@@ -166,6 +181,11 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
           )
             .then(async (userCredential: any) => {
               const user = userCredential.user;
+
+              sessionStorage.setItem(
+                apiKey as string,
+                authService.currentUser?.uid as string
+              );
 
               const snapshot = await getDoc(
                 doc(dbService, "Users", authService.currentUser?.uid as string)
