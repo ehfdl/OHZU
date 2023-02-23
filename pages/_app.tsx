@@ -21,9 +21,6 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
   return (
     <>
-      <Head>
-        <title>OHZU</title>
-      </Head>
       <Component {...pageProps} />
     </>
   );
