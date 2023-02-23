@@ -23,7 +23,7 @@ import {
 import { MdOutlineClose } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
-import { SiNaver, SiKakaotalk } from "react-icons/si";
+import { SiKakaotalk } from "react-icons/si";
 import axios from "axios";
 
 const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
@@ -148,7 +148,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         }
       })
       .catch((error) => {
-        // alert(error.message)
+        console.log(error.message);
       });
   }, [nickname, setNickname]);
 
@@ -189,7 +189,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         setIsOpen(true);
       })
       .catch((error) => {
-        // alert("다시 확인해주세요.");
         alert(error.massage);
       });
   };
@@ -202,8 +201,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
 
     let age = nowYear - newUserYear; // ex) 2023 - 2004 => 19
     let newAge = Math.abs(age);
-
-    console.log("newAge : ", newAge);
 
     if (newUserYear === 0) {
       setCheckAdult("생년월일을 확인해주세요.");

@@ -38,6 +38,10 @@ const UserPage = () => {
   const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
 
   const onClickFollowUpdate = async () => {
+    if (!authService.currentUser?.uid) {
+      alert("로그인이 필요한 서비스입니다.");
+      return true;
+    }
     const FollowerArray = userProfile.follower.includes(
       authService.currentUser?.uid
     );
@@ -153,9 +157,15 @@ const UserPage = () => {
     };
 
     getUserProfile();
-    getMyProfile();
+
     getUserPosts();
   }, []);
+  useEffect(() => {
+    if (authService.currentUser?.uid) {
+      getMyProfile();
+    }
+  }, [authService.currentUser?.uid]);
+
   useEffect(() => {
     if (userProfile) {
       getFollowerUsersProfile();

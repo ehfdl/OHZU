@@ -200,11 +200,10 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     );
 
     onSnapshot(q, (snapshot) => {
-      // q (쿼리)안에 담긴 collection 내의 변화가 생길 때 마다 매번 실행됨
       const newComments = snapshot.docs.map((doc: any) => {
         const newComment = {
           id: doc.id,
-          ...doc.data(), // doc.data() : { text, createdAt, ...  }
+          ...doc.data(),
         };
         return newComment;
       });
@@ -440,7 +439,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                   <button
                     key={i}
                     onClick={() => {
-                      router.push(`/search/${ing}`);
+                      router.push(`/search/include/${ing}`);
                     }}
                     className="inline-block mr-6 mb-6 py-1.5 px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition"
                   >

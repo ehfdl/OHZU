@@ -11,7 +11,6 @@ import {
   query,
   onSnapshot,
   orderBy,
-  where,
   updateDoc,
 } from "firebase/firestore";
 import FollowModal from "@/components/follow_modal";

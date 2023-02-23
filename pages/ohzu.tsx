@@ -3,7 +3,7 @@ import ReportCommentCard from "@/components/ohzu_page/report_comment_card";
 import ReportPostCard from "@/components/ohzu_page/report_post_card";
 import ReportReCommentCard from "@/components/ohzu_page/report_recomment_card";
 import { dbService } from "@/firebase";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, onSnapshot, query } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 
 const Ohzu = () => {
@@ -110,5 +110,3 @@ const Ohzu = () => {
 };
 
 export default Ohzu;
-
-// r9TWnAGKsxgOoKmZf4IfCLxf0Ry2

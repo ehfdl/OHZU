@@ -2,7 +2,6 @@ import { authService, dbService } from "@/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import React from "react";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 
 const UserPostCard = ({ post }: { post: any }) => {
   const defaultImg =
@@ -11,6 +10,10 @@ const UserPostCard = ({ post }: { post: any }) => {
   const like = post.like.includes(authService.currentUser?.uid);
 
   const onClickLikeBtn = async () => {
+    if (!authService.currentUser?.uid) {
+      alert("로그인이 필요한 서비스입니다.");
+      return true;
+    }
     const likeArray = post.like.includes(authService.currentUser?.uid);
 
     if (likeArray) {

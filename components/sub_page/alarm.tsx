@@ -1,6 +1,6 @@
 import { authService, dbService } from "@/firebase";
 import { doc, getDoc } from "firebase/firestore";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AiFillBell } from "react-icons/ai";
 import AlarmModal from "./alarm_modal";
 

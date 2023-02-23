@@ -1,16 +1,5 @@
-import { authService, dbService } from "@/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
-import React, { useEffect, useState, useRef, ReactElement } from "react";
-import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react"; // basic
+import React, { useRef } from "react";
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react"; // basic
 import SwiperCore, {
   Navigation,
   Pagination,
@@ -22,14 +11,7 @@ import SwiperCore, {
 import "swiper/css"; //basic
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import {
-  SwiperModule,
-  SwiperOptions,
-  NavigationEvents,
-  NavigationMethods,
-  NavigationOptions,
-  SwiperEvents,
-} from "swiper/types";
+
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import Link from "next/link";
 
