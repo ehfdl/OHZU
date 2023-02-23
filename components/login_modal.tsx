@@ -203,7 +203,8 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
             })
             .catch((error: any) => {
               const errorCode = error.code;
-              const errorMessage = error.message;
+              const errorMessage =
+                error.message("⛔️ 다시 로그인을 시도해주세요.");
               alert(errorMessage);
             });
         });
@@ -232,7 +233,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 type="text"
                 id="email"
                 placeholder="이메일을 입력해주세요."
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
               />
               <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]"></p>
             </div>
@@ -243,7 +244,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 type="password"
                 id="password"
                 placeholder="비밀번호를 입력해주세요."
-                className="w-[472px] h-[44px] p-2 pl-4 mb-3 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
               />
               <p className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary">
                 비밀번호 찾기

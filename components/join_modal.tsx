@@ -32,6 +32,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [nickname, setNickname] = useState("");
+  const [adult, setAdult] = useState(false);
   const [userYear, setUserYear] = useState("");
   const [userMonth, setUserMonth] = useState("");
   const [userDay, setUserDay] = useState("");
@@ -199,14 +200,30 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     const nowYear = nowTime.getFullYear();
     let newUserYear = Number(userYear);
 
+    let age = nowYear - newUserYear; // ex) 2023 - 2004 => 19
+    let newAge = Math.abs(age);
+
+    console.log("newAge : ", newAge);
+
     if (newUserYear === 0) {
       setCheckAdult("생년월일을 확인해주세요.");
-    } else if (nowYear - newUserYear >= 19) {
+    } else if (newAge >= 19) {
       setCheckAdult("성인입니다.");
+      setAdult(true);
     } else {
       setCheckAdult("성인이 아닙니다. 서비스 이용이 불가합니다.");
     }
   };
+
+  const yearHandler = (e: any) => {
+    if (e.length < 4) {
+      setCheckAdult("형식에 맞게 입력해주세요.");
+    } else {
+      setCheckAdult(" ");
+    }
+  };
+
+  console.log("userYear", userYear);
 
   // 간편 로그인
   // 구글 -> uid 생성 후, setDoc으로 document 생성하여 유저 추가.
@@ -361,9 +378,9 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 type="text"
                 id="email"
                 placeholder="실제 사용하는 이메일을 입력해주세요. "
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01] "
               />
-              <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]">
+              <p className="w-[472px] m-auto mb-1 text-right text-sm text-[#999999]">
                 {checkEmail ? checkEmail : null}
               </p>
             </div>
@@ -376,9 +393,9 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 type="password"
                 id="password"
                 placeholder="비밀번호는 최소 8자리로 입력해주세요."
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
               />
-              <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]">
+              <p className="w-[472px] m-auto mb-1 text-right text-sm text-[#999999]">
                 {checkPassword}
               </p>
             </div>
@@ -391,9 +408,9 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 type="password"
                 id="pwCheck"
                 placeholder="비밀번호 확인"
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1   outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
               />
-              <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]">
+              <p className="w-[472px] m-auto mb-1 text-right text-sm text-[#999999]">
                 {checkPasswordConfirm}
               </p>
             </div>
@@ -406,9 +423,9 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 type="text"
                 id="nickname"
                 placeholder="닉네임"
-                className="w-[472px] h-[44px] p-2 pl-4 mb-1 bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-105"
+                className="w-[472px] h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
               />
-              <p className="w-[472px] m-auto mb-3 text-right text-sm text-[#999999]">
+              <p className="w-[472px] m-auto mb-1 text-right text-sm text-[#999999]">
                 {checkNickname}
               </p>
             </div>
@@ -418,10 +435,14 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 <input
                   onChange={(e) => {
                     setUserYear(e.target.value);
+                    yearHandler(e.target.value);
                   }}
                   type="text"
                   placeholder="YYYY"
-                  className="w-[144px] h-11 text-center bg-[#F5F5F5]"
+                  required={true}
+                  minLength={4}
+                  maxLength={4}
+                  className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
                 />
                 <input
                   onChange={(e) => {
@@ -429,7 +450,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   }}
                   type="text"
                   placeholder="MM"
-                  className="w-[144px] h-11 text-center bg-[#F5F5F5]"
+                  maxLength={2}
+                  className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
                 />
                 <input
                   onChange={(e) => {
@@ -437,7 +459,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   }}
                   type="text"
                   placeholder="DD"
-                  className="w-[144px] h-11 text-center bg-[#F5F5F5]"
+                  maxLength={2}
+                  className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
                 />
               </div>
               <div className="flex w-[472px] m-auto mb-7 ">
@@ -456,9 +479,22 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 </label>
               </div>
             </div>
+
             <button
               type="submit"
-              className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded"
+              disabled={
+                !(
+                  email &&
+                  password &&
+                  passwordConfirm &&
+                  nickname &&
+                  adult &&
+                  userYear &&
+                  userMonth &&
+                  userDay
+                )
+              }
+              className="w-[280px] h-[48px] mb-[29px]  text-white rounded disabled:bg-[#aaa] valid:bg-primary"
             >
               회원가입
             </button>

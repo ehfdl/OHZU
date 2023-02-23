@@ -58,11 +58,10 @@ const Header = ({ ...props }: any) => {
         setCurrentUser(false);
         props.setJoinIsOpen(false);
         props.setIsOpen(false);
-
-        alert("로그아웃 되었습니다.");
       })
       .catch((err) => {
-        alert(err.message);
+        const message = err.message("로그아웃에 실패했습니다.");
+        alert(message);
       });
   };
 
