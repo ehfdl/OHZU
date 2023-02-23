@@ -267,24 +267,28 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       ...snapshotdata,
     };
 
-    if (pastPost.reporter) {
-      if (pastPost.reporter.includes(authService.currentUser?.uid)) {
-        console.log("이미신고했습니당");
-        return;
-      } else {
-        pastPost.reporter.push(authService.currentUser?.uid);
-        await updateDoc(doc(dbService, "ReportPosts", postId), {
-          reporter: pastPost.reporter,
-        });
-        console.log("새로운 신고자!");
+    if (authService.currentUser?.uid) {
+      if (pastPost.reporter) {
+        if (pastPost.reporter.includes(authService.currentUser?.uid)) {
+          alert("이미 신고한 게시물입니다.");
+          return;
+        } else {
+          pastPost.reporter.push(authService.currentUser?.uid);
+          await updateDoc(doc(dbService, "ReportPosts", postId), {
+            reporter: pastPost.reporter,
+          });
+          alert("새로운 신고자!");
+        }
+      } else if (!pastPost.reporter) {
+        const newPost = {
+          ...post,
+          reporter: [authService.currentUser?.uid],
+        };
+        await setDoc(doc(dbService, "ReportPosts", postId), newPost);
+        alert("신고 완료");
       }
-    } else if (!pastPost.reporter) {
-      const newPost = {
-        ...post,
-        reporter: [authService.currentUser?.uid],
-      };
-      await setDoc(doc(dbService, "ReportPosts", postId), newPost);
-      console.log("신고 완료");
+    } else {
+      alert("로그인이 필요한 서비스입니다.");
     }
   };
 
