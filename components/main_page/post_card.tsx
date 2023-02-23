@@ -1,16 +1,7 @@
 import { authService, dbService } from "@/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  orderBy,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Grade from "../grade";
 
 const PostCard = ({ post }: { post: any }) => {
@@ -19,6 +10,10 @@ const PostCard = ({ post }: { post: any }) => {
 
   const like = post.like.includes(authService.currentUser?.uid);
   const onClickLikeBtn = async () => {
+    if (!authService.currentUser?.uid) {
+      alert("로그인이 필요한 서비스입니다.");
+      return true;
+    }
     const likeArray = post.like.includes(authService.currentUser?.uid);
 
     if (likeArray) {
@@ -49,15 +44,7 @@ const PostCard = ({ post }: { post: any }) => {
     imageURL: "",
     point: 0,
   });
-  const [postId, setPostId] = useState("");
-  const getId = async () => {
-    const docRef = doc(dbService, "Posts", docId);
-    const docSnap = await getDoc(docRef);
-    const docID = docSnap.id;
-    setPostId(docID);
-  };
-  const [userProfile, setUserProfile] = useState<any>();
-  const [posts, setPosts] = useState<PostType[]>([]);
+
   const getUser = async () => {
     if (post?.userId) {
       const userRef = doc(dbService, "Users", post?.userId! as string);

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import React from "react";
 import { FiX } from "react-icons/fi";
 import FollowModalCard from "./sub_page/follow_modal_card";

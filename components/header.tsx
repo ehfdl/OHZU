@@ -1,14 +1,11 @@
-import { authService, dbService } from "@/firebase";
+import { authService } from "@/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LOGO_Ohju from "../public/LOGO_Ohju.png";
 import Image from "next/image";
 import Alarm from "./sub_page/alarm";
 import { useRouter } from "next/router";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import Router from "next/router";
-import { SearchCard } from "./search_card";
 
 const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
@@ -123,7 +120,7 @@ const Header = ({ ...props }: any) => {
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
         <div className="flex items-center gap-6">
           {authService.currentUser ? (
-            authService.currentUser?.uid === "r9TWnAGKsxgOoKmZf4IfCLxf0Ry2" ? (
+            authService.currentUser?.uid === "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
               <Link legacyBehavior href="/ohzu">
                 <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
                   관리페이지
