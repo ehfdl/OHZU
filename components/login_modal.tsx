@@ -152,7 +152,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
-          url: "https://ohzu-8s9obgcwg-ehfdl.vercel.app/api/kakao",
+          url: "https://ohzu.vercel.app/api/kakao",
           data: { authObj },
         }).then(function (response: any) {
           // 서버에서 보낸 jwt토큰을 받음
