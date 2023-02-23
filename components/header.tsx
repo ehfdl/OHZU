@@ -1,4 +1,4 @@
-import { authService } from "@/firebase";
+import { apiKey, authService } from "@/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -12,7 +12,15 @@ const Header = ({ ...props }: any) => {
   const [currentUser, setCurrentUser] = useState(false);
   const [search, setSearch] = useState("");
   const router = useRouter();
+  const [ssuid, setSsuid] = useState<any>("");
 
+  useEffect(() => {
+    if (sessionStorage) {
+      const is_session = sessionStorage.getItem(apiKey as string);
+      setSsuid(is_session);
+      console.log(is_session);
+    }
+  }, []);
   // 로그인&회원가입 모달창 show/hidden
   const loginModalHandler = () => {
     if (props.isOpen === false) {
@@ -55,6 +63,10 @@ const Header = ({ ...props }: any) => {
         setCurrentUser(false);
         props.setJoinIsOpen(false);
         props.setIsOpen(false);
+        sessionStorage.removeItem(apiKey as string);
+        router.push({
+          pathname: "/",
+        });
       })
       .catch((err) => {
         const message = err.message("로그아웃에 실패했습니다.");
@@ -119,7 +131,7 @@ const Header = ({ ...props }: any) => {
         </form>
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
         <div className="flex items-center gap-6">
-          {authService.currentUser ? (
+          {authService.currentUser || ssuid ? (
             authService.currentUser?.uid === "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
               <Link legacyBehavior href="/ohzu">
                 <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
@@ -128,7 +140,7 @@ const Header = ({ ...props }: any) => {
               </Link>
             ) : (
               <>
-                <Alarm />
+                <Alarm ssuid={ssuid} />
                 <Link legacyBehavior href="/mypage">
                   <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
                     마이페이지
@@ -145,7 +157,7 @@ const Header = ({ ...props }: any) => {
             </button>
           )}
 
-          {authService.currentUser ? (
+          {authService.currentUser || ssuid ? (
             <button
               onClick={logOut}
               className="w-20 h-[42px] text-[18px] duration-150 hover:text-primary"

@@ -7,6 +7,7 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import {
+  apiKey,
   authService,
   dbService,
   providerFacebook,
@@ -232,6 +233,11 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
 
+        sessionStorage.setItem(
+          apiKey as string,
+          authService.currentUser?.uid as string
+        );
+
         const snapshot = await getDoc(
           doc(dbService, "Users", authService.currentUser?.uid as string)
         );
@@ -278,6 +284,11 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         // 다음은 구글 액세스 토큰을 발급하는 코드입니다. 이 토큰을 사용하여 구글 API에 접근할 수 있습니다.
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const token = credential?.accessToken;
+
+        sessionStorage.setItem(
+          apiKey as string,
+          authService.currentUser?.uid as string
+        );
 
         const snapshot = await getDoc(
           doc(dbService, "Users", authService.currentUser?.uid as string)
@@ -342,7 +353,12 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           )
             .then(async (userCredential) => {
               const user = userCredential.user;
-              console.log("user : ", user);
+
+              sessionStorage.setItem(
+                apiKey as string,
+                authService.currentUser?.uid as string
+              );
+
               const snapshot = await getDoc(
                 doc(dbService, "Users", authService.currentUser?.uid as string)
               );

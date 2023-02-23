@@ -4,14 +4,14 @@ import React, { useEffect, useState } from "react";
 import { AiFillBell } from "react-icons/ai";
 import AlarmModal from "./alarm_modal";
 
-const Alarm = () => {
+const Alarm = ({ ssuid }: { ssuid: string }) => {
   const [alarm, setAlarm] = useState<AlarmType[]>([{}]);
 
   const [isAlarmOpenModal, setIsAlarmOpenModal] = useState(false);
 
   const getAlarm = async () => {
     const snapshot = await getDoc(
-      doc(dbService, "Users", authService.currentUser?.uid as string)
+      doc(dbService, "Users", (authService.currentUser?.uid as string) || ssuid)
     );
     const snapshotdata = await snapshot.data();
     const newPost = {
