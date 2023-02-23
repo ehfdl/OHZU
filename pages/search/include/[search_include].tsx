@@ -8,17 +8,20 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { authService, dbService } from "@/firebase";
 import Fuse from "fuse.js";
 import { SearchCard } from "@/components/search_card";
+import { GetServerSideProps } from "next";
 
 interface PropsType {
   searchWord: string;
 }
 
-export default function SearchInclude() {
+export default function SearchInclude({
+  search_include,
+}: {
+  search_include: string;
+}) {
   const router = useRouter();
-  const searchWord =
-    typeof window !== undefined
-      ? decodeURI(window.location.pathname.substring(16))
-      : "";
+
+  const searchWord = search_include;
 
   const [posts, setPosts] = useState<PostType[]>([]);
   const [searchData, setSearchData]: any = useState();
@@ -141,3 +144,10 @@ export default function SearchInclude() {
     </>
   );
 }
+export const getServerSideProps: GetServerSideProps = async ({
+  params: { search_include },
+}: any) => {
+  return {
+    props: { search_include },
+  };
+};

@@ -16,11 +16,9 @@ import UserDropdown from "@/components/sub_page/user_dropdown";
 import Grade from "@/components/grade";
 import FollowModal from "@/components/follow_modal";
 import UserCateNavbar from "@/components/navbar/user_cate_navbar";
+import { GetServerSideProps } from "next";
 
-const UserPage = () => {
-  const userId =
-    typeof window !== undefined ? window.location.pathname.substring(7) : "";
-
+const UserPage = ({ userId }: { userId: string }) => {
   const [myProfile, setMyProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<any>();
   const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
@@ -376,3 +374,11 @@ const UserPage = () => {
 };
 
 export default UserPage;
+
+export const getServerSideProps: GetServerSideProps = async ({
+  params: { userId },
+}: any) => {
+  return {
+    props: { userId },
+  };
+};
