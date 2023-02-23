@@ -5,19 +5,14 @@ import Category from "@/components/main_page/category";
 import Dropdown from "@/components/dropdown";
 import { useRouter } from "next/router";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { authService, dbService } from "@/firebase";
+import { dbService } from "@/firebase";
 import Fuse from "fuse.js";
 import { SearchCard } from "@/components/search_card";
-
-interface PropsType {
-  searchWord: string;
-}
 
 export default function Searchwords() {
   const router = useRouter();
 
   const searchWord = decodeURI(window.location.pathname.substring(8));
-  // console.log("검색창 키워드 디코드 searchWord : ", searchWord);
 
   const [posts, setPosts] = useState<PostType[]>([]);
   const [searchData, setSearchData]: any = useState();
@@ -91,8 +86,8 @@ export default function Searchwords() {
       <Header />
       <div className="max-w-[1200px] w-full m-auto ">
         <h1 className="mt-20 mb-11 text-[40px] font-bold">
-          {searchWord ? searchWord : " - "}{" "}
-          <span className="text-[#8E8E93]">검색결과</span>
+          {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
+          <span className="text-[#8E8E93]">&nbsp;검색 결과</span>
         </h1>
         <div className=" w-full flex justify-center mb-12">
           <Category setCate={setCate} />
@@ -137,46 +132,4 @@ export default function Searchwords() {
       <Footer />
     </>
   );
-}
-// 카테고리 정상 기능 코드
-// {searchData?.map((card: any) =>
-//   // 카테고리 정렬
-//   cate === "전체" ? (
-//     <SearchCard key={card.item.postId} card={card} />
-//   ) : cate === card.item.type ? (
-//     <SearchCard key={card.item.postId} card={card} />
-//   ) : null
-// )}
-
-// 인기 = like순
-// 최신 = createAt순
-// 조회 = view순
-
-{
-  /* {searchData
-              ?.sort((a: any, b: any) => {
-                if (a.item.like!.length < b.item.like!.length) return 1;
-                if (a.item.like!.length > b.item.like!.length) return -1;
-                return 0;
-              })
-              ?.map((card: any) =>
-                drop === "정렬" ? (
-                  <SearchCard key={card.item.postId} card={card} />
-                ) : drop === card.item.like ? (
-                  <SearchCard key={card.item.postId} card={card} />
-                ) : null
-              )} */
-}
-
-// 정렬
-{
-  /* {() => {
-              searchData.sort((a: any, b: any) => {
-                if (drop === "like") {
-                  return a.like.length - b.like.length;
-                } else if (drop === "view") {
-                  return a.view.length - b.view.length;
-                }
-              });
-            }} */
 }

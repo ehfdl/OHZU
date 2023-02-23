@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { authService } from "@/firebase";
 import { dbService, storageService } from "@/firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-  setDoc,
-  addDoc,
-  collection,
-} from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 import { v4 as uuidv4 } from "uuid";
 

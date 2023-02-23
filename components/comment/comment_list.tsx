@@ -259,7 +259,6 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   >
                     수정
                   </button>
-                  {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
                   <button
                     onClick={deleteToggle}
                     className="hover:text-black text-textGray"

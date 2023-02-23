@@ -1,5 +1,5 @@
 import PostCard from "./post_card";
-import { authService, dbService } from "@/firebase";
+import { dbService } from "@/firebase";
 import {
   collection,
   doc,
@@ -10,9 +10,8 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
-import React, { useEffect, useState, useRef, ReactElement } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Category from "./category";
-import Grade from "@/components/grade";
 import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react"; // basic
 import SwiperCore, {
   Navigation,
@@ -24,14 +23,6 @@ import SwiperCore, {
 import "swiper/css"; //basic
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import {
-  SwiperModule,
-  SwiperOptions,
-  NavigationEvents,
-  NavigationMethods,
-  NavigationOptions,
-  SwiperEvents,
-} from "swiper/types";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 const PostList = () => {
@@ -45,7 +36,6 @@ const PostList = () => {
 
   const [userProfile, setUserProfile] = useState<any>();
   const [posts, setPosts] = useState<PostType[]>([]);
-  const [user, setUser] = useState<UserType[]>([]);
   const [cate, setCate] = useState("전체");
   const [userPosts, setUserPosts] = useState<PostType[]>();
   const [userLikePosts, setUserLikePosts] = useState<PostType[]>();
@@ -138,15 +128,6 @@ const PostList = () => {
   const [resArr, setRestArr] = useState(posts.slice(0, 6));
   const [slicenumber, setSliceNumber] = useState(0);
 
-  const handleOnClick = () => {
-    setIsVisible(!isVisible);
-    if (isVisible) {
-      setRestArr(() => [...posts.slice(0, 6)]);
-    } else {
-      setRestArr(() => [...posts]);
-    }
-  };
-
   return (
     <div>
       <div className="w-full flex justify-center mb-4 min-h-screen">
@@ -160,20 +141,8 @@ const PostList = () => {
                   ? posts?.length
                   : posts?.filter((post) => cate === post.type).length}
               </span>
-              {/* <span className="float-right ml-2 pt-1 font-base text-base text-[#ff6161]">
-                {posts?.length}
-              </span> */}
             </div>
           </div>
-          {/* <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
-            {posts?.map((post: any) =>
-              cate === "전체" ? (
-                <PostCard key={post.postId} post={post} />
-              ) : cate === post.type ? (
-                <PostCard key={post.postId} post={post} />
-              ) : null
-            )}
-          </div> */}
 
           <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
             {cate === "전체"
@@ -188,16 +157,6 @@ const PostList = () => {
                     <PostCard key={post.postId} post={post} />
                   ))
                   .slice(0, 6 + slicenumber)}
-            {/* {posts?.length > 6 &&
-              posts
-                ?.map((post: any) =>
-                  cate === "전체" ? (
-                    <PostCard key={post.postId} post={post} />
-                  ) : cate === post.type ? (
-                    <PostCard key={post.postId} post={post} />
-                  ) : null
-                )
-                .slice(0, 6 + slicenumber)} */}
           </div>
           {posts.length > slicenumber + 6 ? (
             <button

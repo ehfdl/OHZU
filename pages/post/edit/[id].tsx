@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import { dbService, storageService } from "@/firebase";
-import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import {
   deleteObject,
   getDownloadURL,
@@ -301,8 +301,6 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
       const newPreview = savePreview.filter(
         (i: any) => i !== null && i !== undefined
       );
-
-      // downloadPreview.forEach((item: any, i) => savePreview.push(item.value));
 
       let newEditPost = {
         ...editPost,

@@ -1,7 +1,7 @@
 import { authService, dbService } from "@/firebase";
 import { doc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const MyPostCard = ({ post }: { post: any }) => {
   const defaultImg =

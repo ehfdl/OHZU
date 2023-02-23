@@ -1,6 +1,6 @@
 import { authService, dbService } from "@/firebase";
 import { addDoc, collection } from "firebase/firestore";
-import { SetStateAction, useEffect, useState } from "react";
+import { SetStateAction, useState } from "react";
 import RecommentList from "./recomment_list";
 
 interface RecommentPropsType {
