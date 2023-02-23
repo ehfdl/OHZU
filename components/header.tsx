@@ -123,7 +123,7 @@ const Header = ({ ...props }: any) => {
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
         <div className="flex items-center gap-6">
           {authService.currentUser ? (
-            authService.currentUser?.uid === "r9TWnAGKsxgOoKmZf4IfCLxf0Ry2" ? (
+            authService.currentUser?.uid === "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
               <Link legacyBehavior href="/ohzu">
                 <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
                   관리페이지

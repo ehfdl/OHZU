@@ -31,6 +31,7 @@ import {
   SwiperEvents,
 } from "swiper/types";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
+import Link from "next/link";
 
 const MainBanner = () => {
   SwiperCore.use([
@@ -74,19 +75,29 @@ const MainBanner = () => {
       >
         <div className="group w-screen">
           <SwiperSlide>
-            <img className="object-cover w-full" src="/banner/3.svg"></img>
+            <Link href={`/post/0lwyBZaw7I1IxihpDMuS`}>
+              <img className="object-cover w-full" src="/banner/3.svg"></img>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <img className="object-cover w-full" src="/banner/4.svg"></img>
+            <Link href={`/post/fgIjM61aFN0ZWdCDuw0K`}>
+              <img className="object-cover w-full" src="/banner/4.svg"></img>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <img className="object-cover w-full" src="/banner/5.svg"></img>
+            <Link href={`/post/R2MLc2GBrw4jUTLGttoA`}>
+              <img className="object-cover w-full" src="/banner/5.svg"></img>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <img className="object-cover w-full" src="/banner/6.svg"></img>
+            <Link href={`/post/knxbaDkL6B2Yg0KkEnCc`}>
+              <img className="object-cover w-full" src="/banner/6.svg"></img>
+            </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <img className="object-cover w-full" src="/banner/7.svg"></img>
+            <Link href={`/post/avQb8boBf67BFM0eIEqz`}>
+              <img className="object-cover w-full" src="/banner/7.svg"></img>
+            </Link>
           </SwiperSlide>
         </div>
         <div className="w-full">
@@ -94,7 +105,10 @@ const MainBanner = () => {
             ref={bannerPrevRef}
             className="p-2 absolute hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer left-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
           >
-            <BsChevronLeft size={25} />
+            <BsChevronLeft
+              size={25}
+              className="relative right-[2px] bottom-[1px]"
+            />
           </button>
         </div>
         <div className="">
@@ -102,7 +116,10 @@ const MainBanner = () => {
             ref={bannerNextRef}
             className="p-2 absolute hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer right-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
           >
-            <BsChevronRight size={25} />
+            <BsChevronRight
+              size={25}
+              className="relative left-[1px] bottom-[1px]"
+            />
           </button>
         </div>
       </Swiper>
