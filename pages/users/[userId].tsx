@@ -18,7 +18,8 @@ import FollowModal from "@/components/follow_modal";
 import UserCateNavbar from "@/components/navbar/user_cate_navbar";
 
 const UserPage = () => {
-  const userId = window.location.pathname.substring(7);
+  const userId =
+    typeof window !== undefined ? window.location.pathname.substring(7) : "";
 
   const [myProfile, setMyProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<any>();
