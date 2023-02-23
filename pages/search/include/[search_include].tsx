@@ -15,9 +15,10 @@ interface PropsType {
 
 export default function SearchInclude() {
   const router = useRouter();
-
-  const searchWord = decodeURI(window.location.pathname.substring(16));
-  // console.log("검색창 키워드 디코드 searchWord : ", searchWord);
+  const searchWord =
+    typeof window !== undefined
+      ? decodeURI(window.location.pathname.substring(16))
+      : "";
 
   const [posts, setPosts] = useState<PostType[]>([]);
   const [searchData, setSearchData]: any = useState();

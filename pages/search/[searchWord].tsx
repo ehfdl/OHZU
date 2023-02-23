@@ -12,7 +12,10 @@ import { SearchCard } from "@/components/search_card";
 export default function Searchwords() {
   const router = useRouter();
 
-  const searchWord = decodeURI(window.location.pathname.substring(8));
+  const searchWord =
+    typeof window !== undefined
+      ? decodeURI(window.location.pathname.substring(8))
+      : "";
 
   const [posts, setPosts] = useState<PostType[]>([]);
   const [searchData, setSearchData]: any = useState();
