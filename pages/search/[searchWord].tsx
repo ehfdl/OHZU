@@ -5,10 +5,11 @@ import Category from "@/components/main_page/category";
 import Dropdown from "@/components/dropdown";
 import { useRouter } from "next/router";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { dbService } from "@/firebase";
+import { authService, dbService } from "@/firebase";
 import Fuse from "fuse.js";
 import { SearchCard } from "@/components/search_card";
 import { GetServerSideProps } from "next";
+import Layout from "@/components/layout";
 
 export default function Searchwords({ searchWord }: { searchWord: string }) {
   const router = useRouter();
@@ -20,6 +21,22 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
 
   const [drop, setDrop] = useState("최신순");
   const [cate, setCate] = useState("전체");
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      // Firebase 연결되면 화면 표시
+      // user === authService.currentUser 와 같은 값
+      if (user) {
+        setIsLoggedIn(true);
+        console.log("로그인");
+      } else {
+        setIsLoggedIn(false);
+        console.log("로그아웃");
+      }
+    });
+  }, []);
   // DB Posts 전체 데이터 조회
 
   // 검색
@@ -81,8 +98,7 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
   }, [searchData]);
 
   return (
-    <>
-      <Header />
+    <Layout>
       <div className="max-w-[1200px] w-full m-auto ">
         <h1 className="mt-20 mb-11 text-[40px] font-bold">
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
@@ -127,9 +143,7 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </>
+    </Layout>
   );
 }
 export const getServerSideProps: GetServerSideProps = async ({

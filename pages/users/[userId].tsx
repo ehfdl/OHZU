@@ -36,6 +36,22 @@ const UserPage = ({ userId }: { userId: string }) => {
   const [dropOnOff, setDropOnOff] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      // Firebase 연결되면 화면 표시
+      // user === authService.currentUser 와 같은 값
+      if (user) {
+        setIsLoggedIn(true);
+        console.log("로그인");
+      } else {
+        setIsLoggedIn(false);
+        console.log("로그아웃");
+      }
+    });
+  }, []);
+
   const onClickFollowUpdate = async () => {
     if (!authService.currentUser?.uid) {
       alert("로그인이 필요한 서비스입니다.");
