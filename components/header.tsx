@@ -2,7 +2,7 @@ import { apiKey, authService } from "@/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import LOGO_Ohju from "../public/LOGO_Ohju.png";
+import LOGO_Ohju from "../public/LOGO.svg";
 import Image from "next/image";
 import Alarm from "./sub_page/alarm";
 import { useRouter } from "next/router";
@@ -126,7 +126,7 @@ const Header = ({ ...props }: any) => {
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
               <svg
                 aria-hidden="true"
-                className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                className="w-5 h-5 text-textGray"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -144,7 +144,7 @@ const Header = ({ ...props }: any) => {
               value={search}
               type="text"
               id="simple-search"
-              className="w-[419px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5  "
+              className="w-[419px] bg-[#f2f2f2] border  text-phGray text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5  "
               placeholder="혼합주 이름 또는 재료를 입력해주세요."
               required
             />

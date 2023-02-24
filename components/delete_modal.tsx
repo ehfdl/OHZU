@@ -35,7 +35,7 @@ const DeleteModal = ({
 
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
-      <div className="relative w-[590px] bg-white flex flex-col justify-center items-center rounded px-12 pt-20 pb-16">
+      <div className="relative w-[590px] bg-white flex flex-col justify-center items-center rounded px-12 py-16">
         <h2 className="font-bold text-3xl">{text}을 삭제하시겠어요?</h2>
         <p className="text-center text-textGray mt-6 mb-11">{content}</p>
         <div className="flex justify-between space-x-5">
@@ -68,12 +68,6 @@ const DeleteModal = ({
             </button>
           ) : null}
         </div>
-        <button
-          onClick={() => setDeleteConfirm(false)}
-          className="absolute top-0 right-0 !mt-0 p-8"
-        >
-          <CgClose size={24} className="text-iconDefault" />
-        </button>
       </div>
     </div>
   );

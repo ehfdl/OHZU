@@ -102,7 +102,7 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
       <div className="max-w-[1200px] w-full m-auto ">
         <h1 className="mt-20 mb-11 text-[40px] font-bold">
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
-          <span className="text-[#8E8E93]">&nbsp;검색 결과</span>
+          <span className="text-textGray">&nbsp;검색 결과</span>
         </h1>
         <div className=" w-full flex justify-center mb-12">
           <Category setCate={setCate} />
@@ -110,8 +110,7 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
         <div className="max-w-[1200px] m-auto min-h-screen ">
           <div className="inner-top-wrap flex justify-between items-center mb-[15px]">
             <p className="text-[20px] font-semibold">
-              게시글{" "}
-              <span className="text-[#FF6161]">{searchData?.length}</span>
+              게시글 <span className="text-primary">{searchData?.length}</span>
             </p>
             <Dropdown setDrop={setDrop} drop={drop} />
           </div>

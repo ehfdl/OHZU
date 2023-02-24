@@ -146,10 +146,10 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   }, []);
   return (
     <>
-      <li className="py-6 flex space-x-6 justify-end w-full border-b border-borderGray">
+      <li className="py-6 flex space-x-6 justify-end w-full border-b border-borderGray relative before:contents-[''] before:w-4 before:h-4 before:border-l-2 before:border-b-2 before:absolute before:border-iconDefault before:left-4 before:top-8 pl-8 before:opacity-0 first:before:opacity-100">
         <Link
           href={`/users/${recomment.userId}`}
-          className="flex flex-col items-center space-y-2 w-[13%]"
+          className="flex flex-col items-center space-y-2 w-[13%] "
         >
           <img
             src={recommentUser?.imageURL}
