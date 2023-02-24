@@ -14,6 +14,22 @@ const Header = ({ ...props }: any) => {
   const router = useRouter();
   const [ssuid, setSsuid] = useState<any>("");
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      // Firebase 연결되면 화면 표시
+      // user === authService.currentUser 와 같은 값
+      if (user) {
+        setIsLoggedIn(true);
+        console.log("로그인");
+      } else {
+        setIsLoggedIn(false);
+        console.log("로그아웃");
+      }
+    });
+  }, []);
+
   useEffect(() => {
     if (sessionStorage) {
       const is_session = sessionStorage.getItem(apiKey as string);
@@ -65,9 +81,14 @@ const Header = ({ ...props }: any) => {
         setCurrentUser(false);
         props.setJoinIsOpen(false);
         props.setIsOpen(false);
-        router.push({
-          pathname: "/",
-        });
+        if (
+          window.location.pathname === "/mypage" ||
+          window.location.pathname === "/post/write" ||
+          window.location.pathname.includes("edit")
+        )
+          router.push({
+            pathname: "/",
+          });
       })
       .catch((err) => {
         const message = err.message("로그아웃에 실패했습니다.");

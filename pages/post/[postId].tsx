@@ -54,6 +54,22 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     point: 0,
   });
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      // Firebase 연결되면 화면 표시
+      // user === authService.currentUser 와 같은 값
+      if (user) {
+        setIsLoggedIn(true);
+        console.log("로그인");
+      } else {
+        setIsLoggedIn(false);
+        console.log("로그아웃");
+      }
+    });
+  }, []);
+
   const onImgChange = (i: number) => {
     setImgIdx(i);
   };
