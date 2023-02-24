@@ -60,10 +60,11 @@ const Header = ({ ...props }: any) => {
   const logOut = () => {
     signOut(authService)
       .then(() => {
+        sessionStorage.removeItem(apiKey as string);
+        setSsuid("");
         setCurrentUser(false);
         props.setJoinIsOpen(false);
         props.setIsOpen(false);
-        sessionStorage.removeItem(apiKey as string);
         router.push({
           pathname: "/",
         });
@@ -73,7 +74,6 @@ const Header = ({ ...props }: any) => {
         alert(message);
       });
   };
-
   // 검색 실행 함수
   const SearchHanlder = (keyword: any) => {
     setSearch(keyword);

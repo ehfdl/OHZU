@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FiX } from "react-icons/fi";
 import FollowModalCard from "./sub_page/follow_modal_card";
 
@@ -19,10 +19,22 @@ const FollowModal = ({
   myProfile: any;
   getMyProfile: () => Promise<void>;
 }) => {
+  useEffect(() => {
+    document.body.style.cssText = `
+      position: fixed;
+      top: -${window.scrollY}px;
+      overflow-y: scroll;
+      width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    };
+  }, []);
   return (
     <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center">
-      <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)]" />
-      <div className="w-[588px] h-[820px] bg-white z-40 flex flex-col justify-start items-center">
+      <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
+      <div className="w-[588px] h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
           className="w-10 aspect-square absolute mt-8 ml-[500px]"
           onClick={() => setIsOpenFollowModal(false)}
