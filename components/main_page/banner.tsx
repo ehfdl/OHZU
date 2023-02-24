@@ -85,7 +85,7 @@ const MainBanner = () => {
         <div className="w-full">
           <button
             ref={bannerPrevRef}
-            className="p-2 absolute hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer left-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
+            className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer left-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
           >
             <BsChevronLeft
               size={25}
@@ -96,7 +96,7 @@ const MainBanner = () => {
         <div className="">
           <button
             ref={bannerNextRef}
-            className="p-2 absolute hidden group-hover:block hover:text-[#FF6161] hover:bg-[#FFF0F0]/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer right-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
+            className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer right-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
           >
             <BsChevronRight
               size={25}

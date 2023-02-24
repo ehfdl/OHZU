@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 body {
-  font-family: "Poppins", "Noto Sans", sans-serif;
+  font-family: "Noto Sans", sans-serif;
 }
 pre {
-  font-family: "Poppins", "Noto Sans", sans-serif !important;
+  font-family: "Noto Sans", sans-serif !important;
 }
 
 @layer base {

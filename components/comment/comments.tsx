@@ -150,9 +150,7 @@ const Comments = ({
         </button>
       </form>
 
-      <div className="w-full mt-6 border-[1px] border-[#d9d9d9]" />
-
-      <ul id="comment-list" className="mb-6">
+      <ul id="comment-list" className="mt-4 mb-6">
         {comments?.slice(offset, offset + limit).map((comment) => (
           <CommentList
             key={comment.id}

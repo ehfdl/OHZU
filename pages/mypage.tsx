@@ -211,11 +211,11 @@ const Mypage = () => {
                   <div className="flex flex-col justify-center items-center">
                     좋아요<div className="font-bold">{myLike}</div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
                     게시글<div className="font-bold">{myPosts?.length}</div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
                       setIsOpenFollowModal(true);
@@ -228,7 +228,7 @@ const Mypage = () => {
                       {myProfile?.follower.length}
                     </div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
                       setIsOpenFollowModal(true);

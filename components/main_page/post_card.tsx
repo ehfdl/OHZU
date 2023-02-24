@@ -64,18 +64,18 @@ const PostCard = ({ post }: { post: any }) => {
 
   return (
     <div className="flex">
-      <div key={post.postId} className=" border shadow mt-3  rounded ">
+      <div key={post.postId} className="mt-3">
         {/* hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70 */}
         <div className="w-full h-[284px]">
           <Link href={`/post/${post.postId}`}>
             <img
               src={post.img[0] || defaultImg}
-              className="flex w-full h-[284px] object-cover"
+              className="flex w-full h-[284px] object-cover rounded"
             />
-            <div className=" bg-black/0 w-full h-[284px] object-cover translate-y-[-285px] hover:bg-gray-300/30 hover:block"></div>
+            <div className=" bg-black/0 w-full h-[284px] object-cover translate-y-[-285px] hover:bg-gray-300/30 hover:block transition"></div>
           </Link>
         </div>
-        <div className="h-[160px] bg-white overflow-hidden ">
+        <div className="h-[136px] bg-white overflow-hidden ">
           <div className="mt-5 ml-3 flex items-center w-full">
             {post.userId === authService.currentUser?.uid ? (
               <Link href="/mypage">
@@ -105,7 +105,7 @@ const PostCard = ({ post }: { post: any }) => {
                 </div>
               </Link>
 
-              <div className="text-sm font-thin " key={user.userId}>
+              <div className="text-sm" key={user.userId}>
                 <p className="float-left text-black leading-none">
                   {user?.nickname}
                 </p>
