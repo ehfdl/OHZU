@@ -339,6 +339,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
             recomments={recomments}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
+            comment={comment}
           />
         )}
       </li>

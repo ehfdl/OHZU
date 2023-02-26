@@ -95,7 +95,7 @@ const AlarmCard = ({
                 <span className="font-bold text-textGray">{post.nickname}</span>
                 님이
                 <span className="font-bold text-textGray"> {post.title}</span>에
-                작성한 댓글
+                작성한 {post.type}
               </Link>
             </div>
 
@@ -116,7 +116,8 @@ const AlarmCard = ({
               <Link href={`/post/${post.postId}`}>
                 <span className="font-bold">{post.nickname}</span>
                 님이
-                <span className="font-bold"> {post.title}</span>에 작성한 댓글
+                <span className="font-bold"> {post.title}</span>에 작성한{" "}
+                {post.type}
               </Link>
             </div>
             <RxCross2
