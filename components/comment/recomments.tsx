@@ -88,7 +88,7 @@ const Recomments = ({
   };
 
   return (
-    <div className="w-10/12 ml-auto">
+    <div className="w-[90%] ml-auto">
       <ul className="w-full">
         {recomments.map((item) => (
           <RecommentList key={item.id} recomment={item} />
@@ -118,7 +118,7 @@ const Recomments = ({
         onClick={() => {
           setIsOpen(false);
         }}
-        className="block mx-auto mt-6 p-2 text-sm font-bold text-textGray"
+        className="block mx-auto mt-5 p-2 text-sm font-bold text-textGray"
       >
         답글 접기
       </button>

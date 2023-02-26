@@ -5,14 +5,14 @@ import Category from "@/components/main_page/category";
 import Dropdown from "@/components/dropdown";
 import { useRouter } from "next/router";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { dbService } from "@/firebase";
+import { authService, dbService } from "@/firebase";
 import Fuse from "fuse.js";
 import { SearchCard } from "@/components/search_card";
+import { GetServerSideProps } from "next";
+import Layout from "@/components/layout";
 
-export default function Searchwords() {
+export default function Searchwords({ searchWord }: { searchWord: string }) {
   const router = useRouter();
-
-  const searchWord = decodeURI(window.location.pathname.substring(8));
 
   const [posts, setPosts] = useState<PostType[]>([]);
   const [searchData, setSearchData]: any = useState();
@@ -21,6 +21,22 @@ export default function Searchwords() {
 
   const [drop, setDrop] = useState("최신순");
   const [cate, setCate] = useState("전체");
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      // Firebase 연결되면 화면 표시
+      // user === authService.currentUser 와 같은 값
+      if (user) {
+        setIsLoggedIn(true);
+        console.log("로그인");
+      } else {
+        setIsLoggedIn(false);
+        console.log("로그아웃");
+      }
+    });
+  }, []);
   // DB Posts 전체 데이터 조회
 
   // 검색
@@ -82,12 +98,11 @@ export default function Searchwords() {
   }, [searchData]);
 
   return (
-    <>
-      <Header />
+    <Layout>
       <div className="max-w-[1200px] w-full m-auto ">
         <h1 className="mt-20 mb-11 text-[40px] font-bold">
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
-          <span className="text-[#8E8E93]">&nbsp;검색 결과</span>
+          <span className="text-textGray">&nbsp;검색 결과</span>
         </h1>
         <div className=" w-full flex justify-center mb-12">
           <Category setCate={setCate} />
@@ -95,8 +110,7 @@ export default function Searchwords() {
         <div className="max-w-[1200px] m-auto min-h-screen ">
           <div className="inner-top-wrap flex justify-between items-center mb-[15px]">
             <p className="text-[20px] font-semibold">
-              게시글{" "}
-              <span className="text-[#FF6161]">{searchData?.length}</span>
+              게시글 <span className="text-primary">{searchData?.length}</span>
             </p>
             <Dropdown setDrop={setDrop} drop={drop} />
           </div>
@@ -128,8 +142,13 @@ export default function Searchwords() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </>
+    </Layout>
   );
 }
+export const getServerSideProps: GetServerSideProps = async ({
+  params: { searchWord },
+}: any) => {
+  return {
+    props: { searchWord },
+  };
+};

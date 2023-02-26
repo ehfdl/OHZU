@@ -6,7 +6,7 @@ const WriteButton = () => {
     <>
       <div className="scroll__container fixed right-[5%] bottom-[5%] z-50">
         <button
-          className="group rounded-full w-16 h-16 font-thin text-sm  bg-[#ff6161]/90 hover:bg-[#FFF0F0]  "
+          className="group rounded-full w-16 h-16 font-thin text-sm  bg-primary hover:bg-second  "
           id="write"
           type="button"
         >

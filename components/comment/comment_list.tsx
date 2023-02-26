@@ -157,34 +157,41 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
   };
 
   const onClickReportComment = async () => {
-    const snapshot = await getDoc(
-      doc(dbService, "ReportComments", id as string)
-    );
-    const snapshotdata = await snapshot.data();
-    const pastComment = {
-      ...snapshotdata,
-    };
-
-    if (pastComment.reporter) {
-      if (pastComment.reporter.includes(authService.currentUser?.uid)) {
-        console.log("이미신고했습니당");
-        return;
-      } else {
-        pastComment.reporter.push(authService.currentUser?.uid);
-        await updateDoc(doc(dbService, "ReportComments", id as string), {
-          reporter: pastComment.reporter,
-        });
-        console.log("새로운 신고자!");
-      }
-    } else if (!pastComment.reporter) {
-      const newComments = {
-        commentId: id,
-        postId: comment.postId,
-        content: comment.content,
-        reporter: [authService.currentUser?.uid],
+    if (authService.currentUser?.uid) {
+      const snapshot = await getDoc(
+        doc(dbService, "ReportComments", id as string)
+      );
+      const snapshotdata = await snapshot.data();
+      const pastComment = {
+        ...snapshotdata,
       };
-      await setDoc(doc(dbService, "ReportComments", id as string), newComments);
-      console.log("신고 완료");
+
+      if (pastComment.reporter) {
+        if (pastComment.reporter.includes(authService.currentUser?.uid)) {
+          alert("이미 신고한 댓글입니다.");
+          return;
+        } else {
+          pastComment.reporter.push(authService.currentUser?.uid);
+          await updateDoc(doc(dbService, "ReportComments", id as string), {
+            reporter: pastComment.reporter,
+          });
+          alert("새로운 신고자!");
+        }
+      } else if (!pastComment.reporter) {
+        const newComments = {
+          commentId: id,
+          postId: comment.postId,
+          content: comment.content,
+          reporter: [authService.currentUser?.uid],
+        };
+        await setDoc(
+          doc(dbService, "ReportComments", id as string),
+          newComments
+        );
+        alert("신고 완료");
+      }
+    } else {
+      alert("로그인이 필요한 서비스입니다.");
     }
   };
 

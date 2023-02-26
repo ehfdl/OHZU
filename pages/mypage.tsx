@@ -3,7 +3,7 @@ import Cate_Navbar from "@/components/navbar/cate_navbar";
 import Ohju_Navbar from "@/components/navbar/ohju_navbar";
 import ProfileModal from "@/components/sub_page/profile_modal";
 import React, { useEffect, useMemo, useState } from "react";
-import { authService, dbService } from "@/firebase";
+import { apiKey, authService, dbService } from "@/firebase";
 import {
   doc,
   getDoc,
@@ -41,8 +41,13 @@ const Mypage = () => {
   const [isOpenInforModal, setIsOpenInforModal] = useState(false);
 
   const getMyProfile = async () => {
+    const is_session = sessionStorage.getItem(apiKey as string);
     const snapshot = await getDoc(
-      doc(dbService, "Users", authService.currentUser?.uid as string)
+      doc(
+        dbService,
+        "Users",
+        (authService.currentUser?.uid as string) || (is_session as string)
+      )
     );
     const snapshotdata = await snapshot.data();
     const newProfile = {
@@ -206,11 +211,11 @@ const Mypage = () => {
                   <div className="flex flex-col justify-center items-center">
                     좋아요<div className="font-bold">{myLike}</div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
                     게시글<div className="font-bold">{myPosts?.length}</div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
                       setIsOpenFollowModal(true);
@@ -223,7 +228,7 @@ const Mypage = () => {
                       {myProfile?.follower.length}
                     </div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
                       setIsOpenFollowModal(true);

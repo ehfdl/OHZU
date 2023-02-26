@@ -10,7 +10,7 @@ export default function Dropdown({ drop, setDrop }: any) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        <Menu.Button className="inline-flex w-full justify-center  bg-white text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+        <Menu.Button className="inline-flex w-full justify-center  bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
           {drop}
           <ChevronDownIcon className="-mr-1  h-5 w-5" aria-hidden="true" />
         </Menu.Button>
@@ -33,8 +33,8 @@ export default function Dropdown({ drop, setDrop }: any) {
                   onClick={() => setDrop("최신순")}
                   href="#"
                   className={classNames(
-                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
+                    active ? "bg-second text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-primary"
                   )}
                 >
                   최신순
@@ -47,8 +47,8 @@ export default function Dropdown({ drop, setDrop }: any) {
                   onClick={() => setDrop("인기순")}
                   href="#"
                   className={classNames(
-                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
+                    active ? "bg-second text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-primary"
                   )}
                 >
                   인기순
@@ -61,8 +61,8 @@ export default function Dropdown({ drop, setDrop }: any) {
                   onClick={() => setDrop("조화순")}
                   href="#"
                   className={classNames(
-                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
+                    active ? "bg-second text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-primary"
                   )}
                 >
                   조회순

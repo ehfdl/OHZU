@@ -9,6 +9,7 @@ import Link from "next/link";
 import WriteButton from "./write_btn";
 import TopButton from "./top_btn";
 import { authService } from "@/firebase";
+import { flushSync } from "react-dom";
 
 const Layout = ({ children }: { children: any }) => {
   const [isOpen, setIsOpen] = useState(false);

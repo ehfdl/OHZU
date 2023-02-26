@@ -30,7 +30,7 @@ const TopButton = () => {
       {showButton && (
         <div className="scroll__container fixed right-[5%] bottom-[14%] z-50">
           <button
-            className="rounded-full w-16 h-16 font-light text-sm text-[#ff6161]/60 bg-white border border-[#ff6161]/50 hover:text-[#ff6161] hover:bg-[#FFF0F0] hover:border-none "
+            className="rounded-full w-16 h-16 font-light text-sm text-primary bg-white border border-primary hover:text-primary hover:bg-second hover:border-none "
             id="top"
             onClick={scrollToTop}
             type="button"
