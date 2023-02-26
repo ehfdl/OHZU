@@ -3,6 +3,7 @@ import {
   createUserWithEmailAndPassword,
   FacebookAuthProvider,
   GoogleAuthProvider,
+  sendEmailVerification,
   signInWithCustomToken,
   signInWithPopup,
 } from "firebase/auth";
@@ -23,7 +24,7 @@ import {
 import { MdOutlineClose } from "react-icons/md";
 import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
-import { SiKakaotalk } from "react-icons/si";
+import { SiNaver, SiKakaotalk } from "react-icons/si";
 import axios from "axios";
 
 const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
@@ -168,7 +169,17 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       return alert("빈칸을 채워주세요.");
     }
 
+    // 이메일 인증 구현 step
+    //1.  auth에 유저가 생성되고 나서 이메일 인증을 보내고, emailVerified가 undefined면 로그아웃?
+    //2.  createUserWithEmailAndPassword을 실행 시키고 나서 이메일 인증을 보내고, emailVerified가 true로 바뀌면 setDoc이 되게?
+
+    // 회원가입 시에 로그인이 바로된다.
+
+    // 1. 회원가입을 시킨다 (auth 등록이 되어야 emailVerified 속성에 접근가능하기 때문)
+    // 2. 이메일인증메소드를 사용하여 emailVerified 속성이 true일 때 서비스를 이용가능하게. undefined이면 로그인도 못하게 막아버리게.
+
     // 회원가입 함수
+
     createUserWithEmailAndPassword(authService, email, password)
       .then((userCredential) => {
         setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
@@ -183,10 +194,25 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           follower: [],
           recently: [],
           alarm: [],
-        });
-        alert("회원가입 성공 !");
+        })
+          .then(() => {
+            if (authService.currentUser !== null) {
+              sendEmailVerification(authService.currentUser);
+            }
+          })
+          .catch((error) => {
+            const message = error.message;
+            alert(message);
+          });
+        // alert("회원가입 성공 !");
+        alert("인증 메일을 보냈습니다. 인증 후, 서비스 이용이 가능합니다.");
         setJoinIsOpen(false);
         setIsOpen(true);
+        console.log("authService : ", authService);
+        console.log(
+          "authService 이메일 인증 여부 : "
+          // authService.authStateSubscription.auth.emailVerified
+        );
       })
       .catch((error) => {
         alert(error.massage);
@@ -219,8 +245,6 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       setCheckAdult(" ");
     }
   };
-
-  console.log("userYear", userYear);
 
   // 간편 로그인
   // 구글 -> uid 생성 후, setDoc으로 document 생성하여 유저 추가.
@@ -296,12 +320,37 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       });
   };
 
+  // 네이버
+  const { naver } = window as any;
+
+  //   const loginFormWithNaver = (props: any) => {
+  //     const initializeNaverLogin = () => {
+  //       const naverLogin = new naver.LoginWithNaverId({
+  //         // 발급받은 client ID
+  //         clientId: "1eMwvuI2VI1NqTpPlu0I",
+  //         // app 등록 시에 callbackURL에 추가했던 URL
+  //         callbackUrl: "http://localhost:3000",
+  //         isPopup: false, // popup 형식으로 띄울것인지 설정
+  //         loginButton: { color: "white", type: 1, height: "47" }, //버튼의 스타일, 타입, 크기를 지정
+  //       });
+  //       naverLogin.init();
+  //     };
+
+  //     useEffect(() => {
+  //       initializeNaverLogin();
+  //     }, []);
+  // 43
+  //     // return (
+  //     //   <div id='naverIdLogin' /> { /* id 꼭 입력해주어야 함 */}
+  //     // )
+  //   };
+
   // 카카오
   const loginFormWithKakao = () => {
     window.Kakao.Auth.login({
       success(authObj: any) {
         // 카카오 엑세스 토큰 확인용..
-        // console.log("authObj : ", authObj);
+        console.log("authObj : ", authObj);
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
@@ -504,7 +553,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 <GrFacebook className="w-10 h-10 ml-10 mr-10 border border-slate-400 cursor-pointer" />
               </div>
               {/* 네이버 로그인 구현 전 */}
-              {/* <div>
+              {/* <div onClick={loginFormWithNaver}>
                 <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
               </div> */}
               <div onClick={loginFormWithKakao}>

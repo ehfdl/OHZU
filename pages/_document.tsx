@@ -10,11 +10,12 @@ export default function Document() {
           href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;300;500;700&family=Poppins:wght@100;300;500;700&display=swap"
           rel="stylesheet"
         ></link>
+        <link rel="icon" href="/favicon/favicon.svg"></link>
         <script
           defer
           src="https://developers.kakao.com/sdk/js/kakao.js"
         ></script>
-        <link rel="icon" sizes="32x32" href="/favicon/favicon.ico"></link>
+        <script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js"></script>
       </Head>
       <body>
         <Main />

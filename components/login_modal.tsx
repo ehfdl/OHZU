@@ -10,6 +10,7 @@ import {
   signInWithCustomToken,
   signInWithEmailAndPassword,
   signInWithPopup,
+  signOut,
 } from "firebase/auth";
 import React, { SetStateAction, useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
@@ -33,7 +34,23 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
 
     signInWithEmailAndPassword(authService, email, password).then(
       (userCredential) => {
-        setIsOpen(false);
+        // console.log(
+        //   "이메일 인증 여부 : ",
+        //   authService.currentUser?.emailVerified
+        // );
+
+        const user = authService;
+
+        if (user.currentUser?.emailVerified) {
+          setIsOpen(false);
+        } else {
+          alert(
+            "인증이 되지 않은 사용자입니다. 서비스 이용에 제한이 있습니다."
+          );
+          if (authService.currentUser !== null) {
+            signOut(authService);
+          }
+        }
       }
     );
   };

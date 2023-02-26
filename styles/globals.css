@@ -4,9 +4,11 @@
 
 body {
   font-family: "Poppins", "Noto Sans", sans-serif;
+  /* font-family: "Noto Sans", "Poppins", sans-serif; */
 }
 pre {
   font-family: "Poppins", "Noto Sans", sans-serif !important;
+  /* font-family: "Noto Sans", "Poppins", sans-serif !important; */
 }
 
 @layer base {
