@@ -17,7 +17,7 @@ export const app = initializeApp(firebaseConfig);
 export const dbService = getFirestore(app);
 export const authService = getAuth(app);
 export const storageService = getStorage(app);
-
+export const apiKey = firebaseConfig.apiKey;
 // 구글
 export const providerGoogle = new GoogleAuthProvider();
 // 페이스북

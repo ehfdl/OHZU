@@ -64,6 +64,19 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
   };
 
   useEffect(() => {
+    document.body.style.cssText = `
+      position: fixed;
+      top: -${window.scrollY}px;
+      overflow-y: scroll;
+      width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    };
+  }, []);
+
+  useEffect(() => {
     if (imgFile) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -81,7 +94,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
 
   return (
     <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
-      <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)]" />
+      <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
       <div className="w-[588px] h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
           className="w-10 aspect-square absolute mt-7 ml-[500px]"

@@ -46,7 +46,7 @@ const AlarmModal = ({
         onClick={() => setIsAlarmOpenModal(false)}
         className="w-full h-full fixed left-0 top-0 z-10"
       />
-      <div className="w-[348px] h-[480px] py-3 px-3 mt-6 left-0 rounded bg-white border-primary border-[1px] z-20 flex flex-col justify-start items-center absolute">
+      <div className="w-[348px] h-[480px] py-3 px-3 mt-4 left-52 rounded bg-white border-primary border-[1px] z-20 flex flex-col justify-start items-center absolute">
         <div className="w-full py-3 px-3 text-[14px] flex justify-between">
           <div className="font-bold">전체 알림</div>
           <div className="flex gap-6 text-textGray">

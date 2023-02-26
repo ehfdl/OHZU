@@ -16,10 +16,9 @@ import UserDropdown from "@/components/sub_page/user_dropdown";
 import Grade from "@/components/grade";
 import FollowModal from "@/components/follow_modal";
 import UserCateNavbar from "@/components/navbar/user_cate_navbar";
+import { GetServerSideProps } from "next";
 
-const UserPage = () => {
-  const userId = window.location.pathname.substring(7);
-
+const UserPage = ({ userId }: { userId: string }) => {
   const [myProfile, setMyProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<any>();
   const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
@@ -36,6 +35,22 @@ const UserPage = () => {
 
   const [dropOnOff, setDropOnOff] = useState(false);
   const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      // Firebase 연결되면 화면 표시
+      // user === authService.currentUser 와 같은 값
+      if (user) {
+        setIsLoggedIn(true);
+        console.log("로그인");
+      } else {
+        setIsLoggedIn(false);
+        console.log("로그아웃");
+      }
+    });
+  }, []);
 
   const onClickFollowUpdate = async () => {
     if (!authService.currentUser?.uid) {
@@ -263,11 +278,11 @@ const UserPage = () => {
                   <div className="flex flex-col justify-center items-center">
                     좋아요<div className="font-bold">{userLike}</div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
                   <div className="flex flex-col justify-center items-center">
                     게시글<div className="font-bold">{userPosts?.length}</div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
 
                   <div
                     onClick={() => {
@@ -281,7 +296,7 @@ const UserPage = () => {
                       {userProfile?.follower.length}
                     </div>
                   </div>
-                  <div className="h-8 border-[1px] border-[#c9c5c5]" />
+                  <div className="h-8 border-r border-[#c9c5c5]" />
 
                   <div
                     onClick={() => {
@@ -375,3 +390,11 @@ const UserPage = () => {
 };
 
 export default UserPage;
+
+export const getServerSideProps: GetServerSideProps = async ({
+  params: { userId },
+}: any) => {
+  return {
+    props: { userId },
+  };
+};

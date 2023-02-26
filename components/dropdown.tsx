@@ -33,8 +33,8 @@ export default function Dropdown({ drop, setDrop }: any) {
                   onClick={() => setDrop("최신순")}
                   href="#"
                   className={classNames(
-                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
+                    active ? "bg-second text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-primary"
                   )}
                 >
                   최신순
@@ -47,8 +47,8 @@ export default function Dropdown({ drop, setDrop }: any) {
                   onClick={() => setDrop("인기순")}
                   href="#"
                   className={classNames(
-                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
+                    active ? "bg-second text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-primary"
                   )}
                 >
                   인기순
@@ -61,8 +61,8 @@ export default function Dropdown({ drop, setDrop }: any) {
                   onClick={() => setDrop("조화순")}
                   href="#"
                   className={classNames(
-                    active ? "bg-[#FFF0F0] text-gray-900" : "text-gray-700",
-                    "block px-4 py-2 text-sm active:bg-white active:text-[#FF6161]"
+                    active ? "bg-second text-gray-900" : "text-gray-700",
+                    "block px-4 py-2 text-sm active:bg-white active:text-primary"
                   )}
                 >
                   조회순

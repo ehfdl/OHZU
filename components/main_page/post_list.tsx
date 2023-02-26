@@ -160,14 +160,14 @@ const PostList = () => {
           </div>
           {posts.length > slicenumber + 6 ? (
             <button
-              className="w-[100px] h-[40px] mt-6 bg-transparent border border-[#FF6161]/50 text-[#FF6161] font-thin hover:bg-[#FFF0F0] hover:border-none rounded-3xl hover:text-[#FF6161] hover:font-bold"
+              className="w-[100px] h-[40px] mt-9 bg-transparent border border-primary text-primary hover:bg-second hover:border-none rounded-full hover:text-primary hover:font-bold"
               onClick={() => setSliceNumber(slicenumber + 6)}
             >
               더보기
             </button>
           ) : (
             <button
-              className="w-[100px] h-[40px] mt-6 bg-transparent border border-[#FF6161]/50 text-[#FF6161] font-thin hover:bg-[#FFF0F0] hover:border-none rounded-3xl hover:text-[#FF6161] hover:font-bold"
+              className="w-[100px] h-[40px] mt-6 bg-transparent border border-primary text-primary font-thin hover:bg-second hover:border-none rounded-3xl hover:text-primary hover:font-bold"
               onClick={() => setSliceNumber(0)}
             >
               접기

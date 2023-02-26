@@ -8,16 +8,21 @@ import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { authService, dbService } from "@/firebase";
 import Fuse from "fuse.js";
 import { SearchCard } from "@/components/search_card";
+import { GetServerSideProps } from "next";
+import Layout from "@/components/layout";
 
 interface PropsType {
   searchWord: string;
 }
 
-export default function SearchInclude() {
+export default function SearchInclude({
+  search_include,
+}: {
+  search_include: string;
+}) {
   const router = useRouter();
 
-  const searchWord = decodeURI(window.location.pathname.substring(16));
-  // console.log("검색창 키워드 디코드 searchWord : ", searchWord);
+  const searchWord = search_include;
 
   const [posts, setPosts] = useState<PostType[]>([]);
   const [searchData, setSearchData]: any = useState();
@@ -27,6 +32,21 @@ export default function SearchInclude() {
   const [drop, setDrop] = useState("최신순");
   const [cate, setCate] = useState("전체");
   // DB Posts 전체 데이터 조회
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    authService.onAuthStateChanged((user) => {
+      // Firebase 연결되면 화면 표시
+      // user === authService.currentUser 와 같은 값
+      if (user) {
+        setIsLoggedIn(true);
+        console.log("로그인");
+      } else {
+        setIsLoggedIn(false);
+        console.log("로그아웃");
+      }
+    });
+  }, []);
 
   // 검색
   const getSearch = () => {
@@ -87,12 +107,11 @@ export default function SearchInclude() {
   }, [searchData]);
 
   return (
-    <>
-      <Header />
+    <Layout>
       <div className="max-w-[1200px] w-full m-auto ">
         <h1 className="mt-20 mb-11 text-[40px] font-bold">
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
-          <span className="text-[#8E8E93] font-normal">
+          <span className="text-textGray font-normal">
             &nbsp;와(과) 연관된 OHZU
           </span>
         </h1>
@@ -102,8 +121,7 @@ export default function SearchInclude() {
         <div className="max-w-[1200px] m-auto min-h-screen ">
           <div className="inner-top-wrap flex justify-between items-center mb-[15px]">
             <p className="text-[20px] font-semibold">
-              게시글{" "}
-              <span className="text-[#FF6161]">{searchData?.length}</span>
+              게시글 <span className="text-primary">{searchData?.length}</span>
             </p>
             <Dropdown setDrop={setDrop} drop={drop} />
           </div>
@@ -135,8 +153,13 @@ export default function SearchInclude() {
           </div>
         </div>
       </div>
-
-      <Footer />
-    </>
+    </Layout>
   );
 }
+export const getServerSideProps: GetServerSideProps = async ({
+  params: { search_include },
+}: any) => {
+  return {
+    props: { search_include },
+  };
+};
