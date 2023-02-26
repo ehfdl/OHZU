@@ -89,6 +89,7 @@ const Comments = ({
       postId: postId,
       nickname: currentUser?.nickname,
       title: post?.title,
+      type: "댓글",
       createdAt: Date.now(),
       isDone: false,
     };

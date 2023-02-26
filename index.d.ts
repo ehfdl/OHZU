@@ -61,6 +61,7 @@ declare interface AlarmType {
   nickname?: string;
   createdAt?: string;
   title?: string;
+  type?: string;
   isDone?: boolean;
 }
 
