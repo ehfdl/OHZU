@@ -28,6 +28,13 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
 
+  // save email
+
+  const SAVE_EMAIL_ID_KEY = "SAVE_EMAIL_ID_KEY";
+  const SAVE_EMAIL_ID_CHECKED_KEY = "SAVE_EMAIL_ID_CHECKED_KEY";
+
+  const [checkedSaveEmail, setCheckedSaveEmail] = useState(false);
+
   // email, password 정규식
   const emailRegEx =
     /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
@@ -36,17 +43,15 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
   const signIn = (e: any) => {
     e.preventDefault();
 
-    signInWithEmailAndPassword(authService, email, password).then(
-      (userCredential) => {
-        console.log(
-          "이메일 인증 여부 : ",
-          authService.currentUser?.emailVerified
-        );
-        console.log("유저 이메일 : ", authService.currentUser?.email);
-
+    signInWithEmailAndPassword(authService, email, password)
+      .then((userCredential) => {
         const user = authService;
 
         if (user.currentUser?.emailVerified) {
+          localStorage.setItem(SAVE_EMAIL_ID_CHECKED_KEY, checkedSaveEmail);
+          if (checkedSaveEmail) {
+            localStorage.setItem(SAVE_EMAIL_ID_KEY, email);
+          }
           sessionStorage.setItem(
             apiKey as string,
             authService.currentUser?.uid as string
@@ -60,8 +65,17 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
             signOut(authService);
           }
         }
-      }
-    );
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log("errorMessage:", errorMessage);
+        if (errorMessage.includes("user-not-found")) {
+          alert("가입되지 않은 회원입니다.");
+          return;
+        } else if (errorMessage.includes("wrong-password")) {
+          alert("비밀번호가 잘못 되었습니다.");
+        }
+      });
   };
 
   // 이메일 유효성 검사
@@ -275,6 +289,23 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
   };
 
   useEffect(() => {
+    let localEmailChecked = JSON.parse(
+      localStorage.getItem(SAVE_EMAIL_ID_CHECKED_KEY) as string
+    );
+
+    if (!localEmailChecked) {
+      localStorage.setItem(SAVE_EMAIL_ID_KEY, "");
+    }
+
+    let localEmail = localStorage.getItem(SAVE_EMAIL_ID_KEY);
+
+    if (localEmail !== null) {
+      setEmail(localEmail);
+    }
+    if (localEmailChecked) {
+      setCheckedSaveEmail(true);
+    }
+
     document.body.style.cssText = `
       position: fixed;
       top: -${window.scrollY}px;
@@ -286,6 +317,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
       window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
     };
   }, []);
+  console.log("email", email);
 
   return (
     <>
@@ -307,6 +339,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                   onChange={(e) => setEmail(e.target.value)}
                   type="text"
                   id="email"
+                  defaultValue={email}
                   placeholder="이메일을 입력해주세요."
                   className="w-[472px] h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
                 />
@@ -336,11 +369,14 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                     className="flex  items-center mb-[48px]"
                   >
                     <input
-                      id="auto_login"
+                      id="saveEmail"
+                      name="saveEmail"
                       type="checkbox"
-                      className="w-5 h-5"
+                      checked={checkedSaveEmail}
+                      className="w-5 h-5 cursor-pointer"
+                      onChange={() => setCheckedSaveEmail(!checkedSaveEmail)}
                     />
-                    <span className="ml-2 ">자동 로그인</span>
+                    <span className="ml-2 ">이메일 저장하기</span>
                   </label>
                 </div>
               </div>
