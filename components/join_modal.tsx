@@ -357,27 +357,83 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   // 네이버
   const { naver } = window as any;
 
-  //   const loginFormWithNaver = (props: any) => {
-  //     const initializeNaverLogin = () => {
-  //       const naverLogin = new naver.LoginWithNaverId({
-  //         // 발급받은 client ID
-  //         clientId: "1eMwvuI2VI1NqTpPlu0I",
-  //         // app 등록 시에 callbackURL에 추가했던 URL
-  //         callbackUrl: "http://localhost:3000",
-  //         isPopup: false, // popup 형식으로 띄울것인지 설정
-  //         loginButton: { color: "white", type: 1, height: "47" }, //버튼의 스타일, 타입, 크기를 지정
-  //       });
-  //       naverLogin.init();
-  //     };
+  const loginFormWithNaver = (props: any) => {
+    const naverLogin = new naver.LoginWithNaverId({
+      // 발급받은 client ID
+      clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
+      // app 등록 시에 callbackURL에 추가했던 URL
+      callbackUrl: "http://localhost:3000",
+      isPopup: false, // popup 형식으로 띄울것인지 설정
+      loginButton: { color: "white", type: 1, height: "40" }, //버튼의 스타일, 타입, 크기를 지정
+    });
+      const a = naverLogin.init();
+      console.log('네이버 로그인 이닛 : ', a)
+      
+      const token = location.hash;
+      console.log("토큰 : ", token);
+    axios({
+      method: "POST",
+      // url: "https://ohzu.vercel.app/api/kakao",
+      url: "http://localhost:3000",
+      data: { token },
+    }).then(function (response) {
+      // 서버에서 보낸 jwt토큰을 받음
+      console.log(response);
+      localStorage.setItem("data", JSON.stringify(response.data));
+      console.log("responseData", response.data);
 
-  //     useEffect(() => {
-  //       initializeNaverLogin();
-  //     }, []);
-  // 43
-  //     // return (
-  //     //   <div id='naverIdLogin' /> { /* id 꼭 입력해주어야 함 */}
-  //     // )
-  //   };
+      return signInWithCustomToken(
+        authService,
+        `${response.data.firebaseToken}`
+      )
+        .then(async (userCredential) => {
+          const user = userCredential.user;
+          console.log("네이버 토큰 : ", response.data);
+          sessionStorage.setItem(
+            apiKey as string,
+            authService.currentUser?.uid as string
+          );
+
+          const snapshot = await getDoc(
+            doc(dbService, "Users", authService.currentUser?.uid as string)
+          );
+          const snapshotdata = await snapshot.data();
+          const newProfile = {
+            ...snapshotdata,
+          };
+
+          if (!newProfile.userId) {
+            setDoc(
+              doc(dbService, "Users", authService.currentUser?.uid as string),
+              {
+                userId: authService.currentUser?.uid,
+                email: "",
+                nickname: "네이버",
+                imageURL:
+                  "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
+                introduce: "",
+                point: "",
+                following: [],
+                follower: [],
+                recently: [],
+                alarm: [],
+              }
+            );
+            alert("네이버 간편 회원가입 성공!");
+          }
+          setJoinIsOpen(false);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert(errorMessage);
+        });
+    });
+  };
+
+  // useEffect(() => {
+  //   initializeNaverLogin();
+  // }, []);
 
   // 카카오
   const loginFormWithKakao = () => {
@@ -388,7 +444,8 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
-          url: "https://ohzu.vercel.app/api/kakao",
+          // url: "https://ohzu.vercel.app/api/kakao",
+          url: "http://localhost:3000",
           data: { authObj },
         }).then(function (response) {
           // 서버에서 보낸 jwt토큰을 받음
@@ -402,7 +459,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           )
             .then(async (userCredential) => {
               const user = userCredential.user;
-
+              console.log("카카오 토큰 : ", response.data);
               sessionStorage.setItem(
                 apiKey as string,
                 authService.currentUser?.uid as string
@@ -454,6 +511,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     });
   };
 
+  // 화면 고정
   useEffect(() => {
     document.body.style.cssText = `
       position: fixed;
@@ -625,11 +683,11 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   <GrFacebook className="w-10 h-10 ml-10 mr-10 border border-slate-400 cursor-pointer" />
                 </div>
                 {/* 네이버 로그인 구현 전 */}
-                {/* <div onClick={loginFormWithNaver}>
-                <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
-              </div> */}
+                <div onClick={loginFormWithNaver} id="naverIdLogin">
+                  <SiNaver className=" w-10 h-10 border border-slate-400 cursor-pointer" />
+                </div>
                 <div onClick={loginFormWithKakao}>
-                  <SiKakaotalk className="w-10 h-10 border bg-white cursor-pointer" />
+                  <SiKakaotalk className=" w-10 h-10 border bg-white cursor-pointer" />
                 </div>
               </div>
               <div className="w-[473px] m-auto flex justify-center text-sm">
@@ -651,5 +709,4 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
     </>
   );
 };
-
 export default JoinModal;
