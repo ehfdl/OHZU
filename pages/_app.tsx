@@ -7,7 +7,7 @@ import { useEffect } from "react";
 declare global {
   interface Window {
     Kakao: any;
-    // Naver: any;
+    // naver: any;
   }
 }
 
@@ -16,6 +16,7 @@ export default function App({ Component, pageProps }: AppProps) {
     try {
       if (!window.Kakao.isInitialized() && window.Kakao) {
         window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_KEY);
+        // window.naver.init(process.env.NEXT_PUBLIC_NAVER_CLIENT_ID);
       }
     } catch (e) {
       console.log(e);
@@ -24,6 +25,9 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Head>
+        <title>OHZU</title>
+      </Head>
       <Component {...pageProps} />
     </>
   );

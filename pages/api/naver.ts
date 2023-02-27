@@ -11,8 +11,8 @@ const firebaseAdmin = require("firebase-admin");
 // 위치는 service-account.json을 동일한 폴더 app.js에 수동으로 넣어야 합니다.
 const serviceAccount = require("../../public/service-account.json");
 
-// 엑세스 토큰 기반으로 사용자 프로필 조회를 위한 카카오 API 요청 url
-const requestMeUrl = "https://kapi.kakao.com/v2/user/me?secure_resource=true";
+// 엑세스 토큰 기반으로 사용자 프로필 조회를 위한 네이버 API 요청 url
+const requestMeUrl = "https://nid.naver.com/oauth2.0/authorize";
 
 // if (!firebaseAdmin.apps.length) {
 if (!firebaseAdmin.apps.length) {
@@ -23,9 +23,9 @@ if (!firebaseAdmin.apps.length) {
 }
 
 /**
- * requestMe - Kakao API에서 사용자 프로필 반환
+ * requestMe - 네이버 API에서 사용자 프로필 반환
  *
- * @param  {String} kakaoAccessToken kakaoAccessToken Kakao 로그인 API에서 조회한 액세스 토큰
+ * @param  {String} naverAccessToken kakaoAccessToken Kakao 로그인 API에서 조회한 액세스 토큰
  * @return {Promiise<Response>}      Promise 사용자 프로필 응답
  */
 // export function requestMe(kakaoAccessToken: any) {
@@ -36,11 +36,27 @@ if (!firebaseAdmin.apps.length) {
 //     url: requestMeUrl,
 //   });
 // }
-export function requestMe(kakaoAccessToken: any) {
-  console.log("Requesting user profile from Kakao API server.");
-  console.log("카카오 엑세스토큰 : ", kakaoAccessToken);
-  return axios.get(requestMeUrl, {
-    headers: { Authorization: "Bearer " + kakaoAccessToken },
+
+// export function requestMe(naverAccessToken: any) {
+//   console.log("Requesting user profile from Kakao API server.");
+//   console.log("네이버 엑세스토큰 : ", naverAccessToken);
+//   return axios.get(requestMeUrl, {
+//     headers: { Authorization: "Bearer " + naverAccessToken },
+//   });
+// }
+
+const naverRequestMeUrl = "https://openapi.naver.com/v1/nid/me";
+
+function requestMe(naverAccessToken: any) {
+  console.log("Requesting user profile from Naver API server.");
+  return request({
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + naverAccessToken,
+      "X-Naver-Client-Id": "1eMwvuI2VI1NqTpPlu0I",
+      "X-Naver-Client-Secret": "0pAeucjdi5",
+    },
+    url: naverRequestMeUrl,
   });
 }
 
@@ -62,7 +78,7 @@ export function updateOrCreateUser(
 ) {
   console.log("updating or creating a firebase user");
   const updateParams = {
-    provider: "KAKAO",
+    provider: "NAVER",
     displayName: displayName,
     photoURL: "",
     uid: "",
@@ -96,7 +112,7 @@ export function updateOrCreateUser(
 /**
  * createFirebaseToken - Firebase Admin SDK를 사용하여 Firebase 토큰을 반환합니다.
  *
- * @param   { String } 카카오 로그인 API의 kakaoAccessToken 액세스 토큰
+ * @param   { String } 카카오 로그인 API의 naverAccessToken 액세스 토큰
  * @return { Promise<String> } 약속의 Firebase 토큰
  */
 
@@ -138,11 +154,11 @@ export function updateOrCreateUser(
 //     });
 // }
 
-export function createFirebaseToken(kakaoAccessToken: any) {
+export function createFirebaseToken(naverAccessToken: any) {
   return axios
     .get(requestMeUrl, {
       headers: {
-        Authorization: "Bearer " + kakaoAccessToken,
+        Authorization: "Bearer " + naverAccessToken,
 
         // "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
       },
@@ -184,7 +200,7 @@ export function createFirebaseToken(kakaoAccessToken: any) {
         firebaseAdmin
           .auth()
           // .authService
-          .createCustomToken(userId, { provider: "KAKAO" })
+          .createCustomToken(userId, { provider: "NAVER" })
       );
     });
 }
@@ -227,7 +243,7 @@ export default function handler(
   createFirebaseToken(authObj.access_token)
     .then((firebaseToken: string) => {
       console.log(firebaseToken);
-      console.log("파이어베이스 토큰 완성!!");
+      console.log("네이버 파이어베이스 토큰 완성!!");
       return res.status(200).send({ firebaseToken: firebaseToken });
     })
     .catch((error: any) => {

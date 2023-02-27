@@ -7,7 +7,9 @@ import {
 } from "@/firebase";
 import {
   FacebookAuthProvider,
+  getAuth,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithCustomToken,
   signInWithEmailAndPassword,
   signInWithPopup,
@@ -24,6 +26,7 @@ import axios from "axios";
 const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [modal, setModal] = useState(false);
 
   // email, password 정규식
   const emailRegEx =
@@ -35,10 +38,11 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
 
     signInWithEmailAndPassword(authService, email, password).then(
       (userCredential) => {
-        // console.log(
-        //   "이메일 인증 여부 : ",
-        //   authService.currentUser?.emailVerified
-        // );
+        console.log(
+          "이메일 인증 여부 : ",
+          authService.currentUser?.emailVerified
+        );
+        console.log("유저 이메일 : ", authService.currentUser?.email);
 
         const user = authService;
 
@@ -68,6 +72,24 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
       }
     }
   }, [setEmail]);
+
+  // 비밀번호 재설정 함수 (비밀번호 찾기)
+  const resetPassword = () => {
+    if (email !== "") {
+      sendPasswordResetEmail(authService, email)
+        .then(function () {
+          console.log("비밀번호 리셋, 이메일 전송 완료");
+        })
+        .catch(function (error: any) {
+          const errorMessage = error.message;
+          if (errorMessage.includes("user-not-found")) {
+            alert("가입되지 않은 이메일입니다.");
+          }
+        });
+    } else {
+      console.log("이메일이 틀림,");
+    }
+  };
 
   // 간편 로그인
   // 구글 -> uid 생성 후, setDoc으로 document 생성하여 유저 추가.
@@ -299,9 +321,15 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                   placeholder="비밀번호를 입력해주세요."
                   className="w-[472px] h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
                 />
-                <p className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary">
+                <p
+                  onClick={() => {
+                    setModal(true);
+                  }}
+                  className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary"
+                >
                   비밀번호 찾기
                 </p>
+
                 <div className="flex w-[472px] m-auto">
                   <label
                     htmlFor="auto_login"
@@ -316,6 +344,18 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                   </label>
                 </div>
               </div>
+
+              <div>
+                <span>비밀번호 재설정</span>
+                <input
+                  type="text"
+                  placeholder="재설정 코드를 받을 이메일을 입력하세요."
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="border bg-red-200"
+                />
+                <div onClick={resetPassword}>♥️</div>
+              </div>
+
               <div className="buttonWrap mb-4">
                 <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded   ">
                   로그인
