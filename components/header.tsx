@@ -61,7 +61,6 @@ const Header = ({ ...props }: any) => {
       props.setIsOpen(false);
     }
   }, [props.setIsOpen]);
-  console.log("props.isOpen : ", props.isOpen);
 
   useEffect(() => {
     if (authService.currentUser?.uid) {
@@ -72,7 +71,6 @@ const Header = ({ ...props }: any) => {
       props.setIsOpen(false);
     }
   }, [props.setJoinIsOpen]);
-  console.log("joinIsOpen : ", props.joinIsOpen);
 
   // 로그아웃
   const logOut = () => {
