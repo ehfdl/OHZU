@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import Layout from "@/components/layout";
 import { useState } from "react";
 import { dbService, storageService, authService } from "@/firebase";
@@ -6,7 +6,8 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { addDoc, collection } from "firebase/firestore";
 import { BsPlusLg, BsFillXCircleFill } from "react-icons/bs";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
+import Mmodal from "@/components/mmodal";
 
 const Post = () => {
   const router = useRouter();
@@ -15,8 +16,7 @@ const Post = () => {
     dateStyle: "long",
     timeStyle: "medium",
   }).format(date);
-
-  const [form, setForm] = useState<WriteForm>({
+  const initialForm = {
     userId: authService.currentUser?.uid as string,
     img: [""],
     title: "",
@@ -27,7 +27,9 @@ const Post = () => {
     like: [],
     createdAt: dateForm,
     view: 0,
-  });
+  };
+
+  const [form, setForm] = useState<WriteForm>(initialForm);
   const [ingre, setIngre] = useState({
     ing_01: "",
     ing_02: "",
@@ -52,6 +54,11 @@ const Post = () => {
   const [preview_01, setPreview_01] = useState<string | null>();
   const [preview_02, setPreview_02] = useState<string | null>();
   const [preview_03, setPreview_03] = useState<string | null>();
+
+  const [changeForm, setChangeForm] = useState(false);
+  const [toUrl, setToUrl] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
+  const [openmmodal, setopenMmodal] = useState(false);
 
   const onChangeValue = (
     event:
@@ -177,6 +184,51 @@ const Post = () => {
     }
   };
 
+  const handleBeforeunload = (e: BeforeUnloadEvent) => {
+    if (changeForm) {
+      e.preventDefault();
+      e.returnValue = "";
+
+      return "";
+    }
+    return undefined;
+  };
+
+  const routeChangeStart = useCallback(
+    (url: string) => {
+      if (
+        router.asPath.split("?")[0] !== url.split("?")[0] &&
+        !confirmed &&
+        changeForm
+      ) {
+        setToUrl(url);
+        setopenMmodal(true);
+        router.events.emit("routeChangeError");
+        throw "Abort route change. Please ignore this error.";
+      }
+    },
+    [confirmed, changeForm, router.asPath, router.events, openmmodal]
+  );
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeunload);
+    router.events.on("routeChangeStart", routeChangeStart);
+    if (router.asPath !== window.location.pathname) {
+      window.history.pushState("", "", router.asPath);
+    }
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeunload);
+      router.events.off("routeChangeStart", routeChangeStart);
+    };
+  }, [routeChangeStart, router.events]);
+
+  useEffect(() => {
+    if (confirmed) {
+      setopenMmodal(false);
+      router.replace(toUrl);
+    }
+  }, [toUrl, confirmed]);
+
   useEffect(() => {
     validateChangePost();
   }, [form]);
@@ -184,6 +236,27 @@ const Post = () => {
   useEffect(() => {
     validateChangeIng();
   }, [ingre]);
+
+  useEffect(() => {
+    if (
+      form.title === "" &&
+      form.text === "" &&
+      form.recipe === "" &&
+      preview_01 === null &&
+      preview_02 === null &&
+      preview_03 === null &&
+      ingre.ing_01 === "" &&
+      ingre.ing_02 === "" &&
+      ingre.ing_03 === "" &&
+      ingre.ing_04 === "" &&
+      ingre.ing_05 === "" &&
+      ingre.ing_06 === ""
+    ) {
+      setChangeForm(false);
+    } else {
+      setChangeForm(true);
+    }
+  }, [form, ingre, preview_01, preview_02, preview_03]);
 
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -243,7 +316,7 @@ const Post = () => {
         };
 
         await addDoc(collection(dbService, "Posts"), newForm);
-
+        setConfirmed(true);
         router.push("/");
       } else {
         let newForm = {
@@ -253,7 +326,7 @@ const Post = () => {
         };
 
         await addDoc(collection(dbService, "Posts"), newForm);
-
+        setConfirmed(true);
         router.push("/");
       }
     }
@@ -577,6 +650,9 @@ const Post = () => {
           </div>
         </form>
       </div>
+      {openmmodal ? (
+        <Mmodal setConfirmed={setConfirmed} setopenMmodal={setopenMmodal} />
+      ) : null}
     </Layout>
   );
 };
