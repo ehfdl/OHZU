@@ -115,7 +115,7 @@ const Header = ({ ...props }: any) => {
   return (
     <div className="flex w-full sm:h-[118px] mt-5 sticky top-0 z-[8] justify-between items-center bg-white">
       <Link legacyBehavior href="/">
-        <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-4 w-[94px] h-6 justify-center flex items-center cursor-pointer">
+        <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
           <Image src={LOGO_Ohju} alt="Ohju LOGO" />
         </div>
       </Link>
@@ -135,18 +135,6 @@ const Header = ({ ...props }: any) => {
           <label htmlFor="simple-search" className=""></label>
           <div className="relative w-full">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              {/* <svg
-                aria-hidden="true"
-                className="w-5 h-5 text-textGray"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                ></path>
-              </svg> */}
               <Image
                 src="/image/search.svg"
                 width="24"
@@ -169,6 +157,7 @@ const Header = ({ ...props }: any) => {
           </div>
         </form>
 
+        {/* 반응형 아님 */}
         {/* <form className="mr-9 flex items-center bg-" onSubmit={onSubmitHandler}>
           <label htmlFor="simple-search" className=""></label>
           <div className="relative w-full">
@@ -196,12 +185,12 @@ const Header = ({ ...props }: any) => {
         </form> */}
 
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center sm:gap-6 mr-5 ml-1 sm:ml-0 sm:mr-0 ">
           {authService.currentUser || ssuid ? (
             authService.currentUser?.uid === "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
               <Link legacyBehavior href="/ohzu">
-                <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
-                  관리페이지
+                <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                  <span className="hidden sm:block">관리페이지</span>
                 </button>
               </Link>
             ) : (
@@ -209,7 +198,7 @@ const Header = ({ ...props }: any) => {
                 <Alarm ssuid={ssuid} />
                 <Link legacyBehavior href="/mypage">
                   <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
-                    마이페이지
+                    <span className="hidden sm:block">마이페이지</span>
                   </button>
                 </Link>
               </>
@@ -217,18 +206,9 @@ const Header = ({ ...props }: any) => {
           ) : (
             <button
               onClick={loginModalHandler}
-              className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary"
+              className="sm:w-20 w-20 h-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary "
             >
               <span className="hidden sm:block">로그인</span>
-              <span className="sm:hidden">
-                <Image
-                  src="/image/user.svg"
-                  width="24"
-                  height="24"
-                  alt="마이페이지"
-                  className="cursor-pointer"
-                />
-              </span>
             </button>
           )}
 
@@ -237,7 +217,7 @@ const Header = ({ ...props }: any) => {
               onClick={logOut}
               className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary"
             >
-              <span>로그아웃</span>
+              <span className="hidden sm:block">로그아웃</span>
             </button>
           ) : (
             <button
@@ -247,6 +227,13 @@ const Header = ({ ...props }: any) => {
               <span className="hidden sm:block">회원가입</span>
             </button>
           )}
+          <Image
+            src="/image/user.svg"
+            width="24"
+            height="24"
+            alt="마이페이지"
+            className="cursor-pointer block sm:hidden ml-[-6px]"
+          />
         </div>
       </div>
     </div>
