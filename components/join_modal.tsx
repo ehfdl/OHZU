@@ -28,6 +28,7 @@ import { FcGoogle } from "react-icons/fc";
 import { GrFacebook } from "react-icons/gr";
 import { SiNaver, SiKakaotalk } from "react-icons/si";
 import axios from "axios";
+import Image from "next/image";
 
 const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   // 이메일, 비밀번호, 비밀번호 확인, 닉네임, 유저 생년월일
@@ -355,85 +356,81 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   };
 
   // 네이버
-  const { naver } = window as any;
+  // const { naver } = window as any;
 
-  const loginFormWithNaver = (props: any) => {
-    const naverLogin = new naver.LoginWithNaverId({
-      // 발급받은 client ID
-      clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-      // app 등록 시에 callbackURL에 추가했던 URL
-      callbackUrl: "http://localhost:3000",
-      isPopup: false, // popup 형식으로 띄울것인지 설정
-      loginButton: { color: "white", type: 1, height: "40" }, //버튼의 스타일, 타입, 크기를 지정
-    });
-      const a = naverLogin.init();
-      console.log('네이버 로그인 이닛 : ', a)
-      
-      const token = location.hash;
-      console.log("토큰 : ", token);
-    axios({
-      method: "POST",
-      // url: "https://ohzu.vercel.app/api/kakao",
-      url: "http://localhost:3000",
-      data: { token },
-    }).then(function (response) {
-      // 서버에서 보낸 jwt토큰을 받음
-      console.log(response);
-      localStorage.setItem("data", JSON.stringify(response.data));
-      console.log("responseData", response.data);
+  // const loginFormWithNaver = (props: any) => {
+  //   const naverLogin = new naver.LoginWithNaverId({
+  //     // 발급받은 client ID
+  //     clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
+  //     // app 등록 시에 callbackURL에 추가했던 URL
+  //     callbackUrl: "http://localhost:3000",
+  //     isPopup: false, // popup 형식으로 띄울것인지 설정
+  //     loginButton: { color: "white", type: 1, height: "40" }, //버튼의 스타일, 타입, 크기를 지정
+  //   });
+  //     const a = naverLogin.init();
+  //     console.log('네이버 로그인 이닛 : ', a)
 
-      return signInWithCustomToken(
-        authService,
-        `${response.data.firebaseToken}`
-      )
-        .then(async (userCredential) => {
-          const user = userCredential.user;
-          console.log("네이버 토큰 : ", response.data);
-          sessionStorage.setItem(
-            apiKey as string,
-            authService.currentUser?.uid as string
-          );
+  //     const token = location.hash;
+  //     console.log("토큰 : ", token);
+  //   axios({
+  //     method: "POST",
+  //     // url: "https://ohzu.vercel.app/api/kakao",
+  //     url: "http://localhost:3000",
+  //     data: { token },
+  //   }).then(function (response) {
+  //     // 서버에서 보낸 jwt토큰을 받음
+  //     console.log(response);
+  //     localStorage.setItem("data", JSON.stringify(response.data));
+  //     console.log("responseData", response.data);
 
-          const snapshot = await getDoc(
-            doc(dbService, "Users", authService.currentUser?.uid as string)
-          );
-          const snapshotdata = await snapshot.data();
-          const newProfile = {
-            ...snapshotdata,
-          };
+  //     return signInWithCustomToken(
+  //       authService,
+  //       `${response.data.firebaseToken}`
+  //     )
+  //       .then(async (userCredential) => {
+  //         const user = userCredential.user;
+  //         console.log("네이버 토큰 : ", response.data);
+  //         sessionStorage.setItem(
+  //           apiKey as string,
+  //           authService.currentUser?.uid as string
+  //         );
 
-          if (!newProfile.userId) {
-            setDoc(
-              doc(dbService, "Users", authService.currentUser?.uid as string),
-              {
-                userId: authService.currentUser?.uid,
-                email: "",
-                nickname: "네이버",
-                imageURL:
-                  "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
-                introduce: "",
-                point: "",
-                following: [],
-                follower: [],
-                recently: [],
-                alarm: [],
-              }
-            );
-            alert("네이버 간편 회원가입 성공!");
-          }
-          setJoinIsOpen(false);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          alert(errorMessage);
-        });
-    });
-  };
+  //         const snapshot = await getDoc(
+  //           doc(dbService, "Users", authService.currentUser?.uid as string)
+  //         );
+  //         const snapshotdata = await snapshot.data();
+  //         const newProfile = {
+  //           ...snapshotdata,
+  //         };
 
-  // useEffect(() => {
-  //   initializeNaverLogin();
-  // }, []);
+  //         if (!newProfile.userId) {
+  //           setDoc(
+  //             doc(dbService, "Users", authService.currentUser?.uid as string),
+  //             {
+  //               userId: authService.currentUser?.uid,
+  //               email: "",
+  //               nickname: "네이버",
+  //               imageURL:
+  //                 "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
+  //               introduce: "",
+  //               point: "",
+  //               following: [],
+  //               follower: [],
+  //               recently: [],
+  //               alarm: [],
+  //             }
+  //           );
+  //           alert("네이버 간편 회원가입 성공!");
+  //         }
+  //         setJoinIsOpen(false);
+  //       })
+  //       .catch((error) => {
+  //         const errorCode = error.code;
+  //         const errorMessage = error.message;
+  //         alert(errorMessage);
+  //       });
+  //   });
+  // };
 
   // 카카오
   const loginFormWithKakao = () => {
@@ -530,7 +527,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
       <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
 
-        <div className="inner w-[588px] h-[920px] bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="inner max-w-[588px] w-full max-h-[920px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => setJoinIsOpen(false)}
@@ -541,7 +538,9 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
             </h1>
             <form className="formContainer" onSubmit={signUpForm}>
               <div>
-                <p className="w-[472px] m-auto mb-[6px] text-left">이메일</p>
+                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
+                  이메일
+                </p>
                 <input
                   onChange={(e) => {
                     setEmail(e.target.value);
@@ -550,14 +549,16 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   type="text"
                   id="email"
                   placeholder="실제 사용하는 이메일을 입력해주세요. "
-                  className="w-[472px] h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01] "
+                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01] "
                 />
-                <p className="w-[472px] m-auto mb-1 text-right text-sm text-[#999999]">
+                <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
                   {checkEmail ? checkEmail : null}
                 </p>
               </div>
               <div>
-                <p className="w-[472px] m-auto mb-[6px] text-left">비밀번호</p>
+                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
+                  비밀번호
+                </p>
                 <input
                   onChange={(e) => {
                     setPassword(e.target.value);
@@ -565,13 +566,13 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   type="password"
                   id="password"
                   placeholder="비밀번호는 최소 8자리로 입력해주세요."
-                  className="w-[472px] h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
                 />
-                <p className="w-[472px] m-auto mb-1 text-right text-sm text-[#999999]">
+                <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
                   {checkPassword}
                 </p>
               </div>
-              <p className="w-[472px] m-auto mb-[6px] text-left">
+              <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
                 비밀번호 확인
               </p>
               <div>
@@ -582,14 +583,16 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   type="password"
                   id="pwCheck"
                   placeholder="비밀번호 확인"
-                  className="w-[472px] h-[44px] p-2 pl-4 mb-1   outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1   outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
                 />
-                <p className="w-[472px] m-auto mb-1 text-right text-sm text-[#999999]">
+                <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
                   {checkPasswordConfirm}
                 </p>
               </div>
               <div>
-                <p className="w-[472px] m-auto mb-[6px] text-left">닉네임</p>
+                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
+                  닉네임
+                </p>
                 <input
                   onChange={(e) => {
                     setNickname(e.target.value);
@@ -597,14 +600,16 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                   type="text"
                   id="nickname"
                   placeholder="닉네임"
-                  className="w-[472px] h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
                 />
-                <p className="w-[472px] m-auto mb-1 text-right text-sm text-[#999999]">
+                <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
                   {checkNickname}
                 </p>
               </div>
               <div className="birth_Container">
-                <p className="w-[472px] m-auto mb-[6px] text-left">생년월일</p>
+                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
+                  생년월일
+                </p>
                 <div className="birth_input_Wrap w-[472px] m-auto mb-[2px] flex items-center justify-between">
                   <input
                     onChange={(e) => {
@@ -677,17 +682,35 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
               </p>
               <div className="w-[280px] m-auto mb-[24px] flex items-center  justify-around">
                 <div onClick={googleJoin}>
-                  <FcGoogle className="w-10 h-10 border bg-black cursor-pointer" />
+                  <Image
+                    src="/image/google.svg"
+                    width="40"
+                    height="40"
+                    alt="구글 로그인"
+                    className="cursor-pointer"
+                  />
                 </div>
                 <div onClick={facebookJoin}>
-                  <GrFacebook className="w-10 h-10 ml-10 mr-10 border border-slate-400 cursor-pointer" />
+                  <Image
+                    src="/image/facebook.svg"
+                    width="40"
+                    height="40"
+                    alt="페이스북 로그인"
+                    className="cursor-pointer"
+                  />
                 </div>
                 {/* 네이버 로그인 구현 전 */}
-                <div onClick={loginFormWithNaver} id="naverIdLogin">
+                {/* <div onClick={loginFormWithNaver} id="naverIdLogin">
                   <SiNaver className=" w-10 h-10 border border-slate-400 cursor-pointer" />
-                </div>
+                </div> */}
                 <div onClick={loginFormWithKakao}>
-                  <SiKakaotalk className=" w-10 h-10 border bg-white cursor-pointer" />
+                  <Image
+                    src="/image/kakao.svg"
+                    width="40"
+                    height="40"
+                    alt="카카오 로그인"
+                    className="cursor-pointer"
+                  />
                 </div>
               </div>
               <div className="w-[473px] m-auto flex justify-center text-sm">
