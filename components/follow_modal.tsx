@@ -34,9 +34,9 @@ const FollowModal = ({
   return (
     <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center">
       <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-      <div className="w-[588px] h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
+      <div className="w-[390px] h-full sm:w-[588px] sm:h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
-          className="w-10 aspect-square absolute mt-8 ml-[500px]"
+          className="sm:w-10 w-9 aspect-square absolute mt-6 sm:mt-8 ml-[340px] sm:ml-[500px]"
           onClick={() => setIsOpenFollowModal(false)}
         >
           <FiX className="w-full h-full text-phGray" />
@@ -74,7 +74,7 @@ const FollowModal = ({
           </label>
         </div>
 
-        <div className="flex pt-10 flex-col gap-6 justify-start items-center w-[492px] overflow-auto scrollbar-none">
+        <div className="flex pt-8 sm:pt-10 flex-col gap-6 justify-start items-center w-[342px] sm:w-[492px] overflow-auto scrollbar-none">
           {follow === "following" && usersFollowingProfile
             ? usersFollowingProfile.map((profile) => (
                 <FollowModalCard
