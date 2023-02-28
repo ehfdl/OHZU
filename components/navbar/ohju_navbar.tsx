@@ -8,13 +8,13 @@ const Ohju_Navbar = ({
   setCate: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
-    <nav className="w-[900px] border-b-[1px] h-14 border-iconDefault text-[28px] mt-14 flex justify-between">
+    <nav className="w-full sm:w-[900px] border-b-[1px] h-11 sm:h-14 border-iconDefault sm:text-[28px] mt-6 sm:mt-14 flex justify-between">
       <label
         onChange={() => {
           setOhju("my-ohju");
           setCate("전체");
         }}
-        className="w-[300px]  text-textGray text-center"
+        className="w-[130px] sm:w-[300px]  text-textGray text-center"
       >
         <input
           type="radio"
@@ -32,7 +32,7 @@ const Ohju_Navbar = ({
           setOhju("like-ohju");
           setCate("전체");
         }}
-        className="w-[300px]  text-textGray text-center"
+        className="w-[130px] sm:w-[300px]  text-textGray text-center"
       >
         <input
           type="radio"
@@ -49,7 +49,7 @@ const Ohju_Navbar = ({
           setOhju("recently-ohju");
           setCate("전체");
         }}
-        className="w-[300px]  text-textGray text-center"
+        className="w-[130px] sm:w-[300px]  text-textGray text-center"
       >
         <input
           type="radio"

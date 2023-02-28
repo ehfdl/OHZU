@@ -8,7 +8,7 @@ const Cate_Navbar = ({
   cate: string;
 }) => {
   return (
-    <nav className="mt-6 w-[524px] flex justify-between text-[20px]">
+    <nav className="mt-5 sm:mt-6 w-full sm:w-[524px] flex justify-around sm:justify-between text-[14px] sm:text-[20px]">
       <label
         onChange={() => setCate("전체")}
         className=" text-textGray text-center"
