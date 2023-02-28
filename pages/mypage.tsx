@@ -195,7 +195,7 @@ const Mypage = () => {
                 <div>
                   <div className="font-bold sm:text-[24px] flex justify-start items-center gap-1">
                     <span>{myProfile?.nickname}</span>
-                    <span>
+                    <span className="w-3 h-[15px] sm:w-[18px] sm:h-[22px]">
                       <Grade score={myLike! + myPosts?.length! * 5} />
                     </span>
                   </div>
