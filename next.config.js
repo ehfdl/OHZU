@@ -7,8 +7,16 @@ const nextConfig = {
 
     return config;
   },
+  images: {
+    domains: ["firebasestorage.googleapis.com", "mblogthumb-phinf.pstatic.net"],
+  },
 };
 const WithImages = require("next-images");
 
 module.exports = WithImages();
 module.exports = nextConfig;
+module.exports = {
+  images: {
+    domains: ["firebasestorage.googleapis.com", "mblogthumb-phinf.pstatic.net"],
+  },
+};

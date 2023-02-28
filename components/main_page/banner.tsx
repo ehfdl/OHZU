@@ -11,6 +11,7 @@ import SwiperCore, {
 import "swiper/css"; //basic
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import Image from "next/image";
 
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import Link from "next/link";
@@ -58,27 +59,62 @@ const MainBanner = () => {
         <div className="group w-screen">
           <SwiperSlide>
             <Link href={`/post/0lwyBZaw7I1IxihpDMuS`}>
-              <img className="object-cover w-full" src="/banner/3.svg"></img>
+              <Image
+                alt=""
+                className="object-cover w-full"
+                src="/banner/3.svg"
+                width={300}
+                height={300}
+                priority
+              ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
             <Link href={`/post/fgIjM61aFN0ZWdCDuw0K`}>
-              <img className="object-cover w-full" src="/banner/4.svg"></img>
+              <Image
+                alt=""
+                className="object-cover w-full"
+                src="/banner/4.svg"
+                width={300}
+                height={300}
+                priority
+              ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
             <Link href={`/post/R2MLc2GBrw4jUTLGttoA`}>
-              <img className="object-cover w-full" src="/banner/5.svg"></img>
+              <Image
+                alt=""
+                className="object-cover w-full"
+                src="/banner/5.svg"
+                width={300}
+                height={300}
+                priority
+              ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
             <Link href={`/post/knxbaDkL6B2Yg0KkEnCc`}>
-              <img className="object-cover w-full" src="/banner/6.svg"></img>
+              <Image
+                alt=""
+                className="object-cover w-full"
+                src="/banner/6.svg"
+                width={300}
+                height={300}
+                priority
+              ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
             <Link href={`/post/avQb8boBf67BFM0eIEqz`}>
-              <img className="object-cover w-full" src="/banner/7.svg"></img>
+              <Image
+                alt=""
+                className="object-cover w-full"
+                src="/banner/7.svg"
+                width={300}
+                height={300}
+                priority
+              ></Image>
             </Link>
           </SwiperSlide>
         </div>
