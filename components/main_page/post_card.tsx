@@ -3,6 +3,8 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Grade from "../grade";
+import Image from "next/image";
+import { Autoplay } from "swiper";
 
 const PostCard = ({ post }: { post: any }) => {
   const defaultImg =
@@ -68,9 +70,12 @@ const PostCard = ({ post }: { post: any }) => {
         {/* hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70 */}
         <div className="w-full h-[284px]">
           <Link href={`/post/${post.postId}`}>
-            <img
+            <Image
               src={post.img[0] || defaultImg}
               className="flex w-full h-[284px] object-cover rounded"
+              alt=""
+              width={300}
+              height={300}
             />
             <div className=" bg-black/0 w-full h-[284px] object-cover translate-y-[-285px] hover:bg-gray-300/30 hover:block transition"></div>
           </Link>
@@ -80,20 +85,35 @@ const PostCard = ({ post }: { post: any }) => {
             {post.userId === authService.currentUser?.uid ? (
               <Link href="/mypage">
                 <div className="">
-                  <img
-                    className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
-                    alt=""
-                    src={user?.imageURL}
-                  />
+                  {user ? (
+                    <Image
+                      className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
+                      alt=""
+                      src={user.imageURL as string}
+                      width={300}
+                      height={300}
+                    />
+                  ) : (
+                    <Image
+                      className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
+                      alt=""
+                      src="https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png"
+                    />
+                  )}
                 </div>
               </Link>
             ) : (
               <Link href={`/users/${post.userId}`}>
                 <div className="">
-                  <img
-                    className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
-                    src={user?.imageURL}
-                  />
+                  {user.imageURL && (
+                    <Image
+                      className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
+                      alt=""
+                      src={user.imageURL as string}
+                      width={100}
+                      height={100}
+                    />
+                  )}
                 </div>
               </Link>
             )}
@@ -120,9 +140,19 @@ const PostCard = ({ post }: { post: any }) => {
               className="absolute flex flex-col float-right translate-x-[330px] -translate-y-[10px] items-center w-[18px] z-[5] mr-6 mt-6 mb-3 cursor-pointer"
             >
               {like ? (
-                <img src="/like/like-pressed.png" />
+                <Image
+                  alt=""
+                  src="/like/like-pressed.png"
+                  width={20}
+                  height={20}
+                />
               ) : (
-                <img src="/like/like-default.png" />
+                <Image
+                  alt=""
+                  src="/like/like-default.png"
+                  width={20}
+                  height={20}
+                />
               )}
               <div className="text-[rgba(87,86,86,0.5)] text-[11px]">
                 {post.like.length}

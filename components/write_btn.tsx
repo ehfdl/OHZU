@@ -1,5 +1,6 @@
 import React from "react";
 import "tailwindcss/tailwind.css";
+import Image from "next/image";
 
 const WriteButton = () => {
   return (
@@ -10,13 +11,19 @@ const WriteButton = () => {
           id="write"
           type="button"
         >
-          <img
+          <Image
+            alt=""
             src="/write/write-default.png"
             className="relative ml-5 cursor-pointer block group-hover:hidden"
+            width={22}
+            height={22}
           />
-          <img
+          <Image
+            alt=""
             src="/write/write-pressed.png"
-            className="absolute -translate-x-3 -translate-y-3 cursor-pointer hidden group-hover:inline-block"
+            className="absolute -translate-x-[11px] -translate-y-[10px] cursor-pointer hidden group-hover:inline-block"
+            width={21}
+            height={21}
           />
         </button>
       </div>
