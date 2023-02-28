@@ -17,6 +17,7 @@ import Grade from "@/components/grade";
 import FollowModal from "@/components/follow_modal";
 import UserCateNavbar from "@/components/navbar/user_cate_navbar";
 import { GetServerSideProps } from "next";
+import Image from "next/image";
 
 const UserPage = ({ userId }: { userId: string }) => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -238,72 +239,74 @@ const UserPage = ({ userId }: { userId: string }) => {
 
   return (
     <Layout>
-      <div className="w-full flex justify-center mb-4 min-h-screen">
-        <div className="w-[1200px] flex flex-col justify-start items-center">
-          <div className="mt-[70px] w-[670px] flex gap-[60px] mb-2">
+      <div className="w-full flex justify-center mb-4 sm:min-h-screen">
+        <div className="max-w-[390px] w-full sm:max-w-[1200px] flex flex-col justify-start items-center">
+          <div className="mt-9 sm:mt-[70px] w-full sm:w-[696px] flex sm:gap-12 gap-6 px-6">
             <div className="flex flex-col items-center">
-              <div className="bg-[#d9d9d9] rounded-full h-[124px] w-[124px] overflow-hidden">
-                <img
+              <div className="bg-[#d9d9d9] rounded-full w-20 sm:w-[124px] aspect-square overflow-hidden">
+                <Image
                   src={userProfile?.imageURL as string}
-                  className="w-[124px] aspect-square object-cover"
+                  className="w-20 sm:w-[124px] aspect-square object-cover"
+                  alt=""
+                  width={80}
+                  height={80}
                 />
               </div>
               {userProfile?.follower.includes(authService.currentUser?.uid) ? (
                 <button
                   onClick={onClickFollowUpdate}
-                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-second text-sm text-primary flex justify-center items-center"
+                  className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-5 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-second text-[11px] sm:text-sm text-primary flex justify-center items-center"
                 >
                   팔로우
                 </button>
               ) : (
                 <button
                   onClick={onClickFollowUpdate}
-                  className="mt-4 w-[98px] h-[30px] rounded-[50px] bg-primary text-sm text-white  flex justify-center items-center"
+                  className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-5 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-primary text-[11px] sm:text-sm text-white  flex justify-center items-center"
                 >
                   팔로우
                 </button>
               )}
             </div>
             <div className="flex flex-col justify-start w-[452px]">
-              <div className="w-[440px] flex justify-between">
+              <div className="w-[238px] sm:w-[440px] sm:flex sm:justify-between">
                 <div>
-                  <div className="font-bold text-[24px] flex justify-start items-center gap-1">
+                  <div className="font-bold sm:text-[24px] flex justify-start items-center gap-1">
                     <span>{userProfile?.nickname}</span>
                     <span>
                       <Grade score={userLike! + userPosts?.length! * 5} />
                     </span>
                   </div>
                 </div>
-                <div className="w-72 flex justify-between items-center mt-1">
-                  <div className="flex flex-col justify-center items-center">
+                <div className="w-52 sm:w-72 flex justify-between items-center mt-2 sm:mt-1">
+                  <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
                     좋아요<div className="font-bold">{userLike}</div>
                   </div>
-                  <div className="h-8 border-r border-[#c9c5c5]" />
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
+                  <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
                     게시글<div className="font-bold">{userPosts?.length}</div>
                   </div>
-                  <div className="h-8 border-r border-[#c9c5c5]" />
+                  <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
 
                   <div
                     onClick={() => {
                       setIsOpenFollowModal(true);
                       setFollow("follower");
                     }}
-                    className="flex flex-col justify-center items-center cursor-pointer"
+                    className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로워
                     <div className="font-bold">
                       {userProfile?.follower.length}
                     </div>
                   </div>
-                  <div className="h-8 border-r border-[#c9c5c5]" />
-
+                  <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
                       setIsOpenFollowModal(true);
                       setFollow("following");
                     }}
-                    className="flex flex-col justify-center items-center"
+                    className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로잉
                     <div className="font-bold">
@@ -312,14 +315,14 @@ const UserPage = ({ userId }: { userId: string }) => {
                   </div>
                 </div>
               </div>
-              <div className="h-[70px] w-full whitespace-pre-wrap overflow-hidden  mt-7">
+              <div className="h-[50px] sm:h-[70px] text-[12px] sm:text-base w-full whitespace-pre-wrap overflow-hidden mt-3 sm:mt-7">
                 {userProfile?.introduce}
               </div>
             </div>
           </div>
           <UserCateNavbar setCate={setCate} />
-          <div className="w-full mt-12 flex justify-between">
-            <div className="ml-[3px] text-[20px] font-bold">
+          <div className="w-full mt-5 sm:mt-12 flex justify-between">
+            <div className="pl-6 sm:pl-[3px] text-[14px] sm:text-[20px] font-bold">
               게시글{" "}
               <span className="text-primary">
                 {cate === "전체"
@@ -330,13 +333,25 @@ const UserPage = ({ userId }: { userId: string }) => {
             <div>
               <div
                 onClick={() => setDropOnOff(!dropOnOff)}
-                className="w-[111px] h-[33px] text-[#828293] flex justify-center items-center cursor-pointer"
+                className="pr-3 sm:pr-0 pb-3 sm:pb-0 w-[111px] h-[33px] text-[14px] sm:text-base text-[#828293] flex justify-center items-center cursor-pointer"
               >
                 {cateDrop}
                 {dropOnOff ? (
-                  <img src="/arrow/up-arrow.png" className="absolute ml-20" />
+                  <Image
+                    src="/arrow/up-arrow.png"
+                    className="absolute ml-16 sm:ml-20"
+                    width={10}
+                    height={6}
+                    alt=""
+                  />
                 ) : (
-                  <img src="/arrow/down-arrow.png" className="absolute ml-20" />
+                  <Image
+                    src="/arrow/down-arrow.png"
+                    className="absolute ml-16 sm:ml-20"
+                    width={10}
+                    height={6}
+                    alt=""
+                  />
                 )}
               </div>
               {dropOnOff ? (
@@ -345,7 +360,7 @@ const UserPage = ({ userId }: { userId: string }) => {
             </div>
           </div>
 
-          <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
+          <div className="w-full px-4 sm:px-0 mt-4 bg-white grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
             {cateDrop === "최신순"
               ? userPosts?.map((post) =>
                   cate === "전체" ? (
