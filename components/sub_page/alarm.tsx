@@ -34,7 +34,7 @@ const Alarm = ({ ssuid }: { ssuid: string }) => {
     <div className="mr-2">
       <AiFillBell
         onClick={() => setIsAlarmOpenModal(!isAlarmOpenModal)}
-        className="w-8 h-8 cursor-pointer"
+        className="sm:w-8 sm:h-8 w-6 h-6 cursor-pointer"
       />
       {alarm.filter((content) => content.isDone === false).length !== 0 ? (
         <div className="w-4 h-4 rounded-full bg-primary text-[8px] text-white flex justify-center items-center pt-[1px] absolute top-6 ml-5 ">

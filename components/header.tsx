@@ -113,29 +113,35 @@ const Header = ({ ...props }: any) => {
     }
   };
   return (
-    <div className="flex w-full h-[118px] sticky top-0 z-[8] justify-between items-center bg-white">
+    <div className="flex w-full sm:h-[118px] mt-5 sticky top-0 z-[8] justify-between items-center bg-white">
       <Link legacyBehavior href="/">
-        <div className="Logo ml-[32px] w-[200px;] h-[60px] justify-center flex items-center cursor-pointer">
+        <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
           <Image src={LOGO_Ohju} alt="Ohju LOGO" />
         </div>
       </Link>
-      <div className="iconWrap h-[80px] mr-[32px] flex justify-end items-center relative ">
-        <form className="mr-9 flex items-center" onSubmit={onSubmitHandler}>
+      <div className="iconWrap sm:h-[80px] h-6 sm:mr-[32px] flex justify-end items-center relative ">
+        <Image
+          src="/image/search.svg"
+          width="20"
+          height="18"
+          alt="검색 아이콘"
+          className="cursor-pointer sm:hidden"
+          onClick={() => {}}
+        />
+        <form
+          className="sm:mr-9 flex items-center hidden sm:block"
+          onSubmit={onSubmitHandler}
+        >
           <label htmlFor="simple-search" className=""></label>
           <div className="relative w-full">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg
-                aria-hidden="true"
-                className="w-5 h-5 text-textGray"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
+              <Image
+                src="/image/search.svg"
+                width="24"
+                height="24"
+                alt="검색 아이콘"
+                className="cursor-pointer sm:block"
+              />
             </div>
             <input
               onChange={(e) => {
@@ -144,27 +150,55 @@ const Header = ({ ...props }: any) => {
               value={search}
               type="text"
               id="simple-search"
-              className="w-[419px] bg-[#f2f2f2] border  text-phGray text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5  "
+              className="w-[419px] bg-[#f2f2f2] border  text-phGray text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5 sm:block hidden"
               placeholder="혼합주 이름 또는 재료를 입력해주세요."
               required
             />
           </div>
         </form>
+
+        {/* 반응형 아님 */}
+        {/* <form className="mr-9 flex items-center bg-" onSubmit={onSubmitHandler}>
+          <label htmlFor="simple-search" className=""></label>
+          <div className="relative w-full">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+              <Image
+                src="/image/search.svg"
+                width="24"
+                height="24"
+                alt="검색 아이콘"
+                className="cursor-pointer sm:block"
+              />
+            </div>
+            <input
+              onChange={(e) => {
+                SearchHanlder(e.target.value);
+              }}
+              value={search}
+              type="text"
+              id="simple-search"
+              className="w-[419px] bg-[#f2f2f2] border  text-phGray text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5"
+              placeholder="혼합주 이름 또는 재료를 입력해주세요."
+              required
+            />
+          </div>
+        </form> */}
+
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center sm:gap-6 mr-5 ml-1 sm:ml-0 sm:mr-0 ">
           {authService.currentUser || ssuid ? (
             authService.currentUser?.uid === "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
               <Link legacyBehavior href="/ohzu">
-                <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
-                  관리페이지
+                <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                  <span className="hidden sm:block">관리페이지</span>
                 </button>
               </Link>
             ) : (
               <>
                 <Alarm ssuid={ssuid} />
                 <Link legacyBehavior href="/mypage">
-                  <button className="w-20 h-[42px] text-[18px]  duration-150 hover:text-primary">
-                    마이페이지
+                  <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                    <span className="hidden sm:block">마이페이지</span>
                   </button>
                 </Link>
               </>
@@ -172,27 +206,34 @@ const Header = ({ ...props }: any) => {
           ) : (
             <button
               onClick={loginModalHandler}
-              className="w-20 h-[42px] text-[18px] duration-150 hover:text-primary"
+              className="sm:w-20 w-20 h-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary "
             >
-              로그인
+              <span className="hidden sm:block">로그인</span>
             </button>
           )}
 
           {authService.currentUser || ssuid ? (
             <button
               onClick={logOut}
-              className="w-20 h-[42px] text-[18px] duration-150 hover:text-primary"
+              className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary"
             >
-              로그아웃
+              <span className="hidden sm:block">로그아웃</span>
             </button>
           ) : (
             <button
               onClick={joinModalHandler}
-              className="w-20 h-[42px]  text-[18px] duration-150 hover:text-primary"
+              className="sm:w-20 sm:h-[42px]  sm:text-[18px] sm:duration-150 sm:hover:text-primary"
             >
-              회원가입
+              <span className="hidden sm:block">회원가입</span>
             </button>
           )}
+          <Image
+            src="/image/user.svg"
+            width="24"
+            height="24"
+            alt="마이페이지"
+            className="cursor-pointer block sm:hidden ml-[-6px]"
+          />
         </div>
       </div>
     </div>
