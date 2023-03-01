@@ -50,11 +50,6 @@ declare interface UserType {
   recently?: string[];
 }
 
-declare interface ModalType {
-  setIsOpenProfileModal: React.Dispatch<React.SetStateAction<boolean>>;
-  myProfile: any;
-}
-
 declare interface AlarmType {
   content?: string;
   postId?: string;

@@ -7,8 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 import { addDoc, collection } from "firebase/firestore";
 import { BsPlusLg, BsFillXCircleFill } from "react-icons/bs";
 import { Router, useRouter } from "next/router";
-import Mmodal from "@/components/mmodal";
 import Image from "next/image";
+import useModal from "@/hooks/useModal";
 
 const Post = () => {
   const router = useRouter();
@@ -59,7 +59,7 @@ const Post = () => {
   const [changeForm, setChangeForm] = useState(false);
   const [toUrl, setToUrl] = useState("");
   const [confirmed, setConfirmed] = useState(false);
-  const [openmmodal, setopenMmodal] = useState(false);
+  const { showModal, hideModal } = useModal();
 
   const onChangeValue = (
     event:
@@ -203,12 +203,20 @@ const Post = () => {
         changeForm
       ) {
         setToUrl(url);
-        setopenMmodal(true);
+        showModal({
+          modalType: "ConfirmModal",
+          modalProps: {
+            title: "페이지를 이동하시겠습니까?",
+            text: "변경사항이 저장되지 않을 수 있습니다.",
+            rightbtnfunc: () => setConfirmed(true),
+          },
+        });
+
         router.events.emit("routeChangeError");
         throw "Abort route change. Please ignore this error.";
       }
     },
-    [confirmed, changeForm, router.asPath, router.events, openmmodal]
+    [confirmed, changeForm, router.asPath, router.events]
   );
 
   useEffect(() => {
@@ -217,15 +225,16 @@ const Post = () => {
     if (router.asPath !== window.location.pathname) {
       window.history.pushState("", "", router.asPath);
     }
+    console.log("왜안됨?");
     return () => {
       window.removeEventListener("beforeunload", handleBeforeunload);
       router.events.off("routeChangeStart", routeChangeStart);
     };
-  }, [routeChangeStart, router.events]);
+  }, [routeChangeStart, router.events, window.Event]);
 
   useEffect(() => {
     if (confirmed) {
-      setopenMmodal(false);
+      hideModal();
       router.replace(toUrl);
     }
   }, [toUrl, confirmed]);
@@ -662,9 +671,6 @@ const Post = () => {
           </div>
         </form>
       </div>
-      {openmmodal ? (
-        <Mmodal setConfirmed={setConfirmed} setopenMmodal={setopenMmodal} />
-      ) : null}
     </Layout>
   );
 };

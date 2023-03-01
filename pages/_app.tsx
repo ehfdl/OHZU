@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect } from "react";
+import { RecoilRoot } from "recoil";
 
 declare global {
   interface Window {
@@ -28,7 +29,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>OHZU</title>
       </Head>
-      <Component {...pageProps} />
+      <RecoilRoot>
+        <Component {...pageProps} />
+      </RecoilRoot>
     </>
   );
 }

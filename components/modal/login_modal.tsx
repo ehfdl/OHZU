@@ -23,18 +23,24 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { SiNaver, SiKakaotalk } from "react-icons/si";
 import axios from "axios";
 import Image from "next/image";
+import useModal from "@/hooks/useModal";
 
-const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
+export interface LoginModalProps {}
+
+const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [modal, setModal] = useState(false);
 
+  // join modal open
+  const { showModal, hideModal } = useModal();
   // save email
-
   const SAVE_EMAIL_ID_KEY = "SAVE_EMAIL_ID_KEY";
   const SAVE_EMAIL_ID_CHECKED_KEY = "SAVE_EMAIL_ID_CHECKED_KEY";
 
-  const [checkedSaveEmail, setCheckedSaveEmail] = useState(false);
+  const [checkedSaveEmail, setCheckedSaveEmail] = useState<boolean | string>(
+    false
+  );
 
   // email, password 정규식
   const emailRegEx =
@@ -49,7 +55,10 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         const user = authService;
 
         if (user.currentUser?.emailVerified) {
-          localStorage.setItem(SAVE_EMAIL_ID_CHECKED_KEY, checkedSaveEmail);
+          localStorage.setItem(
+            SAVE_EMAIL_ID_CHECKED_KEY,
+            checkedSaveEmail as string
+          );
           if (checkedSaveEmail) {
             localStorage.setItem(SAVE_EMAIL_ID_KEY, email);
           }
@@ -57,7 +66,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
             apiKey as string,
             authService.currentUser?.uid as string
           );
-          setIsOpen(false);
+          hideModal();
         } else {
           alert(
             "인증이 되지 않은 사용자입니다. 서비스 이용에 제한이 있습니다."
@@ -147,7 +156,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
-        setIsOpen(false);
+        hideModal();
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -198,7 +207,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
-        setIsOpen(false);
+        hideModal();
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -273,7 +282,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 alert("카카오 간편 회원가입 성공!");
               }
 
-              setIsOpen(false);
+              hideModal();
             })
             .catch((error: any) => {
               const errorCode = error.code;
@@ -327,7 +336,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         <div className="inner max-w-[588px] w-full max-h-[820px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
-              onClick={() => setIsOpen(false)}
+              onClick={() => hideModal()}
               className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
             />
             <h4 className="text-[40px] font-bold mt-[64px] mb-[42px]">
@@ -377,7 +386,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                       id="saveEmail"
                       name="saveEmail"
                       type="checkbox"
-                      checked={checkedSaveEmail}
+                      checked={checkedSaveEmail as boolean}
                       className="w-5 h-5 cursor-pointer"
                       onChange={() => setCheckedSaveEmail(!checkedSaveEmail)}
                     />
@@ -444,8 +453,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 <p className="text-slate-400 mr-1">아직 회원이 아니신가요?</p>
                 <span
                   onClick={() => {
-                    setIsOpen(false);
-                    setJoinIsOpen(true);
+                    showModal({ modalType: "JoinModal", modalProps: {} });
                   }}
                   className="cursor-pointer"
                 >

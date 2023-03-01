@@ -6,6 +6,7 @@ import LOGO_Ohju from "../public/LOGO.svg";
 import Image from "next/image";
 import Alarm from "./sub_page/alarm";
 import { useRouter } from "next/router";
+import useModal from "@/hooks/useModal";
 
 const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
@@ -13,6 +14,8 @@ const Header = ({ ...props }: any) => {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [ssuid, setSsuid] = useState<any>("");
+
+  const { showModal } = useModal();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -37,30 +40,6 @@ const Header = ({ ...props }: any) => {
       console.log(is_session);
     }
   }, []);
-  // 로그인&회원가입 모달창 show/hidden
-  const loginModalHandler = () => {
-    if (props.isOpen === false) {
-      props.setIsOpen(true);
-      setCurrentUser(true);
-    }
-  };
-
-  const joinModalHandler = () => {
-    if (props.joinIsOpen === false) {
-      props.setJoinIsOpen(true);
-    }
-  };
-
-  // 로그인/로그아웃 버튼 스위치
-  useEffect(() => {
-    if (authService.currentUser?.uid) {
-      setCurrentUser(true);
-      // props.setIsOpen(false);
-    } else if (!authService.currentUser?.uid) {
-      setCurrentUser(false);
-      props.setIsOpen(false);
-    }
-  }, [props.setIsOpen]);
 
   useEffect(() => {
     if (authService.currentUser?.uid) {
@@ -68,7 +47,6 @@ const Header = ({ ...props }: any) => {
       // props.setIsOpen(false);
     } else if (!authService.currentUser?.uid) {
       setCurrentUser(false);
-      props.setIsOpen(false);
     }
   }, [props.setJoinIsOpen]);
 
@@ -79,8 +57,6 @@ const Header = ({ ...props }: any) => {
         sessionStorage.removeItem(apiKey as string);
         setSsuid("");
         setCurrentUser(false);
-        props.setJoinIsOpen(false);
-        props.setIsOpen(false);
         if (
           window.location.pathname === "/mypage" ||
           window.location.pathname === "/post/write" ||
@@ -205,7 +181,12 @@ const Header = ({ ...props }: any) => {
             )
           ) : (
             <button
-              onClick={loginModalHandler}
+              onClick={() => {
+                showModal({
+                  modalType: "LoginModal",
+                  modalProps: {},
+                });
+              }}
               className="sm:w-20 w-20 h-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary "
             >
               <span className="hidden sm:block">로그인</span>
@@ -221,7 +202,12 @@ const Header = ({ ...props }: any) => {
             </button>
           ) : (
             <button
-              onClick={joinModalHandler}
+              onClick={() => {
+                showModal({
+                  modalType: "JoinModal",
+                  modalProps: {},
+                });
+              }}
               className="sm:w-20 sm:h-[42px]  sm:text-[18px] sm:duration-150 sm:hover:text-primary"
             >
               <span className="hidden sm:block">회원가입</span>

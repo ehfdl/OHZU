@@ -6,14 +6,21 @@ import { doc, updateDoc } from "firebase/firestore";
 
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
+import useModal from "@/hooks/useModal";
 
-const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
+export interface ProfileModalProps {
+  myProfile?: any;
+}
+
+const ProfileModal = ({ myProfile }: ProfileModalProps) => {
   const [form, setForm] = useState(myProfile);
   const [imgFile, setImgFile] = useState<File | null>();
 
   const [preview, setPreview] = useState<string | null>();
 
   const [validateNickName, setValidateNickName] = useState("");
+
+  const { hideModal } = useModal();
 
   const onChangeValue = (
     event:
@@ -60,7 +67,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
         await updateDoc(doc(dbService, "Users", myProfile.userId), form);
       }
 
-      setIsOpenProfileModal(false);
+      hideModal();
     }
   };
 
@@ -99,7 +106,7 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
       <div className="w-[390px] h-full sm:w-[588px] sm:h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
           className="w-9 mt-6 ml-[340px] sm:w-10 aspect-square absolute sm:mt-7 sm:ml-[500px]"
-          onClick={() => setIsOpenProfileModal(false)}
+          onClick={() => hideModal()}
         >
           <FiX className="w-full h-full text-phGray" />
         </button>

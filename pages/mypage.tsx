@@ -1,7 +1,6 @@
 import Layout from "@/components/layout";
 import Cate_Navbar from "@/components/navbar/cate_navbar";
 import Ohju_Navbar from "@/components/navbar/ohju_navbar";
-import ProfileModal from "@/components/sub_page/profile_modal";
 import React, { useEffect, useMemo, useState } from "react";
 import { apiKey, authService, dbService } from "@/firebase";
 import {
@@ -13,12 +12,12 @@ import {
   orderBy,
   updateDoc,
 } from "firebase/firestore";
-import FollowModal from "@/components/follow_modal";
 import MyPostCard from "@/components/sub_page/my_post_card";
 import { BiInfoCircle } from "react-icons/bi";
 import RankInformationModal from "@/components/sub_page/membership_grade_information";
 import Grade from "@/components/grade";
 import Image from "next/image";
+import useModal from "@/hooks/useModal";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -34,11 +33,9 @@ const Mypage = () => {
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
-  const [follow, setFollow] = useState("follower");
   //users 불러오기까지함.
 
-  const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
-  const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
+  const { modal, showModal } = useModal();
   const [isOpenInforModal, setIsOpenInforModal] = useState(false);
 
   const getMyProfile = async () => {
@@ -126,7 +123,6 @@ const Mypage = () => {
     setMyPosts(ohjuMyPosts);
     setLikePosts(ohjuLikePosts);
   }, [allPosts]);
-  // console.log("follower", usersFollowerProfile);
 
   useEffect(() => {
     if (myProfile) {
@@ -145,7 +141,7 @@ const Mypage = () => {
 
   useEffect(() => {
     getMyProfile();
-  }, [isOpenProfileModal]);
+  }, [modal]);
 
   useEffect(() => {
     const totalLike = myPosts?.reduce((accumulator, currentObject) => {
@@ -175,17 +171,24 @@ const Mypage = () => {
           <div className="mt-9 sm:mt-[70px] w-full sm:w-[696px] flex sm:gap-12 gap-6 px-6">
             <div className="flex flex-col items-center">
               <div className="bg-[#d9d9d9] rounded-full w-20 sm:w-40 aspect-square overflow-hidden">
-                <Image
-                  src={myProfile?.imageURL as string}
-                  className="w-20 sm:w-40 aspect-square object-cover"
-                  alt=""
-                  width={80}
-                  height={80}
-                />
+                {myProfile?.imageURL && (
+                  <Image
+                    src={myProfile?.imageURL as string}
+                    className="w-20 sm:w-40 aspect-square object-cover"
+                    alt=""
+                    width={80}
+                    height={80}
+                  />
+                )}
               </div>
               <button
                 className="sm:mt-4 mt-2 sm:text-base text-[12px]"
-                onClick={() => setIsOpenProfileModal(true)}
+                onClick={() =>
+                  showModal({
+                    modalType: "ProfileModal",
+                    modalProps: { myProfile: myProfile },
+                  })
+                }
               >
                 프로필 편집
               </button>
@@ -222,8 +225,16 @@ const Mypage = () => {
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
-                      setIsOpenFollowModal(true);
-                      setFollow("follower");
+                      showModal({
+                        modalType: "FollowModal",
+                        modalProps: {
+                          defaultfollow: "follower",
+                          usersFollowerProfile,
+                          usersFollowingProfile,
+                          myProfile,
+                          getMyProfile,
+                        },
+                      });
                     }}
                     className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
@@ -235,8 +246,16 @@ const Mypage = () => {
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
-                      setIsOpenFollowModal(true);
-                      setFollow("following");
+                      showModal({
+                        modalType: "FollowModal",
+                        modalProps: {
+                          defaultfollow: "following",
+                          usersFollowerProfile,
+                          usersFollowingProfile,
+                          myProfile,
+                          getMyProfile,
+                        },
+                      });
                     }}
                     className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
@@ -301,23 +320,6 @@ const Mypage = () => {
               : null}
           </div>
         </div>
-        {isOpenProfileModal ? (
-          <ProfileModal
-            setIsOpenProfileModal={setIsOpenProfileModal}
-            myProfile={myProfile}
-          />
-        ) : null}
-        {isOpenFollowModal ? (
-          <FollowModal
-            setIsOpenFollowModal={setIsOpenFollowModal}
-            follow={follow}
-            setFollow={setFollow}
-            usersFollowerProfile={usersFollowerProfile}
-            usersFollowingProfile={usersFollowingProfile}
-            myProfile={myProfile}
-            getMyProfile={getMyProfile}
-          />
-        ) : null}
       </div>
     </Layout>
   );

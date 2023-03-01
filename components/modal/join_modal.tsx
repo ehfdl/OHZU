@@ -29,8 +29,11 @@ import { GrFacebook } from "react-icons/gr";
 import { SiNaver, SiKakaotalk } from "react-icons/si";
 import axios from "axios";
 import Image from "next/image";
+import useModal from "@/hooks/useModal";
 
-const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
+export interface JoinModalProps {}
+
+const JoinModal = () => {
   // 이메일, 비밀번호, 비밀번호 확인, 닉네임, 유저 생년월일
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,6 +50,9 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
   const [checkPasswordConfirm, setCheckPasswordConfirm] = useState("");
   const [checkNickname, setCheckNickname] = useState("");
   const [checkAdult, setCheckAdult] = useState("");
+
+  //useModal
+  const { showModal, hideModal } = useModal();
 
   // email, password, nickname 정규식
   const emailRegEx =
@@ -209,13 +215,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
           });
         // alert("회원가입 성공 !");
         alert("인증 메일을 보냈습니다. 인증 후, 서비스 이용이 가능합니다.");
-        setJoinIsOpen(false);
-        setIsOpen(true);
-        console.log("authService : ", authService);
-        console.log(
-          "authService 이메일 인증 여부 : "
-          // authService.authStateSubscription.auth.emailVerified
-        );
+        showModal({ modalType: "LoginModal", modalProps: {} });
       })
       .catch((error) => {
         alert(error.massage);
@@ -289,7 +289,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
-        setJoinIsOpen(false);
+        hideModal();
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -341,7 +341,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
-        setJoinIsOpen(false);
+        hideModal();
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -493,7 +493,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 );
                 alert("카카오 간편 회원가입 성공!");
               }
-              setJoinIsOpen(false);
+              hideModal();
             })
             .catch((error) => {
               const errorCode = error.code;
@@ -530,7 +530,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
         <div className="inner max-w-[588px] w-full max-h-[920px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
-              onClick={() => setJoinIsOpen(false)}
+              onClick={() => hideModal()}
               className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
             />
             <h1 className="text-[40px] font-bold mt-[50px] mb-[19px]">
@@ -717,8 +717,7 @@ const JoinModal = ({ joinIsOpen, setJoinIsOpen, isOpen, setIsOpen }: any) => {
                 <p className="text-slate-400 mr-1">이미 계정이 있으신가요?</p>
                 <span
                   onClick={() => {
-                    setIsOpen(true);
-                    setJoinIsOpen(false);
+                    showModal({ modalType: "LoginModal", modalProps: {} });
                   }}
                   className="cursor-pointer"
                 >
