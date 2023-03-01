@@ -170,7 +170,7 @@ const Mypage = () => {
 
   return (
     <Layout>
-      <div className="w-full flex justify-center mb-4 min-h-screen">
+      <div className="w-full flex justify-center mb-4 sm:min-h-screen">
         <div className="max-w-[390px] w-full sm:max-w-[1200px] flex flex-col justify-start items-center">
           <div className="mt-9 sm:mt-[70px] w-full sm:w-[696px] flex sm:gap-12 gap-6 px-6">
             <div className="flex flex-col items-center">
