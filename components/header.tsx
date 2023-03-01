@@ -120,14 +120,14 @@ const Header = ({ ...props }: any) => {
         </div>
       </Link>
       <div className="iconWrap sm:h-[80px] h-6 sm:mr-[32px] flex justify-end items-center relative ">
-        <Image
+        {/* <Image
           src="/image/search.svg"
           width="20"
           height="18"
           alt="검색 아이콘"
           className="cursor-pointer sm:hidden"
           onClick={() => {}}
-        />
+        /> */}
         <form
           className="sm:mr-9 flex items-center hidden sm:block"
           onSubmit={onSubmitHandler}
@@ -186,6 +186,14 @@ const Header = ({ ...props }: any) => {
 
         {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
         <div className="flex items-center sm:gap-6 mr-5 ml-1 sm:ml-0 sm:mr-0 ">
+          <Image
+            src="/image/search.svg"
+            width="20"
+            height="18"
+            alt="검색 아이콘"
+            className="cursor-pointer sm:hidden mr-1"
+            onClick={() => {}}
+          />
           {authService.currentUser || ssuid ? (
             authService.currentUser?.uid === "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
               <Link legacyBehavior href="/ohzu">
@@ -206,12 +214,11 @@ const Header = ({ ...props }: any) => {
           ) : (
             <button
               onClick={loginModalHandler}
-              className="sm:w-20 w-20 h-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary "
+              className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary mr-4"
             >
               <span className="hidden sm:block">로그인</span>
             </button>
           )}
-
           {authService.currentUser || ssuid ? (
             <button
               onClick={logOut}
@@ -227,12 +234,20 @@ const Header = ({ ...props }: any) => {
               <span className="hidden sm:block">회원가입</span>
             </button>
           )}
+
           <Image
             src="/image/user.svg"
             width="24"
             height="24"
             alt="마이페이지"
-            className="cursor-pointer block sm:hidden ml-[-6px]"
+            className="cursor-pointer block sm:hidden ml-[-4px]"
+            onClick={() => {
+              if (!authService.currentUser) {
+                props.setIsOpen(true);
+              } else if (authService.currentUser) {
+                router.push(`/mypage`);
+              }
+            }}
           />
         </div>
       </div>
