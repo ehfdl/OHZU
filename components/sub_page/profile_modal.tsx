@@ -5,6 +5,7 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 
 import { v4 as uuidv4 } from "uuid";
+import Image from "next/image";
 
 const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
   const [form, setForm] = useState(myProfile);
@@ -95,29 +96,37 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
   return (
     <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
       <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-      <div className="w-[588px] h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
+      <div className="w-[390px] h-full sm:w-[588px] sm:h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
-          className="w-10 aspect-square absolute mt-7 ml-[500px]"
+          className="w-9 mt-6 ml-[340px] sm:w-10 aspect-square absolute sm:mt-7 sm:ml-[500px]"
           onClick={() => setIsOpenProfileModal(false)}
         >
           <FiX className="w-full h-full text-phGray" />
         </button>
 
-        <div className="text-[32px] font-bold mt-[84px]">프로필 편집</div>
-        <div className="w-40 aspect-square mt-6 bg-[#d9d9d9] rounded-full overflow-hidden">
+        <div className="text-[18px] sm:text-[32px] font-bold mt-6 sm:mt-[84px]">
+          프로필 편집
+        </div>
+        <div className="w-[120px] sm:w-40 aspect-square mt-12 sm:mt-6 bg-[#d9d9d9] rounded-full overflow-hidden">
           {preview !== null ? (
-            <img
+            <Image
               src={preview as string}
-              className="w-40 aspect-square object-cover"
+              className="w-[120px] sm:w-40 aspect-square object-cover"
+              width={120}
+              height={120}
+              alt=""
             />
           ) : (
-            <img
+            <Image
               src={myProfile.imageURL as string}
-              className="w-40 aspect-square object-cover"
+              className="w-[120px] sm:w-40 aspect-square object-cover"
+              width={120}
+              height={120}
+              alt=""
             />
           )}
         </div>
-        <label className="mt-[30px] cursor-pointer">
+        <label className="mt-4 sm:mt-[30px] cursor-pointer">
           <input
             onChange={onChangeImg}
             name="img"
@@ -125,12 +134,12 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
             accept="image/*"
             className="hidden"
           />
-          <span>프로필 이미지 수정</span>
+          <span className="text-[12px] sm:text-base">프로필 이미지 수정</span>
         </label>
-        <div className="w-[472px] mt-3">
-          <div className=" ">
-            <span className="font-bold text-[24px]">닉네임</span>
-            <span className="ml-2 text-sm text-[red]  w-full">
+        <div className="w-[342px] mt-[30px] sm:w-[472px] sm:mt-3">
+          <div>
+            <span className="font-bold sm:text-[24px]">닉네임</span>
+            <span className="ml-2 text-[11px] sm:text-sm text-[red]  w-full">
               {validateNickName}
             </span>
           </div>
@@ -138,19 +147,19 @@ const ProfileModal = ({ setIsOpenProfileModal, myProfile }: ModalType) => {
             name="nickname"
             value={form.nickname}
             onChange={onChangeValue}
-            className="w-full h-11 mt-2 bg-[#f5f5f5] px-4"
+            className="w-full sm:text-base text-[14px] h-11 mt-2 bg-[#f5f5f5] px-4"
           />
-          <div className="font-bold text-[24px] mt-9">소개</div>
+          <div className="font-bold sm:text-[24px] mt-6 sm:mt-9">소개</div>
           <textarea
             name="introduce"
             value={form.introduce}
             onChange={onChangeValue}
-            className="w-full min-h-[132px] mt-2 bg-[#f5f5f5] py-2 px-4 resize-none"
+            className="w-full sm:text-base text-[14px] min-h-[132px] mt-2 bg-[#f5f5f5] py-2 px-4 resize-none"
           />
         </div>
         <button
           onClick={onSubmit}
-          className="w-[280px] h-12 bg-primary text-white mt-9"
+          className="w-[344px] sm:w-[280px] h-14 sm:h-12 bg-primary text-white mt-16 sm:mt-9"
         >
           저장
         </button>

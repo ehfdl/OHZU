@@ -1,5 +1,6 @@
 import { authService, dbService } from "@/firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -37,32 +38,49 @@ const UserPostCard = ({ post }: { post: any }) => {
       className=" aspect-square bg-slate-200 overflow-hidden relative rounded"
     >
       <Link href={`/post/${post.postId}`}>
-        <div className="w-full h-[180px] bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
+        <div className="w-full h-[60px] sm:h-[180px] bottom-0 sm:top-0 bg-gradient-to-t sm:bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
 
-        <div className="absolute flex flex-col gap-1  pt-9 pl-9 ">
-          <div className="text-white font-bold text-[24px]">{post.title}</div>
-          <div className="text-[12px] text-[#333333] bg-[rgba(255,255,255,0.5)] h-6 w-[58px] flex justify-center items-center rounded-[20px]">
+        <div className="absolute flex flex-col gap-1  sm:pt-9 sm:pl-9 bottom-0 sm:top-0 pb-3 pl-3 ">
+          <div className="text-white font-bold text-sm sm:text-[24px]">
+            {post.title}
+          </div>
+          <div className="text-[10px] sm:text-[12px] bg-white/80 sm:bg-white/50 py-[2px] sm:py-1 text-[#333333] w-10 sm:w-[58px] flex justify-center  rounded-[20px]">
             {post.type}
           </div>
         </div>
       </Link>
       <div
         onClick={onClickLikeBtn}
-        className="absolute flex flex-col items-center w-7 h-7 z-[5]  right-0 mr-9 mt-[42px] cursor-pointer"
+        className="absolute flex flex-col items-center w-7 h-7 z-[5]  right-0 mr-3 sm:mr-9 mt-[14px] sm:mt-[42px] cursor-pointer"
       >
         {like ? (
-          <img src="/like/like-pressed.png" />
+          <Image
+            className="w-4 h-[14px] sm:w-[27px] sm:h-6"
+            src="/like/like-pressed.png"
+            alt=""
+            width={16}
+            height={14}
+          />
         ) : (
-          <img src="/like/like-default.png" />
+          <Image
+            className="w-4 h-[14px] sm:w-[27px] sm:h-6"
+            src="/like/like-default.png"
+            alt=""
+            width={16}
+            height={14}
+          />
         )}
         <div className="text-[rgba(255,255,255,0.5)] text-[11px]">
           {post.like.length}
         </div>
       </div>
       <Link href={`/post/${post.postId}`}>
-        <img
+        <Image
           src={post.img[0] || defaultImg}
           className="w-full h-full object-cover"
+          alt=""
+          width={170}
+          height={168}
         />
       </Link>
     </div>

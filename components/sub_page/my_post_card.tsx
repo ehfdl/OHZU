@@ -31,7 +31,7 @@ const MyPostCard = ({ post }: { post: any }) => {
   return (
     <div
       key={post.postId}
-      className="aspect-square sm:aspect-[4/2.6945169712793735] bg-slate-200 overflow-hidden relative rounded"
+      className="aspect-square sm:aspect-[4/2.6945169712793735] bg-slate-200 overflow-hidden relative rounded border-[1px] border-borderGray"
     >
       <Link href={`/post/${post.postId}`}>
         <div className="w-full sm:h-[92px] h-[60px] bg-gradient-to-t bottom-0 sm:top-0 sm:bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>

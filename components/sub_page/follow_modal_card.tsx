@@ -1,7 +1,9 @@
 import { authService, dbService } from "@/firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Grade from "../grade";
 
 const FollowModalCard = ({
   profile,
@@ -54,42 +56,56 @@ const FollowModalCard = ({
   return (
     <div key={profile?.userId} className="w-full flex justify-start">
       <Link href={`/users/${profile.userId}`}>
-        <div className="w-[78px] aspect-square rounded-full bg-[#d9d9d9] overflow-hidden">
+        <div className="w-14 sm:w-[78px] aspect-square rounded-full bg-[#d9d9d9] overflow-hidden">
           {profile.imageURL !== "" ? (
-            <img
-              src={profile.imageURL}
-              className="w-[78px] aspect-square object-cover"
+            <Image
+              src={profile.imageURL!}
+              className="w-14 sm:w-[78px] aspect-square object-cover"
+              width={56}
+              height={56}
+              alt=""
             />
           ) : null}
         </div>
       </Link>
-      <div className="flex flex-col ml-5 my-[2px]">
-        <Link href={`/users/${profile.userId}`}>
-          <div className="font-bold">{profile.nickname}</div>
-        </Link>
-        <div className="text-sm text-textGray max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
+      <div className="flex flex-col ml-5 sm:my-[2px]">
+        <div className="flex w-[270px] sm:w-[390px] justify-between">
+          <div className="flex gap-1">
+            <Link href={`/users/${profile.userId}`}>
+              <span className="font-bold text-[12px] sm:text-base">
+                {profile.nickname}
+              </span>
+            </Link>
+            <span className="w-[10px] h-3 sm:w-[13px] sm:h-4 mt-2 sm:mt-[5px]">
+              <Grade score={profile.point!} />
+            </span>
+          </div>
+
+          <div>
+            {profile.userId ===
+            authService.currentUser?.uid ? null : profile?.follower!.includes(
+                authService.currentUser?.uid as string
+              ) ? (
+              <button
+                onClick={onClickFollowUpdate}
+                className="w-[60px] h-5 text-[11px] sm:text-sm sm:w-[98px] sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-second  text-primary flex justify-center items-center mr-1"
+              >
+                팔로우
+              </button>
+            ) : (
+              <button
+                onClick={onClickFollowUpdate}
+                className="w-[60px] h-5 text-[11px] sm:text-sm sm:w-[98px] sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-primary  text-white  flex justify-center items-center mr-1"
+              >
+                팔로우
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="text-[11px] sm:text-sm text-textGray max-h-9 sm:max-h-11 w-[268px] mt-1 text-ellipsis overflow-hidden">
           {profile.introduce}
         </div>
       </div>
-
-      {profile.userId ===
-      authService.currentUser?.uid ? null : profile?.follower!.includes(
-          authService.currentUser?.uid as string
-        ) ? (
-        <button
-          onClick={onClickFollowUpdate}
-          className="ml-[14px] w-[98px] h-[30px] rounded-[50px] bg-second text-sm text-primary flex justify-center items-center"
-        >
-          팔로우
-        </button>
-      ) : (
-        <button
-          onClick={onClickFollowUpdate}
-          className="ml-[14px] w-[98px] h-[30px] rounded-[50px] bg-primary text-sm text-white  flex justify-center items-center"
-        >
-          팔로우
-        </button>
-      )}
     </div>
   );
 };

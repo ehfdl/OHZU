@@ -170,7 +170,7 @@ const Mypage = () => {
 
   return (
     <Layout>
-      <div className="w-full flex justify-center mb-4 min-h-screen">
+      <div className="w-full flex justify-center mb-4 sm:min-h-screen">
         <div className="max-w-[390px] w-full sm:max-w-[1200px] flex flex-col justify-start items-center">
           <div className="mt-9 sm:mt-[70px] w-full sm:w-[696px] flex sm:gap-12 gap-6 px-6">
             <div className="flex flex-col items-center">
@@ -195,7 +195,7 @@ const Mypage = () => {
                 <div>
                   <div className="font-bold sm:text-[24px] flex justify-start items-center gap-1">
                     <span>{myProfile?.nickname}</span>
-                    <span>
+                    <span className="w-3 h-[15px] sm:w-[18px] sm:h-[22px]">
                       <Grade score={myLike! + myPosts?.length! * 5} />
                     </span>
                   </div>

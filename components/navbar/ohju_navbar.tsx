@@ -8,7 +8,7 @@ const Ohju_Navbar = ({
   setCate: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
-    <nav className="w-full sm:w-[900px] border-b-[1px] h-11 sm:h-14 border-iconDefault sm:text-[28px] mt-6 sm:mt-14 flex justify-between">
+    <nav className="w-full sm:w-[900px] border-b-[1px] h-9 sm:h-14 border-iconDefault sm:text-[28px] mt-6 sm:mt-14 flex justify-between">
       <label
         onChange={() => {
           setOhju("my-ohju");
@@ -23,7 +23,7 @@ const Ohju_Navbar = ({
           defaultChecked
           className="hidden peer"
         />
-        <span className="w-full h-full block cursor-pointer peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-primary peer-checked:border-primary">
+        <span className="w-full h-full block cursor-pointer peer-checked:font-bold peer-checked:border-b-[3px]  sm:peer-checked:border-b-[5px] peer-checked:text-primary peer-checked:border-primary">
           나만의 오주
         </span>
       </label>
