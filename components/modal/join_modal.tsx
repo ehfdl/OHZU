@@ -44,6 +44,9 @@ const JoinModal = () => {
   const [userMonth, setUserMonth] = useState("");
   const [userDay, setUserDay] = useState("");
 
+  // 모바일 컨텐츠 show/hide
+  const [mobileOption, setMobileOption] = useState(false);
+
   // 이메일, 비밀번호, 닉네임 유효성 검사
   const [checkEmail, setCheckEmail] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
@@ -210,7 +213,8 @@ const JoinModal = () => {
             }
           })
           .catch((error) => {
-            const message = error.message;
+            let message = error.message;
+            message = "형식에 맞게 작성해주세요"
             alert(message);
           });
         // alert("회원가입 성공 !");
@@ -522,9 +526,23 @@ const JoinModal = () => {
     };
   }, []);
 
+  // 모바일 해상도에서 input에 글이 들어가면, 로그인 버튼이 뜨는 함수
+  const mobileHandler = () => {
+    if (email || password == undefined) {
+      setMobileOption(true);
+    } else {
+      setMobileOption(false);
+    }
+  };
+
+  useEffect(() => {
+    mobileHandler();
+  }, [email, password]);
+
   return (
     <>
-      <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
+      {/* 웹 */}
+      <div className="hidden w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
 
         <div className="inner max-w-[588px] w-full max-h-[920px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -718,6 +736,226 @@ const JoinModal = () => {
                 <span
                   onClick={() => {
                     showModal({ modalType: "LoginModal", modalProps: {} });
+                  }}
+                  className="cursor-pointer"
+                >
+                  로그인
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* 모바일 */}
+      <div className="sm:hidden sm:w-full sm:h-auto sm:flex sm:justify-center sm:items-center">
+        {/* <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" /> */}
+
+        <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
+          <div className="loginContainer flex-col text-center">
+            <MdOutlineClose
+              onClick={() => setJoinIsOpen(false)}
+              className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
+            />
+            <h1 className="text-[24px] font-bold mt-[100px] mb-[23px]">
+              회원가입
+            </h1>
+            <form className="formContainer" onSubmit={signUpForm}>
+              <div>
+                <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                  이메일
+                </p>
+                <input
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    isEmail;
+                  }}
+                  type="text"
+                  id="email"
+                  placeholder="실제 사용하는 이메일을 입력해주세요. "
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                />
+                <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
+                  {checkEmail ? checkEmail : null}
+                </p>
+              </div>
+              <div>
+                <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                  비밀번호
+                </p>
+                <input
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  type="password"
+                  id="password"
+                  placeholder="비밀번호는 최소 8자리로 입력해주세요."
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                />
+                <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
+                  {checkPassword}
+                </p>
+              </div>
+
+              {/* input  입력하면 보이는 컨텐츠 */}
+              {mobileOption === true ? (
+                <>
+                  <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                    비밀번호 확인
+                  </p>
+                  <div>
+                    <input
+                      onChange={(e) => {
+                        setPasswordConfirm(e.target.value);
+                      }}
+                      type="password"
+                      id="pwCheck"
+                      placeholder="비밀번호 확인"
+                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                    />
+                    <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
+                      {checkPasswordConfirm}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                      닉네임
+                    </p>
+                    <input
+                      onChange={(e) => {
+                        setNickname(e.target.value);
+                      }}
+                      type="text"
+                      id="nickname"
+                      placeholder="닉네임"
+                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                    />
+                    <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
+                      {checkNickname}
+                    </p>
+                  </div>
+                  <div className="birth_Container">
+                    <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                      생년월일
+                    </p>
+                    <div className="birth_input_Wrap max-w-[358px] w-full m-auto mb-6 flex items-center justify-between">
+                      <input
+                        onChange={(e) => {
+                          setUserYear(e.target.value);
+                          yearHandler(e.target.value);
+                        }}
+                        type="text"
+                        placeholder="YYYY"
+                        required={true}
+                        minLength={4}
+                        maxLength={4}
+                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                      />
+                      <input
+                        onChange={(e) => {
+                          setUserMonth(e.target.value);
+                        }}
+                        type="text"
+                        placeholder="MM"
+                        maxLength={2}
+                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                      />
+                      <input
+                        onChange={(e) => {
+                          setUserDay(e.target.value);
+                        }}
+                        type="text"
+                        placeholder="DD"
+                        maxLength={2}
+                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                      />
+                    </div>
+                    <div className="flex max-w-[358px] w-full m-auto mb-7 ">
+                      <label
+                        htmlFor="auto_login"
+                        className="flex  items-center "
+                      >
+                        <div
+                          onClick={ageVerification}
+                          id="auto_login"
+                          className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary"
+                        >
+                          성인 인증하기
+                          <span className="inline-block ml-[4px]">✅</span>
+                        </div>
+                        <span className="ml-2 text-sm ">
+                          {!checkAdult ? " " : checkAdult}
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={
+                      !(
+                        email &&
+                        password &&
+                        passwordConfirm &&
+                        nickname &&
+                        adult &&
+                        userYear &&
+                        userMonth &&
+                        userDay
+                      )
+                    }
+                    className="w-[344px] h-[56px] mb-[29px]  font-bold text-lg text-white rounded disabled:bg-[#aaa] valid:bg-primary"
+                  >
+                    회원가입
+                  </button>
+                </>
+              ) : null}
+
+              <div className="max-w-[358px] w-full m-auto flex items-center justify-center mt-[38px] mb-[54px]">
+                <div className="max-w-[116px] w-full h-[1px] mr-4 bg-textGray" />
+                <p className="text-xl font-semibold ">소셜 로그인</p>
+                <div className="max-w-[116px] w-full h-[1px] ml-4 bg-textGray" />
+              </div>
+
+              <div className="w-[280px] m-auto mb-[64px] flex items-center  justify-around">
+                <div onClick={googleJoin}>
+                  <Image
+                    src="/image/google.svg"
+                    width="40"
+                    height="40"
+                    alt="구글 로그인"
+                    className="cursor-pointer"
+                  />
+                </div>
+                <div onClick={facebookJoin}>
+                  <Image
+                    src="/image/facebook.svg"
+                    width="40"
+                    height="40"
+                    alt="페이스북 로그인"
+                    className="cursor-pointer"
+                  />
+                </div>
+                {/* 네이버 로그인 구현 전 */}
+                {/* <div>
+                <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
+              </div> */}
+                <div onClick={loginFormWithKakao}>
+                  <Image
+                    src="/image/kakao.svg"
+                    width="40"
+                    height="40"
+                    alt="카카오 로그인"
+                    className="cursor-pointer"
+                  />
+                </div>
+              </div>
+              <div className="max-w-[203px] w-full m-auto pb-7 flex justify-center text-sm">
+                <p className="text-slate-400 mr-1">이미 계정이 있으신가요?</p>
+                <span
+                  onClick={() => {
+                    setIsOpen(true);
+                    setJoinIsOpen(false);
                   }}
                   className="cursor-pointer"
                 >
