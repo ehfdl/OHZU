@@ -12,6 +12,7 @@ const ConfirmModal = ({
   rightbtnfunc,
 }: any) => {
   const { hideModal } = useModal();
+
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
       <div className="relative w-[350px] sm:w-[588px] bg-white flex flex-col justify-center items-center rounded pt-8 sm:px-12 sm:py-16">

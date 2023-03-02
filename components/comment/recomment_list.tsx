@@ -17,7 +17,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   const [editRecommentContent, setEditRecommentContent] = useState<string>();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
-  const { showModal } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const [resizeTextArea, setResizeTextArea] = useState({
     rows: 1,
@@ -69,10 +69,6 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
     }
   }, [editRecommentContent]);
 
-  const deleteToggle = () => {
-    setDeleteConfirm(!deleteConfirm);
-  };
-
   const editToggle = async () => {
     await updateDoc(doc(dbService, "Recomments", id as string), {
       isEdit: !isEdit,
@@ -90,6 +86,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
 
   const deleteRecomment = async (id: string) => {
     await deleteDoc(doc(dbService, "Recomments", id));
+    hideModal();
   };
 
   const getRecommentUser = async () => {
@@ -173,13 +170,15 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
           href={`/users/${recomment.userId}`}
           className="flex flex-col items-center space-y-2 w-[34%] md:w-[13%] "
         >
-          <Image
-            width={48}
-            height={48}
-            alt=""
-            src={recommentUser?.imageURL as string}
-            className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
-          />
+          {recommentUser?.imageURL && (
+            <Image
+              width={48}
+              height={48}
+              alt=""
+              src={recommentUser?.imageURL as string}
+              className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
+            />
+          )}
           <div className="flex justify-start items-center space-x-1">
             <span className="text-xs">{recommentUser?.nickname}</span>
             <span className="w-[8px] sm:w-[12px]">
@@ -228,8 +227,22 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
                 } flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs`}
               >
                 <button onClick={editToggle}>수정</button>
-                {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
-                <button onClick={deleteToggle}>삭제</button>
+                <button
+                  onClick={() =>
+                    showModal({
+                      modalType: "ConfirmModal",
+                      modalProps: {
+                        title: "답글을 삭제 하시겠어요?",
+                        text: "삭제한 답글은 복원이 불가합니다.",
+                        rightbtntext: "삭제",
+                        rightbtnfunc: () =>
+                          deleteRecomment(recomment.id as string),
+                      },
+                    })
+                  }
+                >
+                  삭제
+                </button>
               </div>
             ) : (
               <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
@@ -238,16 +251,6 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             )}
           </div>
         </div>
-
-        {deleteConfirm && (
-          <DeleteModal
-            deleteRecomment={deleteRecomment}
-            setDeleteConfirm={setDeleteConfirm}
-            id={id}
-            text="답글"
-            content="삭제한 답글은 복원이 불가합니다."
-          />
-        )}
       </li>
     </>
   );

@@ -148,11 +148,6 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     }
   };
 
-  const deleteToggle = () => {
-    setDeleteConfirm(!deleteConfirm);
-    setIsOpen(!isOpen);
-  };
-
   const deletePost = async (id: string) => {
     await deleteDoc(doc(dbService, "Posts", id));
 
@@ -210,7 +205,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
           });
       }
     });
-
+    hideModal();
     router.push("/");
   };
 
@@ -509,7 +504,18 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                         </Link>
                         <button
                           className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
-                          onClick={deleteToggle}
+                          onClick={() => {
+                            setIsOpen(false);
+                            showModal({
+                              modalType: "ConfirmModal",
+                              modalProps: {
+                                title: "게시물을 삭제 하시겠어요?",
+                                text: "삭제한 게시물은 복원이 불가합니다.",
+                                rightbtntext: "삭제",
+                                rightbtnfunc: () => deletePost(reportId),
+                              },
+                            });
+                          }}
                         >
                           <span>게시글 삭제하기</span>
                           <TfiTrash className="hidden sm:block" size={18} />
@@ -530,15 +536,6 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                 )}
               </div>
             </div>
-            {deleteConfirm && (
-              <DeleteModal
-                deletePost={deletePost}
-                setDeleteConfirm={setDeleteConfirm}
-                id={postId}
-                text="게시물"
-                content="삭제한 게시물은 복원이 불가합니다."
-              />
-            )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center justify-start space-y-2 lg:w-[25%] w-[30%]">
                 <Link href={`/users/${user.userId}`}>

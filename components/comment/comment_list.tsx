@@ -33,7 +33,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<UserType>();
   const [recomments, setRecomments] = useState<CommentType[]>([]);
-  const { showModal } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const editToggle = async () => {
     await updateDoc(doc(dbService, "Comments", id as string), {
@@ -102,10 +102,6 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
     }
   }, [editContent]);
 
-  const deleteToggle = () => {
-    setDeleteConfirm(!deleteConfirm);
-  };
-
   const deleteComment = async (id: string) => {
     await deleteDoc(doc(dbService, "Comments", id));
 
@@ -116,6 +112,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
     recommentId.map(async (id) => {
       await deleteDoc(doc(dbService, "Recomments", id as string));
     });
+    hideModal();
   };
 
   const getCommentUser = async () => {
@@ -295,7 +292,18 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                     수정
                   </button>
                   <button
-                    onClick={deleteToggle}
+                    onClick={() =>
+                      showModal({
+                        modalType: "ConfirmModal",
+                        modalProps: {
+                          title: "댓글을 삭제 하시겠어요?",
+                          text: "삭제한 댓글은 복원이 불가합니다.",
+                          rightbtntext: "삭제",
+                          rightbtnfunc: () =>
+                            deleteComment(comment.id as string),
+                        },
+                      })
+                    }
                     className="hover:text-black text-textGray"
                   >
                     삭제
@@ -351,15 +359,6 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
             </div>
           </div>
         </div>
-        {deleteConfirm && (
-          <DeleteModal
-            deleteComment={deleteComment}
-            setDeleteConfirm={setDeleteConfirm}
-            id={id}
-            text="댓글"
-            content="삭제한 댓글은 복원이 불가합니다."
-          />
-        )}
         {isOpen && (
           <Recomments
             id={id!}
