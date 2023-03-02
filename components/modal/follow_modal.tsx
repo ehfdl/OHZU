@@ -20,8 +20,6 @@ const FollowModal = ({
 }: FollowModalProps) => {
   const { hideModal } = useModal();
   const [follow, setFollow] = useState(defaultfollow);
-
-  console.log(follow);
   useEffect(() => {
     document.body.style.cssText = `
       position: fixed;
@@ -35,11 +33,10 @@ const FollowModal = ({
     };
   }, []);
   return (
-    <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center">
-      <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-      <div className="w-[390px] h-full sm:w-[588px] sm:h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
+      <div className="w-full h-full relative sm:w-[588px] sm:h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
-          className="sm:w-10 w-9 aspect-square absolute mt-6 sm:mt-8 ml-[340px] sm:ml-[500px]"
+          className="sm:w-10 w-9 aspect-square absolute top-6 right-6"
           onClick={() => hideModal()}
         >
           <FiX className="w-full h-full text-phGray" />
@@ -81,7 +78,7 @@ const FollowModal = ({
           </label>
         </div>
 
-        <div className="flex pt-8 sm:pt-10 flex-col gap-6 justify-start items-center w-[342px] sm:w-[492px] overflow-auto scrollbar-none">
+        <div className="flex pt-8 sm:pt-10 flex-col gap-6 justify-start items-center w-full sm:w-[492px] overflow-auto scrollbar-none">
           {follow === "following" && usersFollowingProfile
             ? usersFollowingProfile.map(
                 (profile) =>

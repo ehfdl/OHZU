@@ -1,4 +1,5 @@
 import { authService, dbService } from "@/firebase";
+import useModal from "@/hooks/useModal";
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +16,8 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   const [recommentUser, setRecommentUser] = useState<UserType>();
   const [editRecommentContent, setEditRecommentContent] = useState<string>();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+
+  const { showModal, hideModal } = useModal();
 
   const [resizeTextArea, setResizeTextArea] = useState({
     rows: 1,
@@ -66,10 +69,6 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
     }
   }, [editRecommentContent]);
 
-  const deleteToggle = () => {
-    setDeleteConfirm(!deleteConfirm);
-  };
-
   const editToggle = async () => {
     await updateDoc(doc(dbService, "Recomments", id as string), {
       isEdit: !isEdit,
@@ -87,6 +86,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
 
   const deleteRecomment = async (id: string) => {
     await deleteDoc(doc(dbService, "Recomments", id));
+    hideModal();
   };
 
   const getRecommentUser = async () => {
@@ -112,32 +112,50 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
       const pastComment = {
         ...snapshotdata,
       };
-
       if (pastComment.reporter) {
-        if (pastComment.reporter.includes(authService.currentUser?.uid)) {
-          alert("이미 신고한 답글입니다.");
+        if (
+          pastComment.reporter
+            .map((rep: any) => rep.userId === authService.currentUser?.uid)
+            .includes(true)
+        ) {
+          alert("이미 신고한 댓글입니다.");
           return;
         } else {
-          pastComment.reporter.push(authService.currentUser?.uid);
-          await updateDoc(doc(dbService, "ReportReComments", id as string), {
-            reporter: pastComment.reporter,
+          showModal({
+            modalType: "ReportModal",
+            modalProps: {
+              type: "recomment",
+              post: recomment,
+              currentUser: recommentUser,
+              pastPost: pastComment,
+            },
           });
-          alert("새로운 신고자!");
         }
       } else if (!pastComment.reporter) {
-        const newComments = {
-          commentId: id,
-          content: content,
-          reporter: [authService.currentUser?.uid],
-        };
-        await setDoc(
-          doc(dbService, "ReportReComments", id as string),
-          newComments
-        );
-        alert("신고 완료");
+        showModal({
+          modalType: "ReportModal",
+          modalProps: {
+            type: "recomment",
+            post: recomment,
+            currentUser: recommentUser,
+            pastPost: pastComment,
+          },
+        });
       }
     } else {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
     }
   };
 
@@ -152,13 +170,15 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
           href={`/users/${recomment.userId}`}
           className="flex flex-col items-center space-y-2 w-[34%] md:w-[13%] "
         >
-          <Image
-            width={48}
-            height={48}
-            alt=""
-            src={recommentUser?.imageURL as string}
-            className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
-          />
+          {recommentUser?.imageURL && (
+            <Image
+              width={48}
+              height={48}
+              alt=""
+              src={recommentUser?.imageURL as string}
+              className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
+            />
+          )}
           <div className="flex justify-start items-center space-x-1">
             <span className="text-xs">{recommentUser?.nickname}</span>
             <span className="w-[8px] sm:w-[12px]">
@@ -207,8 +227,22 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
                 } flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs`}
               >
                 <button onClick={editToggle}>수정</button>
-                {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}
-                <button onClick={deleteToggle}>삭제</button>
+                <button
+                  onClick={() =>
+                    showModal({
+                      modalType: "ConfirmModal",
+                      modalProps: {
+                        title: "답글을 삭제 하시겠어요?",
+                        text: "삭제한 답글은 복원이 불가합니다.",
+                        rightbtntext: "삭제",
+                        rightbtnfunc: () =>
+                          deleteRecomment(recomment.id as string),
+                      },
+                    })
+                  }
+                >
+                  삭제
+                </button>
               </div>
             ) : (
               <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
@@ -217,16 +251,6 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             )}
           </div>
         </div>
-
-        {deleteConfirm && (
-          <DeleteModal
-            deleteRecomment={deleteRecomment}
-            setDeleteConfirm={setDeleteConfirm}
-            id={id}
-            text="답글"
-            content="삭제한 답글은 복원이 불가합니다."
-          />
-        )}
       </li>
     </>
   );
