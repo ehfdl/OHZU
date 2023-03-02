@@ -13,6 +13,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import DeleteModal from "../delete_modal";
@@ -224,19 +225,24 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
 
   return (
     <>
-      <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0">
-        <div className="flex space-x-6 justify-between w-full">
+      <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0 pr-6">
+        <div className="flex space-x-3 sm:space-x-6 justify-between w-full">
           <Link
             href={`/users/${comment.userId}`}
-            className="flex flex-col items-center space-y-2 w-[11%]"
+            className="flex flex-col items-center space-y-2 w-[30%] md:w-[11%]"
           >
-            <img
-              src={user?.imageURL}
-              className="bg-slate-300 w-[40px] aspect-square rounded-full object-cover"
-            />
-            <div className="flex justify-start space-x-1">
+            {user?.imageURL && (
+              <Image
+                width={48}
+                height={48}
+                alt=""
+                src={user?.imageURL as string}
+                className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
+              />
+            )}
+            <div className="flex justify-start items-center space-x-1">
               <span className="text-xs">{user?.nickname}</span>
-              <span className="w-[12px]">
+              <span className="w-[8px] sm:w-[12px]">
                 <Grade score={user?.point!} />
               </span>
             </div>
@@ -247,19 +253,21 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                 name="editContent"
                 value={editContent}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+                className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-xs sm:text-base"
                 rows={resizeTextArea.rows}
                 placeholder={content}
               />
             ) : (
-              <pre className="whitespace-pre-wrap break-all">{content}</pre>
+              <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
+                {content}
+              </pre>
             )}
             <div className="flex justify-between">
               <span className="text-xs text-gray-500 flex items-end">
                 {createdAt}
               </span>
               {isEdit && (
-                <div className="flex justify-end items-end space-x-4">
+                <div className="flex justify-end items-end space-x-2">
                   <button
                     className="text-xs font-medium hover:text-black text-textGray"
                     onClick={editToggle}
@@ -278,7 +286,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                 <div
                   className={`${
                     isEdit ? "hidden" : "flex"
-                  } flex justify-end items-end space-x-4 text-xs`}
+                  } flex justify-end items-end space-x-2 text-xs`}
                 >
                   <button
                     onClick={editToggle}
@@ -317,7 +325,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   )}
                 </div>
               ) : (
-                <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
+                <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs">
                   <button onClick={onClickReportComment}>신고</button>
                   {recomments.length === 0 ? (
                     <button

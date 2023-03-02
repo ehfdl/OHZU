@@ -1,6 +1,7 @@
 import { authService, dbService } from "@/firebase";
 import useModal from "@/hooks/useModal";
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import DeleteModal from "../delete_modal";
@@ -167,18 +168,21 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   }, []);
   return (
     <>
-      <li className="py-6 flex space-x-6 justify-end w-full border-b border-borderGray relative before:contents-[''] before:w-4 before:h-4 before:border-l-2 before:border-b-2 before:absolute before:border-iconDefault before:left-4 before:top-8 pl-8 before:opacity-0 first:before:opacity-100">
+      <li className="py-6 flex space-x-3 sm:space-x-6 justify-end w-full border-b border-borderGray relative before:contents-[''] before:w-4 before:h-4 before:border-l-2 before:border-b-2 before:absolute before:border-iconDefault before:left-0 sm:before:left-4 before:top-8 pl-4 sm:pl-8 before:opacity-0 first:before:opacity-100">
         <Link
           href={`/users/${recomment.userId}`}
-          className="flex flex-col items-center space-y-2 w-[13%] "
+          className="flex flex-col items-center space-y-2 w-[34%] md:w-[13%] "
         >
-          <img
-            src={recommentUser?.imageURL}
-            className="bg-slate-300 w-[40px] aspect-square rounded-full object-cover"
+          <Image
+            width={48}
+            height={48}
+            alt=""
+            src={recommentUser?.imageURL as string}
+            className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
           />
-          <div className="flex justify-start space-x-1">
+          <div className="flex justify-start items-center space-x-1">
             <span className="text-xs">{recommentUser?.nickname}</span>
-            <span className="w-[12px]">
+            <span className="w-[8px] sm:w-[12px]">
               <Grade score={recommentUser?.point!} />
             </span>
           </div>
@@ -189,19 +193,21 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               name="editContent"
               value={editRecommentContent}
               onChange={handleChange}
-              className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+              className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-xs sm:text-base"
               rows={resizeTextArea.rows}
               placeholder={content}
             />
           ) : (
-            <pre className="whitespace-pre-wrap break-all">{content}</pre>
+            <pre className="whitespace-pre-wrap break-all text-xs sm:text-sm">
+              {content}
+            </pre>
           )}
           <div className="flex justify-between">
             <span className="text-xs text-gray-500 flex items-end">
               {createdAt}
             </span>
             {isEdit && (
-              <div className="flex justify-end items-end space-x-2">
+              <div className="flex justify-end items-end space-x-2 text-gray-500">
                 <button className="text-xs font-medium" onClick={editToggle}>
                   취소
                 </button>
@@ -219,7 +225,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               <div
                 className={`${
                   isEdit ? "hidden" : "flex"
-                } flex justify-end items-end space-x-4 text-gray-500 text-xs`}
+                } flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs`}
               >
                 <button onClick={editToggle}>수정</button>
                 {/* <button onClick={() => deleteComment(id as string)}>삭제</button> */}

@@ -7,7 +7,7 @@ const Grade = ({ score }: { score: number }) => {
 
     return (
       <Image
-        className="w-full h-full"
+        className="w-full object-cover"
         src={rank}
         width={12}
         height={15}
@@ -19,7 +19,7 @@ const Grade = ({ score }: { score: number }) => {
 
     return (
       <Image
-        className="w-full h-full"
+        className="w-full object-cover"
         src={rank}
         width={12}
         height={15}
@@ -31,7 +31,7 @@ const Grade = ({ score }: { score: number }) => {
 
     return (
       <Image
-        className="w-full h-full"
+        className="w-full object-cover"
         src={rank}
         width={12}
         height={15}

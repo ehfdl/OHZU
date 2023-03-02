@@ -12,23 +12,33 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 
+import { v4 as uuidv4 } from "uuid";
+
+import { useEffect, useState } from "react";
+import { GetServerSideProps } from "next";
 import Link from "next/link";
-import Layout from "@/components/layout";
-import Grade from "../../components/grade";
-import { FiHeart, FiMoreVertical } from "react-icons/fi";
+import Image from "next/image";
+import { useRouter } from "next/router";
+
+import { FiHeart, FiMoreVertical, FiX } from "react-icons/fi";
 import { FaHeart } from "react-icons/fa";
 import { TfiTrash } from "react-icons/tfi";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import DeleteModal from "@/components/delete_modal";
-import { deleteObject, ref } from "firebase/storage";
-import { GetServerSideProps } from "next";
-import Comments from "@/components/comment/comments";
 import { BsShareFill } from "react-icons/bs";
 import { RiAlarmWarningLine } from "react-icons/ri";
 import { MdOutlineEditNote } from "react-icons/md";
+
+import Layout from "@/components/layout";
+import Grade from "../../components/grade";
+import Comments from "@/components/comment/comments";
+import DeleteModal from "@/components/delete_modal";
 import useModal from "@/hooks/useModal";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import SwiperCore, { Pagination } from "swiper";
+import "swiper/css"; //basic
+import "swiper/css/pagination";
 
 interface PostDetailPropsType {
   postId: string;
@@ -38,6 +48,8 @@ interface PostDetailPropsType {
 
 const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
   const router = useRouter();
+
+  SwiperCore.use([Pagination]);
 
   const [imgIdx, setImgIdx] = useState(0);
   const [deleteConfirm, setDeleteConfirm] = useState(false);
@@ -87,15 +99,28 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       navigator.clipboard
         .writeText(window.location.href)
         .then(() => {
-          alert("클립보드에 복사되었습니다.");
+          // alert("클립보드에 복사되었습니다.");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: { message: "클립보드에 복사되었습니다." },
+          });
+          setIsOpen(false);
         })
         .catch(() => {
-          alert("복사를 다시 시도해주세요.");
+          // alert("복사를 다시 시도해주세요.");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: { message: "복사를 다시 시도해주세요." },
+          });
         });
     } else {
       // 흐름 2.
       if (!document.queryCommandSupported("copy")) {
-        return alert("복사하기가 지원되지 않는 브라우저입니다.");
+        // return alert("복사하기가 지원되지 않는 브라우저입니다.");
+        showModal({
+          modalType: "AlertModal",
+          modalProps: { message: "복사하기가 지원되지 않는 브라우저입니다." },
+        });
       }
 
       // 흐름 3.
@@ -115,12 +140,17 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       document.execCommand("copy");
       // 흐름 6.
       document.body.removeChild(textarea);
-      alert("클립보드에 복사되었습니다.");
+      // alert("클립보드에 복사되었습니다.");
+      showModal({
+        modalType: "AlertModal",
+        modalProps: { message: "클립보드에 복사되었습니다." },
+      });
     }
   };
 
   const deleteToggle = () => {
     setDeleteConfirm(!deleteConfirm);
+    setIsOpen(!isOpen);
   };
 
   const deletePost = async (id: string) => {
@@ -353,10 +383,10 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
 
   return (
     <Layout>
-      <div className="sm:max-w-[1200px] mx-auto py-20">
+      <div className="sm:max-w-[1200px] w-full mx-auto sm:py-20 sm:px-4 relative">
         <div
           id="breadcrumbs"
-          className="w-full space-x-2 flex items-center mb-10 text-sm"
+          className="hidden w-full space-x-2 sm:flex items-center mb-10 text-sm"
         >
           <Link href="/" className="text-textGray">
             홈
@@ -366,17 +396,20 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
         </div>
         <div
           id="post-detail"
-          className="w-full flex justify-between items-stretch space-x-10 mb-32"
+          className="w-full flex flex-col sm:flex-row justify-between items-stretch sm:space-x-10 mb-32"
         >
-          <div id="images-column" className="w-2/5">
-            <img
+          <div id="images-column" className="hidden sm:block sm:w-2/5 w-full">
+            <Image
+              width={100}
+              height={100}
+              alt=""
               src={post.img === null ? "" : post.img![imgIdx]}
               className="w-full aspect-square object-cover rounded"
             />
             <div className="mt-6 grid grid-cols-3 gap-6 items-center w-full">
               {post.img?.map((img, i) => (
                 <button
-                  key={i}
+                  key={uuidv4()}
                   className={`${
                     img === post.img![imgIdx]
                       ? "border-2 border-primary"
@@ -384,7 +417,10 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                   } w-full aspect-square object-cover rounded overflow-hidden`}
                   onClick={() => onImgChange(i)}
                 >
-                  <img
+                  <Image
+                    width={100}
+                    height={100}
+                    alt=""
                     src={img}
                     className="w-full aspect-square object-cover"
                   />
@@ -392,11 +428,39 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
               ))}
             </div>
           </div>
-          <div id="detail-info-column" className="w-1/2 relative">
+          <div className="sm:hidden w-full aspect-[4/3]">
+            <Swiper
+              slidesPerView={1}
+              pagination={{ clickable: true }}
+              grabCursor={true}
+            >
+              {post.img?.map((img) => (
+                <div key={uuidv4()} className="w-full">
+                  <SwiperSlide>
+                    {img && (
+                      <Image
+                        src={img}
+                        width={100}
+                        height={100}
+                        alt=""
+                        className="w-full aspect-[4/3] object-cover"
+                      />
+                    )}
+                  </SwiperSlide>
+                </div>
+              ))}
+            </Swiper>
+          </div>
+          <div
+            id="detail-info-column"
+            className="w-full lg:w-1/2 sm:w-[55%] relative mt-10 sm:mt-0 px-4"
+          >
             <div id="title-column" className="flex justify-between items-start">
               <div className="flex flex-col items-start">
-                <h4 className="text-2xl font-bold mb-2">{post.title}</h4>
-                <span className="block py-1 px-5 rounded-full text-sm text-primary bg-second">
+                <h4 className="text-lg sm:text-2xl font-bold mb-1 sm:mb-2">
+                  {post.title}
+                </h4>
+                <span className="block py-1 px-5 rounded-full text-xs sm:text-sm text-primary bg-second">
                   {post.type}
                 </span>
               </div>
@@ -409,7 +473,9 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                       <FiHeart className="text-primary" size={24} />
                     )}
                   </button>
-                  <span className="text-textGray">{post.like!.length}</span>
+                  <span className="text-textGray text-xs">
+                    {post.like!.length}
+                  </span>
                 </div>
                 {authService.currentUser?.uid === post.userId && (
                   <>
@@ -418,30 +484,45 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                         setIsOpen(!isOpen);
                       }}
                     >
-                      <FiMoreVertical size={24} />
+                      <FiMoreVertical className="sm:w-6 sm:h-6 w-5 h-5 text-iconDefault hover:text-iconHover" />
                     </button>
                     {isOpen && (
-                      <div className="absolute top-14 right-0 z-10 bg-white border-black border flex flex-col space-y-6 items-center px-10 py-6">
+                      <div className="fixed bottom-0 sm:absolute sm:top-14 right-0 z-20 bg-white border-second sm:border flex flex-col items-center sm:py-1.5 sm:px-0.5 w-full sm:w-auto h-fit">
+                        <div className="sm:hidden flex justify-center items-center space-x-5 py-5 border-t border-t-borderGray w-full relative">
+                          <span className="font-bold">더보기</span>
+                          <button
+                            className="absolute right-7 w-[18px] h-[18px]"
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <FiX className="text-phGray w-full h-full" />
+                          </button>
+                        </div>
                         <Link
                           href={`/post/edit/${postId}`}
-                          className="flex items-center space-x-5"
+                          className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                         >
                           <span> 게시글 수정하기</span>{" "}
-                          <MdOutlineEditNote size={18} />
+                          <MdOutlineEditNote
+                            className="hidden sm:block"
+                            size={18}
+                          />
                         </Link>
                         <button
-                          className="flex items-center space-x-5"
+                          className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                           onClick={deleteToggle}
                         >
                           <span>게시글 삭제하기</span>
-                          <TfiTrash size={18} />
+                          <TfiTrash className="hidden sm:block" size={18} />
                         </button>
                         <button
-                          className="flex items-center space-x-5"
+                          className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                           onClick={doCopy}
                         >
                           <span>게시글 공유하기</span>
-                          <BsShareFill size={18} className="p-0.5" />
+                          <BsShareFill
+                            size={18}
+                            className="p-0.5 hidden sm:block"
+                          />
                         </button>
                       </div>
                     )}
@@ -459,39 +540,46 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
               />
             )}
             <div id="post-user" className="flex items-start space-x-6 mt-7">
-              <div className="flex flex-col items-center justify-start space-y-2 w-[15%]">
+              <div className="flex flex-col items-center justify-start space-y-2 lg:w-[25%] w-[30%]">
                 <Link href={`/users/${user.userId}`}>
-                  <img
-                    src={user?.imageURL}
-                    className="w-20 aspect-square bg-slate-300 rounded-full object-cover"
+                  <Image
+                    width={100}
+                    height={100}
+                    alt=""
+                    src={user?.imageURL as string}
+                    className="w-12 sm:w-20 aspect-square bg-slate-300 rounded-full object-cover"
                   />
                 </Link>
                 <Link
                   href={`/users/${post.userId}`}
                   className="flex justify-center items-center"
                 >
-                  <span className="font-bold mr-1">{user?.nickname}</span>
-                  <span className="w-[12px]">
+                  <span className="font-bold mr-1 text-xs sm:text-sm lg:text-base">
+                    {user?.nickname}
+                  </span>
+                  <span className="w-[10px] sm:w-[12px]">
                     <Grade score={user.point!} />
                   </span>
                 </Link>
               </div>
-              <div className="w-4/5 pt-1">
-                <pre className="whitespace-pre-wrap break-all">{post.text}</pre>
+              <div className="w-full pt-1">
+                <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
+                  {post.text}
+                </pre>
               </div>
             </div>
             <div id="ingredient" className="mt-10 mb-9">
-              <span className="inline-block px-7 py-2 bg-primary text-white text-xl rounded-full">
+              <span className="inline-block py-1.5 px-5 sm:px-7 sm:py-2 bg-primary text-white lg:text-xl text-sm rounded-full">
                 준비물
               </span>
               <div className="pt-6 flex justify-start flex-wrap">
-                {post.ingredient?.map((ing, i) => (
+                {post.ingredient?.map((ing) => (
                   <button
-                    key={i}
+                    key={uuidv4()}
                     onClick={() => {
                       router.push(`/search/include/${ing}`);
                     }}
-                    className="inline-block mr-6 mb-6 py-1.5 px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition"
+                    className="inline-block mr-6 mb-6 py-1.5 px-4 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-xs sm:text-base"
                   >
                     {ing}
                   </button>
@@ -499,32 +587,26 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
               </div>
             </div>
             <div id="recipe">
-              <span className="inline-block px-7 py-2 bg-primary text-white text-xl rounded-full">
+              <span className="inline-block py-1.5 px-5 sm:px-7 sm:py-2 bg-primary text-white lg:text-xl text-sm rounded-full">
                 만드는 방법
               </span>
-              <pre className="pt-6 whitespace-pre-wrap break-all leading-10 pl-2">
+              <pre className="text-xs sm:text-base pt-6 whitespace-pre-wrap break-all leading-10 pl-2">
                 {post.recipe}
               </pre>
             </div>
             {authService.currentUser?.uid !== post.userId && (
               <div
                 id="faq"
-                className="absolute right-0 -bottom-16 flex items-start space-x-6"
+                className="absolute right-4 -bottom-16 flex items-start space-x-2 sm:space-x-6"
               >
-                <button onClick={doCopy}>
-                  <BsShareFill
-                    size={24}
-                    className="text-iconDefault mt-1 hover:text-primary"
-                  />
+                <button onClick={doCopy} className="w-[24px]">
+                  <BsShareFill className="w-full text-iconDefault mt-1 hover:text-primary" />
                 </button>
                 <button
                   onClick={onClickReportPost}
-                  className="flex flex-col items-center space-y-0.5 group"
+                  className="flex flex-col items-center space-y-0.5 group w-[24px]"
                 >
-                  <RiAlarmWarningLine
-                    size={24}
-                    className="text-iconDefault group-hover:text-primary"
-                  />
+                  <RiAlarmWarningLine className="w-full text-iconDefault group-hover:text-primary" />
                   <span className="text-[10px] text-iconDefault group-hover:text-primary">
                     신고
                   </span>
@@ -540,7 +622,19 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
           user={user}
           post={post}
         />
+        {isOpen && (
+          <div className="sm:hidden fixed bottom-0 left-0 w-screen h-screen bg-black/50 z-10" />
+        )}
       </div>
+      <style jsx global>{`
+        .swiper-pagination .swiper-pagination-bullet {
+          background: #d9d9d9;
+          opacity: 1;
+        }
+        .swiper-pagination .swiper-pagination-bullet-active {
+          background: #ff6161;
+        }
+      `}</style>
     </Layout>
   );
 };
