@@ -1,4 +1,5 @@
 import { authService, dbService } from "@/firebase";
+import useModal from "@/hooks/useModal";
 import {
   addDoc,
   collection,
@@ -31,6 +32,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<UserType>();
   const [recomments, setRecomments] = useState<CommentType[]>([]);
+  const { showModal } = useModal();
 
   const editToggle = async () => {
     await updateDoc(doc(dbService, "Comments", id as string), {
@@ -167,31 +169,49 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
       };
 
       if (pastComment.reporter) {
-        if (pastComment.reporter.includes(authService.currentUser?.uid)) {
+        if (
+          pastComment.reporter
+            .map((rep: any) => rep.userId === authService.currentUser?.uid)
+            .includes(true)
+        ) {
           alert("이미 신고한 댓글입니다.");
           return;
         } else {
-          pastComment.reporter.push(authService.currentUser?.uid);
-          await updateDoc(doc(dbService, "ReportComments", id as string), {
-            reporter: pastComment.reporter,
+          showModal({
+            modalType: "ReportModal",
+            modalProps: {
+              type: "comment",
+              post: comment,
+              currentUser,
+              pastPost: pastComment,
+            },
           });
-          alert("새로운 신고자!");
         }
       } else if (!pastComment.reporter) {
-        const newComments = {
-          commentId: id,
-          postId: comment.postId,
-          content: comment.content,
-          reporter: [authService.currentUser?.uid],
-        };
-        await setDoc(
-          doc(dbService, "ReportComments", id as string),
-          newComments
-        );
-        alert("신고 완료");
+        showModal({
+          modalType: "ReportModal",
+          modalProps: {
+            type: "comment",
+            post: comment,
+            currentUser,
+            pastPost: pastComment,
+          },
+        });
       }
     } else {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
     }
   };
 

@@ -56,6 +56,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
   });
   // 전역모달
   const { showModal, hideModal } = useModal();
+  const [reportId, setReportId] = useState<string>("");
 
   // 로그인 유무 체크
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -301,23 +302,24 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
 
     if (authService.currentUser?.uid) {
       if (pastPost.reporter) {
-        if (pastPost.reporter.includes(authService.currentUser?.uid)) {
-          alert("이미 신고한 게시물입니다.");
+        if (
+          pastPost.reporter
+            .map((rep: any) => rep.userId === authService.currentUser?.uid)
+            .includes(true)
+        ) {
+          alert("이미 신고한 게시물입니당");
           return;
         } else {
-          pastPost.reporter.push(authService.currentUser?.uid);
-          await updateDoc(doc(dbService, "ReportPosts", postId), {
-            reporter: pastPost.reporter,
+          showModal({
+            modalType: "ReportModal",
+            modalProps: { type: "post", post, currentUser, pastPost, reportId },
           });
-          alert("새로운 신고자!");
         }
       } else if (!pastPost.reporter) {
-        const newPost = {
-          ...post,
-          reporter: [authService.currentUser?.uid],
-        };
-        await setDoc(doc(dbService, "ReportPosts", postId), newPost);
-        alert("신고 완료");
+        showModal({
+          modalType: "ReportModal",
+          modalProps: { type: "post", post, currentUser, pastPost, reportId },
+        });
       }
     } else {
       showModal({
@@ -340,7 +342,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     if (authService.currentUser) {
       updateUserRecently();
     }
-
+    setReportId(postId);
     getComments();
     updateView();
   }, []);

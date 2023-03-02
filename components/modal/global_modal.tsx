@@ -7,6 +7,7 @@ import JoinModal from "./join_modal";
 import { modalState } from "../recoil/modal";
 import ProfileModal from "./profile_modal";
 import FollowModal from "./follow_modal";
+import ReportModal from "./report_modal";
 
 export const MODAL_TYPES = {
   ConfirmModal: "ConfirmModal",
@@ -15,6 +16,7 @@ export const MODAL_TYPES = {
   JoinModal: "JoinModal",
   ProfileModal: "ProfileModal",
   FollowModal: "FollowModal",
+  ReportModal: "ReportModal",
 } as const;
 
 const MODAL_COMPONENTS: any = {
@@ -24,6 +26,7 @@ const MODAL_COMPONENTS: any = {
   [MODAL_TYPES.JoinModal]: JoinModal,
   [MODAL_TYPES.ProfileModal]: ProfileModal,
   [MODAL_TYPES.FollowModal]: FollowModal,
+  [MODAL_TYPES.ReportModal]: ReportModal,
 };
 
 const GlobalModal = () => {

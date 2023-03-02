@@ -101,11 +101,10 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
   }, [form]);
 
   return (
-    <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
-      <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-      <div className="w-[390px] sm:w-[588px] sm:h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
+      <div className="w-full h-full relative sm:w-[588px] sm:h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
-          className="w-9 mt-6 ml-[340px] sm:w-10 aspect-square absolute sm:mt-7 sm:ml-[500px]"
+          className="w-9  sm:w-10 aspect-square absolute top-7 right-7"
           onClick={() => hideModal()}
         >
           <FiX className="w-full h-full text-phGray" />
@@ -114,7 +113,7 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
         <div className="text-[18px] sm:text-[32px] font-bold mt-6 sm:mt-[84px]">
           프로필 편집
         </div>
-        <div className="w-[120px] sm:w-40 aspect-square mt-12 sm:mt-6 bg-[#d9d9d9] rounded-full overflow-hidden">
+        <div className="w-[120px] sm:w-40 aspect-square mt-12 sm:mt-6 bg-[#d9d9d9] rounded-full ">
           {preview !== null ? (
             <Image
               src={preview as string}
@@ -126,14 +125,14 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
           ) : (
             <Image
               src={myProfile.imageURL as string}
-              className="w-[120px] sm:w-40 aspect-square object-cover"
+              className="w-[120px] sm:w-40 aspect-square object-cover rounded-full "
               width={120}
               height={120}
               alt=""
             />
           )}
         </div>
-        <label className="mt-4 sm:mt-[30px] cursor-pointer">
+        <label className="mt-4 sm:mt-[30px] cursor-pointer rounded-full ">
           <input
             onChange={onChangeImg}
             name="img"
@@ -141,7 +140,7 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
             accept="image/*"
             className="hidden"
           />
-          <span className="text-[12px] sm:text-base">프로필 이미지 수정</span>
+          <div className="text-[12px] sm:text-base">프로필 이미지 수정</div>
         </label>
         <div className="w-[342px] mt-[30px] sm:w-[472px] sm:mt-3">
           <div>
