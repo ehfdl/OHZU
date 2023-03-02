@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useState } from "react";
 import UserDropdown from "@/components/sub_page/user_dropdown";
 import Grade from "@/components/grade";
-import FollowModal from "@/components/follow_modal";
+import FollowModal from "@/components/modal/follow_modal";
 import UserCateNavbar from "@/components/navbar/user_cate_navbar";
 import { GetServerSideProps } from "next";
 import Image from "next/image";

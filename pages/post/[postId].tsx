@@ -28,6 +28,7 @@ import Comments from "@/components/comment/comments";
 import { BsShareFill } from "react-icons/bs";
 import { RiAlarmWarningLine } from "react-icons/ri";
 import { MdOutlineEditNote } from "react-icons/md";
+import useModal from "@/hooks/useModal";
 
 interface PostDetailPropsType {
   postId: string;
@@ -53,7 +54,10 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     imageURL: "",
     point: 0,
   });
+  // 전역모달
+  const { showModal, hideModal } = useModal();
 
+  // 로그인 유무 체크
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -204,7 +208,19 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
         });
       }
     } else {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
     }
   };
 
@@ -304,7 +320,19 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
         alert("신고 완료");
       }
     } else {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
     }
   };
 

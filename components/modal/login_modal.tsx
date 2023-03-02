@@ -23,21 +23,27 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { SiNaver, SiKakaotalk } from "react-icons/si";
 import axios from "axios";
 import Image from "next/image";
-import FindPassword from "./find_password";
+import useModal from "@/hooks/useModal";
+import FindPassword from "../find_password";
 
-const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
+export interface LoginModalProps {}
+
+const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const [modal, setModal] = useState(false);
+
   const [findPassword, setFindPassword] = useState(false);
   const [mobileOption, setMobileOption] = useState(false);
 
+  // join modal open
+  const { showModal, hideModal } = useModal();
   // save email
-
   const SAVE_EMAIL_ID_KEY = "SAVE_EMAIL_ID_KEY";
   const SAVE_EMAIL_ID_CHECKED_KEY = "SAVE_EMAIL_ID_CHECKED_KEY";
 
-  const [checkedSaveEmail, setCheckedSaveEmail] = useState(false);
+  const [checkedSaveEmail, setCheckedSaveEmail] = useState<boolean | string>(
+    false
+  );
 
   // email, password 정규식
   const emailRegEx =
@@ -52,7 +58,10 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         const user = authService;
 
         if (user.currentUser?.emailVerified) {
-          localStorage.setItem(SAVE_EMAIL_ID_CHECKED_KEY, checkedSaveEmail);
+          localStorage.setItem(
+            SAVE_EMAIL_ID_CHECKED_KEY,
+            checkedSaveEmail as string
+          );
           if (checkedSaveEmail) {
             localStorage.setItem(SAVE_EMAIL_ID_KEY, email);
           }
@@ -60,7 +69,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
             apiKey as string,
             authService.currentUser?.uid as string
           );
-          setIsOpen(false);
+          hideModal();
         } else {
           alert(
             "인증이 되지 않은 사용자입니다. 서비스 이용에 제한이 있습니다."
@@ -92,22 +101,22 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
   }, [setEmail]);
 
   // 비밀번호 재설정 함수 (비밀번호 찾기)
-  // const resetPassword = () => {
-  //   if (email !== "") {
-  //     sendPasswordResetEmail(authService, email)
-  //       .then(function () {
-  //         console.log("비밀번호 리셋, 이메일 전송 완료");
-  //       })
-  //       .catch(function (error: any) {
-  //         const errorMessage = error.message;
-  //         if (errorMessage.includes("user-not-found")) {
-  //           alert("가입되지 않은 이메일입니다.");
-  //         }
-  //       });
-  //   } else {
-  //     console.log("이메일이 틀림,");
-  //   }
-  // };
+  const resetPassword = () => {
+    if (email !== "") {
+      sendPasswordResetEmail(authService, email)
+        .then(function () {
+          console.log("비밀번호 리셋, 이메일 전송 완료");
+        })
+        .catch(function (error: any) {
+          const errorMessage = error.message;
+          if (errorMessage.includes("user-not-found")) {
+            alert("가입되지 않은 이메일입니다.");
+          }
+        });
+    } else {
+      console.log("이메일이 틀림,");
+    }
+  };
 
   // 간편 로그인
   // 구글 -> uid 생성 후, setDoc으로 document 생성하여 유저 추가.
@@ -150,7 +159,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
-        setIsOpen(false);
+        hideModal();
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -201,7 +210,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         // 로그인한 사용자 정보가 제공됩니다.
         const user = result.user;
         // 추가 정보는 getAdditionalUserInfo(result)를 사용하여 사용할 수 있습니다.
-        setIsOpen(false);
+        hideModal();
       })
       .catch((error) => {
         // 이 부분에서는 오류를 처리합니다.
@@ -276,7 +285,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 alert("카카오 간편 회원가입 성공!");
               }
 
-              setIsOpen(false);
+              hideModal();
             })
             .catch((error: any) => {
               const errorCode = error.code;
@@ -343,7 +352,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         <div className="inner max-w-[588px] w-full max-h-[820px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
-              onClick={() => setIsOpen(false)}
+              onClick={() => hideModal()}
               className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
             />
             <h4 className="text-[40px] font-bold mt-[64px] mb-[42px]">
@@ -393,7 +402,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                       id="saveEmail"
                       name="saveEmail"
                       type="checkbox"
-                      checked={checkedSaveEmail}
+                      checked={checkedSaveEmail as boolean}
                       className="w-5 h-5 cursor-pointer"
                       onChange={() => setCheckedSaveEmail(!checkedSaveEmail)}
                     />
@@ -403,15 +412,15 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
               </div>
 
               {/* <div>
-                <span>비밀번호 재설정</span>
-                <input
-                  type="text"
-                  placeholder="재설정 코드를 받을 이메일을 입력하세요."
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="border bg-red-200"
-                />
-                <div onClick={resetPassword}>♥️</div>
-              </div> */}
+              <span>비밀번호 재설정</span>
+              <input
+                type="text"
+                placeholder="재설정 코드를 받을 이메일을 입력하세요."
+                onChange={(e) => setEmail(e.target.value)}
+                className="border bg-red-200"
+              />
+              <div onClick={resetPassword}>♥️</div>
+            </div> */}
 
               <div className="buttonWrap mb-4">
                 <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded   ">
@@ -444,8 +453,8 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 </div>
                 {/* 네이버 로그인 구현 전 */}
                 {/* <div>
-                <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
-              </div> */}
+              <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
+            </div> */}
                 <div onClick={loginFormWithKakao}>
                   <Image
                     src="/image/kakao.svg"
@@ -460,8 +469,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 <p className="text-slate-400 mr-1">아직 회원이 아니신가요?</p>
                 <span
                   onClick={() => {
-                    setIsOpen(false);
-                    setJoinIsOpen(true);
+                    showModal({ modalType: "JoinModal", modalProps: {} });
                   }}
                   className="cursor-pointer"
                 >
@@ -479,7 +487,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
-              onClick={() => setIsOpen(false)}
+              onClick={() => hideModal()}
               className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
             />
             <h4 className="text-[24px] font-bold mt-[100px] mb-[42px]">
@@ -541,7 +549,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                           id="saveEmail"
                           name="saveEmail"
                           type="checkbox"
-                          checked={checkedSaveEmail}
+                          checked={checkedSaveEmail as boolean}
                           className="w-5 h-5 cursor-pointer"
                           onChange={() =>
                             setCheckedSaveEmail(!checkedSaveEmail)
@@ -588,8 +596,8 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 </div>
                 {/* 네이버 로그인 구현 전 */}
                 {/* <div>
-                <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
-              </div> */}
+              <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
+            </div> */}
                 <div onClick={loginFormWithKakao}>
                   <Image
                     src="/image/kakao.svg"
@@ -604,8 +612,7 @@ const LoginModal = ({ isOpen, setIsOpen, setJoinIsOpen }: any) => {
                 <p className="text-slate-400 mr-1">아직 회원이 아니신가요?</p>
                 <span
                   onClick={() => {
-                    setIsOpen(false);
-                    setJoinIsOpen(true);
+                    showModal({ modalType: "JoinModal", modalProps: {} });
                   }}
                   className="cursor-pointer"
                 >

@@ -19,7 +19,7 @@ const Cate_Navbar = ({
           value="my-ohju"
           className="hidden peer"
           checked={cate === "전체"}
-          defaultChecked={cate === "전체"}
+          readOnly
         />
         <span className="block peer-checked:font-bold  peer-checked:text-primary cursor-pointer">
           전체

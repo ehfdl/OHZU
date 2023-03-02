@@ -75,6 +75,7 @@ const MyPostCard = ({ post }: { post: any }) => {
           className="w-full h-full object-cover"
           width={170}
           height={170}
+          priority={true}
           alt=""
         />
         <div className=" bg-black/0 w-full h-[284px] object-cover translate-y-[-285px] hover:bg-gray-300/30 hover:block"></div>

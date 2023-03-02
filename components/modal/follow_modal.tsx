@@ -1,24 +1,27 @@
-import React, { useEffect } from "react";
+import useModal from "@/hooks/useModal";
+import React, { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import FollowModalCard from "./sub_page/follow_modal_card";
+import FollowModalCard from "../sub_page/follow_modal_card";
+
+export interface FollowModalProps {
+  defaultfollow?: string;
+  usersFollowerProfile?: UserType[];
+  usersFollowingProfile?: UserType[];
+  myProfile?: any;
+  getMyProfile?: () => Promise<void>;
+}
 
 const FollowModal = ({
-  setIsOpenFollowModal,
-  setFollow,
-  follow,
+  defaultfollow,
   usersFollowerProfile,
   usersFollowingProfile,
   myProfile,
   getMyProfile,
-}: {
-  setIsOpenFollowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setFollow: React.Dispatch<React.SetStateAction<string>>;
-  follow: string;
-  usersFollowerProfile: UserType[];
-  usersFollowingProfile: UserType[];
-  myProfile: any;
-  getMyProfile: () => Promise<void>;
-}) => {
+}: FollowModalProps) => {
+  const { hideModal } = useModal();
+  const [follow, setFollow] = useState(defaultfollow);
+
+  console.log(follow);
   useEffect(() => {
     document.body.style.cssText = `
       position: fixed;
@@ -37,13 +40,15 @@ const FollowModal = ({
       <div className="w-[390px] h-full sm:w-[588px] sm:h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
           className="sm:w-10 w-9 aspect-square absolute mt-6 sm:mt-8 ml-[340px] sm:ml-[500px]"
-          onClick={() => setIsOpenFollowModal(false)}
+          onClick={() => hideModal()}
         >
           <FiX className="w-full h-full text-phGray" />
         </button>
         <div className="w-full flex justify-around mt-10 text-[24px]">
           <label
-            onChange={() => setFollow("follower")}
+            onChange={() => {
+              setFollow("follower");
+            }}
             className="w-1/2 text-slate-500 text-center"
           >
             <input
@@ -58,7 +63,9 @@ const FollowModal = ({
             </span>
           </label>
           <label
-            onChange={() => setFollow("following")}
+            onChange={() => {
+              setFollow("following");
+            }}
             className="w-1/2 text-slate-500 text-center"
           >
             <input
@@ -76,23 +83,29 @@ const FollowModal = ({
 
         <div className="flex pt-8 sm:pt-10 flex-col gap-6 justify-start items-center w-[342px] sm:w-[492px] overflow-auto scrollbar-none">
           {follow === "following" && usersFollowingProfile
-            ? usersFollowingProfile.map((profile) => (
-                <FollowModalCard
-                  key={profile.userId}
-                  profile={profile}
-                  myProfile={myProfile}
-                  getMyProfile={getMyProfile}
-                />
-              ))
+            ? usersFollowingProfile.map(
+                (profile) =>
+                  getMyProfile && (
+                    <FollowModalCard
+                      key={profile.userId}
+                      profile={profile}
+                      myProfile={myProfile}
+                      getMyProfile={getMyProfile}
+                    />
+                  )
+              )
             : follow === "follower" && usersFollowerProfile
-            ? usersFollowerProfile.map((profile) => (
-                <FollowModalCard
-                  key={profile.userId}
-                  profile={profile}
-                  myProfile={myProfile}
-                  getMyProfile={getMyProfile}
-                />
-              ))
+            ? usersFollowerProfile.map(
+                (profile) =>
+                  getMyProfile && (
+                    <FollowModalCard
+                      key={profile.userId}
+                      profile={profile}
+                      myProfile={myProfile}
+                      getMyProfile={getMyProfile}
+                    />
+                  )
+              )
             : null}
         </div>
       </div>
