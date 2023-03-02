@@ -1,14 +1,15 @@
 import { authService, dbService } from "@/firebase";
 import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import Image from "next/image";
 import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 import CommentList from "./comment_list";
 
 interface CommentsProps {
-  postId: string;
-  comments: CommentType[];
-  currentUser: UserType;
-  user: UserType;
+  postId?: string;
+  comments?: CommentType[];
+  currentUser?: UserType;
+  user?: UserType;
   post?: Form;
 }
 const Comments = ({
@@ -37,8 +38,8 @@ const Comments = ({
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState<number>(1);
   const offset = (page - 1) * limit;
-  const total = comments.length;
-  const pagesNumber = Math.ceil(total / limit);
+  const total = comments?.length;
+  const pagesNumber = Math.ceil(total! / limit);
 
   const [resizeTextArea, setResizeTextArea] = useState({
     rows: 1,
@@ -121,29 +122,34 @@ const Comments = ({
 
   return (
     <div id="comments" className="max-w-[768px] w-full mx-auto">
-      <div className="text-xl font-medium space-x-2">
+      <div className="sm:text-xl font-medium space-x-2 mb-4 pl-2 mx-4">
         <span>댓글</span>
-        <span>{comments.length}</span>
+        <span>{comments?.length}</span>
       </div>
-      <div className="h-[1px] w-full bg-black mb-6" />
-      <form className="w-full flex items-center relative space-x-6">
-        <img
-          src={currentUser?.imageURL}
-          className="bg-slate-300 w-[45px] aspect-square rounded-full object-cover"
-        />
+      <div className="h-[1px] bg-black mb-6 mx-4" />
+      <form className="w-full flex items-center relative space-x-4 sm:space-x-6 px-4">
+        {currentUser?.imageURL && (
+          <Image
+            width={48}
+            height={48}
+            alt=""
+            src={currentUser?.imageURL}
+            className="bg-slate-300 w-[36px] sm:w-[45px] aspect-square rounded-full object-cover"
+          />
+        )}
         <textarea
           disabled={authService.currentUser ? false : true}
           name="content"
           value={comment.content}
           onChange={handleChange}
-          className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
           placeholder="댓글을 입력해주세요."
           rows={resizeTextArea.rows}
         />
         <button
           disabled={authService.currentUser ? false : true}
           onClick={addComment}
-          className="absolute right-0 bottom-3 pr-4 disabled:text-gray-400"
+          className="absolute right-[34px] bottom-3 disabled:text-gray-400"
         >
           <span className="text-sm font-bold text-phGray hover:text-black">
             등록
@@ -156,11 +162,11 @@ const Comments = ({
           <CommentList
             key={comment.id}
             comment={comment}
-            currentUser={currentUser}
+            currentUser={currentUser!}
           />
         ))}
       </ul>
-      {comments.length !== 0 && (
+      {comments?.length !== 0 && (
         <nav className="w-full flex justify-center items-center space-x-9">
           <button
             className="text-primary hover:text-hover active:text-hover disabled:text-gray-300"
