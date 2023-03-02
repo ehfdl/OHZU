@@ -542,7 +542,7 @@ const JoinModal = () => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
+      <div className="hidden sm:block w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
 
         <div className="inner max-w-[588px] w-full max-h-[920px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -749,8 +749,6 @@ const JoinModal = () => {
 
       {/* 모바일 */}
       <div className="sm:hidden sm:w-full sm:h-auto sm:flex sm:justify-center sm:items-center">
-        {/* <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" /> */}
-
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
@@ -762,7 +760,7 @@ const JoinModal = () => {
             </h1>
             <form className="formContainer" onSubmit={signUpForm}>
               <div>
-                <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
                   이메일
                 </p>
                 <input
@@ -780,7 +778,7 @@ const JoinModal = () => {
                 </p>
               </div>
               <div>
-                <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
                   비밀번호
                 </p>
                 <input
@@ -800,7 +798,7 @@ const JoinModal = () => {
               {/* input  입력하면 보이는 컨텐츠 */}
               {mobileOption === true ? (
                 <>
-                  <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                  <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
                     비밀번호 확인
                   </p>
                   <div>
@@ -818,7 +816,7 @@ const JoinModal = () => {
                     </p>
                   </div>
                   <div>
-                    <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                    <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
                       닉네임
                     </p>
                     <input
@@ -835,7 +833,7 @@ const JoinModal = () => {
                     </p>
                   </div>
                   <div className="birth_Container">
-                    <p className="max-w-[358px] w-full ml-7 mb-[2px] text-left font-bold">
+                    <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
                       생년월일
                     </p>
                     <div className="birth_input_Wrap max-w-[358px] w-full m-auto mb-6 flex items-center justify-between">
