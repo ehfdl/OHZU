@@ -401,7 +401,8 @@ const LoginModal = () => {
                     setFindPassword={setFindPassword}
                     findPassword={findPassword}
                   />
-                ) : null}
+                ) : // showModal({ modalType: "AlertModal", modalProps: {} })
+                null}
 
                 <div className="flex w-[472px] m-auto">
                   <label

@@ -31,27 +31,51 @@ const Alarm = ({ ssuid }: { ssuid: string }) => {
   }, [authService.currentUser?.uid]);
 
   return (
-    <div className="mr-2">
-      <AiFillBell
-        onClick={() => setIsAlarmOpenModal(!isAlarmOpenModal)}
-        className="sm:w-8 sm:h-8 w-6 h-6 cursor-pointer"
-      />
-      {alarm.filter((content) => content.isDone === false).length !== 0 ? (
-        <div className="w-4 h-4 rounded-full bg-primary text-[8px] text-white flex justify-center items-center pt-[1px] absolute top-6 ml-5 ">
-          {alarm.filter((content) => content.isDone === false).length}
-        </div>
-      ) : (
-        <div></div>
-      )}
-
-      {isAlarmOpenModal ? (
-        <AlarmModal
-          alarm={alarm}
-          getAlarm={getAlarm}
-          setIsAlarmOpenModal={setIsAlarmOpenModal}
+    <>
+      {/* 웹 */}
+      <div className="hidden sm:block mr-2">
+        <AiFillBell
+          onClick={() => setIsAlarmOpenModal(!isAlarmOpenModal)}
+          className="sm:w-8 sm:h-8 w-6 h-6 cursor-pointer"
         />
-      ) : null}
-    </div>
+        {alarm.filter((content) => content.isDone === false).length !== 0 ? (
+          <div className="w-4 h-4 rounded-full bg-primary text-[8px] text-white flex justify-center items-center pt-[1px] absolute top-6 ml-5 ">
+            {alarm.filter((content) => content.isDone === false).length}
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {isAlarmOpenModal ? (
+          <AlarmModal
+            alarm={alarm}
+            getAlarm={getAlarm}
+            setIsAlarmOpenModal={setIsAlarmOpenModal}
+          />
+        ) : null}
+      </div>
+
+      {/* 모바일 */}
+      <div className="sm:hidden mr-2">
+        <AiFillBell
+          onClick={() => setIsAlarmOpenModal(!isAlarmOpenModal)}
+          className="w-7 h-7 cursor-pointer"
+        />
+        {alarm.filter((content) => content.isDone === false).length !== 0 ? (
+          <div className="w-[6px] h-[6px] rounded-full bg-primary text-[8px] text-white flex justify-center items-center pt-[1px] absolute top-0 ml-6 "></div>
+        ) : (
+          <div></div>
+        )}
+
+        {isAlarmOpenModal ? (
+          <AlarmModal
+            alarm={alarm}
+            getAlarm={getAlarm}
+            setIsAlarmOpenModal={setIsAlarmOpenModal}
+          />
+        ) : null}
+      </div>
+    </>
   );
 };
 

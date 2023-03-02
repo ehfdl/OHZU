@@ -19,6 +19,8 @@ const Header = ({ ...props }: any) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [mobileSearch, setMobileSearch] = useState(false);
+
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       // Firebase 연결되면 화면 표시
@@ -71,7 +73,7 @@ const Header = ({ ...props }: any) => {
       });
   };
   // 검색 실행 함수
-  const SearchHanlder = (keyword: any) => {
+  const SearchHandler = (keyword: any) => {
     setSearch(keyword);
   };
 
@@ -87,156 +89,189 @@ const Header = ({ ...props }: any) => {
       });
     }
   };
+
   return (
-    <div className="flex w-full sm:h-[118px] mt-5 sticky top-0 z-[8] justify-between items-center bg-white">
-      <Link legacyBehavior href="/">
-        <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
-          <Image src={LOGO_Ohju} alt="Ohju LOGO" />
-        </div>
-      </Link>
-      <div className="iconWrap sm:h-[80px] h-6 sm:mr-[32px] flex justify-end items-center relative ">
-        {/* <Image
-          src="/image/search.svg"
-          width="20"
-          height="18"
-          alt="검색 아이콘"
-          className="cursor-pointer sm:hidden"
-          onClick={() => {}}
-        /> */}
-        <form
-          className="sm:mr-9 flex items-center hidden sm:block"
-          onSubmit={onSubmitHandler}
-        >
-          <label htmlFor="simple-search" className=""></label>
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Image
-                src="/image/search.svg"
-                width="24"
-                height="24"
-                alt="검색 아이콘"
-                className="cursor-pointer sm:block"
-              />
-            </div>
-            <input
-              onChange={(e) => {
-                SearchHanlder(e.target.value);
-              }}
-              value={search}
-              type="text"
-              id="simple-search"
-              className="w-[419px] bg-[#f2f2f2] border  text-phGray text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5 sm:block hidden"
-              placeholder="혼합주 이름 또는 재료를 입력해주세요."
-              required
-            />
+    <>
+      {/* 웹 헤더 크기 */}
+      <div className="flex w-full sm:h-[118px] h-[50px] mt-5 sticky top-0 z-[8] justify-between items-center bg-white">
+        <Link legacyBehavior href="/">
+          <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
+            <Image src={LOGO_Ohju} alt="Ohju LOGO" priority={true} />
           </div>
-        </form>
-
-        {/* 반응형 아님 */}
-        {/* <form className="mr-9 flex items-center bg-" onSubmit={onSubmitHandler}>
-          <label htmlFor="simple-search" className=""></label>
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <Image
-                src="/image/search.svg"
-                width="24"
-                height="24"
-                alt="검색 아이콘"
-                className="cursor-pointer sm:block"
-              />
+        </Link>
+        <div className="iconWrap sm:h-[80px] h-6 sm:mr-[32px] flex justify-end items-center relative ">
+          <form className="mr-9 flex items-center" onSubmit={onSubmitHandler}>
+            <label htmlFor="simple-search" className=""></label>
+            <div className="relative w-full">
+              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <Image
+                  src="/image/search.svg"
+                  width="24"
+                  height="24"
+                  alt="검색 아이콘"
+                  className="cursor-pointer sm:block"
+                />
+              </div>
+              {/* 모바일 검색창이 활성화가 되면, 웹 검색창은 none상태로 =>  모바일환경에서 검색기능이 제대로 작동함. */}
+              {mobileSearch === true ? null : (
+                <input
+                  onChange={(e) => {
+                    SearchHandler(e.target.value);
+                  }}
+                  value={search}
+                  type="text"
+                  id="simple-search"
+                  className="hidden sm:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:ring-none focus:border-none focus:outline-none  "
+                  placeholder="혼합주 이름 또는 재료를 입력해주세요."
+                  required
+                />
+              )}
             </div>
-            <input
-              onChange={(e) => {
-                SearchHanlder(e.target.value);
-              }}
-              value={search}
-              type="text"
-              id="simple-search"
-              className="w-[419px] bg-[#f2f2f2] border  text-phGray text-sm rounded-[50px] focus:ring-blue-500 focus:border-blue-500 block pl-10 p-2.5"
-              placeholder="혼합주 이름 또는 재료를 입력해주세요."
-              required
-            />
-          </div>
-        </form> */}
+            {/* 모바일에서 검색 아이콘 눌렀을 때 표시되는 검색창 */}
+            {mobileSearch === true ? (
+              <div className="sm:hidden w-full h-full bg-white fixed top-0 left-0 z-50">
+                <div className="max-w-[360px] w-full h-[50px] m-auto mt-12 text-center relative">
+                  <Image
+                    onClick={() => {
+                      setMobileSearch(false);
+                    }}
+                    src="/image/m_arrow.svg"
+                    width="12"
+                    height="18"
+                    alt="검색 나가기 화살표"
+                    priority={true}
+                    className="absolute top-1/2 left-0 translate-y-[-50%] sm:hidden mr-1 cursor-pointer "
+                  />
+                  <div className="searchWrap">
+                    <Image
+                      src="/image/search.svg"
+                      width="18"
+                      height="18"
+                      alt="검색 아이콘"
+                      priority={true}
+                      className="absolute top-1/2 left-12 translate-y-[-50%] sm:hidden mr-1 cursor-pointer "
+                    />
+                    <input
+                      onChange={(e) => {
+                        SearchHandler(e.target.value);
+                      }}
+                      value={search}
+                      type="text"
+                      id="simple-search"
+                      priority={true}
+                      className="max-w-[315px] w-full h-[50px]  bg-[#f2f2f2] border   text-sm rounded-[100px] focus:ring-blue-500 focus:border-blue-500 pl-[50px] p-2.5  sm:hidden"
+                      placeholder="혼합주 이름 또는 재료를 입력해주세요."
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            ) : null}
+          </form>
 
-        {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
-        <div className="flex items-center sm:gap-6 mr-5 ml-1 sm:ml-0 sm:mr-0 ">
-          <Image
-            src="/image/search.svg"
-            width="20"
-            height="18"
-            alt="검색 아이콘"
-            className="cursor-pointer sm:hidden mr-1"
-            onClick={() => {}}
-          />
-          {authService.currentUser || ssuid ? (
-            authService.currentUser?.uid === "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
-              <Link legacyBehavior href="/ohzu">
-                <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
-                  <span className="hidden sm:block">관리페이지</span>
-                </button>
-              </Link>
+          {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
+          <div className="flex items-center sm:gap-6 mr-5 ml-1 sm:ml-0 sm:mr-0 ">
+            <Image
+              src="/image/m_search.svg"
+              width="24"
+              height="24"
+              alt="검색 아이콘"
+              priority={true}
+              className="cursor-pointer sm:hidden mr-1"
+              onClick={() => {
+                setMobileSearch(true);
+              }}
+            />
+
+            {!authService.currentUser ? (
+              <Image
+                src="/image/m(notLogin)_mypage.svg"
+                width="20"
+                height="24"
+                alt="마이페이지"
+                className="sm:hidden mx-3 cursor-pointer"
+                priority={true}
+                onClick={() => {
+                  if (!authService.currentUser) {
+                    showModal({ modalType: "LoginModal", modalProps: {} });
+                  } else if (authService.currentUser) {
+                    router.push(`/mypage`);
+                  }
+                }}
+              />
             ) : (
-              <>
-                <Alarm ssuid={ssuid} />
-                <Link legacyBehavior href="/mypage">
+              <Image
+                src="/image/m(login)_mypage.svg"
+                width="20"
+                height="24"
+                alt="마이페이지"
+                className="sm:hidden mx-3 cursor-pointer"
+                priority={true}
+                onClick={() => {
+                  if (!authService.currentUser) {
+                    showModal({ modalType: "LoginModal", modalProps: {} });
+                  } else if (authService.currentUser) {
+                    router.push(`/mypage`);
+                  }
+                }}
+              />
+            )}
+
+            {authService.currentUser || ssuid ? (
+              authService.currentUser?.uid ===
+              "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
+                <Link legacyBehavior href="/ohzu">
                   <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
-                    <span className="hidden sm:block">마이페이지</span>
+                    <span className="hidden sm:block">관리페이지</span>
                   </button>
                 </Link>
-              </>
-            )
-          ) : (
-            <button
-              onClick={() => {
-                showModal({
-                  modalType: "LoginModal",
-                  modalProps: {},
-                });
-              }}
-              className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary mr-4"
-            >
-              <span className="hidden sm:block">로그인</span>
-            </button>
-          )}
-          {authService.currentUser || ssuid ? (
-            <button
-              onClick={logOut}
-              className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary"
-            >
-              <span className="hidden sm:block">로그아웃</span>
-            </button>
-          ) : (
-            <button
-              onClick={() => {
-                showModal({
-                  modalType: "JoinModal",
-                  modalProps: {},
-                });
-              }}
-              className="sm:w-20 sm:h-[42px]  sm:text-[18px] sm:duration-150 sm:hover:text-primary"
-            >
-              <span className="hidden sm:block">회원가입</span>
-            </button>
-          )}
-
-          <Image
-            src="/image/user.svg"
-            width="24"
-            height="24"
-            alt="마이페이지"
-            className="cursor-pointer block sm:hidden ml-[-4px]"
-            onClick={() => {
-              if (!authService.currentUser) {
-                showModal({ modalType: "LoginModal", modalProps: {} });
-              } else if (authService.currentUser) {
-                router.push(`/mypage`);
-              }
-            }}
-          />
+              ) : (
+                <>
+                  <Alarm ssuid={ssuid} />
+                  <Link legacyBehavior href="/mypage">
+                    <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                      <span className="hidden sm:block">마이페이지</span>
+                    </button>
+                  </Link>
+                </>
+              )
+            ) : (
+              <button
+                onClick={() => {
+                  showModal({
+                    modalType: "LoginModal",
+                    modalProps: {},
+                  });
+                }}
+                className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary mr-4"
+              >
+                <span className="hidden sm:block">로그인</span>
+              </button>
+            )}
+            {authService.currentUser || ssuid ? (
+              <button
+                onClick={logOut}
+                className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary"
+              >
+                <span className="hidden sm:block">로그아웃</span>
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  showModal({
+                    modalType: "JoinModal",
+                    modalProps: {},
+                  });
+                }}
+                className="sm:w-20 sm:h-[42px]  sm:text-[18px] sm:duration-150 sm:hover:text-primary"
+              >
+                <span className="hidden sm:block">회원가입</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
