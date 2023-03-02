@@ -98,15 +98,28 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       navigator.clipboard
         .writeText(window.location.href)
         .then(() => {
-          alert("클립보드에 복사되었습니다.");
+          // alert("클립보드에 복사되었습니다.");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: { message: "클립보드에 복사되었습니다." },
+          });
+          setIsOpen(false);
         })
         .catch(() => {
-          alert("복사를 다시 시도해주세요.");
+          // alert("복사를 다시 시도해주세요.");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: { message: "복사를 다시 시도해주세요." },
+          });
         });
     } else {
       // 흐름 2.
       if (!document.queryCommandSupported("copy")) {
-        return alert("복사하기가 지원되지 않는 브라우저입니다.");
+        // return alert("복사하기가 지원되지 않는 브라우저입니다.");
+        showModal({
+          modalType: "AlertModal",
+          modalProps: { message: "복사하기가 지원되지 않는 브라우저입니다." },
+        });
       }
 
       // 흐름 3.
@@ -126,12 +139,17 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       document.execCommand("copy");
       // 흐름 6.
       document.body.removeChild(textarea);
-      alert("클립보드에 복사되었습니다.");
+      // alert("클립보드에 복사되었습니다.");
+      showModal({
+        modalType: "AlertModal",
+        modalProps: { message: "클립보드에 복사되었습니다." },
+      });
     }
   };
 
   const deleteToggle = () => {
     setDeleteConfirm(!deleteConfirm);
+    setIsOpen(!isOpen);
   };
 
   const deletePost = async (id: string) => {
@@ -553,7 +571,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                 준비물
               </span>
               <div className="pt-6 flex justify-start flex-wrap">
-                {post.ingredient?.map((ing, i) => (
+                {post.ingredient?.map((ing) => (
                   <button
                     key={uuidv4()}
                     onClick={() => {

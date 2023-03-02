@@ -35,33 +35,35 @@ const DeleteModal = ({
 
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
-      <div className="relative w-[590px] bg-white flex flex-col justify-center items-center rounded px-12 py-16">
-        <h2 className="font-bold text-3xl">{text}을 삭제하시겠어요?</h2>
-        <p className="text-center text-textGray mt-6 mb-11">{content}</p>
-        <div className="flex justify-between space-x-5">
+      <div className="relative w-[90%] sm:w-[590px] bg-white flex flex-col justify-center items-center rounded pt-8 pb-12 px-16 sm:px-12 sm:py-16">
+        <h2 className="font-bold sm:text-3xl">{text}을 삭제하시겠어요?</h2>
+        <p className="text-center text-sm sm:text-base text-textGray mt-6 mb-11">
+          {content}
+        </p>
+        <div className="absolute bottom-0 left-0 sm:static flex justify-center sm:space-x-5 w-full">
           <button
-            className="py-3 px-24 border border-primary text-primary rounded"
+            className="py-3.5 sm:px-24 w-full sm:w-auto border-t border-r sm:border border-primary text-primary sm:rounded"
             onClick={() => setDeleteConfirm(false)}
           >
             취소
           </button>
           {text === "댓글" ? (
             <button
-              className="py-3 px-24 bg-primary text-white rounded"
+              className="py-3.5 sm:px-24 w-full sm:w-auto bg-primary text-white sm:rounded"
               onClick={() => deleteComment!(id!)}
             >
               삭제
             </button>
           ) : text === "게시물" ? (
             <button
-              className="py-3 px-24 bg-primary text-white rounded"
+              className="py-3.5 sm:px-24 w-full sm:w-auto bg-primary text-white sm:rounded"
               onClick={() => deletePost!(id!)}
             >
               삭제
             </button>
           ) : text === "답글" ? (
             <button
-              className="py-3 px-24 bg-primary text-white rounded"
+              className="py-3.5 sm:px-24 w-full sm:w-auto bg-primary text-white sm:rounded"
               onClick={() => deleteRecomment!(id!)}
             >
               삭제
