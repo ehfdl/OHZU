@@ -725,6 +725,11 @@
   dependencies:
     tslib "^2.4.0"
 
+"@tailwindcss/line-clamp@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.npmjs.org/@tailwindcss/line-clamp/-/line-clamp-0.4.2.tgz"
+  integrity sha512-HFzAQuqYCjyy/SX9sLGB1lroPzmcnWv1FHkIpmypte10hptf4oPUfucryMKovZh2u0uiS9U5Ty3GghWfEJGwVw==
+
 "@tootallnate/once@2":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@tootallnate/once/-/once-2.0.0.tgz"
@@ -2240,7 +2245,7 @@ functions-have-names@^1.2.2:
 
 fuse.js@^6.6.2:
   version "6.6.2"
-  resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-6.6.2.tgz#fe463fed4b98c0226ac3da2856a415576dc9a111"
+  resolved "https://registry.npmjs.org/fuse.js/-/fuse.js-6.6.2.tgz"
   integrity sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==
 
 gaxios@^5.0.0, gaxios@^5.0.1:
@@ -2440,6 +2445,11 @@ gtoken@^6.1.0:
     gaxios "^5.0.1"
     google-p12-pem "^4.0.0"
     jws "^4.0.0"
+
+hamt_plus@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/hamt_plus/-/hamt_plus-1.0.2.tgz"
+  integrity sha512-t2JXKaehnMb9paaYA7J0BX8QQAY8lwfQ9Gjf4pg/mk4krt+cmwmU652HOoWonf+7+EQV97ARPMhhVgU1ra2GhA==
 
 has-bigints@^1.0.1, has-bigints@^1.0.2:
   version "1.0.2"
@@ -3740,6 +3750,13 @@ readdirp@~3.6.0:
   integrity sha512-hOS089on8RduqdbhvQ5Z37A0ESjsqz6qnRcffsMU3495FuTdqSm+7bhJ29JvIOsBDEEnan5DPu9t3To9VRlMzA==
   dependencies:
     picomatch "^2.2.1"
+
+recoil@^0.7.6:
+  version "0.7.7"
+  resolved "https://registry.npmjs.org/recoil/-/recoil-0.7.7.tgz"
+  integrity sha512-8Og5KPQW9LwC577Vc7Ug2P0vQshkv1y3zG3tSSkWMqkWSwHmE+by06L8JtnGocjW6gcCvfwB3YtrJG6/tWivNQ==
+  dependencies:
+    hamt_plus "1.0.2"
 
 regenerator-runtime@^0.13.11:
   version "0.13.11"

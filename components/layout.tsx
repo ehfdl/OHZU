@@ -25,7 +25,7 @@ const Layout = ({ children }: { children: any }) => {
   }, []);
 
   return (
-    <>
+    <div>
       <GlobalModal />
 
       <Header search={search} setSearch={setSearch} />
@@ -66,7 +66,7 @@ const Layout = ({ children }: { children: any }) => {
       ) : null}
 
       <Footer />
-    </>
+    </div>
   );
 };
 
