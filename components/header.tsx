@@ -15,7 +15,7 @@ const Header = ({ ...props }: any) => {
   const router = useRouter();
   const [ssuid, setSsuid] = useState<any>("");
 
-  const { showModal } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -58,6 +58,7 @@ const Header = ({ ...props }: any) => {
         sessionStorage.removeItem(apiKey as string);
         setSsuid("");
         setCurrentUser(false);
+        hideModal();
         if (
           window.location.pathname === "/mypage" ||
           window.location.pathname === "/post/write" ||

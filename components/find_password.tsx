@@ -1,8 +1,8 @@
 import { authService } from "@/firebase";
+import useModal from "@/hooks/useModal";
 import { sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
-import FindPasswordModal from "./find_password_modal";
 
 const FindPassword = ({
   setEmail,
@@ -10,20 +10,31 @@ const FindPassword = ({
   findPassword,
   setFindPassword,
 }: any) => {
-  const [modal, setModal] = useState(false);
+  const { showModal } = useModal();
+  const [validate, setValidate] = useState<string>("");
 
   // 비밀번호 재설정 함수 (비밀번호 찾기)
   const resetPassword = () => {
     if (email !== "") {
       sendPasswordResetEmail(authService, email)
         .then(function () {
-          console.log("성공! 메일을 확인하고, 비밀번호를 변경해주세요.");
-          setModal(true);
+          console.log("비밀번호 리셋, 이메일 전송 완료");
+          setFindPassword(false);
+          showModal({
+            modalType: "AlertModal",
+            modalProps: {
+              src: "/image/Check_circle.svg",
+              title: "인증메일 발송 완료",
+              text: "이메일을 발송했습니다. \n 해당 메일에서 비밀번호를 재설정하고 로그인해주세요.",
+              btnfunc: () =>
+                showModal({ modalType: "LoginModal", modalProps: {} }),
+            },
+          });
         })
         .catch(function (error: any) {
           const errorMessage = error.message;
           if (errorMessage.includes("user-not-found")) {
-            alert("가입되지 않은 이메일입니다.");
+            setValidate("가입되지 않은 이메일입니다.");
           }
         });
     } else {
@@ -82,8 +93,11 @@ const FindPassword = ({
               type="text"
               placeholder="재설정 코드를 받을 이메일을 입력하세요."
               onChange={(e) => setEmail(e.target.value)}
-              className="max-w-[358px] w-full h-[56px] pl-6 mb-[83px] m-auto bg-[#f5f5f5] placeholder-phGray"
+              className="max-w-[358px] w-full h-[56px] pl-6  m-auto bg-[#f5f5f5] placeholder-phGray"
             />
+            <div className="text-[red] h-3 mb-[70px] text-right mr-4">
+              {validate}
+            </div>
             <div
               onClick={resetPassword}
               className="w-[344px] h-[48px] mb-[29px] m-auto flex justify-center items-center bg-primary text-white rounded   "
@@ -93,13 +107,6 @@ const FindPassword = ({
           </div>
         </div>
       </div>
-      {modal === true ? (
-        <FindPasswordModal
-          setFindPassword={setFindPassword}
-          setModal={setModal}
-          setEmail={setEmail}
-        />
-      ) : null}
     </>
   );
 };

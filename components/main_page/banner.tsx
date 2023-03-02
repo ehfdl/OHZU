@@ -32,7 +32,7 @@ const MainBanner = () => {
   const bannerPrevRef = useRef(null);
 
   return (
-    <div className="group w-full mt-[-62px] py-16 flex mb-10 ">
+    <div className="group sm:w-full sm:mt-[-62px] mt-[-50px] mb-8 py-16 flex sm:mb-10 ">
       <Swiper
         observer={true}
         observeParents={true}
@@ -61,7 +61,7 @@ const MainBanner = () => {
             <Link href={`/post/0lwyBZaw7I1IxihpDMuS`}>
               <Image
                 alt=""
-                className="object-cover w-full"
+                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
                 src="/banner/3.svg"
                 width={300}
                 height={300}
@@ -73,7 +73,7 @@ const MainBanner = () => {
             <Link href={`/post/fgIjM61aFN0ZWdCDuw0K`}>
               <Image
                 alt=""
-                className="object-cover w-full"
+                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
                 src="/banner/4.svg"
                 width={300}
                 height={300}
@@ -85,7 +85,7 @@ const MainBanner = () => {
             <Link href={`/post/R2MLc2GBrw4jUTLGttoA`}>
               <Image
                 alt=""
-                className="object-cover w-full"
+                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
                 src="/banner/5.svg"
                 width={300}
                 height={300}
@@ -97,7 +97,7 @@ const MainBanner = () => {
             <Link href={`/post/knxbaDkL6B2Yg0KkEnCc`}>
               <Image
                 alt=""
-                className="object-cover w-full"
+                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
                 src="/banner/6.svg"
                 width={300}
                 height={300}
@@ -109,7 +109,7 @@ const MainBanner = () => {
             <Link href={`/post/avQb8boBf67BFM0eIEqz`}>
               <Image
                 alt=""
-                className="object-cover w-full"
+                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
                 src="/banner/7.svg"
                 width={300}
                 height={300}
@@ -121,22 +121,22 @@ const MainBanner = () => {
         <div className="w-full">
           <button
             ref={bannerPrevRef}
-            className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer left-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
+            className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] w-[30px] h-[30px] bg-black/20 text-white cursor-pointer sm:left-10 left-2 z-20 -translate-y-[16px] top-1/2 sm:-translate-y-1/2 rounded-full"
           >
             <BsChevronLeft
-              size={25}
-              className="relative right-[2px] bottom-[1px]"
+              size={20}
+              className="relative right-[4px] bottom-[2px] sm:left-[1px] sm:bottom-[0px]"
             />
           </button>
         </div>
         <div className="">
           <button
             ref={bannerNextRef}
-            className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer right-10 z-20 top-1/2 -translate-y-1/2 rounded-full"
+            className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] w-[30px] h-[30px] bg-black/20 text-white cursor-pointer sm:right-10 right-2 z-20 top-1/2 -translate-y-[15px] sm:-translate-y-1/2 rounded-full"
           >
             <BsChevronRight
-              size={25}
-              className="relative left-[1px] bottom-[1px]"
+              size={20}
+              className="relative right-[1px] bottom-[2px] sm:left-[3px] sm:bottom-[0px]"
             />
           </button>
         </div>
