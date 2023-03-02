@@ -103,7 +103,7 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
   return (
     <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
       <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-      <div className="w-[390px] h-full sm:w-[588px] sm:h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
+      <div className="w-[390px] sm:w-[588px] sm:h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
           className="w-9 mt-6 ml-[340px] sm:w-10 aspect-square absolute sm:mt-7 sm:ml-[500px]"
           onClick={() => hideModal()}
@@ -166,7 +166,7 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
         </div>
         <button
           onClick={onSubmit}
-          className="w-[344px] sm:w-[280px] h-14 sm:h-12 bg-primary text-white mt-16 sm:mt-9"
+          className="w-[344px] sm:w-[280px] h-14 sm:h-12 bg-primary text-white my-16 sm:my-9"
         >
           저장
         </button>

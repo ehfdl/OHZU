@@ -37,7 +37,6 @@ const Header = ({ ...props }: any) => {
     if (sessionStorage) {
       const is_session = sessionStorage.getItem(apiKey as string);
       setSsuid(is_session);
-      console.log(is_session);
     }
   }, []);
 
@@ -229,7 +228,7 @@ const Header = ({ ...props }: any) => {
             className="cursor-pointer block sm:hidden ml-[-4px]"
             onClick={() => {
               if (!authService.currentUser) {
-                props.setIsOpen(true);
+                showModal({ modalType: "LoginModal", modalProps: {} });
               } else if (authService.currentUser) {
                 router.push(`/mypage`);
               }

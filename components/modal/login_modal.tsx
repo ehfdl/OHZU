@@ -24,13 +24,16 @@ import { SiNaver, SiKakaotalk } from "react-icons/si";
 import axios from "axios";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
+import FindPassword from "../find_password";
 
 export interface LoginModalProps {}
 
 const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [modal, setModal] = useState(false);
+
+  const [findPassword, setFindPassword] = useState(false);
+  const [mobileOption, setMobileOption] = useState(false);
 
   // join modal open
   const { showModal, hideModal } = useModal();
@@ -327,11 +330,24 @@ const LoginModal = () => {
       window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
     };
   }, []);
-  console.log("email", email);
+
+  // 모바일 해상도에서 input에 글이 들어가면, 로그인 버튼이 뜨는 함수
+  const mobileHandler = () => {
+    if (email || password == undefined) {
+      setMobileOption(true);
+    } else {
+      setMobileOption(false);
+    }
+  };
+
+  useEffect(() => {
+    mobileHandler();
+  }, [email, password]);
 
   return (
     <>
-      <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
+      {/* 웹 */}
+      <div className="hidden sm:w-full sm:h-screen sm:flex sm:absolute sm:justify-center sm:top-0 sm:left-0 sm:items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
         <div className="inner max-w-[588px] w-full max-h-[820px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
           <div className="loginContainer flex-col text-center">
@@ -370,7 +386,7 @@ const LoginModal = () => {
                 />
                 <p
                   onClick={() => {
-                    setModal(true);
+                    setFindPassword(true);
                   }}
                   className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary"
                 >
@@ -395,16 +411,16 @@ const LoginModal = () => {
                 </div>
               </div>
 
-              <div>
-                <span>비밀번호 재설정</span>
-                <input
-                  type="text"
-                  placeholder="재설정 코드를 받을 이메일을 입력하세요."
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="border bg-red-200"
-                />
-                <div onClick={resetPassword}>♥️</div>
-              </div>
+              {/* <div>
+              <span>비밀번호 재설정</span>
+              <input
+                type="text"
+                placeholder="재설정 코드를 받을 이메일을 입력하세요."
+                onChange={(e) => setEmail(e.target.value)}
+                className="border bg-red-200"
+              />
+              <div onClick={resetPassword}>♥️</div>
+            </div> */}
 
               <div className="buttonWrap mb-4">
                 <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded   ">
@@ -437,8 +453,8 @@ const LoginModal = () => {
                 </div>
                 {/* 네이버 로그인 구현 전 */}
                 {/* <div>
-                <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
-              </div> */}
+              <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
+            </div> */}
                 <div onClick={loginFormWithKakao}>
                   <Image
                     src="/image/kakao.svg"
@@ -450,6 +466,149 @@ const LoginModal = () => {
                 </div>
               </div>
               <div className="w-[473px] m-auto flex justify-center text-sm">
+                <p className="text-slate-400 mr-1">아직 회원이 아니신가요?</p>
+                <span
+                  onClick={() => {
+                    showModal({ modalType: "JoinModal", modalProps: {} });
+                  }}
+                  className="cursor-pointer"
+                >
+                  회원가입
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {/* 모바일 */}
+      <div className="sm:hidden sm:w-full sm:h-auto sm:flex sm:justify-center sm:items-center">
+        {/* <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" /> */}
+        <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
+          <div className="loginContainer flex-col text-center">
+            <MdOutlineClose
+              onClick={() => hideModal()}
+              className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
+            />
+            <h4 className="text-[24px] font-bold mt-[100px] mb-[42px]">
+              로그인
+            </h4>
+            <form className="formContainer" onSubmit={signIn}>
+              <div>
+                <p className="max-w-[358px] w-full ml-7 mb-[6px] text-left font-bold">
+                  이메일
+                </p>
+                <input
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  id="email"
+                  // defaultValue={email}
+                  placeholder="이메일을 입력해주세요."
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-6 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                />
+                {/* <p className=" w-[472px] m-auto mb-3 text-right text-sm text-[#999999]"></p> */}
+              </div>
+              <div>
+                <p className="max-w-[358px] w-full ml-7 mb-[6px] text-left font-bold">
+                  비밀번호
+                </p>
+                <input
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  id="password"
+                  placeholder="비밀번호를 입력해주세요."
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                />
+                <p
+                  onClick={() => {
+                    setFindPassword(true);
+                  }}
+                  className=" max-w-[358px] w-full m-auto text-right text-gray-500 text-xs cursor-pointer duration-150 hover:text-primary"
+                >
+                  비밀번호 찾기
+                </p>
+                {/* 비밀번호 찾기 */}
+                {findPassword === true ? (
+                  <FindPassword
+                    setEmail={setEmail}
+                    email={email}
+                    setFindPassword={setFindPassword}
+                    findPassword={findPassword}
+                  />
+                ) : null}
+
+                {/* input 값 들어가면 보이는 컨텐츠 */}
+                {mobileOption === true ? (
+                  <div className="focusContainer block">
+                    <div className="flex max-w-[358px] w-full  m-auto">
+                      <label
+                        htmlFor="auto_login"
+                        className="flex  items-center mb-[48px]"
+                      >
+                        <input
+                          id="saveEmail"
+                          name="saveEmail"
+                          type="checkbox"
+                          checked={checkedSaveEmail as boolean}
+                          className="w-5 h-5 cursor-pointer"
+                          onChange={() =>
+                            setCheckedSaveEmail(!checkedSaveEmail)
+                          }
+                        />
+                        <span className="ml-2 ">이메일 저장하기</span>
+                      </label>
+                    </div>
+
+                    <div className="buttonWrap mb-4">
+                      <button className="w-[344px] h-[56px] mb-[29px] bg-primary text-white rounded   ">
+                        로그인
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+                {/**  input 포커싱되면 뜨는 컨텐츠 ---여기까지*/}
+              </div>
+
+              <div className="max-w-[358px] w-full m-auto flex items-center justify-center mt-[38px] mb-[54px]">
+                <div className="max-w-[116px] w-full h-[1px] mr-4 bg-textGray" />
+                <p className="text-xl font-semibold ">소셜 로그인</p>
+                <div className="max-w-[116px] w-full h-[1px] ml-4 bg-textGray" />
+              </div>
+
+              <div className="w-[280px] m-auto mb-[64px] flex items-center  justify-around">
+                <div onClick={googleJoin}>
+                  <Image
+                    src="/image/google.svg"
+                    width="40"
+                    height="40"
+                    alt="구글 로그인"
+                    className="cursor-pointer"
+                  />
+                </div>
+                <div onClick={facebookJoin}>
+                  <Image
+                    src="/image/facebook.svg"
+                    width="40"
+                    height="40"
+                    alt="페이스북 로그인"
+                    className="cursor-pointer"
+                  />
+                </div>
+                {/* 네이버 로그인 구현 전 */}
+                {/* <div>
+              <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
+            </div> */}
+                <div onClick={loginFormWithKakao}>
+                  <Image
+                    src="/image/kakao.svg"
+                    width="40"
+                    height="40"
+                    alt="카카오 로그인"
+                    className="cursor-pointer"
+                  />
+                </div>
+              </div>
+              <div className="max-w-[203px] w-full m-auto flex justify-center text-sm">
                 <p className="text-slate-400 mr-1">아직 회원이 아니신가요?</p>
                 <span
                   onClick={() => {

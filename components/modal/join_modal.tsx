@@ -214,7 +214,7 @@ const JoinModal = () => {
           })
           .catch((error) => {
             let message = error.message;
-            message = "형식에 맞게 작성해주세요"
+            message = "형식에 맞게 작성해주세요";
             alert(message);
           });
         // alert("회원가입 성공 !");
@@ -754,7 +754,7 @@ const JoinModal = () => {
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
-              onClick={() => setJoinIsOpen(false)}
+              onClick={() => hideModal()}
               className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
             />
             <h1 className="text-[24px] font-bold mt-[100px] mb-[23px]">
@@ -954,8 +954,7 @@ const JoinModal = () => {
                 <p className="text-slate-400 mr-1">이미 계정이 있으신가요?</p>
                 <span
                   onClick={() => {
-                    setIsOpen(true);
-                    setJoinIsOpen(false);
+                    showModal({ modalType: "LoginModal", modalProps: {} });
                   }}
                   className="cursor-pointer"
                 >
