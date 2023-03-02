@@ -347,7 +347,7 @@ const LoginModal = () => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:w-full sm:h-screen sm:flex sm:absolute sm:justify-center sm:top-0 sm:left-0 sm:items-center ">
+      <div className="hidden sm:block w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
         <div className="inner max-w-[588px] w-full max-h-[820px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
           <div className="loginContainer flex-col text-center">
@@ -387,11 +387,22 @@ const LoginModal = () => {
                 <p
                   onClick={() => {
                     setFindPassword(true);
+                    // showModal()
                   }}
                   className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary"
                 >
                   비밀번호 찾기
                 </p>
+                {/* 비밀번호 찾기 */}
+                {findPassword === true ? (
+                  <FindPassword
+                    setEmail={setEmail}
+                    email={email}
+                    setFindPassword={setFindPassword}
+                    findPassword={findPassword}
+                  />
+                ) : // showModal({ modalType: "AlertModal", modalProps: {} })
+                null}
 
                 <div className="flex w-[472px] m-auto">
                   <label
@@ -482,20 +493,19 @@ const LoginModal = () => {
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden sm:w-full sm:h-auto sm:flex sm:justify-center sm:items-center">
-        {/* <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" /> */}
+      <div className="sm:hidden sm:w-full sm:flex sm:justify-center sm:items-center">
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => hideModal()}
               className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
             />
-            <h4 className="text-[24px] font-bold mt-[100px] mb-[42px]">
+            <h4 className="text-[24px] font-bold mt-[100px] mb-[23px]">
               로그인
             </h4>
             <form className="formContainer" onSubmit={signIn}>
               <div>
-                <p className="max-w-[358px] w-full ml-7 mb-[6px] text-left font-bold">
+                <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
                   이메일
                 </p>
                 <input
@@ -509,7 +519,7 @@ const LoginModal = () => {
                 {/* <p className=" w-[472px] m-auto mb-3 text-right text-sm text-[#999999]"></p> */}
               </div>
               <div>
-                <p className="max-w-[358px] w-full ml-7 mb-[6px] text-left font-bold">
+                <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
                   비밀번호
                 </p>
                 <input

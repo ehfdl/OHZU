@@ -108,7 +108,8 @@ export default function SearchInclude({
 
   return (
     <Layout>
-      <div className="max-w-[1200px] w-full m-auto ">
+      {/* 웹 */}
+      <div className="hidden sm:block max-w-[1200px] w-full m-auto ">
         <h1 className="mt-20 mb-11 text-[40px] font-bold">
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
           <span className="text-textGray font-normal">
@@ -126,6 +127,53 @@ export default function SearchInclude({
             <Dropdown setDrop={setDrop} drop={drop} />
           </div>
           <div className="card-wrap grid grid-cols-3 gap-6 justify-between">
+            {drop === "최신순"
+              ? searchData?.map((card: any) =>
+                  // 카테고리 정렬
+                  cate === "전체" ? (
+                    <SearchCard key={card.item.postId} card={card} />
+                  ) : cate === card.item.type ? (
+                    <SearchCard key={card.item.postId} card={card} />
+                  ) : null
+                )
+              : drop === "인기순"
+              ? searchDataLike?.map((card: any) =>
+                  cate === "전체" ? (
+                    <SearchCard key={card.item.postId} card={card} />
+                  ) : cate === card.item.type ? (
+                    <SearchCard key={card.item.postId} card={card} />
+                  ) : null
+                )
+              : searchDataView?.map((card: any) =>
+                  cate === "전체" ? (
+                    <SearchCard key={card.item.postId} card={card} />
+                  ) : cate === card.item.type ? (
+                    <SearchCard key={card.item.postId} card={card} />
+                  ) : null
+                )}
+          </div>
+        </div>
+      </div>
+
+      {/* 모바일 */}
+      <div className="sm:hidden max-w-[635px] w-full m-auto scrollbar-none">
+        <h1 className="max-w-[390px] m-auto mt-6 mb-[30px] pl-6 text-[20px] font-bold">
+          {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
+          <span className="text-textGray font-normal">
+            &nbsp;와(과) 연관된 OHZU
+          </span>
+        </h1>
+        <div className=" w-full flex justify-center mb-12">
+          <Category setCate={setCate} />
+        </div>
+        <div className="max-w-[1200px] m-auto min-h-screen ">
+          <div className="inner-top-wrap flex justify-between items-center mb-[15px]">
+            <p className="ml-6 text-sm font-semibold">
+              게시글 <span className="text-primary">{searchData?.length}</span>
+            </p>
+            <Dropdown setDrop={setDrop} drop={drop} />
+          </div>
+          <div className="card-wrap max-w-[390px] m-auto px-4 w-full grid grid-cols-2 gap-4 place-items-center ">
             {drop === "최신순"
               ? searchData?.map((card: any) =>
                   // 카테고리 정렬
