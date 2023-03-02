@@ -32,7 +32,6 @@ import { MdOutlineEditNote } from "react-icons/md";
 import Layout from "@/components/layout";
 import Grade from "../../components/grade";
 import Comments from "@/components/comment/comments";
-import DeleteModal from "@/components/delete_modal";
 import useModal from "@/hooks/useModal";
 
 import { Swiper, SwiperSlide } from "swiper/react";
