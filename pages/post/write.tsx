@@ -230,7 +230,7 @@ const Post = () => {
       window.removeEventListener("beforeunload", handleBeforeunload);
       router.events.off("routeChangeStart", routeChangeStart);
     };
-  }, [routeChangeStart, router.events, window.Event]);
+  }, [routeChangeStart, router.events]);
 
   useEffect(() => {
     if (confirmed) {
