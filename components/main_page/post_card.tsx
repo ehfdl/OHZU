@@ -93,12 +93,11 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
   return (
     <div className={`flex ${type === "like" ? "scale-90" : null} sm:scale-100`}>
       <div key={post.postId} className="sm:mt-1">
-        {/* hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70 */}
-        <div className="sm:w-full w-[171px] h-[168px] sm:h-[284px] ">
+        <div className="w-full h-[168px] sm:h-[284px] ">
           <Link href={`/post/${post.postId}`}>
             <Image
               src={post.img[0] || defaultImg}
-              className="flex sm:w-[384px] w-[171px] h-[168px] sm:h-[284px] object-cover rounded border-[1px] border-borderGray"
+              className="flex sm:w-[384px] h-[168px] sm:h-[284px] object-cover rounded border-[1px] border-borderGray"
               alt=""
               width={300}
               height={300}
@@ -106,7 +105,7 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
             <div className="rounded bg-black/0 w-full h-[168px] sm:h-[284px] object-cover -translate-y-[168px] sm:translate-y-[-285px] hover:bg-gray-300/30 hover:block transition"></div>
           </Link>
         </div>
-        <div className="sm:h-[136px] h-[105px] sm:w-[384px] bg-white overflow-hidden w-[171px] mb-6 ">
+        <div className="sm:h-[136px] h-[105px] sm:w-[384px] bg-white overflow-hidden  mb-6 ">
           <div className="sm:group">
             <Link href={`/post/${post.postId}`}>
               <div className="sm:float-left mt-3 sm:mt-2 ml-[1px] text-start sm:ml-[70px] sm:translate-y-[12px] float-none sm:text-[22px] text-base font-bold sm:w-[195px] w-[155px]">
