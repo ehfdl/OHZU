@@ -336,7 +336,12 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
             .map((rep: any) => rep.userId === authService.currentUser?.uid)
             .includes(true)
         ) {
-          alert("이미 신고한 게시물입니당");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: {
+              title: "이미 신고한 게시물입니다.",
+            },
+          });
           return;
         } else {
           showModal({

@@ -5,7 +5,7 @@ import Image from "next/image";
 const WriteButton = () => {
   return (
     <>
-      <div className="scroll__container fixed right-[5%] bottom-[5%] z-50">
+      <div className="scroll__container fixed sm:right-[84px] right-[44px]  bottom-[60px] z-50">
         <button
           className="group rounded-full sm:w-16 w-[48px] aspect-square font-thin sm:text-sm duration-300 bg-primary hover:bg-second  "
           id="write"

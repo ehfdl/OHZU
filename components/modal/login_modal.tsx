@@ -142,7 +142,6 @@ const LoginModal = () => {
 
         if (!newProfile.userId) {
           setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
-            alarm: [],
             userId: authService.currentUser?.uid,
             email: token, // 실제 값은 이메일이 아닌 token으로 변경.
             nickname: result.user.displayName,
@@ -153,6 +152,7 @@ const LoginModal = () => {
             following: [],
             follower: [],
             recently: [],
+            alarm: [],
           });
         }
 

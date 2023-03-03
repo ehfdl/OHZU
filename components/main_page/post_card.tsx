@@ -117,13 +117,15 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
             {post.userId === authService.currentUser?.uid ? (
               <Link href="/mypage">
                 <div>
-                  <Image
-                    className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointer"
-                    alt=""
-                    src={user.imageURL as string}
-                    width={300}
-                    height={300}
-                  />
+                  {user.imageURL && (
+                    <Image
+                      className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointer"
+                      alt=""
+                      src={user.imageURL as string}
+                      width={300}
+                      height={300}
+                    />
+                  )}
                 </div>
               </Link>
             ) : (
@@ -162,14 +164,14 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
                   alt=""
                   src="/like/like-pressed.png"
                   width={20}
-                  height={20}
+                  height={23}
                 />
               ) : (
                 <Image
                   alt=""
                   src="/like/like-default.png"
                   width={20}
-                  height={20}
+                  height={23}
                 />
               )}
               <div className="sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">

@@ -1,4 +1,5 @@
 import { authService, dbService } from "@/firebase";
+import useModal from "@/hooks/useModal";
 import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useState } from "react";
@@ -33,7 +34,7 @@ const Comments = ({
   };
 
   const [comment, setComment] = useState<CommentType>(initialComment);
-
+  const { showModal } = useModal();
   // pagination State
   const [limit, setLimit] = useState(5);
   const [page, setPage] = useState<number>(1);
@@ -111,7 +112,10 @@ const Comments = ({
         });
       }
     } else {
-      alert("내용이 없습니다!");
+      showModal({
+        modalType: "AlertModal",
+        modalProps: { title: "내용이 없습니다!" },
+      });
     }
     setComment(initialComment);
     setResizeTextArea({

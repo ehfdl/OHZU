@@ -97,7 +97,7 @@ const JoinModal = () => {
         }
       })
       .catch((error) => {
-        alert(error.message);
+        console.log(error.message);
       });
   }, [email, setCheckEmail]);
 
@@ -217,9 +217,14 @@ const JoinModal = () => {
             message = "형식에 맞게 작성해주세요";
             alert(message);
           });
-        // alert("회원가입 성공 !");
-        alert("인증 메일을 보냈습니다. 인증 후, 서비스 이용이 가능합니다.");
-        showModal({ modalType: "LoginModal", modalProps: {} });
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "인증 메일을 보냈습니다. 인증 후, 서비스 이용이 가능합니다.",
+            btnfunc: () =>
+              showModal({ modalType: "LoginModal", modalProps: {} }),
+          },
+        });
       })
       .catch((error) => {
         alert(error.massage);
@@ -495,7 +500,7 @@ const JoinModal = () => {
                     alarm: [],
                   }
                 );
-                alert("카카오 간편 회원가입 성공!");
+                console.log("카카오 간편 회원가입 성공!");
               }
               hideModal();
             })
