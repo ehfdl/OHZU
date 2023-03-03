@@ -1,5 +1,6 @@
 import { authService, dbService } from "@/firebase";
-import { addDoc, collection } from "firebase/firestore";
+import useModal from "@/hooks/useModal";
+import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { SetStateAction, useState } from "react";
 import RecommentList from "./recomment_list";
 
@@ -9,6 +10,7 @@ interface RecommentPropsType {
   recomments: CommentType[];
   isOpen: boolean;
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
+  comment: CommentType;
 }
 
 const Recomments = ({
@@ -16,6 +18,8 @@ const Recomments = ({
   recomments,
   setIsOpen,
   isOpen,
+  comment,
+  currentUser,
 }: RecommentPropsType) => {
   const date = Date.now();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
@@ -29,6 +33,7 @@ const Recomments = ({
     createdAt: "",
     isEdit: false,
   };
+  const { showModal } = useModal();
 
   const [recomment, setRecomment] = useState<CommentType>(initialRecomment);
   const [resizeTextArea, setResizeTextArea] = useState({
@@ -75,10 +80,36 @@ const Recomments = ({
       createdAt: dateForm,
       isEdit: false,
     };
+    const newAlarm = {
+      content: recomment.content,
+      postId: id,
+      nickname: currentUser?.nickname,
+      title: comment?.content,
+      type: "답글",
+      createdAt: Date.now(),
+      isDone: false,
+    };
     if (recomment.content.trim() !== "") {
       await addDoc(collection(dbService, "Recomments"), newRecomment);
+      if (comment?.userId !== authService.currentUser?.uid) {
+        const snapshot = await getDoc(
+          doc(dbService, "Users", comment?.userId as string)
+        );
+        const snapshotdata = await snapshot.data();
+        const newPost = {
+          ...snapshotdata,
+        };
+        const newA = newPost?.alarm.push(newAlarm);
+
+        await updateDoc(doc(dbService, "Users", comment?.userId as string), {
+          alarm: newPost?.alarm,
+        });
+      }
     } else {
-      alert("내용이 없습니다!");
+      showModal({
+        modalType: "AlertModal",
+        modalProps: { title: "내용이 없습니다." },
+      });
     }
     setRecomment(initialRecomment);
     setResizeTextArea({
@@ -100,7 +131,7 @@ const Recomments = ({
           name="content"
           value={recomment.content}
           onChange={handleChange}
-          className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
           placeholder="답글을 입력해주세요."
           rows={resizeTextArea.rows}
         />

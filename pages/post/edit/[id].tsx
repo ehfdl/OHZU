@@ -8,6 +8,7 @@ import {
   uploadString,
 } from "firebase/storage";
 import { GetServerSideProps } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -407,18 +408,18 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
   return (
     <Layout>
       <div className="w-full flex justify-center pb-16">
-        <form className="w-[588px] flex flex-col">
+        <form className="w-[352px] sm:w-[588px] flex flex-col">
           <div className="flex gap-3">
-            <div className="font-bold text-[20px] mt-5">사진</div>
-            <div className="text-[12px] mt-7 text-textGray">
+            <div className="font-bold sm:text-[20px] mt-5">사진</div>
+            <div className="text-[12px] mt-6 sm:mt-7 text-textGray">
               최대 3장까지 업로드 가능
             </div>
           </div>
-          <div className="flex w-full mt-[18px] gap-[10px] justify-center">
-            <div className="w-[186px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
+          <div className="flex w-full mt-3 sm:mt-[18px] gap-4 sm:gap-[10px] justify-center">
+            <div className="w-[72px] sm:w-[186px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
               {editPreview_01 === null ? (
                 <>
-                  <label className="w-12 h-12 bg-[#f2f2f2] flex justify-center items-center absolute">
+                  <label className="w-10 sm:w-12 aspect-square bg-[#f2f2f2] flex justify-center items-center absolute">
                     <input
                       name="img"
                       type="file"
@@ -426,31 +427,34 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                       onChange={onChangeImg_01}
                       className="hidden"
                     />
-                    <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
+                    <BsPlusLg className="scale-[1.8] sm:scale-[2] text-[#b7b7b7] hover:scale-[2] sm:hover:scale-[2.2] cursor-pointer" />
                   </label>
                 </>
               ) : (
                 <>
-                  <label className="w-[186px] aspect-square bg-transparent flex p-2 justify-end absolute">
+                  <label className="w-[72px] sm:w-[186px] aspect-square bg-transparent flex p-2 justify-end absolute">
                     <BsFillXCircleFill
                       onClick={() => {
                         setEditImgFile_01(null);
                       }}
-                      className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
+                      className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                     />
                   </label>
-                  <img
+                  <Image
                     src={editPreview_01 as string}
-                    className="w-[186px] aspect-square object-cover"
+                    className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                    width={72}
+                    height={72}
+                    alt=""
                   />
                 </>
               )}
             </div>
-            <div className="flex flex-col gap-[10px]">
-              <div className="w-[88px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
+            <div className="flex sm:flex-col gap-4 sm:gap-[10px]">
+              <div className="w-[72px] sm:w-[88px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
                 {editPreview_02 === null ? (
                   <>
-                    <label className="w-12 h-12 bg-[#f2f2f2] flex justify-center items-center absolute">
+                    <label className="w-10 sm:w-12 aspect-square bg-[#f2f2f2] flex justify-center items-center absolute">
                       <input
                         name="img"
                         type="file"
@@ -458,30 +462,33 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onChange={onChangeImg_02}
                         className="hidden"
                       />
-                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
+                      <BsPlusLg className="scale-[1.8] sm:scale-[2] text-[#b7b7b7] hover:scale-[2] sm:hover:scale-[2.2] cursor-pointer" />
                     </label>
                   </>
                 ) : (
                   <>
-                    <label className="w-[88px] aspect-square bg-transparent flex p-2 justify-end absolute">
+                    <label className="w-[72px] sm:w-[88px] aspect-square bg-transparent flex p-2 justify-end absolute">
                       <BsFillXCircleFill
                         onClick={() => {
                           setEditImgFile_02(null);
                         }}
-                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
+                        className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
-                    <img
+                    <Image
                       src={editPreview_02 as string}
-                      className="w-[88px] aspect-square object-cover"
+                      className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                      width={72}
+                      height={72}
+                      alt=""
                     />
                   </>
                 )}
               </div>
-              <div className="w-[88px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
+              <div className="w-[72px] sm:w-[88px] aspect-square bg-[#f2f2f2] flex justify-center items-center overflow-hidden">
                 {editPreview_03 === null ? (
                   <>
-                    <label className="w-12 h-12 bg-[#f2f2f2] flex justify-center items-center absolute">
+                    <label className="w-10 sm:w-12 aspect-square bg-[#f2f2f2] flex justify-center items-center absolute">
                       <input
                         name="img"
                         type="file"
@@ -489,22 +496,25 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         onChange={onChangeImg_03}
                         className="hidden"
                       />
-                      <BsPlusLg className="scale-[2] text-[#b7b7b7] hover:scale-[2.2] cursor-pointer" />
+                      <BsPlusLg className="scale-[1.8] sm:scale-[2] text-[#b7b7b7] hover:scale-[2] sm:hover:scale-[2.2] cursor-pointer" />
                     </label>
                   </>
                 ) : (
                   <>
-                    <label className="w-[88px] aspect-square bg-transparent flex p-2 justify-end absolute">
+                    <label className="w-[72px] sm:w-[88px] aspect-square bg-transparent flex p-2 justify-end absolute">
                       <BsFillXCircleFill
                         onClick={() => {
                           setEditImgFile_03(null);
                         }}
-                        className=" text-iconHover scale-150 bg-white rounded-full hover:scale-[1.6] box-border cursor-pointer"
+                        className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
-                    <img
+                    <Image
                       src={editPreview_03 as string}
-                      className="w-[88px] aspect-square object-cover"
+                      className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                      width={72}
+                      height={72}
+                      alt=""
                     />
                   </>
                 )}
@@ -513,8 +523,8 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           </div>
 
           <div className=" my-5">
-            <span className="font-bold text-[20px]">제목</span>
-            <span className="ml-2 text-sm text-[red]  w-full">
+            <span className="font-bold sm:text-[20px]">이름</span>
+            <span className="ml-2 text-[11px] sm:text-sm text-[red]  w-full">
               {validateTitle}
             </span>
           </div>
@@ -523,19 +533,19 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             value={editPost.title}
             onChange={onChangeValue}
             placeholder={post.title}
-            className="w-full"
+            className="w-full text-[14px] sm:text-base"
           />
 
-          <div className="w-full border-[1px] border-[#d9d9d9] mt-[10px]" />
+          <div className="w-full border-b-[1px] border-[#d9d9d9] mt-2 sm:mt-[10px]" />
 
           <div className=" my-5">
-            <span className="font-bold text-[20px]">소개</span>
-            <span className="ml-2 text-sm text-[red]  w-full">
+            <span className="font-bold sm:text-[20px]">소개</span>
+            <span className="ml-2 text-[11px] sm:text-sm text-[red]  w-full">
               {validateIntro}
             </span>
           </div>
           <textarea
-            className="w-full h-[118px] px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
+            className="w-full h-20 sm:h-[118px] text-[14px] sm:text-base px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
             name="text"
             value={editPost.text}
             onChange={onChangeValue}
@@ -543,14 +553,14 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           />
 
           <div className="mt-6">
-            <span className="font-bold text-[20px]">카테고리</span>
-            <span className="ml-2 text-sm text-[red]  w-full">
+            <span className="font-bold sm:text-[20px]">카테고리</span>
+            <span className="ml-2 text-[11px] sm:text-sm text-[red]  w-full">
               {validateCate}
             </span>
           </div>
 
-          <div className="flex w-full justify-center gap-6 my-4 text-[#9e9e9e]">
-            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
+          <div className="flex w-full justify-center gap-6 my-4 text-[11px] sm:text-[14px] text-[#9e9e9e]">
+            <label className="w-[53px] h-[23px] sm:w-20 sm:h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -563,7 +573,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                 소주
               </span>
             </label>
-            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
+            <label className="w-[53px] h-[23px] sm:w-20 sm:h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -576,7 +586,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                 맥주
               </span>
             </label>
-            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
+            <label className="w-[53px] h-[23px] sm:w-20 sm:h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -589,7 +599,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                 양주
               </span>
             </label>
-            <label className="w-20 h-8 cursor-pointer rounded-[16px]">
+            <label className="w-[53px] h-[23px] sm:w-20 sm:h-8 cursor-pointer rounded-[16px]">
               <input
                 type="radio"
                 name="type"
@@ -604,24 +614,24 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             </label>
           </div>
 
-          <div className="w-full border-[1px] border-[#d9d9d9]" />
+          <div className="w-full border-b-[1px] border-[#d9d9d9]" />
 
           <div className=" my-5">
-            <span className="font-bold text-[20px]">준비물</span>
+            <span className="font-bold sm:text-[20px]">준비물</span>
 
             {validateIng === "최대 6개까지 작성 가능" ? (
-              <span className="ml-2 text-sm text-textGray  w-full">
+              <span className="ml-2 text-[11px] sm:text-sm text-textGray  w-full">
                 {validateIng}
               </span>
             ) : (
-              <span className="ml-2 text-sm text-[red]  w-full">
+              <span className="ml-2 text-[11px] sm:text-sm text-[red]  w-full">
                 {validateIng}
               </span>
             )}
           </div>
-          <div className="flex justify-between">
+          <div className="grid grid-cols-2 gap-[18px] sm:grid-cols-3 sm:gap-[38px] text-[14px] sm:text-base">
             <input
-              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              className="border-b-[1px] border-[#d9d9d9] px-1 py-[6px]"
               name="editIng_01"
               value={editIng.editIng_01}
               onChange={onChangeIngre}
@@ -632,7 +642,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
               }`}
             />
             <input
-              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              className="border-b-[1px] border-[#d9d9d9] px-1 py-[6px]"
               name="editIng_02"
               value={editIng.editIng_02}
               onChange={onChangeIngre}
@@ -643,7 +653,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
               }`}
             />
             <input
-              className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
+              className="border-b-[1px] border-[#d9d9d9] px-1 py-[6px]"
               name="editIng_03"
               value={editIng.editIng_03}
               onChange={onChangeIngre}
@@ -653,76 +663,78 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                   : "준비물 3"
               }`}
             />
+
+            {editPlusIng ? (
+              <>
+                <input
+                  className="border-b-[1px] border-[#d9d9d9] px-1 py-[6px]"
+                  name="editIng_04"
+                  value={editIng.editIng_04}
+                  onChange={onChangeIngre}
+                  placeholder={`${
+                    editPost.ingredient![3] !== undefined
+                      ? editPost.ingredient![3]
+                      : "준비물 4"
+                  }`}
+                />
+                <input
+                  className="border-b-[1px] border-[#d9d9d9] px-1 py-[6px]"
+                  name="editIng_05"
+                  value={editIng.editIng_05}
+                  onChange={onChangeIngre}
+                  placeholder={`${
+                    editPost.ingredient![4] !== undefined
+                      ? editPost.ingredient![4]
+                      : "준비물 5"
+                  }`}
+                />
+                <input
+                  className="border-b-[1px] border-[#d9d9d9] px-1 py-[6px]"
+                  name="editIng_06"
+                  value={editIng.editIng_06}
+                  onChange={onChangeIngre}
+                  placeholder={`${
+                    editPost.ingredient![5] !== undefined
+                      ? editPost.ingredient![5]
+                      : "준비물 6"
+                  }`}
+                />
+              </>
+            ) : null}
           </div>
-          {editPlusIng ? (
-            <div className="flex justify-between mt-5">
-              <input
-                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
-                name="editIng_04"
-                value={editIng.editIng_04}
-                onChange={onChangeIngre}
-                placeholder={`${
-                  editPost.ingredient![3] !== undefined
-                    ? editPost.ingredient![3]
-                    : "준비물 4"
-                }`}
-              />
-              <input
-                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
-                name="editIng_05"
-                value={editIng.editIng_05}
-                onChange={onChangeIngre}
-                placeholder={`${
-                  editPost.ingredient![4] !== undefined
-                    ? editPost.ingredient![4]
-                    : "준비물 5"
-                }`}
-              />
-              <input
-                className="border-b-[1.5px] border-[#d9d9d9] px-1 py-[6px]"
-                name="editIng_06"
-                value={editIng.editIng_06}
-                onChange={onChangeIngre}
-                placeholder={`${
-                  editPost.ingredient![5] !== undefined
-                    ? editPost.ingredient![5]
-                    : "준비물 6"
-                }`}
-              />
-            </div>
-          ) : (
+          {editPlusIng ? null : (
             <div
               onClick={onChangePlusIngre}
-              className="my-5 ml-1 text-[14px] text-phGray flex justify-start items-center gap-2 cursor-pointer w-[92px]"
+              className="my-5 ml-1 text-[12px] sm:text-sm text-phGray flex justify-start items-center gap-2 cursor-pointer w-[92px]"
             >
-              <BsPlusLg className="mb-[3px]" />더 추가하기
+              <BsPlusLg className="mb-[1px]" />더 추가하기
             </div>
           )}
 
-          <div className=" my-5">
-            <span className="font-bold text-[20px]">만드는 방법</span>
-            <span className="ml-2 text-sm text-[red]  w-full">
+          <div className="my-5">
+            <span className="font-bold sm:text-[20px]">만드는 방법</span>
+            <span className="ml-2 text-[11px] sm:text-sm text-[red]  w-full">
               {validateRecipe}
             </span>
           </div>
 
           <textarea
-            className="w-full h-[170px] px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
+            className="w-full h-28 sm:h-[170px] text-[14px] sm:text-base px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
             name="recipe"
             value={editPost.recipe}
             onChange={onChangeValue}
             placeholder={post.recipe}
           />
-          <div className="w-full flex justify-between items-center mt-10">
+          <div className="w-full flex flex-col sm:flex-row justify-between gap-6 items-center mt-10">
             <Link
-              className="border border-primary text-primary rounded px-32 py-3 font-bold text-center"
+              className="border border-primary text-primary rounded w-full py-3 font-bold text-center"
               href={`/post/${id}`}
             >
               취소
             </Link>
             <button
               onClick={onSubmit}
-              className="bg-primary rounded px-32 py-3 font-bold text-white"
+              className="bg-primary rounded w-full py-3 font-bold text-white"
             >
               저장
             </button>

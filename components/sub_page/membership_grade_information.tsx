@@ -9,21 +9,21 @@ const RankInformationModal = () => {
           <img src="/badge/badge-gold.png" className="w-[9.5px] h-3" />
           <div className="flex justify-between text-[12px] w-[120px]">
             <span>Gold</span>
-            <span>501잔 이상</span>
+            <span>51잔 이상</span>
           </div>
         </div>
         <div className="flex gap-[10px] items-center">
           <img src="/badge/badge-silver.png" className="w-[9.5px] h-3" />
           <div className="flex justify-between text-[12px] w-[120px]">
             <span>Silver</span>
-            <span>301~500잔</span>
+            <span>31~50잔</span>
           </div>
         </div>
         <div className="flex gap-[10px] items-center">
           <img src="/badge/badge-bronze.png" className="w-[9.5px] h-3" />
           <div className="flex justify-between text-[12px] w-[120px]">
             <span>Bronze</span>
-            <span>0~300잔</span>
+            <span>0~30잔</span>
           </div>
         </div>
       </div>

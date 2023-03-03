@@ -130,13 +130,13 @@ const PostList = () => {
 
   return (
     <div>
-      <div className="w-full flex justify-center mb-4 min-h-screen">
-        <div className="w-[1200px] flex flex-col justify-start items-center">
-          <Category setCate={setCate} />
-          <div className="w-full mt-12 flex justify-between">
-            <div className="text-xl font-bold">
-              전체 게시글{" "}
-              <span className="float-right ml-2 text-xl font-normal text-primary">
+      <div className="sm:w-full flex flex-col justify-center items-center sm:mb-4 sm:min-h-screen">
+        <Category setCate={setCate} />
+        <div className="sm:w-[1200px] w-full flex flex-col justify-start items-center px-4">
+          <div className="sm:w-full sm:mt-12 ml-[-10px] mt-4 mr-[280px] mb-4 flex justify-between sm:ml-[290px] sm:mb-6">
+            <div className="sm:text-xl text-sm font-bold">
+              게시물{" "}
+              <span className="float-right ml-2 sm:text-xl text-sm font-bold sm:font-bold text-primary">
                 {cate === "전체"
                   ? posts?.length
                   : posts?.filter((post) => cate === post.type).length}
@@ -144,7 +144,7 @@ const PostList = () => {
             </div>
           </div>
 
-          <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
+          <div className="w-full gap-4 bg-white grid grid-cols-2  sm:grid sm:grid-cols-3 sm:gap-6">
             {cate === "전체"
               ? posts
                   ?.map((post: any) => (
@@ -160,22 +160,22 @@ const PostList = () => {
           </div>
           {posts.length > slicenumber + 6 ? (
             <button
-              className="w-[100px] h-[40px] mt-9 bg-transparent border border-primary text-primary hover:bg-second hover:border-none rounded-full hover:text-primary hover:font-bold"
+              className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary hover:bg-second hover:border-none rounded-full hover:text-primary hover:font-bold"
               onClick={() => setSliceNumber(slicenumber + 6)}
             >
               더보기
             </button>
           ) : (
             <button
-              className="w-[100px] h-[40px] mt-6 bg-transparent border border-primary text-primary font-thin hover:bg-second hover:border-none rounded-3xl hover:text-primary hover:font-bold"
+              className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary font-thin hover:bg-second hover:border-none rounded-3xl hover:text-primary hover:font-bold"
               onClick={() => setSliceNumber(0)}
             >
               접기
             </button>
           )}
 
-          <div className="w-full  mt-16 relative z-0">
-            <div className="text-2xl font-bold mb-3">
+          <div className="w-full mt-12 sm:mt-16 relative z-0">
+            <div className="sm:text-2xl text-xl font-bold mb-5 ml-3 sm:mb-3">
               인기 많은 OHZU
               <span className="text-primary">
                 {cate === "전체"
@@ -185,7 +185,7 @@ const PostList = () => {
             </div>
             <div className="group">
               <Swiper
-                spaceBetween={24}
+                spaceBetween={160}
                 slidesPerView={3}
                 scrollbar={{ draggable: true }}
                 navigation={{
@@ -193,43 +193,66 @@ const PostList = () => {
                   nextEl: navigationNextRef.current,
                 }}
                 breakpoints={{
+                  320: {
+                    slidesPerView: 3,
+                    spaceBetween: 130,
+                    slidesPerGroup: 2,
+                  },
+                  500: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                    slidesPerGroup: 3,
+                  },
+                  640: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                    slidesPerGroup: 3,
+                  },
                   768: {
                     slidesPerView: 3,
+                    spaceBetween: 24,
+                    slidesPerGroup: 3,
                   },
                 }}
                 modules={[EffectCoverflow, Navigation, Mousewheel]}
                 grabCursor={true}
-                slidesPerGroup={3}
+                slidesPerGroup={2}
               >
                 <div className="">
                   {userLikePosts?.map((post: any) => (
                     <SwiperSlide key={post.postId}>
-                      <PostCard key={post.postId} post={post} />
+                      <PostCard key={post.postId} post={post} type="like" />
                     </SwiperSlide>
                   ))}{" "}
                 </div>
                 <div className="">
                   <button
                     ref={navigationPrevRef}
-                    className="absolute p-1.5 hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[15px] translate-y-[20px] z-20 top-[190px] rounded-full"
+                    className="w-[30px] h-[30px] translate-x-[4px] -translate-y-[70px] top-1/2 absolute p-1.5 hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[15px] sm:translate-y-[-30px] z-20 sm:top-[190px] rounded-full"
                   >
-                    <BsChevronLeft size={25} />
+                    <BsChevronLeft
+                      size={20}
+                      className="relative right-[2px] bottom-[1px] sm:right-[-3px] sm:bottom-0"
+                    />
                   </button>
                 </div>
                 <div className="">
                   <button
                     ref={navigationNextRef}
-                    className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[1140px] translate-y-[-50px] z-20 top-[260px] rounded-full"
+                    className="w-[30px] h-[30px] translate-x-[340px] -translate-y-[70px] top-1/2 p-2 absolute hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[1110px] sm:translate-y-[-95px] z-20 sm:top-[260px] rounded-full"
                   >
-                    <BsChevronRight size={25} />
+                    <BsChevronRight
+                      size={20}
+                      className="relative right-[1px] bottom-[3px] sm:right-[-4px] sm:bottom-0"
+                    />
                   </button>
                 </div>
               </Swiper>
             </div>
           </div>
 
-          <div className="w-full mt-[90px] relative z-0 overflow-hidden">
-            <div className="text-2xl font-bold mb-3">
+          <div className="w-full mt-10 sm:mt-[90px] relative z-0 overflow-hidden">
+            <div className="sm:text-2xl text-xl font-bold mb-5 ml-3 sm:mb-3">
               많이 본 OHZU
               <span className="text-primary">
                 {cate === "전체"
@@ -239,7 +262,7 @@ const PostList = () => {
             </div>
             <div className="group overflow-visible">
               <Swiper
-                spaceBetween={24}
+                spaceBetween={160}
                 slidesPerView={3}
                 scrollbar={{ draggable: true }}
                 navigation={{
@@ -247,35 +270,58 @@ const PostList = () => {
                   nextEl: nextRef.current,
                 }}
                 breakpoints={{
+                  320: {
+                    slidesPerView: 3,
+                    spaceBetween: 130,
+                    slidesPerGroup: 2,
+                  },
+                  500: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                    slidesPerGroup: 3,
+                  },
+                  640: {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                    slidesPerGroup: 3,
+                  },
                   768: {
                     slidesPerView: 3,
+                    spaceBetween: 24,
+                    slidesPerGroup: 3,
                   },
                 }}
                 modules={[EffectCoverflow, Navigation, Mousewheel]}
                 grabCursor={true}
-                slidesPerGroup={3}
+                slidesPerGroup={2}
               >
                 <div>
                   {userViewPosts?.map((post: any) => (
                     <SwiperSlide key={post.postId}>
-                      <PostCard key={post.postId} post={post} />
+                      <PostCard key={post.postId} post={post} type="like" />
                     </SwiperSlide>
                   ))}{" "}
                 </div>
                 <div>
                   <button
                     ref={prevRef}
-                    className="absolute p-1.5 hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[20px] translate-y-[-10px] z-20 top-[210px] rounded-full"
+                    className="hidden w-[30px] h-[30px] translate-x-[4px] -translate-y-[70px] top-1/2 absolute p-1.5 sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[20px] sm:translate-y-[-30px] z-20 sm:top-[210px] rounded-full"
                   >
-                    <BsChevronLeft size={25} />
+                    <BsChevronLeft
+                      size={20}
+                      className="relative sm:right-[-3px] sm:bottom-0 right-[2px] bottom-[1px]"
+                    />
                   </button>
                 </div>
                 <div>
                   <button
                     ref={nextRef}
-                    className="absolute p-2 hidden group-hover:block hover:text-primary hover:bg-second/70 w-[40px] h-[40px] bg-black/20 text-white cursor-pointer translate-x-[1140px] translate-y-[-100px] z-20 top-[300px] rounded-full"
+                    className="w-[30px] h-[30px] translate-x-[340px] -translate-y-[70px] top-1/2 absolute p-2 hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[1110px] sm:translate-y-[-115px] z-20 sm:top-[300px] rounded-full"
                   >
-                    <BsChevronRight size={25} />
+                    <BsChevronRight
+                      size={20}
+                      className="relative sm:right-[-4px] sm:bottom-0 right-[1px] bottom-[3px]"
+                    />
                   </button>
                 </div>
               </Swiper>

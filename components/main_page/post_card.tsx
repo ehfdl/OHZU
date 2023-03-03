@@ -3,15 +3,31 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Grade from "../grade";
+import Image from "next/image";
+import useModal from "@/hooks/useModal";
 
-const PostCard = ({ post }: { post: any }) => {
+const PostCard = ({ post, type }: { post: any; type?: string }) => {
   const defaultImg =
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
+  const { showModal } = useModal();
 
   const like = post.like.includes(authService.currentUser?.uid);
   const onClickLikeBtn = async () => {
     if (!authService.currentUser?.uid) {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
+
       return true;
     }
     const likeArray = post.like.includes(authService.currentUser?.uid);
@@ -29,7 +45,19 @@ const PostCard = ({ post }: { post: any }) => {
         like: post.like,
       });
     } else if (authService.currentUser?.uid === null) {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
     }
   };
 
@@ -63,53 +91,65 @@ const PostCard = ({ post }: { post: any }) => {
   }, []);
 
   return (
-    <div className="flex">
-      <div key={post.postId} className="mt-3">
-        {/* hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70 */}
-        <div className="w-full h-[284px]">
+    <div className={`flex ${type === "like" ? "scale-90" : null} sm:scale-100`}>
+      <div key={post.postId} className="sm:mt-1">
+        <div className="w-full h-[168px] sm:h-[284px] ">
           <Link href={`/post/${post.postId}`}>
-            <img
+            <Image
               src={post.img[0] || defaultImg}
-              className="flex w-full h-[284px] object-cover rounded"
-            />
-            <div className=" bg-black/0 w-full h-[284px] object-cover translate-y-[-285px] hover:bg-gray-300/30 hover:block transition"></div>
+              className="flex sm:w-[384px] h-[168px] sm:h-[284px] object-cover rounded border-[1px] border-borderGray"
+              alt=""
+              width={300}
+              height={300}
+            ></Image>
+            <div className="rounded bg-black/0 w-full h-[168px] sm:h-[284px] object-cover -translate-y-[168px] sm:translate-y-[-285px] hover:bg-gray-300/30 hover:block transition"></div>
           </Link>
         </div>
-        <div className="h-[136px] bg-white overflow-hidden ">
-          <div className="mt-5 ml-3 flex items-center w-full">
+        <div className="sm:h-[136px] h-[105px] sm:w-[384px] bg-white overflow-hidden  mb-6 ">
+          <div className="sm:group">
+            <Link href={`/post/${post.postId}`}>
+              <div className="sm:float-left mt-3 sm:mt-2 ml-[1px] text-start sm:ml-[70px] sm:translate-y-[12px] float-none sm:text-[22px] text-base font-bold sm:w-[195px] w-[155px]">
+                {post.title}
+              </div>
+            </Link>
+          </div>
+          <div className="sm:mt-5 sm:ml-3 flex items-center w-full mt-2">
             {post.userId === authService.currentUser?.uid ? (
               <Link href="/mypage">
-                <div className="">
-                  <img
-                    className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
-                    alt=""
-                    src={user?.imageURL}
-                  />
+                <div>
+                  {user.imageURL && (
+                    <Image
+                      className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointer"
+                      alt=""
+                      src={user.imageURL as string}
+                      width={300}
+                      height={300}
+                    />
+                  )}
                 </div>
               </Link>
             ) : (
               <Link href={`/users/${post.userId}`}>
-                <div className="">
-                  <img
-                    className="w-10 h-10 rounded-full mx-2 mb-2 bg-black cursor-pointer"
-                    src={user?.imageURL}
-                  />
+                <div>
+                  {user.imageURL && (
+                    <Image
+                      className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointe "
+                      alt=""
+                      src={user.imageURL as string}
+                      width={100}
+                      height={100}
+                    />
+                  )}
                 </div>
               </Link>
             )}
 
             <div className="mb-2">
-              <Link href={`/post/${post.postId}`}>
-                <div className="float-left text-xl font-semibold w-[185px]">
-                  {post.title}
-                </div>
-              </Link>
-
-              <div className="text-sm" key={user.userId}>
-                <p className="float-left text-black leading-none">
+              <div className="sm:text-sm text-[14px]" key={user.userId}>
+                <p className="sm:float-left float-left ml-[8px] sm:mt-[18px] sm:ml-[14px] text-black leading-none -translate-y-[1px]">
                   {user?.nickname}
                 </p>
-                <span className="float-left w-[10px] h-[10px] ml-1 translate-y-[0px]">
+                <span className="sm:float-left float-left w-[11px] h-[14px] sm:mt-[18px]  sm:w-[11px] sm:h-[14px] ml-1 -translate-y-[2px] sm:-translate-y-[2px]">
                   <Grade score={user?.point as number} />
                 </span>
               </div>
@@ -117,19 +157,29 @@ const PostCard = ({ post }: { post: any }) => {
 
             <div
               onClick={onClickLikeBtn}
-              className="absolute flex flex-col float-right translate-x-[330px] -translate-y-[10px] items-center w-[18px] z-[5] mr-6 mt-6 mb-3 cursor-pointer"
+              className="absolute flex flex-col float-right w-4 h-4 translate-x-[142px] -translate-y-[200px] sm:translate-x-[330px] sm:-translate-y-[23px] items-center sm:w-[20px] sm:h-[16px] sm:z-[5] sm:mr-6 sm:mt-6 sm:mb-3 cursor-pointer"
             >
               {like ? (
-                <img src="/like/like-pressed.png" />
+                <Image
+                  alt=""
+                  src="/like/like-pressed.png"
+                  width={20}
+                  height={23}
+                />
               ) : (
-                <img src="/like/like-default.png" />
+                <Image
+                  alt=""
+                  src="/like/like-default.png"
+                  width={20}
+                  height={23}
+                />
               )}
-              <div className="text-[rgba(87,86,86,0.5)] text-[11px]">
+              <div className="sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">
                 {post.like.length}
               </div>
             </div>
           </div>
-          <div className="font-base text-black/60 text-sm mx-6 mt-2 mb-2 w-[335px] line-clamp-3 text-ellipsis break-all">
+          <div className="text-sm mx-[0.5px] text-[#8E8E93] sm:text-sm sm:mx-[13px] sm:mt-1 sm:mb-2 sm:w-[345px] w-[170px] sm:line-clamp-3 line-clamp-2 text-ellipsis break-all font-normal">
             {post.text}
           </div>
         </div>

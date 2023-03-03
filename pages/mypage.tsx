@@ -1,7 +1,6 @@
 import Layout from "@/components/layout";
 import Cate_Navbar from "@/components/navbar/cate_navbar";
 import Ohju_Navbar from "@/components/navbar/ohju_navbar";
-import ProfileModal from "@/components/sub_page/profile_modal";
 import React, { useEffect, useMemo, useState } from "react";
 import { apiKey, authService, dbService } from "@/firebase";
 import {
@@ -13,11 +12,12 @@ import {
   orderBy,
   updateDoc,
 } from "firebase/firestore";
-import FollowModal from "@/components/follow_modal";
 import MyPostCard from "@/components/sub_page/my_post_card";
 import { BiInfoCircle } from "react-icons/bi";
 import RankInformationModal from "@/components/sub_page/membership_grade_information";
 import Grade from "@/components/grade";
+import Image from "next/image";
+import useModal from "@/hooks/useModal";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -33,11 +33,9 @@ const Mypage = () => {
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
-  const [follow, setFollow] = useState("follower");
   //users 불러오기까지함.
 
-  const [isOpenProfileModal, setIsOpenProfileModal] = useState(false);
-  const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
+  const { modal, showModal } = useModal();
   const [isOpenInforModal, setIsOpenInforModal] = useState(false);
 
   const getMyProfile = async () => {
@@ -111,6 +109,7 @@ const Mypage = () => {
       });
     };
     getMyProfile();
+
     getAllPosts();
   }, []);
 
@@ -125,7 +124,6 @@ const Mypage = () => {
     setMyPosts(ohjuMyPosts);
     setLikePosts(ohjuLikePosts);
   }, [allPosts]);
-  // console.log("follower", usersFollowerProfile);
 
   useEffect(() => {
     if (myProfile) {
@@ -143,8 +141,10 @@ const Mypage = () => {
   }, [myProfile]);
 
   useEffect(() => {
-    getMyProfile();
-  }, [isOpenProfileModal]);
+    if (authService.currentUser?.uid) {
+      getMyProfile();
+    }
+  }, [modal]);
 
   useEffect(() => {
     const totalLike = myPosts?.reduce((accumulator, currentObject) => {
@@ -169,72 +169,98 @@ const Mypage = () => {
 
   return (
     <Layout>
-      <div className="w-full flex justify-center mb-4 min-h-screen">
-        <div className="w-[1200px] flex flex-col justify-start items-center">
-          <div className="mt-[70px] w-[696px] flex gap-12">
+      <div className="w-full flex justify-center mb-4 sm:min-h-screen">
+        <div className="max-w-[390px] w-full sm:max-w-[1200px] flex flex-col justify-start items-center">
+          <div className="mt-9 sm:mt-[70px] w-full sm:w-[696px] justify-between flex sm:gap-12 gap-6 px-6">
             <div className="flex flex-col items-center">
-              <div className="bg-[#d9d9d9] rounded-full h-40 w-40 overflow-hidden">
-                <img
-                  src={myProfile?.imageURL as string}
-                  className="w-40 aspect-square object-cover"
-                />
+              <div className="bg-[#d9d9d9] rounded-full w-16 sm:w-40 aspect-square overflow-hidden">
+                {myProfile?.imageURL && (
+                  <Image
+                    src={myProfile?.imageURL as string}
+                    className="w-16 sm:w-40 aspect-square object-cover"
+                    alt=""
+                    width={64}
+                    height={64}
+                  />
+                )}
               </div>
               <button
-                className="mt-4 "
-                onClick={() => setIsOpenProfileModal(true)}
+                className="sm:mt-4 mt-2 sm:text-base text-[12px]"
+                onClick={() =>
+                  showModal({
+                    modalType: "ProfileModal",
+                    modalProps: { myProfile: myProfile },
+                  })
+                }
               >
                 프로필 편집
               </button>
             </div>
             <div className="flex flex-col">
-              <div className="w-[440px] flex justify-between">
+              <div className="w-[238px] sm:w-[440px] sm:flex sm:justify-between">
                 <div>
-                  <div className="font-bold text-[24px] flex justify-start items-center gap-1">
+                  <div className="font-bold sm:text-[24px] flex justify-start items-center gap-1">
                     <span>{myProfile?.nickname}</span>
-                    <span>
+                    <span className="w-3 h-[15px] sm:w-[18px] sm:h-[22px]">
                       <Grade score={myLike! + myPosts?.length! * 5} />
                     </span>
                   </div>
-                  <div className="text-[20px] flex">
+                  <div className="text-[11px] sm:text-[20px] flex">
                     <span>{myLike! + myPosts?.length! * 5}잔</span>
-                    <span className="ml-1 mt-[6px]">
+                    <span className="ml-1 mt-1 sm:mt-[6px]">
                       <BiInfoCircle
                         onMouseOver={() => setIsOpenInforModal(true)}
                         onMouseOut={() => setIsOpenInforModal(false)}
-                        className="w-[20px] aspect-auto text-[#999999]"
+                        className="w-[18px] sm:w-5 aspect-square text-[#999999]"
                       />
                     </span>
                   </div>
                   {isOpenInforModal ? <RankInformationModal /> : null}
                 </div>
-                <div className="w-72 flex justify-between items-center mt-1">
-                  <div className="flex flex-col justify-center items-center">
+                <div className="w-52 sm:w-72 flex justify-between items-center mt-2 sm:mt-1">
+                  <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
                     좋아요<div className="font-bold">{myLike}</div>
                   </div>
-                  <div className="h-8 border-r border-[#c9c5c5]" />
-                  <div className="flex flex-col justify-center items-center">
+                  <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
+                  <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
                     게시글<div className="font-bold">{myPosts?.length}</div>
                   </div>
-                  <div className="h-8 border-r border-[#c9c5c5]" />
+                  <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
-                      setIsOpenFollowModal(true);
-                      setFollow("follower");
+                      showModal({
+                        modalType: "FollowModal",
+                        modalProps: {
+                          defaultfollow: "follower",
+                          usersFollowerProfile,
+                          usersFollowingProfile,
+                          myProfile,
+                          getMyProfile,
+                        },
+                      });
                     }}
-                    className="flex flex-col justify-center items-center cursor-pointer"
+                    className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로워
                     <div className="font-bold">
                       {myProfile?.follower.length}
                     </div>
                   </div>
-                  <div className="h-8 border-r border-[#c9c5c5]" />
+                  <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
-                      setIsOpenFollowModal(true);
-                      setFollow("following");
+                      showModal({
+                        modalType: "FollowModal",
+                        modalProps: {
+                          defaultfollow: "following",
+                          usersFollowerProfile,
+                          usersFollowingProfile,
+                          myProfile,
+                          getMyProfile,
+                        },
+                      });
                     }}
-                    className="flex flex-col justify-center items-center cursor-pointer"
+                    className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로잉
                     <div className="font-bold">
@@ -243,15 +269,18 @@ const Mypage = () => {
                   </div>
                 </div>
               </div>
-              <div className="h-[70px] w-[478px] overflow-hidden mt-5 whitespace-pre-wrap ">
+              <div className="hidden sm:block text-[12px] sm:text-base h-[52px] sm:h-[70px] w-[238px] sm:w-[478px] overflow-hidden mt-3 sm:mt-5 whitespace-pre-wrap ">
                 {myProfile?.introduce}
               </div>
             </div>
           </div>
+          <div className="sm:hidden flex justify-center items-center h-[50px] px-8 sm:h-[70px] text-[12px] w-full whitespace-pre-wrap overflow-hidden mt-3 sm:mt-7">
+            {myProfile?.introduce}
+          </div>
           <Ohju_Navbar setOhju={setOhju} setCate={setCate} />
           <Cate_Navbar setCate={setCate} cate={cate} />
 
-          <div className="w-full mt-12 ml-[3px] text-[20px] font-bold">
+          <div className="w-full mt-5 sm:mt-12 pl-6 sm:pl-[3px] text-[14px] sm:text-[20px] font-bold">
             게시글{" "}
             <span className="text-primary">
               {ohju === "my-ohju"
@@ -269,7 +298,7 @@ const Mypage = () => {
                 : null}
             </span>
           </div>
-          <div className="w-full mt-4 bg-white grid grid-cols-3 gap-6">
+          <div className="w-full min-h-[200px] mt-4 px-4 sm:px-0 bg-white grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
             {ohju === "my-ohju"
               ? myPosts?.map((post) =>
                   cate === "전체" ? (
@@ -297,23 +326,6 @@ const Mypage = () => {
               : null}
           </div>
         </div>
-        {isOpenProfileModal ? (
-          <ProfileModal
-            setIsOpenProfileModal={setIsOpenProfileModal}
-            myProfile={myProfile}
-          />
-        ) : null}
-        {isOpenFollowModal ? (
-          <FollowModal
-            setIsOpenFollowModal={setIsOpenFollowModal}
-            follow={follow}
-            setFollow={setFollow}
-            usersFollowerProfile={usersFollowerProfile}
-            usersFollowingProfile={usersFollowingProfile}
-            myProfile={myProfile}
-            getMyProfile={getMyProfile}
-          />
-        ) : null}
       </div>
     </Layout>
   );

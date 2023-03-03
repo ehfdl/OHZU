@@ -1,22 +1,29 @@
 import React from "react";
 import "tailwindcss/tailwind.css";
+import Image from "next/image";
 
 const WriteButton = () => {
   return (
     <>
-      <div className="scroll__container fixed right-[5%] bottom-[5%] z-50">
+      <div className="scroll__container fixed sm:right-[84px] right-[44px]  bottom-[60px] z-50">
         <button
-          className="group rounded-full w-16 h-16 font-thin text-sm  bg-primary hover:bg-second  "
+          className="group rounded-full sm:w-16 w-[48px] aspect-square font-thin sm:text-sm duration-300 bg-primary hover:bg-second  "
           id="write"
           type="button"
         >
-          <img
+          <Image
+            alt=""
             src="/write/write-default.png"
-            className="relative ml-5 cursor-pointer block group-hover:hidden"
+            className="relative sm:ml-5 ml-[13px] cursor-pointer block group-hover:hidden"
+            width={21}
+            height={21}
           />
-          <img
+          <Image
+            alt=""
             src="/write/write-pressed.png"
-            className="absolute -translate-x-3 -translate-y-3 cursor-pointer hidden group-hover:inline-block"
+            className="absolute -translate-x-[11px] -translate-y-[11px] cursor-pointer hidden group-hover:inline-block"
+            width={21}
+            height={21}
           />
         </button>
       </div>

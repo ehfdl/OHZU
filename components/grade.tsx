@@ -1,18 +1,43 @@
+import Image from "next/image";
 import React from "react";
 
 const Grade = ({ score }: { score: number }) => {
   if (score < 21) {
     const rank = "/badge/badge-bronze.png";
 
-    return <img src={rank} />;
+    return (
+      <Image
+        className="w-full object-cover"
+        src={rank}
+        width={12}
+        height={15}
+        alt=""
+      />
+    );
   } else if (score < 31) {
     const rank = "/badge/badge-silver.png";
 
-    return <img src={rank} />;
+    return (
+      <Image
+        className="w-full object-cover"
+        src={rank}
+        width={12}
+        height={15}
+        alt=""
+      />
+    );
   } else {
     const rank = "/badge/badge-gold.png";
 
-    return <img src={rank} />;
+    return (
+      <Image
+        className="w-full object-cover"
+        src={rank}
+        width={12}
+        height={15}
+        alt=""
+      />
+    );
   }
 };
 

@@ -3,10 +3,12 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { useEffect } from "react";
+import { RecoilRoot } from "recoil";
 
 declare global {
   interface Window {
     Kakao: any;
+    // naver: any;
   }
 }
 
@@ -15,6 +17,7 @@ export default function App({ Component, pageProps }: AppProps) {
     try {
       if (!window.Kakao.isInitialized() && window.Kakao) {
         window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_KEY);
+        // window.naver.init(process.env.NEXT_PUBLIC_NAVER_CLIENT_ID);
       }
     } catch (e) {
       console.log(e);
@@ -24,9 +27,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>OHZU</title>
       </Head>
-      <Component {...pageProps} />
+      <RecoilRoot>
+        <Component {...pageProps} />
+      </RecoilRoot>
     </>
   );
 }

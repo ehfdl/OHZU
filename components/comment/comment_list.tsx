@@ -1,6 +1,6 @@
 import { authService, dbService } from "@/firebase";
+import useModal from "@/hooks/useModal";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -8,13 +8,12 @@ import {
   onSnapshot,
   orderBy,
   query,
-  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import DeleteModal from "../delete_modal";
 import Grade from "../grade";
 import Recomments from "./recomments";
 
@@ -31,6 +30,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<UserType>();
   const [recomments, setRecomments] = useState<CommentType[]>([]);
+  const { showModal, hideModal } = useModal();
 
   const editToggle = async () => {
     await updateDoc(doc(dbService, "Comments", id as string), {
@@ -99,10 +99,6 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
     }
   }, [editContent]);
 
-  const deleteToggle = () => {
-    setDeleteConfirm(!deleteConfirm);
-  };
-
   const deleteComment = async (id: string) => {
     await deleteDoc(doc(dbService, "Comments", id));
 
@@ -113,6 +109,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
     recommentId.map(async (id) => {
       await deleteDoc(doc(dbService, "Recomments", id as string));
     });
+    hideModal();
   };
 
   const getCommentUser = async () => {
@@ -167,31 +164,52 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
       };
 
       if (pastComment.reporter) {
-        if (pastComment.reporter.includes(authService.currentUser?.uid)) {
-          alert("이미 신고한 댓글입니다.");
+        if (
+          pastComment.reporter
+            .map((rep: any) => rep.userId === authService.currentUser?.uid)
+            .includes(true)
+        ) {
+          showModal({
+            modalType: "AlertModal",
+            modalProps: { title: "이미 신고한 댓글입니다." },
+          });
           return;
         } else {
-          pastComment.reporter.push(authService.currentUser?.uid);
-          await updateDoc(doc(dbService, "ReportComments", id as string), {
-            reporter: pastComment.reporter,
+          showModal({
+            modalType: "ReportModal",
+            modalProps: {
+              type: "comment",
+              post: comment,
+              currentUser,
+              pastPost: pastComment,
+            },
           });
-          alert("새로운 신고자!");
         }
       } else if (!pastComment.reporter) {
-        const newComments = {
-          commentId: id,
-          postId: comment.postId,
-          content: comment.content,
-          reporter: [authService.currentUser?.uid],
-        };
-        await setDoc(
-          doc(dbService, "ReportComments", id as string),
-          newComments
-        );
-        alert("신고 완료");
+        showModal({
+          modalType: "ReportModal",
+          modalProps: {
+            type: "comment",
+            post: comment,
+            currentUser,
+            pastPost: pastComment,
+          },
+        });
       }
     } else {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
     }
   };
 
@@ -204,19 +222,24 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
 
   return (
     <>
-      <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0">
-        <div className="flex space-x-6 justify-between w-full">
+      <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0 pr-6">
+        <div className="flex space-x-3 sm:space-x-6 justify-between w-full">
           <Link
             href={`/users/${comment.userId}`}
-            className="flex flex-col items-center space-y-2 w-[11%]"
+            className="flex flex-col items-center space-y-2 w-[30%] md:w-[11%]"
           >
-            <img
-              src={user?.imageURL}
-              className="bg-slate-300 w-[40px] aspect-square rounded-full object-cover"
-            />
-            <div className="flex justify-start space-x-1">
+            {user?.imageURL && (
+              <Image
+                width={48}
+                height={48}
+                alt=""
+                src={user?.imageURL as string}
+                className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
+              />
+            )}
+            <div className="flex justify-start items-center space-x-1">
               <span className="text-xs">{user?.nickname}</span>
-              <span className="w-[12px]">
+              <span className="w-[8px] sm:w-[12px]">
                 <Grade score={user?.point!} />
               </span>
             </div>
@@ -227,19 +250,21 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                 name="editContent"
                 value={editContent}
                 onChange={handleChange}
-                className="w-full px-4 py-3 border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+                className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-xs sm:text-base"
                 rows={resizeTextArea.rows}
                 placeholder={content}
               />
             ) : (
-              <pre className="whitespace-pre-wrap break-all">{content}</pre>
+              <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
+                {content}
+              </pre>
             )}
             <div className="flex justify-between">
               <span className="text-xs text-gray-500 flex items-end">
                 {createdAt}
               </span>
               {isEdit && (
-                <div className="flex justify-end items-end space-x-4">
+                <div className="flex justify-end items-end space-x-2">
                   <button
                     className="text-xs font-medium hover:text-black text-textGray"
                     onClick={editToggle}
@@ -258,7 +283,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                 <div
                   className={`${
                     isEdit ? "hidden" : "flex"
-                  } flex justify-end items-end space-x-4 text-xs`}
+                  } flex justify-end items-end space-x-2 text-xs`}
                 >
                   <button
                     onClick={editToggle}
@@ -267,7 +292,18 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                     수정
                   </button>
                   <button
-                    onClick={deleteToggle}
+                    onClick={() =>
+                      showModal({
+                        modalType: "ConfirmModal",
+                        modalProps: {
+                          title: "댓글을 삭제 하시겠어요?",
+                          text: "삭제한 댓글은 복원이 불가합니다.",
+                          rightbtntext: "삭제",
+                          rightbtnfunc: () =>
+                            deleteComment(comment.id as string),
+                        },
+                      })
+                    }
                     className="hover:text-black text-textGray"
                   >
                     삭제
@@ -297,7 +333,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   )}
                 </div>
               ) : (
-                <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
+                <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs">
                   <button onClick={onClickReportComment}>신고</button>
                   {recomments.length === 0 ? (
                     <button
@@ -323,15 +359,6 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
             </div>
           </div>
         </div>
-        {deleteConfirm && (
-          <DeleteModal
-            deleteComment={deleteComment}
-            setDeleteConfirm={setDeleteConfirm}
-            id={id}
-            text="댓글"
-            content="삭제한 댓글은 복원이 불가합니다."
-          />
-        )}
         {isOpen && (
           <Recomments
             id={id!}
@@ -339,6 +366,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
             recomments={recomments}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
+            comment={comment}
           />
         )}
       </li>
