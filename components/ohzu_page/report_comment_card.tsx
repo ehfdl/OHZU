@@ -8,7 +8,6 @@ const ReportCommentCard = ({ comment }: { comment: ReportComment }) => {
       doc(dbService, "ReportComments", comment.commentId as string)
     );
     await deleteDoc(doc(dbService, "Comments", comment.commentId as string));
-    console.log("삭제됨");
   };
 
   return (
