@@ -4,15 +4,10 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 
-const FindPassword = ({
-  setEmail,
-  email,
-  findPassword,
-  setFindPassword,
-}: any) => {
+const FindPassword = ({ setEmail, email, setFindPassword }: any) => {
   const { showModal } = useModal();
   const [validate, setValidate] = useState<string>("");
-
+  console.log(email);
   // 비밀번호 재설정 함수 (비밀번호 찾기)
   const resetPassword = () => {
     if (email !== "") {
@@ -63,11 +58,14 @@ const FindPassword = ({
               type="text"
               placeholder="비밀번호를 변경할 이메일을 입력하세요."
               onChange={(e) => setEmail(e.target.value)}
-              className="max-w-[472px] w-full h-[44px] pl-6 mb-[72px] m-auto bg-[#f5f5f5] placeholder-phGray"
+              className="max-w-[472px] w-full h-[44px] pl-6  m-auto bg-[#f5f5f5] placeholder-phGray"
             />
+            <div className="text-[red] h-3 mb-[50px] text-right mr-14">
+              {validate}
+            </div>
             <div
               onClick={resetPassword}
-              className="w-[280px] h-[48px] mb-[72px] m-auto flex justify-center items-center bg-primary text-white rounded font-bold  "
+              className="w-[280px] h-[48px] mb-[72px] m-auto flex justify-center items-center bg-primary text-white rounded font-bold cursor-pointer "
             >
               <p>인증번호 받기</p>
             </div>
@@ -76,7 +74,7 @@ const FindPassword = ({
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden sm:w-full sm:h-auto sm:flex sm:justify-center sm:items-center">
+      <div className="sm:hidden w-full h-auto flex justify-center items-center">
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose

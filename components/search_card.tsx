@@ -3,13 +3,28 @@ import Link from "next/link";
 import { doc, updateDoc } from "firebase/firestore";
 import { authService, dbService } from "@/firebase";
 import Image from "next/image";
+import useModal from "@/hooks/useModal";
 
 export const SearchCard = ({ card }: any) => {
+  const { showModal } = useModal();
   const like = card.item.like?.includes(authService.currentUser?.uid);
 
   const onClickLikeBtn = async () => {
     if (!authService.currentUser?.uid) {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
+
       return true;
     }
     const likeArray = card.item.like?.includes(authService.currentUser?.uid);

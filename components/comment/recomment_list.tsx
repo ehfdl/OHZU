@@ -4,7 +4,6 @@ import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import DeleteModal from "../delete_modal";
 import Grade from "../grade";
 
 interface RecommentListPropsType {

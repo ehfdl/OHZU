@@ -170,14 +170,14 @@ const Mypage = () => {
         <div className="max-w-[390px] w-full sm:max-w-[1200px] flex flex-col justify-start items-center">
           <div className="mt-9 sm:mt-[70px] w-full sm:w-[696px] flex sm:gap-12 gap-6 px-6">
             <div className="flex flex-col items-center">
-              <div className="bg-[#d9d9d9] rounded-full w-20 sm:w-40 aspect-square overflow-hidden">
+              <div className="bg-[#d9d9d9] rounded-full w-16 sm:w-40 aspect-square overflow-hidden">
                 {myProfile?.imageURL && (
                   <Image
                     src={myProfile?.imageURL as string}
-                    className="w-20 sm:w-40 aspect-square object-cover"
+                    className="w-16 sm:w-40 aspect-square object-cover"
                     alt=""
-                    width={80}
-                    height={80}
+                    width={64}
+                    height={64}
                   />
                 )}
               </div>
@@ -193,7 +193,7 @@ const Mypage = () => {
                 프로필 편집
               </button>
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col mt-1 sm:mt-0">
               <div className="w-[238px] sm:w-[440px] sm:flex sm:justify-between">
                 <div>
                   <div className="font-bold sm:text-[24px] flex justify-start items-center gap-1">
@@ -266,10 +266,13 @@ const Mypage = () => {
                   </div>
                 </div>
               </div>
-              <div className="text-[12px] sm:text-base h-[52px] sm:h-[70px] w-[238px] sm:w-[478px] overflow-hidden mt-3 sm:mt-5 whitespace-pre-wrap ">
+              <div className="hidden sm:block sm:text-base h-[52px] sm:h-[70px] w-[238px] sm:w-[478px] overflow-hidden mt-3 sm:mt-5 whitespace-pre-wrap ">
                 {myProfile?.introduce}
               </div>
             </div>
+          </div>
+          <div className="sm:hidden flex justify-center text-[12px] items-center h-[70px] w-full px-8 overflow-hidden mt-3 sm:mt-5 whitespace-pre-wrap ">
+            {myProfile?.introduce}
           </div>
           <Ohju_Navbar setOhju={setOhju} setCate={setCate} />
           <Cate_Navbar setCate={setCate} cate={cate} />
