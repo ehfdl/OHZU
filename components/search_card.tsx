@@ -47,20 +47,13 @@ export const SearchCard = ({ card }: any) => {
   return (
     <>
       {/* 웹 */}
-      <div
-        key={card.item.postId}
-        className="hidden sm:block card max-w-[384px] w-full h-[420px] mb-6  rounded  row-span-[1] relative"
-      >
+      <div className="hidden sm:block card max-w-[384px] w-full h-[420px] mb-6  rounded  row-span-[1] relative">
         <Link href={`/post/${card.item.postId}`}>
-          {/* <img
-            className=" max-w-[384px] w-full max-h-[284px] h-full rounded-t bg-contain  object-cover"
-            src={card.item.img[0]}
-          /> */}
           <Image
-            className=" max-w-[384px] w-full max-h-[284px] h-full rounded  object-cover"
+            className=" max-w-[384px] w-full max-h-[284px] h-full rounded border-[1px] border-borderGray object-cover"
             src={card.item.img[0]}
-            width="100"
-            height="100"
+            width={350}
+            height={350}
             alt="검색 음료 사진"
           />
           <div className=" bg-black/0 max-w-[384px] w-full h-[284px] object-cover absolute top-0 hover:bg-gray-300/30 hover:block"></div>
@@ -100,7 +93,6 @@ export const SearchCard = ({ card }: any) => {
                 {card.item.like.length}
               </p>
             </div>
-            {/* </div> */}
           </div>
         </div>
         <p className=" text-[14px] max-w-[384px] w-full h-[45px]  px-5 overflow-hidden break-words">
@@ -115,10 +107,7 @@ export const SearchCard = ({ card }: any) => {
       </div>
 
       {/* 모바일 */}
-      <div
-        key={card.item.postId}
-        className="sm:hidden card max-w-[171px] w-full  mb-6  rounded row-span-[1] relative"
-      >
+      <div className="sm:hidden card max-w-[171px] w-full  mb-6  rounded row-span-[1] relative">
         <div
           className="w-8 h-8 absolute top-[14px] right-[15.5px] cursor-pointer flex flex-col justify-center items-center z-1"
           onClick={onClickLikeBtn}
@@ -129,7 +118,7 @@ export const SearchCard = ({ card }: any) => {
               width="18"
               height="16"
               alt="좋아요"
-              className="cursor-pointer text-center"
+              className="cursor-pointer text-center "
             />
           ) : (
             <Image
@@ -147,10 +136,10 @@ export const SearchCard = ({ card }: any) => {
         </div>
         <Link href={`/post/${card.item.postId}`}>
           <Image
-            className="w-full  w-[171px] h-[168px] w-full h-full cursor-pointer rounded-t bg-contain"
+            className="w-[171px] h-[168px]  cursor-pointer rounded border-[1px] border-borderGray  object-cover"
             src={card.item.img[0]}
-            width="100"
-            height="100"
+            width={200}
+            height={200}
             alt="검색 음료 사진"
           />
         </Link>
@@ -164,7 +153,7 @@ export const SearchCard = ({ card }: any) => {
             </div>
           </div>
         </div>
-        <p className=" text-sm w-full min-h-[45px] h-full  overflow-hidden break-words">
+        <p className=" text-sm w-full min-h-[60px] h-full  overflow-hidden break-words">
           {card.item?.ingredient.map((tag: any, i: number) => (
             <Link href={`/search/include/${tag}`} key={i}>
               <span className="mr-[10px] text-xs font-normal text-textGray">
