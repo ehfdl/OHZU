@@ -4,16 +4,30 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Grade from "../grade";
 import Image from "next/image";
-import { Autoplay } from "swiper";
+import useModal from "@/hooks/useModal";
 
-const PostCard = ({ post }: { post: any }) => {
+const PostCard = ({ post, type }: { post: any; type?: string }) => {
   const defaultImg =
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
+  const { showModal } = useModal();
 
   const like = post.like.includes(authService.currentUser?.uid);
   const onClickLikeBtn = async () => {
     if (!authService.currentUser?.uid) {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
+
       return true;
     }
     const likeArray = post.like.includes(authService.currentUser?.uid);
@@ -31,7 +45,19 @@ const PostCard = ({ post }: { post: any }) => {
         like: post.like,
       });
     } else if (authService.currentUser?.uid === null) {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
     }
   };
 
@@ -65,14 +91,14 @@ const PostCard = ({ post }: { post: any }) => {
   }, []);
 
   return (
-    <div className="flex">
+    <div className={`flex ${type === "like" ? "scale-90" : null} sm:scale-100`}>
       <div key={post.postId} className="sm:mt-1">
         {/* hover:border-[#FF6161]/20 hover:shadow-xl hover:shadow-[#FF9999]/70 */}
         <div className="sm:w-full w-[171px] h-[168px] sm:h-[284px] ">
           <Link href={`/post/${post.postId}`}>
             <Image
               src={post.img[0] || defaultImg}
-              className="flex sm:w-[384px] w-[171px] h-[168px] sm:h-[284px] object-cover rounded"
+              className="flex sm:w-[384px] w-[171px] h-[168px] sm:h-[284px] object-cover rounded border-[1px] border-borderGray"
               alt=""
               width={300}
               height={300}
@@ -106,7 +132,7 @@ const PostCard = ({ post }: { post: any }) => {
                 <div>
                   {user.imageURL && (
                     <Image
-                      className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointer"
+                      className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointe "
                       alt=""
                       src={user.imageURL as string}
                       width={100}

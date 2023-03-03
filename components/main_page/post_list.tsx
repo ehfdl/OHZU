@@ -193,9 +193,9 @@ const PostList = () => {
                   nextEl: navigationNextRef.current,
                 }}
                 breakpoints={{
-                  420: {
+                  320: {
                     slidesPerView: 3,
-                    spaceBetween: 120,
+                    spaceBetween: 100,
                     slidesPerGroup: 3,
                   },
                   500: {
@@ -221,7 +221,7 @@ const PostList = () => {
                 <div className="">
                   {userLikePosts?.map((post: any) => (
                     <SwiperSlide key={post.postId}>
-                      <PostCard key={post.postId} post={post} />
+                      <PostCard key={post.postId} post={post} type="like" />
                     </SwiperSlide>
                   ))}{" "}
                 </div>
@@ -270,9 +270,9 @@ const PostList = () => {
                   nextEl: nextRef.current,
                 }}
                 breakpoints={{
-                  420: {
+                  320: {
                     slidesPerView: 3,
-                    spaceBetween: 120,
+                    spaceBetween: 100,
                     slidesPerGroup: 3,
                   },
                   500: {
@@ -298,7 +298,7 @@ const PostList = () => {
                 <div>
                   {userViewPosts?.map((post: any) => (
                     <SwiperSlide key={post.postId}>
-                      <PostCard key={post.postId} post={post} />
+                      <PostCard key={post.postId} post={post} type="like" />
                     </SwiperSlide>
                   ))}{" "}
                 </div>

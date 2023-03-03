@@ -35,7 +35,7 @@ const ConfirmModal = ({
         </p>
         <div className="flex w-full justify-center sm:gap-4">
           <button
-            className="py-3 w-1/2 sm:w-[236px] border border-primary text-primary rounded-bl sm:rounded"
+            className="py-3 w-1/2 sm:w-[236px] border-t border-r sm:border border-primary text-primary rounded-bl sm:rounded"
             onClick={leftbtnfunc ? leftbtnfunc : hideModal}
           >
             {leftbtntext ? leftbtntext : "취소"}

@@ -1,7 +1,6 @@
 import { authService, dbService } from "@/firebase";
 import useModal from "@/hooks/useModal";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
@@ -9,14 +8,12 @@ import {
   onSnapshot,
   orderBy,
   query,
-  setDoc,
   updateDoc,
   where,
 } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import DeleteModal from "../delete_modal";
 import Grade from "../grade";
 import Recomments from "./recomments";
 

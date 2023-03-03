@@ -1,4 +1,5 @@
 import { authService, dbService } from "@/firebase";
+import useModal from "@/hooks/useModal";
 import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,43 +15,61 @@ const FollowModalCard = ({
   myProfile: any;
   getMyProfile: () => Promise<void>;
 }) => {
-  const onClickFollowUpdate = async () => {
-    const FollowerArray = profile?.follower!.includes(
-      authService.currentUser?.uid as string
-    );
+  const { showModal } = useModal();
 
-    if (FollowerArray) {
-      const newFollowerArray = profile?.follower!.filter(
-        (id: any) => id !== authService.currentUser?.uid
-      );
-      const newFollowingArray = myProfile.following.filter(
-        (id: any) => id !== profile.userId
-      );
-      await updateDoc(doc(dbService, "Users", profile.userId as string), {
-        follower: newFollowerArray,
-      });
-      await updateDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string),
-        {
-          following: newFollowingArray,
-        }
-      );
-    } else if (!FollowerArray) {
-      const newFollowerArray = profile?.follower!.push(
+  const onClickFollowUpdate = async () => {
+    if (authService.currentUser?.uid) {
+      const FollowerArray = profile?.follower!.includes(
         authService.currentUser?.uid as string
       );
-      const newFollowingArray = myProfile.following.push(profile.userId);
-      await updateDoc(doc(dbService, "Users", profile.userId as string), {
-        follower: profile.follower,
+
+      if (FollowerArray) {
+        const newFollowerArray = profile?.follower!.filter(
+          (id: any) => id !== authService.currentUser?.uid
+        );
+        const newFollowingArray = myProfile.following.filter(
+          (id: any) => id !== profile.userId
+        );
+        await updateDoc(doc(dbService, "Users", profile.userId as string), {
+          follower: newFollowerArray,
+        });
+        await updateDoc(
+          doc(dbService, "Users", authService.currentUser?.uid as string),
+          {
+            following: newFollowingArray,
+          }
+        );
+      } else if (!FollowerArray) {
+        const newFollowerArray = profile?.follower!.push(
+          authService.currentUser?.uid as string
+        );
+        const newFollowingArray = myProfile.following.push(profile.userId);
+        await updateDoc(doc(dbService, "Users", profile.userId as string), {
+          follower: profile.follower,
+        });
+        await updateDoc(
+          doc(dbService, "Users", authService.currentUser?.uid as string),
+          {
+            following: myProfile.following,
+          }
+        );
+      }
+      getMyProfile();
+    } else {
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
       });
-      await updateDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string),
-        {
-          following: myProfile.following,
-        }
-      );
     }
-    getMyProfile();
   };
 
   return (

@@ -102,8 +102,8 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
           showModal({
             modalType: "AlertModal",
             modalProps: {
-              title: "클립보드에 복사되었습니다.",
               src: "/image/Check_circle.svg",
+              title: "클립보드에 복사되었습니다.",
             },
           });
           setIsOpen(false);

@@ -3,8 +3,8 @@ import Link from "next/link";
 
 const Footer = () => {
   return (
-    <div className="w-full h-[400px] bg-second">
-      <div className="topContentsWrap flex justify-between items-end">
+    <div className="w-full h-[250px] bg-second">
+      <div className="topContentsWrap flex justify-between items-center">
         <div className="inline-block mt-[86px] ml-[69px]">
           <Link href={`/`}>
             <Image
