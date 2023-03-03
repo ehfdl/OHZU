@@ -1,4 +1,5 @@
 import { authService, dbService } from "@/firebase";
+import useModal from "@/hooks/useModal";
 import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
 import { SetStateAction, useState } from "react";
 import RecommentList from "./recomment_list";
@@ -32,6 +33,7 @@ const Recomments = ({
     createdAt: "",
     isEdit: false,
   };
+  const { showModal } = useModal();
 
   const [recomment, setRecomment] = useState<CommentType>(initialRecomment);
   const [resizeTextArea, setResizeTextArea] = useState({
@@ -104,7 +106,10 @@ const Recomments = ({
         });
       }
     } else {
-      alert("내용이 없습니다!");
+      showModal({
+        modalType: "AlertModal",
+        modalProps: { title: "내용이 없습니다." },
+      });
     }
     setRecomment(initialRecomment);
     setResizeTextArea({

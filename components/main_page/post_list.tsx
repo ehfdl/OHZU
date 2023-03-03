@@ -195,8 +195,8 @@ const PostList = () => {
                 breakpoints={{
                   320: {
                     slidesPerView: 3,
-                    spaceBetween: 100,
-                    slidesPerGroup: 3,
+                    spaceBetween: 130,
+                    slidesPerGroup: 2,
                   },
                   500: {
                     slidesPerView: 3,
@@ -228,7 +228,7 @@ const PostList = () => {
                 <div className="">
                   <button
                     ref={navigationPrevRef}
-                    className="w-[30px] h-[30px] translate-x-[4px] -translate-y-[70px] top-1/2 absolute p-1.5 hidden group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[15px] sm:translate-y-[-30px] z-20 sm:top-[190px] rounded-full"
+                    className="w-[30px] h-[30px] translate-x-[4px] -translate-y-[70px] top-1/2 absolute p-1.5 hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[15px] sm:translate-y-[-30px] z-20 sm:top-[190px] rounded-full"
                   >
                     <BsChevronLeft
                       size={20}
@@ -239,7 +239,7 @@ const PostList = () => {
                 <div className="">
                   <button
                     ref={navigationNextRef}
-                    className="w-[30px] h-[30px] translate-x-[340px] -translate-y-[70px] top-1/2 p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[1140px] sm:translate-y-[-95px] z-20 sm:top-[260px] rounded-full"
+                    className="w-[30px] h-[30px] translate-x-[340px] -translate-y-[70px] top-1/2 p-2 absolute hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[1110px] sm:translate-y-[-95px] z-20 sm:top-[260px] rounded-full"
                   >
                     <BsChevronRight
                       size={20}
@@ -272,8 +272,8 @@ const PostList = () => {
                 breakpoints={{
                   320: {
                     slidesPerView: 3,
-                    spaceBetween: 100,
-                    slidesPerGroup: 3,
+                    spaceBetween: 130,
+                    slidesPerGroup: 2,
                   },
                   500: {
                     slidesPerView: 3,
@@ -305,7 +305,7 @@ const PostList = () => {
                 <div>
                   <button
                     ref={prevRef}
-                    className="w-[30px] h-[30px] translate-x-[4px] -translate-y-[70px] top-1/2 absolute p-1.5 hidden group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[20px] sm:translate-y-[-30px] z-20 sm:top-[210px] rounded-full"
+                    className="hidden w-[30px] h-[30px] translate-x-[4px] -translate-y-[70px] top-1/2 absolute p-1.5 sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[20px] sm:translate-y-[-30px] z-20 sm:top-[210px] rounded-full"
                   >
                     <BsChevronLeft
                       size={20}
@@ -316,7 +316,7 @@ const PostList = () => {
                 <div>
                   <button
                     ref={nextRef}
-                    className="w-[30px] h-[30px] translate-x-[340px] -translate-y-[70px] top-1/2 absolute p-2 hidden group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[1140px] sm:translate-y-[-115px] z-20 sm:top-[300px] rounded-full"
+                    className="w-[30px] h-[30px] translate-x-[340px] -translate-y-[70px] top-1/2 absolute p-2 hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[1110px] sm:translate-y-[-115px] z-20 sm:top-[300px] rounded-full"
                   >
                     <BsChevronRight
                       size={20}

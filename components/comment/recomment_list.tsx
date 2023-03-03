@@ -117,7 +117,10 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             .map((rep: any) => rep.userId === authService.currentUser?.uid)
             .includes(true)
         ) {
-          alert("이미 신고한 댓글입니다.");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: { title: "이미 신고한 답글입니다." },
+          });
           return;
         } else {
           showModal({

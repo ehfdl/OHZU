@@ -7,7 +7,8 @@ export default function Document() {
       <Head>
         <link
           href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;800;900&family=Noto+Sans:wght@300;400;500;600;700&display=swap"
-          rel="stylesheet"
+          rel="preload"
+          as="font"
         ></link>
         <link rel="icon" href="/favicon/favicon.svg"></link>
         <script

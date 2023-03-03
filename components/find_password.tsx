@@ -33,7 +33,10 @@ const FindPassword = ({ setEmail, email, setFindPassword }: any) => {
           }
         });
     } else {
-      alert("메일을 입력해주세요.");
+      showModal({
+        modalType: "AlertModal",
+        modalProps: { title: "메일을 입력해주세요." },
+      });
     }
   };
 

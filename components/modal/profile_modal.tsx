@@ -114,23 +114,25 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
           프로필 편집
         </div>
         <div className="w-[120px] sm:w-40 aspect-square mt-12 sm:mt-6 bg-[#d9d9d9] rounded-full ">
-          {preview !== null ? (
-            <Image
-              src={preview as string}
-              className="w-[120px] sm:w-40 aspect-square object-cover"
-              width={120}
-              height={120}
-              alt=""
-            />
-          ) : (
-            <Image
-              src={myProfile.imageURL as string}
-              className="w-[120px] sm:w-40 aspect-square object-cover rounded-full "
-              width={120}
-              height={120}
-              alt=""
-            />
-          )}
+          {preview !== null
+            ? preview && (
+                <Image
+                  src={preview as string}
+                  className="w-[120px] sm:w-40 aspect-square object-cover rounded-full"
+                  width={120}
+                  height={120}
+                  alt=""
+                />
+              )
+            : myProfile.imageURL && (
+                <Image
+                  src={myProfile.imageURL as string}
+                  className="w-[120px] sm:w-40 aspect-square object-cover rounded-full "
+                  width={120}
+                  height={120}
+                  alt=""
+                />
+              )}
         </div>
         <label className="mt-4 sm:mt-[30px] cursor-pointer rounded-full ">
           <input

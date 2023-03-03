@@ -70,7 +70,7 @@ const Header = ({ ...props }: any) => {
       })
       .catch((err) => {
         const message = err.message("로그아웃에 실패했습니다.");
-        alert(message);
+        showModal({ modalType: "AlertModal", modalProps: { title: message } });
       });
   };
 
@@ -251,7 +251,16 @@ const Header = ({ ...props }: any) => {
             )}
             {authService.currentUser || ssuid ? (
               <button
-                onClick={logOut}
+                onClick={() =>
+                  showModal({
+                    modalType: "ConfirmModal",
+                    modalProps: {
+                      title: "로그아웃 하시겠습니까?",
+                      rightbtntext: "로그아웃",
+                      rightbtnfunc: () => logOut(),
+                    },
+                  })
+                }
                 className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary"
               >
                 <span className="hidden sm:block">로그아웃</span>

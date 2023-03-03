@@ -58,7 +58,7 @@ const MainBanner = () => {
       >
         <div className="group w-screen">
           <SwiperSlide>
-            <Link href={`/post/0lwyBZaw7I1IxihpDMuS`}>
+            <Link href={`/post/7aHaIn5nNLSMwLV4nKyC`}>
               <Image
                 alt=""
                 className="object-cover w-full sm:h-full  h-[152px]"
@@ -70,7 +70,7 @@ const MainBanner = () => {
             </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <Link href={`/post/fgIjM61aFN0ZWdCDuw0K`}>
+            <Link href={`/post/HAX99HwmDDUETpxiprFo`}>
               <Image
                 alt=""
                 className="object-cover w-full sm:h-full  h-[152px]"
@@ -82,7 +82,7 @@ const MainBanner = () => {
             </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <Link href={`/post/R2MLc2GBrw4jUTLGttoA`}>
+            <Link href={`/post/w1Y390uY9l7zGUNGSjDI`}>
               <Image
                 alt=""
                 className="object-cover w-full sm:h-full  h-[152px]"
@@ -94,7 +94,7 @@ const MainBanner = () => {
             </Link>
           </SwiperSlide>
           <SwiperSlide className="overflow-hidden">
-            <Link href={`/post/knxbaDkL6B2Yg0KkEnCc`}>
+            <Link href={`/post/Avg5qd9KUPx1ugWnCHzL`}>
               <Image
                 alt=""
                 className="object-cover w-full sm:h-full h-[152px]"
@@ -106,7 +106,7 @@ const MainBanner = () => {
             </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <Link href={`/post/avQb8boBf67BFM0eIEqz`}>
+            <Link href={`/post/a9ZwgOaQoR3tAj0r3ZyX`}>
               <Image
                 alt=""
                 className="object-cover w-full sm:h-full  h-[152px]"
