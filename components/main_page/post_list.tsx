@@ -130,9 +130,9 @@ const PostList = () => {
 
   return (
     <div>
-      <div className="sm:w-full flex justify-center sm:mb-4 sm:min-h-screen">
-        <div className="sm:w-[1200px] w-full flex flex-col justify-start items-center">
-          <Category setCate={setCate} />
+      <div className="sm:w-full flex flex-col justify-center items-center sm:mb-4 sm:min-h-screen">
+        <Category setCate={setCate} />
+        <div className="sm:w-[1200px] w-full flex flex-col justify-start items-center px-4">
           <div className="sm:w-full sm:mt-12 ml-[-10px] mt-4 mr-[280px] mb-4 flex justify-between sm:ml-[290px] sm:mb-6">
             <div className="sm:text-xl text-sm font-bold">
               게시물{" "}
@@ -144,7 +144,7 @@ const PostList = () => {
             </div>
           </div>
 
-          <div className="w-full sm:mt-[-15px] mr-[-75px] ml-[-50px] sm:ml-0 sm:mr-0 gap-[-50px] bg-white grid grid-cols-2  sm:grid sm:grid-cols-3 sm:gap-6">
+          <div className="w-full gap-4 bg-white grid grid-cols-2  sm:grid sm:grid-cols-3 sm:gap-6">
             {cate === "전체"
               ? posts
                   ?.map((post: any) => (
@@ -174,7 +174,7 @@ const PostList = () => {
             </button>
           )}
 
-          <div className="w-full mt-12 sm:mt-16 relative z-0 ml-6">
+          <div className="w-full mt-12 sm:mt-16 relative z-0">
             <div className="sm:text-2xl text-xl font-bold mb-5 ml-3 sm:mb-3">
               인기 많은 OHZU
               <span className="text-primary">
@@ -251,7 +251,7 @@ const PostList = () => {
             </div>
           </div>
 
-          <div className="w-full mt-10 sm:mt-[90px] relative z-0 overflow-hidden ml-6">
+          <div className="w-full mt-10 sm:mt-[90px] relative z-0 overflow-hidden">
             <div className="sm:text-2xl text-xl font-bold mb-5 ml-3 sm:mb-3">
               많이 본 OHZU
               <span className="text-primary">

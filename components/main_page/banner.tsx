@@ -32,7 +32,7 @@ const MainBanner = () => {
   const bannerPrevRef = useRef(null);
 
   return (
-    <div className="group sm:w-full sm:mt-[-62px] mt-[-50px] mb-8 py-16 flex sm:mb-10 ">
+    <div className="group w-full mb-4 flex sm:mb-10 ">
       <Swiper
         observer={true}
         observeParents={true}
@@ -61,7 +61,7 @@ const MainBanner = () => {
             <Link href={`/post/0lwyBZaw7I1IxihpDMuS`}>
               <Image
                 alt=""
-                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
+                className="object-cover w-full sm:h-full  h-[152px]"
                 src="/banner/3.svg"
                 width={300}
                 height={300}
@@ -73,7 +73,7 @@ const MainBanner = () => {
             <Link href={`/post/fgIjM61aFN0ZWdCDuw0K`}>
               <Image
                 alt=""
-                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
+                className="object-cover w-full sm:h-full  h-[152px]"
                 src="/banner/4.svg"
                 width={300}
                 height={300}
@@ -85,7 +85,7 @@ const MainBanner = () => {
             <Link href={`/post/R2MLc2GBrw4jUTLGttoA`}>
               <Image
                 alt=""
-                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
+                className="object-cover w-full sm:h-full  h-[152px]"
                 src="/banner/5.svg"
                 width={300}
                 height={300}
@@ -93,11 +93,11 @@ const MainBanner = () => {
               ></Image>
             </Link>
           </SwiperSlide>
-          <SwiperSlide>
+          <SwiperSlide className="overflow-hidden">
             <Link href={`/post/knxbaDkL6B2Yg0KkEnCc`}>
               <Image
                 alt=""
-                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
+                className="object-cover w-full sm:h-full h-[152px]"
                 src="/banner/6.svg"
                 width={300}
                 height={300}
@@ -109,7 +109,7 @@ const MainBanner = () => {
             <Link href={`/post/avQb8boBf67BFM0eIEqz`}>
               <Image
                 alt=""
-                className="object-cover sm:w-full sm:h-full w-[390px] h-[152px]"
+                className="object-cover w-full sm:h-full  h-[152px]"
                 src="/banner/7.svg"
                 width={300}
                 height={300}
