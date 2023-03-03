@@ -64,13 +64,12 @@ const Footer = () => {
             </Link>
           </ul>
         </div>
-        <div></div>
       </div>
 
       {/* 모바일*/}
-      <div className="sm:hidden flex flex-col w-full h-[328px] bg-second">
-        <div className="topContentsWrap max-w-[390px] mx-auto">
-          <div className="inline-block mt-[51px] ml-5 mb-3">
+      <div className="sm:hidden flex flex-col w-full h-[328px] bg-second ">
+        <div className="topContentsWrap max-w-[390px] mx-auto ">
+          <div className="inline-block mt-[51px] ml-5 mb-3 ">
             <Link href={`/`}>
               <Image
                 className="w-[70px] h-[18px] cursor-pointer"
@@ -81,20 +80,21 @@ const Footer = () => {
               />
             </Link>
           </div>
-          <div
-            className="text-sm font-semibold text-right mr-[27px] mb-12 cursor-pointer"
-            onClick={() =>
-              showModal({
-                modalType: "ConfirmModal",
-                modalProps: {
-                  title: "로그아웃 하시겠습니까?",
-                  rightbtntext: "로그아웃",
-                  rightbtnfunc: () => logOut(),
-                },
-              })
-            }
-          >
-            로그아웃
+          <div className=" text-sm font-semibold text-right mr-[27px] mb-12 cursor-pointer">
+            <span
+              onClick={() =>
+                showModal({
+                  modalType: "ConfirmModal",
+                  modalProps: {
+                    title: "로그아웃 하시겠습니까?",
+                    rightbtntext: "로그아웃",
+                    rightbtnfunc: () => logOut(),
+                  },
+                })
+              }
+            >
+              로그아웃
+            </span>
           </div>
           <ul className="flex justify-center max-w-[333px] w-full m-auto text-xs ">
             <Link href="/about" className="duration-150 hover:text-primary">
@@ -117,7 +117,6 @@ const Footer = () => {
             </Link>
           </ul>
         </div>
-        <div></div>
       </div>
     </>
   );
