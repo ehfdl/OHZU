@@ -450,8 +450,8 @@ const JoinModal = () => {
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
-          // url: "https://ohzu.vercel.app/api/kakao",
-          url: "http://localhost:3000",
+          url: "https://ohzu.vercel.app/api/kakao",
+          // url: "http://localhost:3000",
           data: { authObj },
         }).then(function (response) {
           // 서버에서 보낸 jwt토큰을 받음

@@ -202,12 +202,19 @@ const Post = () => {
         !confirmed &&
         changeForm
       ) {
+        if (router.asPath !== window.location.pathname) {
+          window.history.pushState("", "", router.asPath);
+        }
         setToUrl(url);
         showModal({
           modalType: "ConfirmModal",
           modalProps: {
             title: "페이지를 이동하시겠습니까?",
             text: "변경사항이 저장되지 않을 수 있습니다.",
+            leftbtnfunc: () => {
+              setToUrl("");
+              hideModal();
+            },
             rightbtnfunc: () => setConfirmed(true),
           },
         });
@@ -218,14 +225,10 @@ const Post = () => {
     },
     [confirmed, changeForm, router.asPath, router.events]
   );
-
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeunload);
     router.events.on("routeChangeStart", routeChangeStart);
-    if (router.asPath !== window.location.pathname) {
-      window.history.pushState("", "", router.asPath);
-    }
-    console.log("왜안됨?");
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeunload);
       router.events.off("routeChangeStart", routeChangeStart);
@@ -235,7 +238,11 @@ const Post = () => {
   useEffect(() => {
     if (confirmed) {
       hideModal();
-      router.replace(toUrl);
+      if (toUrl !== "") {
+        router.replace(toUrl);
+      } else {
+        router.push("/");
+      }
     }
   }, [toUrl, confirmed]);
 
@@ -327,7 +334,7 @@ const Post = () => {
 
         await addDoc(collection(dbService, "Posts"), newForm);
         setConfirmed(true);
-        router.push("/");
+        // router.push("/");
       } else {
         let newForm = {
           ...form,
@@ -337,7 +344,7 @@ const Post = () => {
 
         await addDoc(collection(dbService, "Posts"), newForm);
         setConfirmed(true);
-        router.push("/");
+        // router.push("/");
       }
     }
   };

@@ -444,8 +444,9 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                     {img && (
                       <Image
                         src={img}
-                        width={100}
-                        height={100}
+                        width={350}
+                        height={350}
+                        quality="100"
                         alt=""
                         className="w-full aspect-[4/3] object-cover"
                       />

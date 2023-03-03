@@ -38,8 +38,6 @@ const UserPage = ({ userId }: { userId: string }) => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  console.log(userId);
-
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       // Firebase 연결되면 화면 표시

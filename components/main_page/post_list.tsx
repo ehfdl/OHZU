@@ -130,13 +130,13 @@ const PostList = () => {
 
   return (
     <div>
-      <div className="sm:w-full flex flex-col justify-center items-center sm:mb-4 sm:min-h-screen">
+      <div className="sm:w-full flex flex-col justify-center items-center sm:mb-3 sm:min-h-screen">
         <Category setCate={setCate} />
         <div className="sm:w-[1200px] w-full flex flex-col justify-start items-center px-4">
-          <div className="sm:w-full sm:mt-12 ml-[-10px] mt-4 mr-[280px] mb-4 flex justify-between sm:ml-[290px] sm:mb-6">
+          <div className="w-full sm:mt-12 mt-4 mb-4 flex justify-between sm:mb-6">
             <div className="sm:text-xl text-sm font-bold">
               게시물{" "}
-              <span className="float-right ml-2 sm:text-xl text-sm font-bold sm:font-bold text-primary">
+              <span className="float-right ml-2 sm:text-xl text-sm font-bold text-primary">
                 {cate === "전체"
                   ? posts?.length
                   : posts?.filter((post) => cate === post.type).length}

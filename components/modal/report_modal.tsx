@@ -12,12 +12,9 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
   const { hideModal } = useModal();
   const [cate, setCate] = useState<string>();
 
-  console.log(currentUser);
-
   const setReport = async () => {
     if (type === "post") {
       if (authService.currentUser?.uid) {
-        console.log(pastPost.reporter);
         if (pastPost.reporter) {
           let copyPost = [...pastPost.reporter];
           copyPost.push({ userId: authService.currentUser?.uid, type: cate });
@@ -106,7 +103,7 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
       window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
     };
   }, []);
-  console.log(type);
+
   return (
     <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
       <div className="w-full relative sm:w-[588px] rounded bg-white z-40 flex flex-col justify-start items-center">
