@@ -73,7 +73,7 @@ const FollowModalCard = ({
   };
 
   return (
-    <div key={profile?.userId} className="w-full flex justify-start">
+    <div key={profile?.userId} className="w-full flex justify-center">
       <Link href={`/users/${profile.userId}`}>
         <div className="w-14 sm:w-[78px] aspect-square rounded-full bg-[#d9d9d9] overflow-hidden">
           {profile.imageURL !== "" ? (

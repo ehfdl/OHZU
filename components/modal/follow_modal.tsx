@@ -36,12 +36,12 @@ const FollowModal = ({
     <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
       <div className="w-full h-full relative sm:w-[588px] sm:h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
-          className="sm:w-10 w-9 aspect-square absolute top-6 right-6"
+          className="sm:w-10 w-8 aspect-square absolute top-5 right-3"
           onClick={() => hideModal()}
         >
           <FiX className="w-full h-full text-phGray" />
         </button>
-        <div className="w-full flex justify-around mt-10 text-[24px]">
+        <div className="w-full flex justify-around mt-10 text-lg sm:text-[24px]">
           <label
             onChange={() => {
               setFollow("follower");
@@ -55,7 +55,7 @@ const FollowModal = ({
               defaultChecked={follow === "follower"}
               className="hidden peer"
             />
-            <span className="w-full block cursor-pointer py-5 border-b-[1px] border-second peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-primary peer-checked:border-primary">
+            <span className="w-full block cursor-pointer py-4 sm:py-5 border-b-[1px] border-second peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-primary peer-checked:border-primary">
               팔로워
             </span>
           </label>
@@ -72,13 +72,13 @@ const FollowModal = ({
               className="hidden peer"
               defaultChecked={follow === "following"}
             />
-            <span className="w-full block cursor-pointer py-5 border-b-[1px] border-second peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-primary peer-checked:border-primary">
+            <span className="w-full block cursor-pointer py-4 sm:py-5  border-b-[1px] border-second peer-checked:font-bold  peer-checked:border-b-4 peer-checked:text-primary peer-checked:border-primary">
               팔로잉
             </span>
           </label>
         </div>
 
-        <div className="flex pt-8 sm:pt-10 flex-col gap-6 justify-start items-center w-full sm:w-[492px] overflow-auto scrollbar-none">
+        <div className="flex px-2 pt-8 sm:pt-10 flex-col gap-6 justify-start items-center w-full sm:w-[492px] overflow-auto scrollbar-none">
           {follow === "following" && usersFollowingProfile
             ? usersFollowingProfile.map(
                 (profile) =>
