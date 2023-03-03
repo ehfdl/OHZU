@@ -83,7 +83,7 @@ const Category = ({
       </nav>
 
       {/* 모바일 */}
-      <nav className="sm:hidden max-w-[635px] w-full flex justify-around ">
+      <nav className="sm:hidden max-w-[390px] w-full flex justify-around ">
         <label
           onChange={() => setCate("전체")}
           className="w-[88px] text-slate-500 text-center"

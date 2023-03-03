@@ -156,7 +156,7 @@ export default function SearchInclude({
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden max-w-[635px] w-full m-auto scrollbar-none">
+      <div className="sm:hidden max-w-[390px] w-full m-auto scrollbar-none">
         <h1 className="max-w-[390px] m-auto mt-6 mb-[30px] pl-6 text-[20px] font-bold">
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
           <span className="text-textGray font-normal">

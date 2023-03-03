@@ -73,6 +73,7 @@ const Header = ({ ...props }: any) => {
         alert(message);
       });
   };
+
   // 검색 실행 함수
   const SearchHandler = (keyword: any) => {
     setSearch(keyword);
@@ -170,7 +171,7 @@ const Header = ({ ...props }: any) => {
           </form>
 
           {/* 로그인 유무에 따른 버튼 텍스트 변화 */}
-          <div className="flex items-center sm:gap-6 mr-5 ml-1 sm:ml-0 sm:mr-0 ">
+          <div className="flex items-center sm:gap-6 ">
             <Image
               src="/image/m_search.svg"
               width="24"
@@ -189,7 +190,7 @@ const Header = ({ ...props }: any) => {
                 width="20"
                 height="24"
                 alt="마이페이지"
-                className="sm:hidden mx-3 cursor-pointer"
+                className="sm:hidden ml-3 cursor-pointer"
                 priority={true}
                 onClick={() => {
                   if (!authService.currentUser) {
@@ -219,7 +220,7 @@ const Header = ({ ...props }: any) => {
 
             {authService.currentUser || ssuid ? (
               authService.currentUser?.uid ===
-              "cQEpUpvxr4R5azgOTGgdjzKjS7z1" ? (
+              "DllfZJxOSgRqHvF37aJV1RLsPFy2" ? (
                 <Link legacyBehavior href="/ohzu">
                   <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
                     <span className="hidden sm:block">관리페이지</span>

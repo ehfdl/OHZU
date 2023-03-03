@@ -33,7 +33,7 @@ const AlertModal = ({ src, title, text, btntext, btnfunc }: any) => {
                 src={src}
                 width="40"
                 height="40"
-                alt="비밀번호 재설정 발송 완료"
+                alt="확인 로고"
                 className="mb-5 sm:mb-[22px]"
               />
             )}

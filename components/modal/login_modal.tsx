@@ -422,17 +422,6 @@ const LoginModal = () => {
                 </div>
               </div>
 
-              {/* <div>
-              <span>비밀번호 재설정</span>
-              <input
-                type="text"
-                placeholder="재설정 코드를 받을 이메일을 입력하세요."
-                onChange={(e) => setEmail(e.target.value)}
-                className="border bg-red-200"
-              />
-              <div onClick={resetPassword}>♥️</div>
-            </div> */}
-
               <div className="buttonWrap mb-4">
                 <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded   ">
                   로그인
