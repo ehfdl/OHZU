@@ -10,23 +10,23 @@ const Footer = () => {
             <Image
               className="w-[164px] h-[42px]"
               src="/LOGO.svg"
+              alt="OHZU Logo"
               width="100"
               height="100"
-              alt="OHZU LOGO"
             />
           </Link>
         </div>
-        <ul className="flex justify-between max-w-[541px] w-full mr-[183px] text-xs">
-          <Link href="/temporary">
+        <ul className="flex justify-between max-w-[541px] w-full mr-[183px] text-xs ">
+          <Link href="/about" className="duration-150 hover:text-primary">
             <li>브랜드 소개</li>
           </Link>
-          <Link href="/temporary">
+          <Link href="/temporary" className="duration-150 hover:text-primary">
             <li>이용약관</li>
           </Link>
-          <Link href="/temporary">
+          <Link href="/temporary" className="duration-150 hover:text-primary">
             <li>공지사항</li>
           </Link>
-          <Link href="/temporary">
+          <Link href="/temporary" className="duration-150 hover:text-primary">
             <li>개인정보 처리방침</li>
           </Link>
         </ul>

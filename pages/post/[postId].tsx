@@ -145,7 +145,9 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       // alert("클립보드에 복사되었습니다.");
       showModal({
         modalType: "AlertModal",
-        modalProps: { message: "클립보드에 복사되었습니다." },
+        modalProps: {
+          title: "클립보드에 복사되었습니다.",
+        },
       });
     }
   };
