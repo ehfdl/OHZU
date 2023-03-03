@@ -42,10 +42,12 @@ const FindPassword = ({
     }
   };
 
+  console.log("email : ", email);
+
   return (
     <>
       {/* 웹 */}
-      <div className=" sm:block flex justify-center items-center">
+      <div className="hidden sm:flex justify-center items-center">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
         <div className="inner max-w-[588px] max-h-[454px] w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">

@@ -93,8 +93,7 @@ const Header = ({ ...props }: any) => {
 
   return (
     <>
-      {/* 웹 헤더 크기 */}
-      <div className="flex w-full sm:h-[118px] h-[50px] mt-5 sticky top-0 z-[8] justify-between items-center bg-white">
+      <div className="flex w-full sm:h-[118px] h-[50px] sm:sticky top-0 left-0 z-[8] justify-between items-center bg-white">
         <Link legacyBehavior href="/">
           <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
             <Image src={LOGO_Ohju} alt="Ohju LOGO" priority={true} />
@@ -159,7 +158,7 @@ const Header = ({ ...props }: any) => {
                       value={search}
                       type="text"
                       id="simple-search"
-                      priority={true}
+                      // priority={true}
                       className="max-w-[315px] w-full h-[50px]  bg-[#f2f2f2] border   text-sm rounded-[100px] focus:ring-blue-500 focus:border-blue-500 pl-[50px] p-2.5  sm:hidden"
                       placeholder="혼합주 이름 또는 재료를 입력해주세요."
                       required

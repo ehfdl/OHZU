@@ -101,7 +101,10 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
           // alert("클립보드에 복사되었습니다.");
           showModal({
             modalType: "AlertModal",
-            modalProps: { message: "클립보드에 복사되었습니다." },
+            modalProps: {
+              title: "클립보드에 복사되었습니다.",
+              src: "/image/Check_circle.svg",
+            },
           });
           setIsOpen(false);
         })
@@ -109,7 +112,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
           // alert("복사를 다시 시도해주세요.");
           showModal({
             modalType: "AlertModal",
-            modalProps: { message: "복사를 다시 시도해주세요." },
+            modalProps: { title: "복사를 다시 시도해주세요." },
           });
         });
     } else {
@@ -118,7 +121,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
         // return alert("복사하기가 지원되지 않는 브라우저입니다.");
         showModal({
           modalType: "AlertModal",
-          modalProps: { message: "복사하기가 지원되지 않는 브라우저입니다." },
+          modalProps: { title: "복사하기가 지원되지 않는 브라우저입니다." },
         });
       }
 
@@ -142,7 +145,9 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       // alert("클립보드에 복사되었습니다.");
       showModal({
         modalType: "AlertModal",
-        modalProps: { message: "클립보드에 복사되었습니다." },
+        modalProps: {
+          title: "클립보드에 복사되었습니다.",
+        },
       });
     }
   };
