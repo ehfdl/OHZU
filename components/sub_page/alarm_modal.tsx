@@ -1,7 +1,8 @@
 import { authService, dbService } from "@/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import React from "react";
+import React, { useEffect } from "react";
 import AlarmCard from "./alarm_card";
+import { FiX } from "react-icons/fi";
 
 const AlarmModal = ({
   alarm,
@@ -40,14 +41,33 @@ const AlarmModal = ({
     getAlarm();
   };
 
+  useEffect(() => {
+    document.body.style.cssText = `
+      position: fixed;
+      top: -${window.scrollY}px;
+      overflow-y: scroll;
+      width: 100%;`;
+    return () => {
+      const scrollY = document.body.style.top;
+      document.body.style.cssText = "";
+      window.scrollTo(0, parseInt(scrollY || "0", 10) * -1);
+    };
+  }, []);
+
   return (
     <div>
       <div
         onClick={() => setIsAlarmOpenModal(false)}
-        className="w-full h-full fixed left-0 top-0 z-10"
+        className="hidden sm:block w-full h-full fixed left-0 top-0 z-10"
       />
-      <div className="w-[348px] h-[480px] py-3 px-3 mt-4 left-52 rounded bg-white border-primary border-[1px] z-20 flex flex-col justify-start items-center absolute">
-        <div className="w-full py-3 px-3 text-[14px] flex justify-between">
+      <div className="sm:w-[348px] sm:h-[480px] w-full h-full fixed top-0 sm:top-14 left-0 py-3 px-3 mt-4 sm:left-52 rounded bg-white sm:border-primary sm:border-[1px] z-20 flex flex-col justify-start items-center sm:absolute">
+        <button
+          className=" sm:hidden  w-9 aspect-square absolute top-4 right-4"
+          onClick={() => setIsAlarmOpenModal(false)}
+        >
+          <FiX className="w-full h-full text-phGray" />
+        </button>
+        <div className="w-full py-3 px-3 text-[14px] flex justify-between mt-12 sm:mt-0">
           <div className="font-bold">전체 알림</div>
           <div className="flex gap-6 text-textGray">
             {alarmTrue.length === 0 ? (

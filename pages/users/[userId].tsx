@@ -14,10 +14,10 @@ import {
 import React, { useEffect, useState } from "react";
 import UserDropdown from "@/components/sub_page/user_dropdown";
 import Grade from "@/components/grade";
-import FollowModal from "@/components/modal/follow_modal";
 import UserCateNavbar from "@/components/navbar/user_cate_navbar";
-import { GetServerSideProps } from "next";
 import Image from "next/image";
+import useModal from "@/hooks/useModal";
+import { GetServerSideProps } from "next";
 
 const UserPage = ({ userId }: { userId: string }) => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -32,12 +32,13 @@ const UserPage = ({ userId }: { userId: string }) => {
 
   const [cate, setCate] = useState("전체");
   const [cateDrop, setCateDrop] = useState("최신순");
-  const [follow, setFollow] = useState("follower");
+  const { showModal } = useModal();
 
   const [dropOnOff, setDropOnOff] = useState(false);
-  const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  console.log(userId);
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
@@ -55,7 +56,20 @@ const UserPage = ({ userId }: { userId: string }) => {
 
   const onClickFollowUpdate = async () => {
     if (!authService.currentUser?.uid) {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
+
       return true;
     }
     const FollowerArray = userProfile.follower.includes(
@@ -243,13 +257,13 @@ const UserPage = ({ userId }: { userId: string }) => {
         <div className="max-w-[390px] w-full sm:max-w-[1200px] flex flex-col justify-start items-center">
           <div className="mt-9 sm:mt-[70px] w-full sm:w-[696px] flex sm:gap-12 gap-6 px-6">
             <div className="flex flex-col items-center">
-              <div className="bg-[#d9d9d9] rounded-full w-20 sm:w-[124px] aspect-square overflow-hidden">
+              <div className="bg-[#d9d9d9] rounded-full w-16 sm:w-[124px] aspect-square overflow-hidden">
                 <Image
                   src={userProfile?.imageURL as string}
-                  className="w-20 sm:w-[124px] aspect-square object-cover"
+                  className="w-16 sm:w-[124px] aspect-square object-cover"
                   alt=""
-                  width={80}
-                  height={80}
+                  width={64}
+                  height={64}
                 />
               </div>
               {userProfile?.follower.includes(authService.currentUser?.uid) ? (
@@ -268,7 +282,7 @@ const UserPage = ({ userId }: { userId: string }) => {
                 </button>
               )}
             </div>
-            <div className="flex flex-col justify-start w-[452px]">
+            <div className="flex flex-col mt-1 sm:mt-0 justify-start w-[452px]">
               <div className="w-[238px] sm:w-[440px] sm:flex sm:justify-between">
                 <div>
                   <div className="font-bold sm:text-[24px] flex justify-start items-center gap-1">
@@ -290,8 +304,16 @@ const UserPage = ({ userId }: { userId: string }) => {
 
                   <div
                     onClick={() => {
-                      setIsOpenFollowModal(true);
-                      setFollow("follower");
+                      showModal({
+                        modalType: "FollowModal",
+                        modalProps: {
+                          defaultfollow: "follower",
+                          usersFollowerProfile,
+                          usersFollowingProfile,
+                          myProfile,
+                          getMyProfile,
+                        },
+                      });
                     }}
                     className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
@@ -303,8 +325,16 @@ const UserPage = ({ userId }: { userId: string }) => {
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
-                      setIsOpenFollowModal(true);
-                      setFollow("following");
+                      showModal({
+                        modalType: "FollowModal",
+                        modalProps: {
+                          defaultfollow: "following",
+                          usersFollowerProfile,
+                          usersFollowingProfile,
+                          myProfile,
+                          getMyProfile,
+                        },
+                      });
                     }}
                     className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
@@ -315,10 +345,13 @@ const UserPage = ({ userId }: { userId: string }) => {
                   </div>
                 </div>
               </div>
-              <div className="h-[50px] sm:h-[70px] text-[12px] sm:text-base w-full whitespace-pre-wrap overflow-hidden mt-3 sm:mt-7">
+              <div className="hidden sm:block h-[50px] sm:h-[70px] text-[12px] sm:text-base w-full whitespace-pre-wrap overflow-hidden mt-3 sm:mt-7">
                 {userProfile?.introduce}
               </div>
             </div>
+          </div>
+          <div className="sm:hidden flex justify-center items-center h-[50px] px-8 sm:h-[70px] text-[12px] w-full whitespace-pre-wrap overflow-hidden mt-3 sm:mt-7">
+            {userProfile?.introduce}
           </div>
           <UserCateNavbar setCate={setCate} />
           <div className="w-full mt-5 sm:mt-12 flex justify-between">
@@ -388,17 +421,6 @@ const UserPage = ({ userId }: { userId: string }) => {
               : null}
           </div>
         </div>
-        {isOpenFollowModal ? (
-          <FollowModal
-            setIsOpenFollowModal={setIsOpenFollowModal}
-            follow={follow}
-            setFollow={setFollow}
-            usersFollowerProfile={usersFollowerProfile}
-            usersFollowingProfile={usersFollowingProfile}
-            myProfile={myProfile}
-            getMyProfile={getMyProfile}
-          />
-        ) : null}
       </div>
     </Layout>
   );

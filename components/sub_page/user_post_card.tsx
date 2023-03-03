@@ -1,4 +1,5 @@
 import { authService, dbService } from "@/firebase";
+import useModal from "@/hooks/useModal";
 import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,12 +8,26 @@ import React from "react";
 const UserPostCard = ({ post }: { post: any }) => {
   const defaultImg =
     "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
+  const { showModal } = useModal();
 
   const like = post.like.includes(authService.currentUser?.uid);
 
   const onClickLikeBtn = async () => {
     if (!authService.currentUser?.uid) {
-      alert("로그인이 필요한 서비스입니다.");
+      showModal({
+        modalType: "ConfirmModal",
+        modalProps: {
+          title: "로그인 후 이용 가능합니다.",
+          text: "로그인 페이지로 이동하시겠어요?",
+          rightbtnfunc: () => {
+            showModal({
+              modalType: "LoginModal",
+              modalProps: {},
+            });
+          },
+        },
+      });
+
       return true;
     }
     const likeArray = post.like.includes(authService.currentUser?.uid);
@@ -77,7 +92,7 @@ const UserPostCard = ({ post }: { post: any }) => {
       <Link href={`/post/${post.postId}`}>
         <Image
           src={post.img[0] || defaultImg}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover border-[1px] border-borderGray"
           alt=""
           width={170}
           height={168}
