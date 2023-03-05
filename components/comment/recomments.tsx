@@ -139,7 +139,7 @@ const Recomments = ({
           name="content"
           value={recomment.content}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm"
           placeholder="답글을 입력해주세요."
           rows={resizeTextArea.rows}
         />

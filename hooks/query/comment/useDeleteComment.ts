@@ -7,10 +7,10 @@ const useDeleteComment = (commentId: string) => {
     (body: any) => removeComment(body),
     {
       onSuccess: () => {
-        console.log("삭제성공");
+        console.log("댓글 삭제성공");
       },
       onError: (err) => {
-        console.log("삭제실패", err);
+        console.log("댓글 삭제실패", err);
       },
     }
   );

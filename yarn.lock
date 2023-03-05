@@ -717,10 +717,10 @@
   dependencies:
     "remove-accents" "0.4.2"
 
-"@tanstack/query-core@4.24.10":
-  "integrity" "sha512-2QywqXEAGBIUoTdgn1lAB4/C8QEqwXHj2jrCLeYTk2xVGtLiPEUD8jcMoeB2noclbiW2mMt4+Fq7fZStuz3wAQ=="
-  "resolved" "https://registry.npmjs.org/@tanstack/query-core/-/query-core-4.24.10.tgz"
-  "version" "4.24.10"
+"@tanstack/query-core@4.26.0":
+  "integrity" "sha512-9CRqXmCH82KZDKmezoGU4FOn1Oqbzlp2/zf71n+9nC58e7NSqCIjfSCMpqQWcu9YqUcUykxZEUunOyKHVc6BJA=="
+  "resolved" "https://registry.npmjs.org/@tanstack/query-core/-/query-core-4.26.0.tgz"
+  "version" "4.26.0"
 
 "@tanstack/react-query-devtools@^4.24.12":
   "integrity" "sha512-FxSIQk84vn5SpK6xQ2AxL63eis/qQ5foJ1LEjTzaU7cMcfvN4vNZ3mtUCeW/txI8aBpZ5gbVmGLEAtoi8ub4kQ=="
@@ -731,12 +731,12 @@
     "superjson" "^1.10.0"
     "use-sync-external-store" "^1.2.0"
 
-"@tanstack/react-query@4.24.10":
-  "integrity" "sha512-FY1DixytOcNNCydPQXLxuKEV7VSST32CAuJ55BjhDNqASnMLZn+6c30yQBMrODjmWMNwzfjMZnq0Vw7C62Fwow=="
-  "resolved" "https://registry.npmjs.org/@tanstack/react-query/-/react-query-4.24.10.tgz"
-  "version" "4.24.10"
+"@tanstack/react-query@^4.26.0", "@tanstack/react-query@4.24.10":
+  "integrity" "sha512-Y5qKyr9AtreTHBPAsn+ulR02E7SyZXPQbwL2tkOcgUAGH2KHHcf7j7NHBhKpaAGB6/vPqkxGYW46epu29V0HqA=="
+  "resolved" "https://registry.npmjs.org/@tanstack/react-query/-/react-query-4.26.0.tgz"
+  "version" "4.26.0"
   dependencies:
-    "@tanstack/query-core" "4.24.10"
+    "@tanstack/query-core" "4.26.0"
     "use-sync-external-store" "^1.2.0"
 
 "@tootallnate/once@2":

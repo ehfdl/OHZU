@@ -5,10 +5,10 @@ import React, { useState, useEffect } from "react";
 import Grade from "../grade";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
+import { ETC_IMG } from "@/util";
 
 const PostCard = ({ post, type }: { post: any; type?: string }) => {
-  const defaultImg =
-    "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
+  const defaultImg = ETC_IMG;
   const { showModal } = useModal();
 
   const like = post.like.includes(authService.currentUser?.uid);

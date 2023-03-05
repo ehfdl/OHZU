@@ -1,10 +1,11 @@
 import useModal from "@/hooks/useModal";
 import React, { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { AiFillCheckSquare } from "react-icons/ai";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
 import { authService, dbService } from "@/firebase";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
+import useSetReport from "@/hooks/query/reportPost/useSetReport";
+import useUpdateReport from "@/hooks/query/reportPost/useUpdateReport";
 
 export interface ReportModalProps {}
 
@@ -12,14 +13,26 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
   const { hideModal } = useModal();
   const [cate, setCate] = useState<string>();
 
+  const { isLoading: isLoadingReport, mutate: onSetReport } = useSetReport();
+
+  const { isLoading: isLoadingEditReport, mutate: updateReport } =
+    useUpdateReport(reportId || post.id);
+
   const setReport = async () => {
     if (type === "post") {
       if (authService.currentUser?.uid) {
         if (pastPost.reporter) {
           let copyPost = [...pastPost.reporter];
           copyPost.push({ userId: authService.currentUser?.uid, type: cate });
-          await updateDoc(doc(dbService, "ReportPosts", reportId), {
-            reporter: copyPost,
+          // await updateDoc(doc(dbService, "ReportPosts", reportId), {
+          //   reporter: copyPost,
+          // });
+          await updateReport({
+            reportId,
+            reportType: "ReportPosts",
+            reportObj: {
+              reporter: copyPost,
+            },
           });
           hideModal();
         } else if (!pastPost.reporter) {
@@ -27,7 +40,12 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
             ...post,
             reporter: [{ userId: authService.currentUser?.uid, type: cate }],
           };
-          await setDoc(doc(dbService, "ReportPosts", reportId), newPost);
+          // await setDoc(doc(dbService, "ReportPosts", reportId), newPost);
+          onSetReport({
+            reportId,
+            reportType: "ReportPosts",
+            reportObj: newPost,
+          });
           hideModal();
         }
       }
@@ -40,8 +58,15 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
             userId: authService.currentUser?.uid,
             type: cate,
           });
-          await updateDoc(doc(dbService, "ReportComments", post.id as string), {
-            reporter: copyPost,
+          // await updateDoc(doc(dbService, "ReportComments", post.id as string), {
+          //   reporter: copyPost,
+          // });
+          await updateReport({
+            reportId: post.id,
+            reportType: "ReportComments",
+            reportObj: {
+              reporter: copyPost,
+            },
           });
           hideModal();
         } else if (!pastPost.reporter) {
@@ -51,10 +76,15 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
             content: post.content,
             reporter: [{ userId: authService.currentUser?.uid, type: cate }],
           };
-          await setDoc(
-            doc(dbService, "ReportComments", post.id as string),
-            newComments
-          );
+          // await setDoc(
+          //   doc(dbService, "ReportComments", post.id as string),
+          //   newComments
+          // );
+          onSetReport({
+            reportId: post.id,
+            reportType: "ReportComments",
+            reportObj: newComments,
+          });
           hideModal();
         }
       }
@@ -67,12 +97,19 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
             userId: authService.currentUser?.uid,
             type: cate,
           });
-          await updateDoc(
-            doc(dbService, "ReportReComments", post.id as string),
-            {
+          // await updateDoc(
+          //   doc(dbService, "ReportReComments", post.id as string),
+          //   {
+          //     reporter: copyPost,
+          //   }
+          // );
+          await updateReport({
+            reportId: post.id,
+            reportType: "ReportReComments",
+            reportObj: {
               reporter: copyPost,
-            }
-          );
+            },
+          });
           hideModal();
         } else if (!pastPost.reporter) {
           const newComments = {
@@ -81,10 +118,15 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
             content: post.content,
             reporter: [{ userId: authService.currentUser?.uid, type: cate }],
           };
-          await setDoc(
-            doc(dbService, "ReportReComments", post.id as string),
-            newComments
-          );
+          // await setDoc(
+          //   doc(dbService, "ReportReComments", post.id as string),
+          //   newComments
+          // );
+          onSetReport({
+            reportId: post.id,
+            reportType: "ReportReComments",
+            reportObj: newComments,
+          });
           hideModal();
         }
       }

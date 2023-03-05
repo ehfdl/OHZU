@@ -80,7 +80,7 @@ const Comments = ({
     });
   };
 
-  const { isLoading: isLoadingAddComment, mutate: createRecomment } =
+  const { isLoading: isLoadingAddComment, mutate: createComment } =
     useCreateComment();
 
   const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -102,7 +102,7 @@ const Comments = ({
       isDone: false,
     };
     if (comment.content.trim() !== "") {
-      createRecomment(newComment);
+      createComment(newComment);
       if (post?.userId !== authService.currentUser?.uid) {
         const snapshot = await getDoc(
           doc(dbService, "Users", user?.userId as string)
@@ -152,7 +152,7 @@ const Comments = ({
           name="content"
           value={comment.content}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm"
           placeholder="댓글을 입력해주세요."
           rows={resizeTextArea.rows}
         />

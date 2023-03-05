@@ -1,5 +1,8 @@
+import { getPost } from "@/api/postAPI";
 import Layout from "@/components/layout";
 import { dbService, storageService } from "@/firebase";
+import useGetPost from "@/hooks/query/post/useGetPost";
+import useUpdatePost from "@/hooks/query/post/useUpdatePost";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import {
   deleteObject,
@@ -14,6 +17,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { BsFillXCircleFill, BsPlusLg } from "react-icons/bs";
 import { v4 as uuidv4 } from "uuid";
+import { dehydrate, QueryClient } from "@tanstack/react-query";
+import { BEER_IMG, ETC_IMG, LIQUOR_IMG, SOJU_IMG } from "@/util";
 
 interface ParamsPropsType {
   id: string;
@@ -22,7 +27,9 @@ interface ParamsPropsType {
 const EditDetail = ({ id, post }: ParamsPropsType) => {
   const router = useRouter();
 
-  const [editPost, setEditPost] = useState<Form>(post);
+  const { data: postData, isLoading: postLoading } = useGetPost(id);
+
+  const [editPost, setEditPost] = useState<Form>(postData!);
 
   const [editImgFile_01, setEditImgFile_01] = useState<File | null>();
   const [editImgFile_02, setEditImgFile_02] = useState<File | null>();
@@ -190,6 +197,8 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
     validateChangeIng();
   }, [editIng]);
 
+  const { isLoading: isLoadingPost, mutate: updatePost } = useUpdatePost(id);
+
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
@@ -235,14 +244,10 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           savePreview[i] !== undefined
         ) {
           if (
-            savePreview[i] !==
-              "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800" &&
-            savePreview[i] !==
-              "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe" &&
-            savePreview[i] !==
-              "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg" &&
-            savePreview[i] !==
-              "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330"
+            savePreview[i] !== SOJU_IMG &&
+            savePreview[i] !== BEER_IMG &&
+            savePreview[i] !== LIQUOR_IMG &&
+            savePreview[i] !== ETC_IMG
           ) {
             const imgId = savePreview[i].split("2F")[1].split("?")[0];
             const desertRef = ref(storageService, `post/${imgId}`);
@@ -264,35 +269,23 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
         ) {
           savePreview[i] = item.value;
         } else if (
-          (savePreview.includes(
-            "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800"
-          ) ||
-            savePreview.includes(
-              "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe"
-            ) ||
-            savePreview.includes(
-              "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg"
-            ) ||
-            savePreview.includes(
-              "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330"
-            ) ||
+          (savePreview.includes(SOJU_IMG) ||
+            savePreview.includes(BEER_IMG) ||
+            savePreview.includes(LIQUOR_IMG) ||
+            savePreview.includes(ETC_IMG) ||
             savePreview.filter((i: any) => i === undefined).length ===
               savePreview.length) &&
           downloadPreview.filter((i: any) => i.value === undefined).length ===
             downloadPreview.length
         ) {
           if (editPost.type === "소주") {
-            savePreview[0] =
-              "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800";
+            savePreview[0] = SOJU_IMG;
           } else if (editPost.type === "맥주") {
-            savePreview[0] =
-              "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe";
+            savePreview[0] = BEER_IMG;
           } else if (editPost.type === "양주") {
-            savePreview[0] =
-              "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg";
+            savePreview[0] = LIQUOR_IMG;
           } else if (editPost.type === "기타") {
-            savePreview[0] =
-              "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330";
+            savePreview[0] = ETC_IMG;
           }
         } else {
           return savePreview[i];
@@ -308,9 +301,17 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
         img: newPreview,
         ingredient: filterIngre,
       };
+      // await updatePost({
+      //   postId: id,
+      //   editPostObj: newEditPost,
+      // });
 
       await updateDoc(doc(dbService, "Posts", id), newEditPost);
     } else {
+      // await updatePost({
+      //   postId: id,
+      //   editPostObj: editPost,
+      // });
       await updateDoc(doc(dbService, "Posts", id), editPost as any);
     }
     router.push(`/post/${id}`);
@@ -440,13 +441,15 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                       className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                     />
                   </label>
-                  <Image
-                    src={editPreview_01 as string}
-                    className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                    width={72}
-                    height={72}
-                    alt=""
-                  />
+                  {editPreview_01 && (
+                    <Image
+                      src={editPreview_01 as string}
+                      className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                      width={72}
+                      height={72}
+                      alt=""
+                    />
+                  )}
                 </>
               )}
             </div>
@@ -475,13 +478,15 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
-                    <Image
-                      src={editPreview_02 as string}
-                      className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                      width={72}
-                      height={72}
-                      alt=""
-                    />
+                    {editPreview_02 && (
+                      <Image
+                        src={editPreview_02 as string}
+                        className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                        width={72}
+                        height={72}
+                        alt=""
+                      />
+                    )}
                   </>
                 )}
               </div>
@@ -509,13 +514,15 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                         className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
-                    <Image
-                      src={editPreview_03 as string}
-                      className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                      width={72}
-                      height={72}
-                      alt=""
-                    />
+                    {editPreview_03 && (
+                      <Image
+                        src={editPreview_03 as string}
+                        className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                        width={72}
+                        height={72}
+                        alt=""
+                      />
+                    )}
                   </>
                 )}
               </div>
@@ -532,7 +539,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             name="title"
             value={editPost.title}
             onChange={onChangeValue}
-            placeholder={post.title}
+            placeholder={postData?.title}
             className="w-full text-[14px] sm:text-base"
           />
 
@@ -549,7 +556,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             name="text"
             value={editPost.text}
             onChange={onChangeValue}
-            placeholder={post.text}
+            placeholder={postData?.text}
           />
 
           <div className="mt-6">
@@ -723,7 +730,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             name="recipe"
             value={editPost.recipe}
             onChange={onChangeValue}
-            placeholder={post.recipe}
+            placeholder={postData?.recipe}
           />
           <div className="w-full flex flex-col sm:flex-row justify-between gap-6 items-center mt-10">
             <Link
@@ -747,17 +754,21 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
 
 export default EditDetail;
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params: { id },
-}: any) => {
-  const docRef = doc(dbService, "Posts", id);
-  const docSnap = await getDoc(docRef);
-  const data = docSnap.data();
-  const post: Form = {
-    ...data,
-  };
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { id } = context.params!;
+
+  const queryClient = new QueryClient();
+
+  let isError = false;
+
+  try {
+    await queryClient.prefetchQuery(["post", id], () => getPost(id as string));
+  } catch (error: any) {
+    isError = true;
+    context.res.statusCode = error.response.status;
+  }
 
   return {
-    props: { id, post },
+    props: { id, isError, dehydratedState: dehydrate(queryClient) },
   };
 };

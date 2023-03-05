@@ -14,7 +14,7 @@ const WriteButton = () => {
           <Image
             alt=""
             src="/write/write-default.png"
-            className="relative sm:ml-5 ml-[13px] cursor-pointer block group-hover:hidden"
+            className="relative sm:ml-5 mx-auto w-[21px] h-auto aspect-square cursor-pointer block group-hover:hidden"
             width={21}
             height={21}
           />

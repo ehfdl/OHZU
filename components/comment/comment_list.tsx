@@ -272,7 +272,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                 <div
                   className={`${
                     commentIsEdit ? "hidden" : "flex"
-                  } flex justify-end items-end space-x-2 text-xs`}
+                  } flex justify-end items-end space-x-2 sm:space-x-4 text-xs`}
                 >
                   <button
                     onClick={editToggle}
@@ -321,7 +321,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   )}
                 </div>
               ) : (
-                <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs">
+                <div className="flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs">
                   <button onClick={onClickReportComment}>신고</button>
                   {recomments.length === 0 ? (
                     <button
