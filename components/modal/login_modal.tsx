@@ -233,13 +233,14 @@ const LoginModal = () => {
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
-          url: "https://ohzu.vercel.app/api/kakao",
+          // url: "https://ohzu.vercel.app/api/kakao",
+          url: "http://localhost:3000/api/kakao",
           data: { authObj },
         }).then(function (response: any) {
           // 서버에서 보낸 jwt토큰을 받음
-          // console.log("로그인 모달 : ", response);
+          console.log("로그인 모달 : ", response);
           localStorage.setItem("data", JSON.stringify(response.data));
-          // console.log("로그인 모달 responseData", response.data);
+          console.log("로그인 모달 responseData", response.data);
 
           return signInWithCustomToken(
             authService,
@@ -284,14 +285,11 @@ const LoginModal = () => {
                 );
                 alert("카카오 간편 회원가입 성공!");
               }
-
               hideModal();
             })
             .catch((error: any) => {
-              const errorCode = error.code;
-              const errorMessage =
-                error.message("⛔️ 다시 로그인을 시도해주세요.");
-              alert(errorMessage);
+              const errorMessage = error.message;
+              console.log(errorMessage);
             });
         });
       },
@@ -344,15 +342,29 @@ const LoginModal = () => {
     mobileHandler();
   }, [email, password]);
 
+  // 인증메일을 받지않고 로그인창을 끄면 서비스 이용이 가능함을 확인함. 이를 해결하는 함수
+  //✅ header에 있는 logOut 메소드를 login_modal로 넘겨주려면 전역모달에 어떻게 넣어야 하는가?
+  // 나가기 버튼 클릭 시, 로그아웃 시키는 함수
+  const logOutClose = () => {
+    if (authService.currentUser) {
+      signOut(authService).then(() => {
+        sessionStorage.removeItem(apiKey as string);
+      });
+    }
+  };
+
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:block w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
+      <div className="hidden sm:flex w-full h-screen absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
         <div className="inner max-w-[588px] w-full max-h-[820px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
-              onClick={() => hideModal()}
+              onClick={() => {
+                logOutClose();
+                hideModal();
+              }}
               className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
             />
             <h4 className="text-[40px] font-bold mt-[64px] mb-[42px]">
@@ -387,7 +399,6 @@ const LoginModal = () => {
                 <p
                   onClick={() => {
                     setFindPassword(true);
-                    // showModal()
                   }}
                   className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary"
                 >
@@ -423,7 +434,7 @@ const LoginModal = () => {
               </div>
 
               <div className="buttonWrap mb-4">
-                <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded   ">
+                <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded ">
                   로그인
                 </button>
               </div>
@@ -486,7 +497,10 @@ const LoginModal = () => {
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
-              onClick={() => hideModal()}
+              onClick={() => {
+                hideModal();
+                logOutClose();
+              }}
               className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
             />
             <h4 className="text-[24px] font-bold mt-[100px] mb-[23px]">
@@ -503,9 +517,8 @@ const LoginModal = () => {
                   id="email"
                   // defaultValue={email}
                   placeholder="이메일을 입력해주세요."
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-6 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-6 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
                 />
-                {/* <p className=" w-[472px] m-auto mb-3 text-right text-sm text-[#999999]"></p> */}
               </div>
               <div>
                 <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
@@ -516,15 +529,16 @@ const LoginModal = () => {
                   type="password"
                   id="password"
                   placeholder="비밀번호를 입력해주세요."
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
                 />
-                <p
-                  onClick={() => {
-                    setFindPassword(true);
-                  }}
-                  className=" max-w-[358px] w-full m-auto text-right text-gray-500 text-xs cursor-pointer duration-150 hover:text-primary"
-                >
-                  비밀번호 찾기
+                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs cursor-pointer duration-150 hover:text-primary">
+                  <span
+                    onClick={() => {
+                      setFindPassword(true);
+                    }}
+                  >
+                    비밀번호 찾기
+                  </span>
                 </p>
                 {/* 비밀번호 찾기 */}
                 {findPassword === true ? (
