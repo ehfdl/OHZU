@@ -23,7 +23,7 @@ const About = () => {
         />
         <div className="text-center sm:text-left">
           <p className="mt-2 mb-[22px] font-semibold sm:text-[24px] text-lg">
-            "오늘의 혼합주"
+            오늘의 혼합주
           </p>
           {/* 웹 */}
           <p className="hidden sm:block">

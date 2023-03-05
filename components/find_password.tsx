@@ -7,13 +7,12 @@ import { MdOutlineClose } from "react-icons/md";
 const FindPassword = ({ setEmail, email, setFindPassword }: any) => {
   const { showModal } = useModal();
   const [validate, setValidate] = useState<string>("");
-  console.log(email);
+
   // 비밀번호 재설정 함수 (비밀번호 찾기)
   const resetPassword = () => {
     if (email !== "") {
       sendPasswordResetEmail(authService, email)
         .then(function () {
-          console.log("비밀번호 리셋, 이메일 전송 완료");
           setFindPassword(false);
           showModal({
             modalType: "AlertModal",
@@ -39,8 +38,6 @@ const FindPassword = ({ setEmail, email, setFindPassword }: any) => {
       });
     }
   };
-
-  console.log("email : ", email);
 
   return (
     <>

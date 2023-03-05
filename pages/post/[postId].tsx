@@ -404,8 +404,8 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
         >
           <div id="images-column" className="hidden sm:block sm:w-2/5 w-full">
             <Image
-              width={100}
-              height={100}
+              width={450}
+              height={450}
               alt=""
               src={post.img === null ? "" : post.img![imgIdx]}
               className="w-full aspect-square object-cover rounded"
@@ -422,8 +422,8 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                   onClick={() => onImgChange(i)}
                 >
                   <Image
-                    width={100}
-                    height={100}
+                    width={150}
+                    height={150}
                     alt=""
                     src={img}
                     className="w-full aspect-square object-cover"
@@ -444,8 +444,9 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                     {img && (
                       <Image
                         src={img}
-                        width={100}
-                        height={100}
+                        width={350}
+                        height={350}
+                        quality="100"
                         alt=""
                         className="w-full aspect-[4/3] object-cover"
                       />

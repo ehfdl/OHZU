@@ -60,7 +60,7 @@ const AlarmModal = ({
         onClick={() => setIsAlarmOpenModal(false)}
         className="hidden sm:block w-full h-full fixed left-0 top-0 z-10"
       />
-      <div className="sm:w-[348px] sm:h-[480px] w-full h-full fixed top-0 sm:top-14 left-0 py-3 px-3 mt-4 sm:left-52 rounded bg-white sm:border-primary sm:border-[1px] z-20 flex flex-col justify-start items-center sm:absolute">
+      <div className="sm:w-[348px] sm:h-[480px] w-full h-full fixed top-0 sm:top-14 left-0 py-3 px-3 mt-0 sm:mt-4 sm:left-52 rounded bg-white sm:border-primary sm:border-[1px] z-20 flex flex-col justify-start items-center sm:absolute">
         <button
           className=" sm:hidden  w-9 aspect-square absolute top-4 right-4"
           onClick={() => setIsAlarmOpenModal(false)}

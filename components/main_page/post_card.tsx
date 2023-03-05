@@ -101,8 +101,8 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
               alt=""
               width={300}
               height={300}
-            ></Image>
-            <div className="rounded bg-black/0 w-full h-[168px] sm:h-[284px] object-cover -translate-y-[168px] sm:translate-y-[-285px] hover:bg-gray-300/30 hover:block transition"></div>
+            />
+            {/* <div className=" bg-black/0 max-w-[384px] w-full h-[284px] object-cover absolute top-0 left-1 hover:bg-gray-300/30 hover:block"></div> */}
           </Link>
         </div>
         <div className="sm:h-[136px] h-[105px] sm:w-[384px] bg-white overflow-hidden  mb-6 ">

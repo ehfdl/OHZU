@@ -24,6 +24,8 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  console.log(searchData);
+
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       // Firebase 연결되면 화면 표시
@@ -42,6 +44,8 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
   // 검색
   const getSearch = () => {
     const postsData = new Fuse(posts, {
+      threshold: 0.2,
+      distance: 100,
       keys: ["title", "ingredient"],
     });
     const result = postsData.search(searchWord);
@@ -111,7 +115,13 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
         <div className="max-w-[1200px] m-auto min-h-screen">
           <div className="inner-top-wrap flex justify-between items-center mb-[15px]">
             <p className="text-[20px] font-semibold">
-              게시글 <span className="text-primary">{searchData?.length}</span>
+              게시글{" "}
+              <span className="text-primary">
+                {cate === "전체"
+                  ? searchData?.length
+                  : searchData?.filter((post: any) => cate === post.item.type)
+                      .length}
+              </span>
             </p>
             <Dropdown setDrop={setDrop} drop={drop} />
           </div>

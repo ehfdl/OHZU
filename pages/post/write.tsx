@@ -202,12 +202,19 @@ const Post = () => {
         !confirmed &&
         changeForm
       ) {
+        if (router.asPath !== window.location.pathname) {
+          window.history.pushState("", "", router.asPath);
+        }
         setToUrl(url);
         showModal({
           modalType: "ConfirmModal",
           modalProps: {
             title: "페이지를 이동하시겠습니까?",
             text: "변경사항이 저장되지 않을 수 있습니다.",
+            leftbtnfunc: () => {
+              setToUrl("");
+              hideModal();
+            },
             rightbtnfunc: () => setConfirmed(true),
           },
         });
@@ -218,24 +225,24 @@ const Post = () => {
     },
     [confirmed, changeForm, router.asPath, router.events]
   );
-
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeunload);
     router.events.on("routeChangeStart", routeChangeStart);
-    if (router.asPath !== window.location.pathname) {
-      window.history.pushState("", "", router.asPath);
-    }
-    console.log("왜안됨?");
+
     return () => {
       window.removeEventListener("beforeunload", handleBeforeunload);
       router.events.off("routeChangeStart", routeChangeStart);
     };
-  }, [routeChangeStart, router.events, window.Event]);
+  }, [routeChangeStart, router.events]);
 
   useEffect(() => {
     if (confirmed) {
       hideModal();
-      router.replace(toUrl);
+      if (toUrl !== "") {
+        router.replace(toUrl);
+      } else {
+        router.push("/");
+      }
     }
   }, [toUrl, confirmed]);
 
@@ -303,19 +310,19 @@ const Post = () => {
       if (savePreview.length === 0) {
         if (form.type === "소주") {
           savePreview = [
-            "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800",
+            "https://firebasestorage.googleapis.com/v0/b/oh-zu-30482.appspot.com/o/post%2F%E1%84%89%E1%85%A9%E1%84%8C%E1%85%AE%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB.jpeg?alt=media&token=a21f938c-00bc-47a7-9df4-f48a5fe62125",
           ];
         } else if (form.type === "맥주") {
           savePreview = [
-            "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe",
+            "https://firebasestorage.googleapis.com/v0/b/oh-zu-30482.appspot.com/o/post%2F%E1%84%86%E1%85%A2%E1%86%A8%E1%84%8C%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB.webp?alt=media&token=7e4b3fc5-811b-49fd-bf37-2e70d529cf46",
           ];
         } else if (form.type === "양주") {
           savePreview = [
-            "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg",
+            "https://firebasestorage.googleapis.com/v0/b/oh-zu-30482.appspot.com/o/post%2F%E1%84%8B%E1%85%A3%E1%86%BC%E1%84%8C%E1%85%AE%20%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB.jpeg?alt=media&token=59180378-c188-4596-a186-8dc48f5ebefe",
           ];
         } else if (form.type === "기타") {
           savePreview = [
-            "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330",
+            "https://firebasestorage.googleapis.com/v0/b/oh-zu-30482.appspot.com/o/post%2F%E1%84%80%E1%85%B5%E1%84%90%E1%85%A1%20%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB.jpeg?alt=media&token=d47b698f-7829-48d9-b8b2-af893cee7457",
           ];
         }
 
@@ -327,7 +334,7 @@ const Post = () => {
 
         await addDoc(collection(dbService, "Posts"), newForm);
         setConfirmed(true);
-        router.push("/");
+        // router.push("/");
       } else {
         let newForm = {
           ...form,
@@ -337,7 +344,7 @@ const Post = () => {
 
         await addDoc(collection(dbService, "Posts"), newForm);
         setConfirmed(true);
-        router.push("/");
+        // router.push("/");
       }
     }
   };
