@@ -1,6 +1,7 @@
 import { authService, dbService } from "@/firebase";
+import useCreateRecomment from "@/hooks/query/recomment/useCreateRecomment";
 import useModal from "@/hooks/useModal";
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { SetStateAction, useState } from "react";
 import RecommentList from "./recomment_list";
 
@@ -11,6 +12,7 @@ interface RecommentPropsType {
   isOpen: boolean;
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
   comment: CommentType;
+  postId: string;
 }
 
 const Recomments = ({
@@ -20,18 +22,21 @@ const Recomments = ({
   isOpen,
   comment,
   currentUser,
+  postId,
 }: RecommentPropsType) => {
   const date = Date.now();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
     timeStyle: "medium",
   }).format(date);
+
   const initialRecomment = {
     content: "",
     commentId: "",
     userId: "",
     createdAt: "",
-    isEdit: false,
+    id: "",
+    postId: "",
   };
   const { showModal } = useModal();
 
@@ -71,6 +76,9 @@ const Recomments = ({
     });
   };
 
+  const { isLoading: isLoadingAddRecomment, mutate: createRecomment } =
+    useCreateRecomment();
+
   const addRecomment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newRecomment = {
@@ -78,7 +86,7 @@ const Recomments = ({
       commentId: id,
       userId: authService.currentUser?.uid,
       createdAt: dateForm,
-      isEdit: false,
+      postId,
     };
     const newAlarm = {
       content: recomment.content,
@@ -90,7 +98,7 @@ const Recomments = ({
       isDone: false,
     };
     if (recomment.content.trim() !== "") {
-      await addDoc(collection(dbService, "Recomments"), newRecomment);
+      createRecomment(newRecomment);
       if (comment?.userId !== authService.currentUser?.uid) {
         const snapshot = await getDoc(
           doc(dbService, "Users", comment?.userId as string)

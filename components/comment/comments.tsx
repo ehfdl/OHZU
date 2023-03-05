@@ -1,6 +1,7 @@
 import { authService, dbService } from "@/firebase";
+import useCreateComment from "@/hooks/query/comment/useCreateComment";
 import useModal from "@/hooks/useModal";
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
@@ -31,6 +32,8 @@ const Comments = ({
     userId: "",
     createdAt: "",
     isEdit: false,
+    id: "",
+    commentId: "",
   };
 
   const [comment, setComment] = useState<CommentType>(initialComment);
@@ -77,6 +80,9 @@ const Comments = ({
     });
   };
 
+  const { isLoading: isLoadingAddComment, mutate: createRecomment } =
+    useCreateComment();
+
   const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newComment = {
@@ -96,7 +102,7 @@ const Comments = ({
       isDone: false,
     };
     if (comment.content.trim() !== "") {
-      await addDoc(collection(dbService, "Comments"), newComment);
+      createRecomment(newComment);
       if (post?.userId !== authService.currentUser?.uid) {
         const snapshot = await getDoc(
           doc(dbService, "Users", user?.userId as string)
