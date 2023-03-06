@@ -19,6 +19,7 @@ import Grade from "@/components/grade";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import useUpdateUser from "@/hooks/query/user/useUpdateUser";
+import FollowModal from "@/components/modal/follow_modal";
 
 const Mypage = () => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -34,9 +35,11 @@ const Mypage = () => {
 
   const [ohju, setOhju] = useState("my-ohju");
   const [cate, setCate] = useState("전체");
+  const [follow, setFollow] = useState("follower");
   //users 불러오기까지함.
 
   const { modal, showModal } = useModal();
+  const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
   const [isOpenInforModal, setIsOpenInforModal] = useState(false);
 
   const getMyProfile = async () => {
@@ -229,16 +232,8 @@ const Mypage = () => {
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
-                      showModal({
-                        modalType: "FollowModal",
-                        modalProps: {
-                          defaultfollow: "follower",
-                          usersFollowerProfile,
-                          usersFollowingProfile,
-                          myProfile,
-                          getMyProfile,
-                        },
-                      });
+                      setIsOpenFollowModal(true);
+                      setFollow("follower");
                     }}
                     className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
@@ -250,16 +245,8 @@ const Mypage = () => {
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
-                      showModal({
-                        modalType: "FollowModal",
-                        modalProps: {
-                          defaultfollow: "following",
-                          usersFollowerProfile,
-                          usersFollowingProfile,
-                          myProfile,
-                          getMyProfile,
-                        },
-                      });
+                      setIsOpenFollowModal(true);
+                      setFollow("following");
                     }}
                     className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
@@ -328,6 +315,17 @@ const Mypage = () => {
           </div>
         </div>
       </div>
+      {isOpenFollowModal ? (
+        <FollowModal
+          setIsOpenFollowModal={setIsOpenFollowModal}
+          follow={follow}
+          setFollow={setFollow}
+          usersFollowerProfile={usersFollowerProfile}
+          usersFollowingProfile={usersFollowingProfile}
+          myProfile={myProfile}
+          getMyProfile={getMyProfile}
+        />
+      ) : null}
     </Layout>
   );
 };

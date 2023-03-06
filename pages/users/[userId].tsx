@@ -18,6 +18,7 @@ import UserCateNavbar from "@/components/navbar/user_cate_navbar";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import { GetServerSideProps } from "next";
+import FollowModal from "@/components/modal/follow_modal";
 
 const UserPage = ({ userId }: { userId: string }) => {
   const [myProfile, setMyProfile] = useState<any>();
@@ -32,10 +33,11 @@ const UserPage = ({ userId }: { userId: string }) => {
 
   const [cate, setCate] = useState("전체");
   const [cateDrop, setCateDrop] = useState("최신순");
+  const [follow, setFollow] = useState("follower");
   const { showModal } = useModal();
 
   const [dropOnOff, setDropOnOff] = useState(false);
-
+  const [isOpenFollowModal, setIsOpenFollowModal] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -305,16 +307,8 @@ const UserPage = ({ userId }: { userId: string }) => {
 
                   <div
                     onClick={() => {
-                      showModal({
-                        modalType: "FollowModal",
-                        modalProps: {
-                          defaultfollow: "follower",
-                          usersFollowerProfile,
-                          usersFollowingProfile,
-                          myProfile,
-                          getMyProfile,
-                        },
-                      });
+                      setIsOpenFollowModal(true);
+                      setFollow("follower");
                     }}
                     className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
@@ -326,16 +320,8 @@ const UserPage = ({ userId }: { userId: string }) => {
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
                     onClick={() => {
-                      showModal({
-                        modalType: "FollowModal",
-                        modalProps: {
-                          defaultfollow: "following",
-                          usersFollowerProfile,
-                          usersFollowingProfile,
-                          myProfile,
-                          getMyProfile,
-                        },
-                      });
+                      setIsOpenFollowModal(true);
+                      setFollow("following");
                     }}
                     className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
@@ -423,6 +409,17 @@ const UserPage = ({ userId }: { userId: string }) => {
           </div>
         </div>
       </div>
+      {isOpenFollowModal ? (
+        <FollowModal
+          setIsOpenFollowModal={setIsOpenFollowModal}
+          follow={follow}
+          setFollow={setFollow}
+          usersFollowerProfile={usersFollowerProfile}
+          usersFollowingProfile={usersFollowingProfile}
+          myProfile={myProfile}
+          getMyProfile={getMyProfile}
+        />
+      ) : null}
     </Layout>
   );
 };
