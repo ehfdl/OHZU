@@ -358,7 +358,7 @@ const LoginModal = () => {
       {/* 웹 */}
       <div className="hidden sm:flex w-full h-screen absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-        <div className="inner max-w-[588px] w-full max-h-[820px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
+        <div className="inner max-w-[588px] w-full max-h-[700px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => {
@@ -367,12 +367,12 @@ const LoginModal = () => {
               }}
               className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
             />
-            <h4 className="text-[40px] font-bold mt-[64px] mb-[42px]">
+            <h4 className="text-[32px] font-bold mt-[60px] mb-[29px]">
               로그인
             </h4>
             <form className="formContainer" onSubmit={signIn}>
               <div>
-                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
+                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
                   이메일
                 </p>
                 <input
@@ -383,10 +383,9 @@ const LoginModal = () => {
                   placeholder="이메일을 입력해주세요."
                   className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-4 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
                 />
-                {/* <p className=" w-[472px] m-auto mb-3 text-right text-sm text-[#999999]"></p> */}
               </div>
               <div>
-                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
+                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
                   비밀번호
                 </p>
                 <input
@@ -400,7 +399,7 @@ const LoginModal = () => {
                   onClick={() => {
                     setFindPassword(true);
                   }}
-                  className=" w-[472px] m-auto text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary"
+                  className=" w-[472px] m-auto mb-[22px] text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary"
                 >
                   비밀번호 찾기
                 </p>
@@ -418,7 +417,7 @@ const LoginModal = () => {
                 <div className="flex w-[472px] m-auto">
                   <label
                     htmlFor="auto_login"
-                    className="flex  items-center mb-[48px]"
+                    className="flex  items-center mb-[31px]"
                   >
                     <input
                       id="saveEmail"
@@ -433,17 +432,19 @@ const LoginModal = () => {
                 </div>
               </div>
 
-              <div className="buttonWrap mb-4">
-                <button className="w-[280px] h-[48px] mb-[29px] bg-primary text-white rounded ">
+              <div className="buttonWrap">
+                <button className="w-[280px] h-[48px] mb-[50px] bg-primary text-white rounded ">
                   로그인
                 </button>
               </div>
 
-              <p className="text-2xl font-bold mb-12 mt-[52px]">
-                소셜계정으로 로그인
-              </p>
+              <div className="max-w-[472px] w-full m-auto mb-10 flex items-center justify-center">
+                <div className="max-w-[186px] w-full h-[1px] mr-4 bg-textGray" />
+                <p className="text-sm font-semibold ">간편 로그인</p>
+                <div className="max-w-[186px] w-full h-[1px] ml-4 bg-textGray" />
+              </div>
 
-              <div className="w-[280px] m-auto mb-[24px] flex items-center  justify-around">
+              <div className="w-[280px] m-auto mb-[51px] flex items-center  justify-around">
                 <div onClick={googleJoin}>
                   <Image
                     src="/image/google.svg"
