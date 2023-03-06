@@ -4,6 +4,7 @@ import MainBanner from "@/components/main_page/banner";
 import "tailwindcss/tailwind.css";
 import PostList from "@/components/main_page/post_list";
 import { authService } from "@/firebase";
+import LandingPage from "@/components/landing/landing_page";
 
 const Home = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,11 +22,15 @@ const Home = () => {
       }
     });
   }, []);
+
   return (
-    <Layout>
-      <MainBanner />
-      <PostList />
-    </Layout>
+    <>
+      <LandingPage />
+      <Layout>
+        <MainBanner />
+        <PostList />
+      </Layout>
+    </>
   );
 };
 

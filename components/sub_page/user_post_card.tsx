@@ -4,12 +4,16 @@ import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { ETC_IMG } from "@/util";
+import useUpdatePost from "@/hooks/query/post/useUpdatePost";
 
 const UserPostCard = ({ post }: { post: any }) => {
-  const defaultImg =
-    "https://www.kocis.go.kr/CONTENTS/BOARD/images/map_Soju2_kr.png";
+  const defaultImg = ETC_IMG;
   const { showModal } = useModal();
 
+  const { isLoading: isLoadingPost, mutate: updatePost } = useUpdatePost(
+    post.postId
+  );
   const like = post.like.includes(authService.currentUser?.uid);
 
   const onClickLikeBtn = async () => {
@@ -36,13 +40,25 @@ const UserPostCard = ({ post }: { post: any }) => {
       const newLikeArray = post.like.filter(
         (id: any) => id !== authService.currentUser?.uid
       );
-      await updateDoc(doc(dbService, "Posts", post.postId), {
-        like: newLikeArray,
+      // await updateDoc(doc(dbService, "Posts", post.postId), {
+      //   like: newLikeArray,
+      // });
+      await updatePost({
+        postId: post.postId,
+        editPostObj: {
+          like: newLikeArray,
+        },
       });
     } else if (!likeArray) {
       const newLikeArray = post.like.push(authService.currentUser?.uid);
-      await updateDoc(doc(dbService, "Posts", post.postId), {
-        like: post.like,
+      // await updateDoc(doc(dbService, "Posts", post.postId), {
+      //   like: post.like,
+      // });
+      await updatePost({
+        postId: post.postId,
+        editPostObj: {
+          like: post.like,
+        },
       });
     }
   };

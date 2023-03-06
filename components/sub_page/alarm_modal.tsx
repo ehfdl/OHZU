@@ -3,6 +3,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import React, { useEffect } from "react";
 import AlarmCard from "./alarm_card";
 import { FiX } from "react-icons/fi";
+import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 
 const AlarmModal = ({
   alarm,
@@ -16,14 +17,24 @@ const AlarmModal = ({
   const alarmFalse = alarm.filter((content) => content.isDone === false);
   const alarmTrue = alarm.filter((content) => content.isDone === true);
 
+  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
+    authService.currentUser?.uid as string
+  );
+
   const onClickAllReadDelete = async () => {
     const filterAlarm = alarm.filter((content) => content.isDone === false);
-    await updateDoc(
-      doc(dbService, "Users", authService.currentUser?.uid as string),
-      {
+    // await updateDoc(
+    //   doc(dbService, "Users", authService.currentUser?.uid as string),
+    //   {
+    //     alarm: filterAlarm,
+    //   }
+    // );
+    updateUser({
+      userId: authService.currentUser?.uid,
+      editUserObj: {
         alarm: filterAlarm,
-      }
-    );
+      },
+    });
     getAlarm();
   };
   const onClickAllRead = async () => {
@@ -32,12 +43,18 @@ const AlarmModal = ({
       return content;
     });
 
-    await updateDoc(
-      doc(dbService, "Users", authService.currentUser?.uid as string),
-      {
+    // await updateDoc(
+    //   doc(dbService, "Users", authService.currentUser?.uid as string),
+    //   {
+    //     alarm: filterAlarm,
+    //   }
+    // );
+    updateUser({
+      userId: authService.currentUser?.uid,
+      editUserObj: {
         alarm: filterAlarm,
-      }
-    );
+      },
+    });
     getAlarm();
   };
 

@@ -1,4 +1,5 @@
 import { authService, dbService } from "@/firebase";
+import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 import { doc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import React from "react";
@@ -57,6 +58,10 @@ const AlarmCard = ({
     }
   }
 
+  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
+    authService.currentUser?.uid as string
+  );
+
   const onClickIsDone = async () => {
     const filterAlarm = alarm.filter((x) => x.createdAt !== post.createdAt);
 
@@ -66,22 +71,34 @@ const AlarmCard = ({
     };
     filterAlarm.push(newPost);
 
-    await updateDoc(
-      doc(dbService, "Users", authService.currentUser?.uid as string),
-      {
+    // await updateDoc(
+    //   doc(dbService, "Users", authService.currentUser?.uid as string),
+    //   {
+    //     alarm: filterAlarm,
+    //   }
+    // );
+    updateUser({
+      userId: authService.currentUser?.uid,
+      editUserObj: {
         alarm: filterAlarm,
-      }
-    );
+      },
+    });
     getAlarm();
   };
   const onClickDelete = async () => {
     const filterAlarm = alarm.filter((x) => x.createdAt !== post.createdAt);
-    await updateDoc(
-      doc(dbService, "Users", authService.currentUser?.uid as string),
-      {
+    // await updateDoc(
+    //   doc(dbService, "Users", authService.currentUser?.uid as string),
+    //   {
+    //     alarm: filterAlarm,
+    //   }
+    // );
+    updateUser({
+      userId: authService.currentUser?.uid,
+      editUserObj: {
         alarm: filterAlarm,
-      }
-    );
+      },
+    });
     getAlarm();
   };
 

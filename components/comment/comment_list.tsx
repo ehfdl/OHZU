@@ -2,13 +2,11 @@ import { authService, dbService } from "@/firebase";
 import useModal from "@/hooks/useModal";
 import {
   collection,
-  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
   orderBy,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import Image from "next/image";

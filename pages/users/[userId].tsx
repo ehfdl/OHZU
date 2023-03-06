@@ -18,10 +18,14 @@ import UserCateNavbar from "@/components/navbar/user_cate_navbar";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import { GetServerSideProps } from "next";
+import useUpdateUser from "@/hooks/query/user/useUpdateUser";
+import { useGetUser } from "@/hooks/query/user/useGetUser";
 
 const UserPage = ({ userId }: { userId: string }) => {
   const [myProfile, setMyProfile] = useState<any>();
-  const [userProfile, setUserProfile] = useState<any>();
+
+  const { data: user, isLoading: userLoading } = useGetUser(userId);
+  const [userProfile, setUserProfile] = useState<any>(user!);
   const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
   const [usersFollowingProfile, setUsersFollowingProfile] = useState<any>();
 
@@ -52,6 +56,10 @@ const UserPage = ({ userId }: { userId: string }) => {
     });
   }, []);
 
+  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
+    userId || (authService.currentUser?.uid as string)
+  );
+
   const onClickFollowUpdate = async () => {
     if (!authService.currentUser?.uid) {
       showModal({
@@ -81,42 +89,66 @@ const UserPage = ({ userId }: { userId: string }) => {
       const newFollowingArray = myProfile.following.filter(
         (id: any) => id !== userId
       );
-      await updateDoc(doc(dbService, "Users", userId), {
-        follower: newFollowerArray,
+      // await updateDoc(doc(dbService, "Users", userId), {
+      //   follower: newFollowerArray,
+      // });
+      updateUser({
+        userId: userId,
+        editUserObj: {
+          follower: newFollowerArray,
+        },
       });
-      await updateDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string),
-        {
+      // await updateDoc(
+      //   doc(dbService, "Users", authService.currentUser?.uid as string),
+      //   {
+      //     following: newFollowingArray,
+      //   }
+      // );
+      updateUser({
+        userId: authService.currentUser?.uid,
+        editUserObj: {
           following: newFollowingArray,
-        }
-      );
+        },
+      });
     } else if (!FollowerArray) {
       const newFollowerArray = userProfile.follower.push(
         authService.currentUser?.uid
       );
       const newFollowingArray = myProfile.following.push(userId);
-      await updateDoc(doc(dbService, "Users", userId), {
-        follower: userProfile.follower,
+      // await updateDoc(doc(dbService, "Users", userId), {
+      //   follower: userProfile.follower,
+      // });
+      updateUser({
+        userId: userId,
+        editUserObj: {
+          follower: userProfile.follower,
+        },
       });
-      await updateDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string),
-        {
+      // await updateDoc(
+      //   doc(dbService, "Users", authService.currentUser?.uid as string),
+      //   {
+      //     following: myProfile.following,
+      //   }
+      // );
+      updateUser({
+        userId: authService.currentUser?.uid,
+        editUserObj: {
           following: myProfile.following,
-        }
-      );
+        },
+      });
     }
-    getUserProfile();
+    // getUserProfile();
     getMyProfile();
   };
 
-  const getUserProfile = async () => {
-    const snapshot = await getDoc(doc(dbService, "Users", userId));
-    const snapshotdata = await snapshot.data();
-    const newProfile = {
-      ...snapshotdata,
-    };
-    setUserProfile(newProfile);
-  };
+  // const getUserProfile = async () => {
+  //   const snapshot = await getDoc(doc(dbService, "Users", userId));
+  //   const snapshotdata = await snapshot.data();
+  //   const newProfile = {
+  //     ...snapshotdata,
+  //   };
+  //   setUserProfile(newProfile);
+  // };
   const getMyProfile = async () => {
     const snapshot = await getDoc(
       doc(dbService, "Users", authService.currentUser?.uid as string)
@@ -184,7 +216,7 @@ const UserPage = ({ userId }: { userId: string }) => {
       });
     };
 
-    getUserProfile();
+    // getUserProfile();
 
     getUserPosts();
   }, []);
@@ -240,8 +272,14 @@ const UserPage = ({ userId }: { userId: string }) => {
     if (userLike) {
       if (userPosts?.length) {
         const updateUserPoint = async () => {
-          await updateDoc(doc(dbService, "Users", userId as string), {
-            point: userLike + userPosts.length * 5,
+          // await updateDoc(doc(dbService, "Users", userId as string), {
+          //   point: userLike + userPosts.length * 5,
+          // });
+          updateUser({
+            userId: userId,
+            editUserObj: {
+              point: userLike + userPosts.length * 5,
+            },
           });
         };
         updateUserPoint();

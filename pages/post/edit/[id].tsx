@@ -301,18 +301,18 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
         img: newPreview,
         ingredient: filterIngre,
       };
-      // await updatePost({
-      //   postId: id,
-      //   editPostObj: newEditPost,
-      // });
+      await updatePost({
+        postId: id,
+        editPostObj: newEditPost,
+      });
 
-      await updateDoc(doc(dbService, "Posts", id), newEditPost);
+      // await updateDoc(doc(dbService, "Posts", id), newEditPost);
     } else {
-      // await updatePost({
-      //   postId: id,
-      //   editPostObj: editPost,
-      // });
-      await updateDoc(doc(dbService, "Posts", id), editPost as any);
+      await updatePost({
+        postId: id,
+        editPostObj: editPost,
+      });
+      // await updateDoc(doc(dbService, "Posts", id), editPost as any);
     }
     router.push(`/post/${id}`);
   };

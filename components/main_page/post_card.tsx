@@ -6,10 +6,15 @@ import Grade from "../grade";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import { ETC_IMG } from "@/util";
+import useUpdatePost from "@/hooks/query/post/useUpdatePost";
 
 const PostCard = ({ post, type }: { post: any; type?: string }) => {
   const defaultImg = ETC_IMG;
   const { showModal } = useModal();
+
+  const { isLoading: isLoadingPost, mutate: updatePost } = useUpdatePost(
+    post.postId
+  );
 
   const like = post.like.includes(authService.currentUser?.uid);
   const onClickLikeBtn = async () => {
@@ -36,13 +41,26 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
       const newLikeArray = post.like.filter(
         (id: any) => id !== authService.currentUser?.uid
       );
-      await updateDoc(doc(dbService, "Posts", post.postId), {
-        like: newLikeArray,
+      // await updateDoc(doc(dbService, "Posts", post.postId), {
+      //   like: newLikeArray,
+      // });
+
+      await updatePost({
+        postId: post.postId,
+        editPostObj: {
+          like: newLikeArray,
+        },
       });
     } else if (!likeArray) {
       const newLikeArray = post.like.push(authService.currentUser?.uid);
-      await updateDoc(doc(dbService, "Posts", post.postId), {
-        like: post.like,
+      // await updateDoc(doc(dbService, "Posts", post.postId), {
+      //   like: post.like,
+      // });
+      await updatePost({
+        postId: post.postId,
+        editPostObj: {
+          like: post.like,
+        },
       });
     } else if (authService.currentUser?.uid === null) {
       showModal({
