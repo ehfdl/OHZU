@@ -5,7 +5,7 @@ import { AlertModalProps } from "../modal/alert_modal";
 import { LoginModalProps } from "../modal/login_modal";
 import { JoinModalProps } from "../modal/join_modal";
 import { ProfileModalProps } from "../modal/profile_modal";
-import { FollowModalProps } from "../modal/follow_modal";
+
 import { ReportModalProps } from "../modal/report_modal";
 
 const {
@@ -14,7 +14,7 @@ const {
   LoginModal,
   JoinModal,
   ProfileModal,
-  FollowModal,
+
   ReportModal,
 } = MODAL_TYPES;
 
@@ -43,11 +43,6 @@ export interface ProfileModalType {
   modalProps: ProfileModalProps;
 }
 
-export interface FollowModalType {
-  modalType: typeof FollowModal;
-  modalProps: FollowModalProps;
-}
-
 export interface ReportModalType {
   modalType: typeof ReportModal;
   modalProps: ReportModalProps;
@@ -59,7 +54,6 @@ export type ModalType =
   | LoginModalType
   | JoinModalType
   | ProfileModalType
-  | FollowModalType
   | ReportModalType;
 
 export const modalState = atom<ModalType | null>({

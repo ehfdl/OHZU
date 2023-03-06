@@ -230,7 +230,7 @@ const Header = ({ ...props }: any) => {
               authService.currentUser?.uid ===
               "DllfZJxOSgRqHvF37aJV1RLsPFy2" ? (
                 <Link legacyBehavior href="/ohzu">
-                  <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                  <button className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
                     <span className="hidden sm:block">관리페이지</span>
                   </button>
                 </Link>
@@ -238,7 +238,7 @@ const Header = ({ ...props }: any) => {
                 <>
                   <Alarm ssuid={ssuid} />
                   <Link legacyBehavior href="/mypage">
-                    <button className="sm:w-20 sm:h-[42px] sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                    <button className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
                       <span className="hidden sm:block">마이페이지</span>
                     </button>
                   </Link>
@@ -252,7 +252,7 @@ const Header = ({ ...props }: any) => {
                     modalProps: { logOut },
                   });
                 }}
-                className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary mr-4"
+                className=" sm:text-[18px] sm:duration-150 sm:hover:text-primary mr-4"
               >
                 <span className="hidden sm:block">로그인</span>
               </button>
@@ -269,7 +269,7 @@ const Header = ({ ...props }: any) => {
                     },
                   })
                 }
-                className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary"
+                className="sm:text-[18px] sm:duration-150 sm:hover:text-primary"
               >
                 <span className="hidden sm:block">로그아웃</span>
               </button>
@@ -281,7 +281,7 @@ const Header = ({ ...props }: any) => {
                     modalProps: {},
                   });
                 }}
-                className="sm:w-20 sm:h-[42px]  sm:text-[18px] sm:duration-150 sm:hover:text-primary"
+                className="sm:text-[18px] sm:duration-150 sm:hover:text-primary"
               >
                 <span className="hidden sm:block">회원가입</span>
               </button>

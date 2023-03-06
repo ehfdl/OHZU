@@ -413,13 +413,15 @@ const Post = () => {
                       className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                     />
                   </label>
-                  <Image
-                    src={preview_01 as string}
-                    className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                    width={72}
-                    height={72}
-                    alt=""
-                  />
+                  {preview_01 && (
+                    <Image
+                      src={preview_01 as string}
+                      className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                      width={186}
+                      height={186}
+                      alt=""
+                    />
+                  )}
                 </>
               )}
             </div>
@@ -446,13 +448,15 @@ const Post = () => {
                         className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
-                    <Image
-                      src={preview_02 as string}
-                      className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                      width={72}
-                      height={72}
-                      alt=""
-                    />
+                    {preview_02 && (
+                      <Image
+                        src={preview_02 as string}
+                        className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                        width={186}
+                        height={186}
+                        alt=""
+                      />
+                    )}
                   </>
                 )}
               </div>
@@ -478,13 +482,15 @@ const Post = () => {
                         className="text-iconHover scale-100 sm:scale-150 bg-white rounded-full hover:scale-110 sm:hover:scale-[1.6] box-border cursor-pointer"
                       />
                     </label>
-                    <Image
-                      src={preview_03 as string}
-                      className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                      width={72}
-                      height={72}
-                      alt=""
-                    />
+                    {preview_03 && (
+                      <Image
+                        src={preview_03 as string}
+                        className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
+                        width={186}
+                        height={186}
+                        alt=""
+                      />
+                    )}
                   </>
                 )}
               </div>

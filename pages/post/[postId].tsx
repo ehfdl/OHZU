@@ -385,6 +385,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     if (authService.currentUser) {
       updateUserRecently();
     }
+    setPost(postData!);
     setReportId(postId);
     getComments();
     updateView();
@@ -595,15 +596,13 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               </span>
               <div className="pt-6 flex justify-start flex-wrap">
                 {post?.ingredient?.map((ing: string) => (
-                  <button
+                  <Link
                     key={uuidv4()}
-                    onClick={() => {
-                      router.push(`/search/include/${ing}`);
-                    }}
+                    href={`/search/include/${ing}`}
                     className="inline-block mr-4 mb-4 sm:mr-6 sm:mb-6 py-1.5 px-4 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-xs sm:text-base"
                   >
                     {ing}
-                  </button>
+                  </Link>
                 ))}
               </div>
             </div>
