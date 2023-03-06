@@ -7,12 +7,10 @@ import {
   onSnapshot,
   orderBy,
   query,
-  updateDoc,
-  where,
 } from "firebase/firestore";
 import React, { useEffect, useState, useRef } from "react";
 import Category from "./category";
-import { Swiper, SwiperRef, SwiperSlide, useSwiper } from "swiper/react"; // basic
+import { Swiper, SwiperSlide, useSwiper } from "swiper/react"; // basic
 import SwiperCore, {
   Navigation,
   Pagination,
@@ -109,19 +107,6 @@ const PostList = () => {
       getViewPosts();
     }
   }, [posts]);
-
-  useEffect(() => {
-    if (userLike) {
-      if (userPosts?.length) {
-        const updateUserPoint = async () => {
-          await updateDoc(doc(dbService, "Users", "nickname"), {
-            point: userLike + userPosts.length * 5,
-          });
-        };
-        updateUserPoint();
-      }
-    }
-  }, [userLike]);
 
   //더보기 기능
   const [isVisible, setIsVisible] = useState(false);

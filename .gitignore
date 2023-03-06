@@ -39,3 +39,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 components/dropdown.jsx
+
+# Sentry
+.sentryclirc
+
+# Sentry
+next.config.original.js

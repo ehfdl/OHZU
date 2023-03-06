@@ -493,7 +493,7 @@ const LoginModal = () => {
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden sm:w-full sm:flex sm:justify-center sm:items-center">
+      <div className="sm:hidden sm:w-full flex sm:justify-center sm:items-center">
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose

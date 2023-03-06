@@ -549,7 +549,7 @@ const JoinModal = () => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:block w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
+      <div className="hidden sm:block w-full h-screen absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
 
         <div className="inner max-w-[588px] w-full max-h-[920px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -755,7 +755,7 @@ const JoinModal = () => {
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden sm:w-full sm:h-auto sm:flex sm:justify-center sm:items-center">
+      <div className="sm:hidden sm:w-full sm:h-auto flex sm:justify-center sm:items-center">
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose

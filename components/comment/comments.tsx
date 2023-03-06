@@ -1,6 +1,8 @@
 import { authService, dbService } from "@/firebase";
+import useCreateComment from "@/hooks/query/comment/useCreateComment";
+import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 import useModal from "@/hooks/useModal";
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
@@ -31,6 +33,8 @@ const Comments = ({
     userId: "",
     createdAt: "",
     isEdit: false,
+    id: "",
+    commentId: "",
   };
 
   const [comment, setComment] = useState<CommentType>(initialComment);
@@ -77,6 +81,13 @@ const Comments = ({
     });
   };
 
+  const { isLoading: isLoadingAddComment, mutate: createComment } =
+    useCreateComment();
+
+  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
+    user?.userId as string
+  );
+
   const addComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newComment = {
@@ -96,7 +107,7 @@ const Comments = ({
       isDone: false,
     };
     if (comment.content.trim() !== "") {
-      await addDoc(collection(dbService, "Comments"), newComment);
+      createComment(newComment);
       if (post?.userId !== authService.currentUser?.uid) {
         const snapshot = await getDoc(
           doc(dbService, "Users", user?.userId as string)
@@ -107,8 +118,11 @@ const Comments = ({
         };
         const newA = newPost?.alarm.push(newAlarm);
 
-        await updateDoc(doc(dbService, "Users", user?.userId as string), {
-          alarm: newPost?.alarm,
+        updateUser({
+          userId: user?.userId,
+          editUserObj: {
+            alarm: newPost?.alarm,
+          },
         });
       }
     } else {
@@ -146,7 +160,7 @@ const Comments = ({
           name="content"
           value={comment.content}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm"
           placeholder="댓글을 입력해주세요."
           rows={resizeTextArea.rows}
         />

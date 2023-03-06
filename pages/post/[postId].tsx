@@ -1,18 +1,16 @@
 import { authService, dbService, storageService } from "@/firebase";
 import {
   collection,
-  deleteDoc,
   doc,
   getDoc,
-  getDocs,
   onSnapshot,
   orderBy,
   query,
-  setDoc,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
+
+import { dehydrate, QueryClient } from "@tanstack/react-query";
 
 import { v4 as uuidv4 } from "uuid";
 
@@ -39,25 +37,40 @@ import SwiperCore, { Pagination } from "swiper";
 import "swiper/css"; //basic
 import "swiper/css/pagination";
 
+import { getPost } from "@/api/postAPI";
+import { useGetUser } from "@/hooks/query/user/useGetUser";
+import useGetPost from "@/hooks/query/post/useGetPost";
+import useUpdatePost from "@/hooks/query/post/useUpdatePost";
+import { BEER_IMG, ETC_IMG, LIQUOR_IMG, SOJU_IMG } from "@/util";
+import useDeletePost from "@/hooks/query/post/useDeletePost";
+import useUpdateUser from "@/hooks/query/user/useUpdateUser";
+import useGetReport from "@/hooks/query/reportPost/useGetReport";
+
 interface PostDetailPropsType {
   postId: string;
-  newPost: Form;
-  newUser: UserType;
 }
 
-const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
+const PostDetail = ({ postId }: PostDetailPropsType) => {
   const router = useRouter();
 
   SwiperCore.use([Pagination]);
 
+  const { data: postData, isLoading: postLoading } = useGetPost(postId);
+  const { data: reportPost, isLoading: reportPostLoading } = useGetReport({
+    reportId: postId,
+    reportType: "ReportPosts",
+  });
+
+  const { data: user, isLoading: userLoading } = useGetUser(
+    postData?.userId as string
+  );
+
+  const [post, setPost] = useState<Form>(postData!);
+
   const [imgIdx, setImgIdx] = useState(0);
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
-  const [post, setPost] = useState<Form>(newPost);
-
   const [comments, setComments] = useState<CommentType[]>([]);
-  const [user, setUser] = useState<UserType>(newUser);
   const [currentUser, setCurrentUser] = useState<UserType>({
     userId: "",
     email: "",
@@ -78,10 +91,8 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       // user === authService.currentUser 와 같은 값
       if (user) {
         setIsLoggedIn(true);
-        console.log("로그인");
       } else {
         setIsLoggedIn(false);
-        console.log("로그아웃");
       }
     });
   }, []);
@@ -152,42 +163,20 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     }
   };
 
-  const deletePost = async (id: string) => {
-    await deleteDoc(doc(dbService, "Posts", id));
+  // Delete Post
+  const { isLoading: removePostLoading, mutate: deletePost } =
+    useDeletePost(postId);
 
-    const commentId = comments.filter((i) => i.postId === id).map((i) => i.id);
+  const onDeletePost = async () => {
+    await deletePost(postId);
 
-    commentId.map(async (id) => {
-      await deleteDoc(doc(dbService, "Comments", id as string));
-      const q = query(
-        collection(dbService, "Recomments"),
-        where("commentId", "==", id) // 해당 collection 내의 docs들을 createdAt 속성을 내림차순 기준으로
-      );
-      const querySnapshot = await getDocs(q);
-      // doc.id는 DB가 자체적으로 생성하는 값으로, id도 함께 포함시키기 위해 객체 재구성
-      const newRecomment: any = [];
-      querySnapshot.forEach((doc) => {
-        const newObj = {
-          id: doc.id,
-          ...doc.data(),
-        };
-        newRecomment.push(newObj.id);
-      });
-
-      newRecomment.map(async (id: string) => {
-        await deleteDoc(doc(dbService, "Recomments", id as string));
-      });
-    });
-
-    const postImgId = post.img?.map((item) => {
+    // Delete Image
+    const postImgId = post?.img?.map((item: string) => {
       if (
-        item !==
-          "https://mblogthumb-phinf.pstatic.net/MjAxODAxMDhfMTI0/MDAxNTE1MzM4MzgyOTgw.JGPYfKZh1Zq15968iGm6eAepu5T4x-9LEAq_0aRSPSsg.vlICAPGyOq_JDoJWSj4iVuh9SHA6wYbLFBK8oQRE8xAg.JPEG.aflashofhope/%EC%86%8C%EC%A3%BC.jpg?type=w800" &&
-        item !==
-          "https://steptohealth.co.kr/wp-content/uploads/2016/08/9-benefits-from-drinking-beer-in-moderation.jpg?auto=webp&quality=45&width=1920&crop=16:9,smart,safe" &&
-        item !==
-          "http://i.fltcdn.net/contents/3285/original_1475799965087_vijbl1k0529.jpeg" &&
-        item !== "https://t1.daumcdn.net/cfile/tistory/1526D4524E0160C330"
+        item !== SOJU_IMG &&
+        item !== BEER_IMG &&
+        item !== LIQUOR_IMG &&
+        item !== ETC_IMG
       ) {
         return item.split("2F")[1].split("?")[0];
       } else {
@@ -195,7 +184,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       }
     });
 
-    postImgId?.map(async (item) => {
+    postImgId?.map(async (item: string | null) => {
       if (item !== null && item !== undefined) {
         const desertRef = ref(storageService, `post/${item}`);
 
@@ -213,14 +202,23 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     router.push("/");
   };
 
+  // Update Post
+  const { isLoading: isLoadingPost, mutate: updatePost } =
+    useUpdatePost(postId);
+
   const likedUser = post?.like!.includes(authService.currentUser?.uid!);
-  const postLike = async (id: string) => {
+  const postLike = async () => {
     if (authService.currentUser) {
       if (likedUser) {
-        await updateDoc(doc(dbService, "Posts", id), {
+        const editPostObj = {
+          ...post,
           like: post?.like!.filter(
-            (prev) => prev !== authService.currentUser?.uid
+            (prev: string) => prev !== authService.currentUser?.uid
           ),
+        };
+        await updatePost({
+          postId,
+          editPostObj,
         });
         setPost({
           ...post,
@@ -229,8 +227,13 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
           ),
         });
       } else {
-        await updateDoc(doc(dbService, "Posts", id), {
+        const editPostObj = {
+          ...post,
           like: [...post?.like!, authService.currentUser?.uid],
+        };
+        await updatePost({
+          postId,
+          editPostObj,
         });
         setPost({
           ...post,
@@ -254,6 +257,22 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     }
   };
 
+  const updateView = async () => {
+    let curView = ++post.view!;
+    const editPostObj = {
+      ...post,
+      view: curView,
+    };
+    try {
+      await updatePost({
+        postId,
+        editPostObj,
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   const getComments = async () => {
     const q = query(
       collection(dbService, "Comments"),
@@ -273,19 +292,10 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     });
   };
 
-  const updateView = async () => {
-    const docRef = doc(dbService, "Posts", postId);
-    const docSnap = await getDoc(docRef);
-    const forUpdate = {
-      ...docSnap.data(),
-    };
-    let curView = ++forUpdate.view;
-    try {
-      await updateDoc(docRef, { view: curView });
-    } catch (error) {
-      alert(error);
-    }
-  };
+  // Update User
+  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
+    authService.currentUser?.uid as string
+  );
 
   const updateUserRecently = async () => {
     const snapshot = await getDoc(
@@ -295,38 +305,20 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
     const newPost = {
       ...snapshotdata,
     };
-    if (!newPost.recently.includes(postId)) {
-      await newPost.recently.unshift(postId);
-      await updateDoc(
-        doc(dbService, "Users", authService.currentUser?.uid as string),
-        { recently: newPost.recently }
-      );
-    }
-  };
-
-  const getCurrentUser = async () => {
-    if (authService.currentUser?.uid) {
-      const userRef = doc(
-        dbService,
-        "Users",
-        authService.currentUser?.uid! as string
-      );
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data();
-
-      const newUser = {
-        ...userData,
-      };
-
-      setCurrentUser(newUser);
+    if (!newPost?.recently.includes(postId)) {
+      await newPost?.recently.unshift(postId);
+      updateUser({
+        userId: authService.currentUser?.uid,
+        editUserObj: { recently: newPost?.recently },
+      });
     }
   };
 
   const onClickReportPost = async () => {
-    const snapshot = await getDoc(doc(dbService, "ReportPosts", postId));
-    const snapshotdata = await snapshot.data();
+    // const snapshot = await getDoc(doc(dbService, "ReportPosts", postId));
+    // const snapshotdata = await snapshot.data();
     const pastPost = {
-      ...snapshotdata,
+      ...reportPost,
     };
 
     if (authService.currentUser?.uid) {
@@ -371,6 +363,23 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
       });
     }
   };
+  const getCurrentUser = async () => {
+    if (authService.currentUser?.uid) {
+      const userRef = doc(
+        dbService,
+        "Users",
+        authService.currentUser?.uid! as string
+      );
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+
+      const newUser = {
+        ...userData,
+      };
+
+      setCurrentUser(newUser);
+    }
+  };
 
   useEffect(() => {
     if (authService.currentUser) {
@@ -396,7 +405,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
             홈
           </Link>
           <span className="text-textGray"> &#62; </span>
-          <span className="text-textBlack">{post.type}</span>
+          <span className="text-textBlack">{post?.type}</span>
         </div>
         <div
           id="post-detail"
@@ -404,24 +413,26 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
         >
           <div id="images-column" className="hidden sm:block sm:w-2/5 w-full">
             <Image
+              priority
               width={450}
               height={450}
               alt=""
-              src={post.img === null ? "" : post.img![imgIdx]}
+              src={post?.img === null ? "" : post?.img![imgIdx]}
               className="w-full aspect-square object-cover rounded"
             />
             <div className="mt-6 grid grid-cols-3 gap-6 items-center w-full">
-              {post.img?.map((img, i) => (
+              {post?.img?.map((img: string, i: number) => (
                 <button
                   key={uuidv4()}
                   className={`${
-                    img === post.img![imgIdx]
+                    img === post?.img![imgIdx]
                       ? "border-2 border-primary"
                       : "border-0"
                   } w-full aspect-square object-cover rounded overflow-hidden`}
                   onClick={() => onImgChange(i)}
                 >
                   <Image
+                    priority
                     width={150}
                     height={150}
                     alt=""
@@ -438,21 +449,19 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
               pagination={{ clickable: true }}
               grabCursor={true}
             >
-              {post.img?.map((img) => (
-                <div key={uuidv4()} className="w-full">
-                  <SwiperSlide>
-                    {img && (
-                      <Image
-                        src={img}
-                        width={350}
-                        height={350}
-                        quality="100"
-                        alt=""
-                        className="w-full aspect-[4/3] object-cover"
-                      />
-                    )}
-                  </SwiperSlide>
-                </div>
+              {post?.img?.map((img: string) => (
+                <SwiperSlide key={uuidv4()} className="w-full">
+                  {img && (
+                    <Image
+                      priority
+                      src={img}
+                      width={350}
+                      height={350}
+                      alt=""
+                      className="w-full aspect-[4/3] object-cover"
+                    />
+                  )}
+                </SwiperSlide>
               ))}
             </Swiper>
           </div>
@@ -463,15 +472,15 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
             <div id="title-column" className="flex justify-between items-start">
               <div className="flex flex-col items-start">
                 <h4 className="text-lg sm:text-2xl font-bold mb-1 sm:mb-2">
-                  {post.title}
+                  {post?.title}
                 </h4>
                 <span className="block py-1 px-5 rounded-full text-xs sm:text-sm text-primary bg-second">
-                  {post.type}
+                  {post?.type}
                 </span>
               </div>
               <div className="flex justify-end items-start space-x-2">
                 <div className="flex flex-col items-center">
-                  <button onClick={() => postLike(postId as string)}>
+                  <button onClick={postLike}>
                     {likedUser ? (
                       <FaHeart className="text-primary" size={24} />
                     ) : (
@@ -479,10 +488,10 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                     )}
                   </button>
                   <span className="text-textGray text-xs">
-                    {post.like!.length}
+                    {post?.like!.length}
                   </span>
                 </div>
-                {authService.currentUser?.uid === post.userId && (
+                {authService.currentUser?.uid === post?.userId && (
                   <>
                     <button
                       onClick={() => {
@@ -522,7 +531,7 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                                 title: "게시물을 삭제 하시겠어요?",
                                 text: "삭제한 게시물은 복원이 불가합니다.",
                                 rightbtntext: "삭제",
-                                rightbtnfunc: () => deletePost(reportId),
+                                rightbtnfunc: onDeletePost,
                               },
                             });
                           }}
@@ -548,30 +557,35 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
             </div>
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center justify-start space-y-2 lg:w-[25%] w-[30%]">
-                <Link href={`/users/${user.userId}`}>
-                  <Image
-                    width={100}
-                    height={100}
-                    alt=""
-                    src={user?.imageURL as string}
-                    className="w-12 sm:w-20 aspect-square bg-slate-300 rounded-full object-cover"
-                  />
+                <Link href={`/users/${user?.userId}`}>
+                  {user?.imageURL ? (
+                    <Image
+                      priority
+                      width={100}
+                      height={100}
+                      alt=""
+                      src={user?.imageURL as string}
+                      className="w-12 sm:w-20 aspect-square rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-12 sm:w-20 aspect-square bg-slate-300 rounded-full object-cover" />
+                  )}
                 </Link>
                 <Link
-                  href={`/users/${post.userId}`}
+                  href={`/users/${post?.userId}`}
                   className="flex justify-center items-center"
                 >
                   <span className="font-bold mr-1 text-xs sm:text-sm lg:text-base">
                     {user?.nickname}
                   </span>
                   <span className="w-[10px] sm:w-[12px]">
-                    <Grade score={user.point!} />
+                    <Grade score={user?.point!} />
                   </span>
                 </Link>
               </div>
               <div className="w-full pt-1">
                 <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
-                  {post.text}
+                  {post?.text}
                 </pre>
               </div>
             </div>
@@ -580,13 +594,13 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                 준비물
               </span>
               <div className="pt-6 flex justify-start flex-wrap">
-                {post.ingredient?.map((ing) => (
+                {post?.ingredient?.map((ing: string) => (
                   <button
                     key={uuidv4()}
                     onClick={() => {
                       router.push(`/search/include/${ing}`);
                     }}
-                    className="inline-block mr-6 mb-6 py-1.5 px-4 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-xs sm:text-base"
+                    className="inline-block mr-4 mb-4 sm:mr-6 sm:mb-6 py-1.5 px-4 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-xs sm:text-base"
                   >
                     {ing}
                   </button>
@@ -598,10 +612,10 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
                 만드는 방법
               </span>
               <pre className="text-xs sm:text-base pt-6 whitespace-pre-wrap break-all leading-10 pl-2">
-                {post.recipe}
+                {post?.recipe}
               </pre>
             </div>
-            {authService.currentUser?.uid !== post.userId && (
+            {authService.currentUser?.uid !== post?.userId && (
               <div
                 id="faq"
                 className="absolute right-4 -bottom-16 flex items-start space-x-2 sm:space-x-6"
@@ -648,25 +662,27 @@ const PostDetail = ({ postId, newPost, newUser }: PostDetailPropsType) => {
 
 export default PostDetail;
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params: { postId },
-}: any) => {
-  const docRef = doc(dbService, "Posts", postId);
-  const docSnap = await getDoc(docRef);
-  const data = docSnap.data();
-  const newPost = {
-    ...data,
-  };
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { postId } = context.params!;
 
-  const userRef = doc(dbService, "Users", newPost?.userId! as string);
-  const userSnap = await getDoc(userRef);
-  const userData = userSnap.data();
+  const queryClient = new QueryClient();
 
-  const newUser = {
-    ...userData,
-  };
+  let isError = false;
+
+  try {
+    await queryClient.prefetchQuery(["post", postId], () =>
+      getPost(postId as string)
+    );
+  } catch (error: any) {
+    isError = true;
+    context.res.statusCode = error.response.status;
+  }
 
   return {
-    props: { postId, newPost, newUser },
+    props: {
+      postId,
+      isError,
+      dehydratedState: dehydrate(queryClient),
+    },
   };
 };

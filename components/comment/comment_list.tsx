@@ -2,13 +2,11 @@ import { authService, dbService } from "@/firebase";
 import useModal from "@/hooks/useModal";
 import {
   collection,
-  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
   orderBy,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import Image from "next/image";
@@ -16,6 +14,9 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Grade from "../grade";
 import Recomments from "./recomments";
+import useUpdateComment from "@/hooks/query/comment/useUpdateComment";
+import { useGetUser } from "@/hooks/query/user/useGetUser";
+import useDeleteComment from "@/hooks/query/comment/useDeleteComment";
 
 interface CommentProps {
   comment: CommentType;
@@ -23,32 +24,19 @@ interface CommentProps {
 }
 
 const CommentList = ({ comment, currentUser }: CommentProps) => {
-  const { content, createdAt, userId, id, isEdit } = comment;
+  const { content, createdAt, userId, id, isEdit, postId } = comment;
 
-  const [editContent, setEditContent] = useState(content);
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  // get User
+  const { data: user, isLoading: userLoading } = useGetUser(comment?.userId);
+
+  const [editContent, setEditContent] = useState<string>(content);
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState<UserType>();
   const [recomments, setRecomments] = useState<CommentType[]>([]);
+  const [commentIsEdit, setCommentIsEdit] = useState(false);
+
   const { showModal, hideModal } = useModal();
 
-  const editToggle = async () => {
-    await updateDoc(doc(dbService, "Comments", id as string), {
-      isEdit: !isEdit,
-    });
-  };
-
-  const editComment = async (id: string, edit: any) => {
-    if (edit.trim() !== "") {
-      await updateDoc(doc(dbService, "Comments", id), {
-        ...comment,
-        content: edit,
-        isEdit: false,
-      });
-      setEditContent("");
-    }
-  };
-
+  // textarea resize & onChange editContent
   const [resizeTextArea, setResizeTextArea] = useState({
     rows: 1,
     minRows: 1,
@@ -56,7 +44,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     const textareaLineHeight = 24;
     const { minRows, maxRows } = resizeTextArea;
 
@@ -99,38 +87,38 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
     }
   }, [editContent]);
 
-  const deleteComment = async (id: string) => {
-    await deleteDoc(doc(dbService, "Comments", id));
-
-    const recommentId = recomments
-      .filter((i) => i.commentId === id)
-      .map((i) => i.id);
-
-    recommentId.map(async (id) => {
-      await deleteDoc(doc(dbService, "Recomments", id as string));
-    });
-    hideModal();
+  // Update comment
+  const editToggle = async () => {
+    setCommentIsEdit(!commentIsEdit);
   };
 
-  const getCommentUser = async () => {
-    if (comment?.userId) {
-      const userRef = doc(dbService, "Users", comment?.userId! as string);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data();
+  const { isLoading: isLoadingEdit, mutate: updateComment } =
+    useUpdateComment(id);
 
-      const newUser = {
-        ...userData,
+  const onEditComment = async () => {
+    if (editContent.trim() !== "") {
+      const editComment: any = {
+        ...comment,
+        content: editContent,
       };
-
-      setUser(newUser);
+      await updateComment({ commentId: id, editCommentObj: editComment });
+      setEditContent("");
+      setCommentIsEdit(false);
     }
   };
 
+  // Delete comment
+  const { isLoading: removeCommentLoading, mutate: deleteComment } =
+    useDeleteComment(id);
+
+  const onDeleteComment = async () => {
+    await deleteComment(id);
+
+    hideModal();
+  };
+
   const resetToggle = async () => {
-    await updateDoc(doc(dbService, "Comments", id as string), {
-      isEdit: false,
-    });
-    setDeleteConfirm(false);
+    setCommentIsEdit(false);
   };
 
   const getRecomments = async () => {
@@ -215,7 +203,6 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
 
   useEffect(() => {
     resetToggle();
-    getCommentUser();
     getRecomments();
     return;
   }, []);
@@ -245,7 +232,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
             </div>
           </Link>
           <div className="space-y-6 flex flex-col justify-between w-full">
-            {isEdit ? (
+            {commentIsEdit ? (
               <textarea
                 name="editContent"
                 value={editContent}
@@ -263,7 +250,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
               <span className="text-xs text-gray-500 flex items-end">
                 {createdAt}
               </span>
-              {isEdit && (
+              {commentIsEdit && (
                 <div className="flex justify-end items-end space-x-2">
                   <button
                     className="text-xs font-medium hover:text-black text-textGray"
@@ -273,7 +260,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   </button>
                   <button
                     className="text-xs font-medium hover:text-black text-textGray"
-                    onClick={() => editComment(id as string, editContent)}
+                    onClick={onEditComment}
                   >
                     완료
                   </button>
@@ -282,8 +269,8 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
               {authService.currentUser?.uid === userId ? (
                 <div
                   className={`${
-                    isEdit ? "hidden" : "flex"
-                  } flex justify-end items-end space-x-2 text-xs`}
+                    commentIsEdit ? "hidden" : "flex"
+                  } flex justify-end items-end space-x-2 sm:space-x-4 text-xs`}
                 >
                   <button
                     onClick={editToggle}
@@ -299,8 +286,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                           title: "댓글을 삭제 하시겠어요?",
                           text: "삭제한 댓글은 복원이 불가합니다.",
                           rightbtntext: "삭제",
-                          rightbtnfunc: () =>
-                            deleteComment(comment.id as string),
+                          rightbtnfunc: onDeleteComment,
                         },
                       })
                     }
@@ -333,7 +319,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   )}
                 </div>
               ) : (
-                <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs">
+                <div className="flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs">
                   <button onClick={onClickReportComment}>신고</button>
                   {recomments.length === 0 ? (
                     <button
@@ -367,6 +353,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
             isOpen={isOpen}
             setIsOpen={setIsOpen}
             comment={comment}
+            postId={postId}
           />
         )}
       </li>

@@ -8,6 +8,12 @@ import { useEffect, useState } from "react";
 import Lottie from "react-lottie-player";
 import { RecoilRoot } from "recoil";
 import lottieJson from "../animation/loading_spinner.json";
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 declare global {
   interface Window {
@@ -17,6 +23,7 @@ declare global {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [queryClient] = useState(() => new QueryClient());
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -65,7 +72,12 @@ export default function App({ Component, pageProps }: AppProps) {
         <title>OHZU</title>
       </Head>
       <RecoilRoot>
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Component {...pageProps} />
+          </Hydrate>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </QueryClientProvider>
       </RecoilRoot>
     </>
   );
