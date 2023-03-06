@@ -61,7 +61,7 @@ const MainBanner = () => {
             <Link href={`/post/7aHaIn5nNLSMwLV4nKyC`}>
               <Image
                 alt=""
-                className="object-cover w-full sm:h-full  h-[152px]"
+                className="object-cover w-full min-h-[152px]"
                 src="/banner/3.svg"
                 width={300}
                 height={300}
@@ -73,7 +73,7 @@ const MainBanner = () => {
             <Link href={`/post/HAX99HwmDDUETpxiprFo`}>
               <Image
                 alt=""
-                className="object-cover w-full sm:h-full  h-[152px]"
+                className="object-cover w-full min-h-[152px]"
                 src="/banner/4.svg"
                 width={300}
                 height={300}
@@ -85,7 +85,7 @@ const MainBanner = () => {
             <Link href={`/post/w1Y390uY9l7zGUNGSjDI`}>
               <Image
                 alt=""
-                className="object-cover w-full sm:h-full  h-[152px]"
+                className="object-cover w-full min-h-[152px]"
                 src="/banner/5.svg"
                 width={300}
                 height={300}
@@ -93,11 +93,11 @@ const MainBanner = () => {
               ></Image>
             </Link>
           </SwiperSlide>
-          <SwiperSlide className="overflow-hidden">
+          <SwiperSlide className="overflow-hidden ">
             <Link href={`/post/Avg5qd9KUPx1ugWnCHzL`}>
               <Image
                 alt=""
-                className="object-cover w-full sm:h-full h-[152px]"
+                className="object-cover w-full min-h-[152px]"
                 src="/banner/6.svg"
                 width={300}
                 height={300}
@@ -109,7 +109,7 @@ const MainBanner = () => {
             <Link href={`/post/a9ZwgOaQoR3tAj0r3ZyX`}>
               <Image
                 alt=""
-                className="object-cover w-full sm:h-full  h-[152px]"
+                className="object-cover w-full min-h-[152px]"
                 src="/banner/7.svg"
                 width={300}
                 height={300}

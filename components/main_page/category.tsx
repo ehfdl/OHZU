@@ -15,7 +15,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="maintype"
             value="my-ohju"
             className="hidden peer"
             defaultChecked
@@ -30,7 +30,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="maintype"
             value="my-ohju"
             className="hidden peer"
           />
@@ -44,7 +44,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="maintype"
             value="my-ohju"
             className="hidden peer"
           />
@@ -58,7 +58,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="maintype"
             value="my-ohju"
             className="hidden peer"
           />
@@ -72,7 +72,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="maintype"
             value="my-ohju"
             className="hidden peer"
           />
@@ -90,7 +90,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="mobilemaintype"
             value="my-ohju"
             className="hidden peer"
             defaultChecked
@@ -105,7 +105,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="mobilemaintype"
             value="my-ohju"
             className="hidden peer"
           />
@@ -119,7 +119,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="mobilemaintype"
             value="my-ohju"
             className="hidden peer"
           />
@@ -133,7 +133,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="mobilemaintype"
             value="my-ohju"
             className="hidden peer"
           />
@@ -147,7 +147,7 @@ const Category = ({
         >
           <input
             type="radio"
-            name="type"
+            name="mobilemaintype"
             value="my-ohju"
             className="hidden peer"
           />

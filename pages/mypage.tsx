@@ -183,8 +183,8 @@ const Mypage = () => {
                     src={myProfile?.imageURL as string}
                     className="w-16 sm:w-40 aspect-square object-cover"
                     alt=""
-                    width={64}
-                    height={64}
+                    width={160}
+                    height={160}
                   />
                 )}
               </div>

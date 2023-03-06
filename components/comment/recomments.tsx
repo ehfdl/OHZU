@@ -95,7 +95,7 @@ const Recomments = ({
     };
     const newAlarm = {
       content: recomment.content,
-      postId: id,
+      postId: postId,
       nickname: currentUser?.nickname,
       title: comment?.content,
       type: "답글",

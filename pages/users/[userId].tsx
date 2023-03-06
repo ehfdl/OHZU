@@ -23,8 +23,7 @@ import { useGetUser } from "@/hooks/query/user/useGetUser";
 const UserPage = ({ userId }: { userId: string }) => {
   const [myProfile, setMyProfile] = useState<any>();
 
-  const { data: user, isLoading: userLoading } = useGetUser(userId);
-  const [userProfile, setUserProfile] = useState<any>(user!);
+  const { data: userProfile, isLoading: userLoading } = useGetUser(userId);
   const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
   const [usersFollowingProfile, setUsersFollowingProfile] = useState<any>();
 
@@ -75,12 +74,12 @@ const UserPage = ({ userId }: { userId: string }) => {
 
       return true;
     }
-    const FollowerArray = userProfile.follower.includes(
+    const FollowerArray = userProfile?.follower.includes(
       authService.currentUser?.uid
     );
 
     if (FollowerArray) {
-      const newFollowerArray = userProfile.follower.filter(
+      const newFollowerArray = userProfile?.follower.filter(
         (id: any) => id !== authService.currentUser?.uid
       );
       const newFollowingArray = myProfile.following.filter(
@@ -101,7 +100,7 @@ const UserPage = ({ userId }: { userId: string }) => {
         },
       });
     } else if (!FollowerArray) {
-      const newFollowerArray = userProfile.follower.push(
+      const newFollowerArray = userProfile?.follower.push(
         authService.currentUser?.uid
       );
       const newFollowingArray = myProfile.following.push(userId);
@@ -109,7 +108,7 @@ const UserPage = ({ userId }: { userId: string }) => {
       updateUser({
         userId: userId,
         editUserObj: {
-          follower: userProfile.follower,
+          follower: userProfile?.follower,
         },
       });
 
@@ -270,8 +269,8 @@ const UserPage = ({ userId }: { userId: string }) => {
                   src={userProfile?.imageURL as string}
                   className="w-16 sm:w-[124px] aspect-square object-cover"
                   alt=""
-                  width={64}
-                  height={64}
+                  width={124}
+                  height={124}
                 />
               </div>
               {userProfile?.follower.includes(authService.currentUser?.uid) ? (
@@ -295,7 +294,7 @@ const UserPage = ({ userId }: { userId: string }) => {
                 <div>
                   <div className="font-bold sm:text-[24px] flex justify-start items-center gap-1">
                     <span>{userProfile?.nickname}</span>
-                    <span>
+                    <span className="w-3 h-[15px] sm:w-[18px] sm:h-[22px]">
                       <Grade score={userLike! + userPosts?.length! * 5} />
                     </span>
                   </div>
