@@ -10,6 +10,7 @@ import {
   query,
   onSnapshot,
   orderBy,
+  updateDoc,
 } from "firebase/firestore";
 import MyPostCard from "@/components/sub_page/my_post_card";
 import { BiInfoCircle } from "react-icons/bi";
@@ -153,18 +154,14 @@ const Mypage = () => {
     setMyLike(totalLike);
   }, [myPosts]);
 
-  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
-    authService.currentUser?.uid as string
-  );
-
   useEffect(() => {
     if (myLike) {
       if (myPosts?.length) {
         const updateUserPoint = async () => {
-          updateUser({
-            userId: authService.currentUser?.uid,
-            editUserObj: { point: myLike + myPosts.length * 5 },
-          });
+          await updateDoc(
+            doc(dbService, "Users", authService.currentUser?.uid as string),
+            { point: myLike + myPosts.length * 5 }
+          );
         };
         updateUserPoint();
       }
