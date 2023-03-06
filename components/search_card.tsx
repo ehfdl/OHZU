@@ -1,14 +1,17 @@
 import React from "react";
 import Link from "next/link";
-import { doc, updateDoc } from "firebase/firestore";
-import { authService, dbService } from "@/firebase";
+import { authService } from "@/firebase";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
+import useUpdatePost from "@/hooks/query/post/useUpdatePost";
 
 export const SearchCard = ({ card }: any) => {
   const { showModal } = useModal();
   const like = card.item.like?.includes(authService.currentUser?.uid);
 
+  const { isLoading: isLoadingPost, mutate: updatePost } = useUpdatePost(
+    card.item.postId
+  );
   const onClickLikeBtn = async () => {
     if (!authService.currentUser?.uid) {
       showModal({
@@ -33,13 +36,19 @@ export const SearchCard = ({ card }: any) => {
       const newLikeArray = card.item.like.filter(
         (id: any) => id !== authService.currentUser?.uid
       );
-      await updateDoc(doc(dbService, "Posts", card.item.postId), {
-        like: newLikeArray,
+      await updatePost({
+        postId: card.item.postId,
+        editPostObj: {
+          like: newLikeArray,
+        },
       });
     } else if (!likeArray) {
       const newLikeArray = card.item.like?.push(authService.currentUser?.uid);
-      await updateDoc(doc(dbService, "Posts", card.item.postId), {
-        like: card.item.like,
+      await updatePost({
+        postId: card.item.postId,
+        editPostObj: {
+          like: card.item.like,
+        },
       });
     }
   };

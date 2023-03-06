@@ -1,20 +1,23 @@
 import { authService, dbService } from "@/firebase";
 import useModal from "@/hooks/useModal";
-import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import Grade from "../grade";
+import useDeleteRecomment from "@/hooks/query/recomment/useDeleteRecomment";
+import useUpdateRecomment from "@/hooks/query/recomment/useUpdateRecomment";
+import { useGetUser } from "@/hooks/query/user/useGetUser";
 
 interface RecommentListPropsType {
   recomment: CommentType;
 }
 
 const RecommentList = ({ recomment }: RecommentListPropsType) => {
-  const { commentId, userId, createdAt, isEdit, content, id } = recomment;
-  const [recommentUser, setRecommentUser] = useState<UserType>();
+  const { commentId, userId, createdAt, content, id } = recomment;
+
   const [editRecommentContent, setEditRecommentContent] = useState<string>();
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const [recommentIsEdit, setRecommentIsEdit] = useState(false);
 
   const { showModal, hideModal } = useModal();
 
@@ -25,7 +28,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
+    const { value } = event.target;
     const textareaLineHeight = 24;
     const { minRows, maxRows } = resizeTextArea;
 
@@ -68,38 +71,37 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
     }
   }, [editRecommentContent]);
 
+  // Get Recomment User
+  const { data: recommentUser, isLoading: recommentUserLoading } =
+    useGetUser(userId);
+
+  // Update recomment
   const editToggle = async () => {
-    await updateDoc(doc(dbService, "Recomments", id as string), {
-      isEdit: !isEdit,
-    });
+    setRecommentIsEdit(!recommentIsEdit);
   };
 
-  const editRecomment = async (id: string, edit: any) => {
-    await updateDoc(doc(dbService, "Recomments", id), {
-      ...recomment,
-      content: edit,
-      isEdit: false,
-    });
-    setEditRecommentContent("");
-  };
+  const { isLoading: isLoadingEdit, mutate: updateRecomment } =
+    useUpdateRecomment(id);
 
-  const deleteRecomment = async (id: string) => {
-    await deleteDoc(doc(dbService, "Recomments", id));
-    hideModal();
-  };
-
-  const getRecommentUser = async () => {
-    if (userId) {
-      const userRef = doc(dbService, "Users", userId! as string);
-      const userSnap = await getDoc(userRef);
-      const userData = userSnap.data();
-
-      const newUser = {
-        ...userData,
+  const onEditRecomment = async () => {
+    if (editRecommentContent?.trim() !== "") {
+      const editComment: any = {
+        ...recomment,
+        content: editRecommentContent,
       };
-
-      setRecommentUser(newUser);
+      await updateRecomment({ recommentId: id, editRecommentObj: editComment });
+      setEditRecommentContent("");
+      setRecommentIsEdit(false);
     }
+  };
+
+  // Delete Recomment
+  const { isLoading: removeRecommentLoading, mutate: deleteRecomment } =
+    useDeleteRecomment(id);
+
+  const onDeleteRecomment = async () => {
+    await deleteRecomment(id);
+    hideModal();
   };
 
   const onClickReportComment = async () => {
@@ -162,7 +164,6 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   };
 
   useEffect(() => {
-    getRecommentUser();
     setEditRecommentContent(content);
   }, []);
   return (
@@ -189,7 +190,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
           </div>
         </Link>
         <div className="space-y-6 flex flex-col justify-between w-full">
-          {isEdit ? (
+          {recommentIsEdit ? (
             <textarea
               name="editContent"
               value={editRecommentContent}
@@ -207,16 +208,14 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             <span className="text-xs text-gray-500 flex items-end">
               {createdAt}
             </span>
-            {isEdit && (
+            {recommentIsEdit && (
               <div className="flex justify-end items-end space-x-2 text-gray-500">
                 <button className="text-xs font-medium" onClick={editToggle}>
                   취소
                 </button>
                 <button
                   className="text-xs font-medium"
-                  onClick={() =>
-                    editRecomment(id as string, editRecommentContent)
-                  }
+                  onClick={onEditRecomment}
                 >
                   완료
                 </button>
@@ -225,7 +224,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             {authService.currentUser?.uid === userId ? (
               <div
                 className={`${
-                  isEdit ? "hidden" : "flex"
+                  recommentIsEdit ? "hidden" : "flex"
                 } flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs`}
               >
                 <button onClick={editToggle}>수정</button>
@@ -237,8 +236,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
                         title: "답글을 삭제 하시겠어요?",
                         text: "삭제한 답글은 복원이 불가합니다.",
                         rightbtntext: "삭제",
-                        rightbtnfunc: () =>
-                          deleteRecomment(recomment.id as string),
+                        rightbtnfunc: onDeleteRecomment,
                       },
                     })
                   }

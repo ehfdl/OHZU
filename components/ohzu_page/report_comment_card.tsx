@@ -1,13 +1,24 @@
 import { dbService } from "@/firebase";
+import useDeleteReport from "@/hooks/query/reportPost/useDeleteReport";
 import { deleteDoc, doc } from "firebase/firestore";
 import React from "react";
 
 const ReportCommentCard = ({ comment }: { comment: ReportComment }) => {
+  const { isLoading: isRemoveReportLoading, mutate: deleteReport } =
+    useDeleteReport({ reportId: comment?.commentId as string });
   const deleteComments = async () => {
-    await deleteDoc(
-      doc(dbService, "ReportComments", comment.commentId as string)
-    );
-    await deleteDoc(doc(dbService, "Comments", comment.commentId as string));
+    // await deleteDoc(
+    //   doc(dbService, "ReportComments", comment.commentId as string)
+    // );
+    deleteReport({
+      reportId: comment?.commentId,
+      reportType: "ReportComments",
+    });
+    deleteReport({
+      reportId: comment?.commentId,
+      reportType: "Comments",
+    });
+    // await deleteDoc(doc(dbService, "Comments", comment.commentId as string));
   };
 
   return (

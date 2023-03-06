@@ -1,6 +1,8 @@
 import { authService, dbService } from "@/firebase";
+import useCreateRecomment from "@/hooks/query/recomment/useCreateRecomment";
+import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 import useModal from "@/hooks/useModal";
-import { addDoc, collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { SetStateAction, useState } from "react";
 import RecommentList from "./recomment_list";
 
@@ -11,6 +13,7 @@ interface RecommentPropsType {
   isOpen: boolean;
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
   comment: CommentType;
+  postId: string;
 }
 
 const Recomments = ({
@@ -20,18 +23,21 @@ const Recomments = ({
   isOpen,
   comment,
   currentUser,
+  postId,
 }: RecommentPropsType) => {
   const date = Date.now();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
     dateStyle: "long",
     timeStyle: "medium",
   }).format(date);
+
   const initialRecomment = {
     content: "",
     commentId: "",
     userId: "",
     createdAt: "",
-    isEdit: false,
+    id: "",
+    postId: "",
   };
   const { showModal } = useModal();
 
@@ -71,6 +77,13 @@ const Recomments = ({
     });
   };
 
+  const { isLoading: isLoadingAddRecomment, mutate: createRecomment } =
+    useCreateRecomment();
+
+  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
+    comment?.userId as string
+  );
+
   const addRecomment = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     const newRecomment = {
@@ -78,7 +91,7 @@ const Recomments = ({
       commentId: id,
       userId: authService.currentUser?.uid,
       createdAt: dateForm,
-      isEdit: false,
+      postId,
     };
     const newAlarm = {
       content: recomment.content,
@@ -90,7 +103,7 @@ const Recomments = ({
       isDone: false,
     };
     if (recomment.content.trim() !== "") {
-      await addDoc(collection(dbService, "Recomments"), newRecomment);
+      createRecomment(newRecomment);
       if (comment?.userId !== authService.currentUser?.uid) {
         const snapshot = await getDoc(
           doc(dbService, "Users", comment?.userId as string)
@@ -101,8 +114,11 @@ const Recomments = ({
         };
         const newA = newPost?.alarm.push(newAlarm);
 
-        await updateDoc(doc(dbService, "Users", comment?.userId as string), {
-          alarm: newPost?.alarm,
+        updateUser({
+          userId: comment?.userId,
+          editUserObj: {
+            alarm: newPost?.alarm,
+          },
         });
       }
     } else {
@@ -131,7 +147,7 @@ const Recomments = ({
           name="content"
           value={recomment.content}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none"
+          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm"
           placeholder="답글을 입력해주세요."
           rows={resizeTextArea.rows}
         />

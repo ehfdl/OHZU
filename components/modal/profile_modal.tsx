@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { dbService, storageService } from "@/firebase";
+import { storageService } from "@/firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { doc, updateDoc } from "firebase/firestore";
 
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
+import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 
 export interface ProfileModalProps {
   myProfile?: any;
@@ -50,6 +50,10 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
     }
   };
 
+  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
+    myProfile.userId
+  );
+
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     let imgFileUrl = "";
@@ -62,9 +66,15 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
           ...form,
           imageURL: imgFileUrl,
         };
-        await updateDoc(doc(dbService, "Users", myProfile.userId), newForm);
+        updateUser({
+          userId: myProfile.userId,
+          editUserObj: newForm,
+        });
       } else {
-        await updateDoc(doc(dbService, "Users", myProfile.userId), form);
+        updateUser({
+          userId: myProfile.userId,
+          editUserObj: form,
+        });
       }
 
       hideModal();

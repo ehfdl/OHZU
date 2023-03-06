@@ -191,7 +191,6 @@ const JoinModal = () => {
     // 2. 이메일인증메소드를 사용하여 emailVerified 속성이 true일 때 서비스를 이용가능하게. undefined이면 로그인도 못하게 막아버리게.
 
     // 회원가입 함수
-
     createUserWithEmailAndPassword(authService, email, password)
       .then((userCredential) => {
         setDoc(doc(dbService, "Users", `${authService.currentUser?.uid}`), {
@@ -220,7 +219,9 @@ const JoinModal = () => {
         showModal({
           modalType: "AlertModal",
           modalProps: {
-            title: "인증 메일을 보냈습니다. 인증 후, 서비스 이용이 가능합니다.",
+            src: "/image/Check_circle.svg",
+            title: "인증 메일을 보냈습니다.",
+            text: "인증 후, 서비스 이용이 가능합니다.",
             btnfunc: () =>
               showModal({ modalType: "LoginModal", modalProps: {} }),
           },
@@ -250,6 +251,7 @@ const JoinModal = () => {
     }
   };
 
+  // 년도 기입
   const yearHandler = (e: any) => {
     if (e.length < 4) {
       setCheckAdult("형식에 맞게 입력해주세요.");
@@ -450,8 +452,8 @@ const JoinModal = () => {
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
-          url: "https://ohzu.vercel.app/api/kakao",
-          // url: "http://localhost:3000",
+          // url: "https://ohzu.vercel.app/api/kakao",
+          url: "http://localhost:3000/api/kakao",
           data: { authObj },
         }).then(function (response) {
           // 서버에서 보낸 jwt토큰을 받음
@@ -547,7 +549,7 @@ const JoinModal = () => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:block w-full h-screen flex absolute justify-center top-0 left-0 items-center ">
+      <div className="hidden sm:block w-full h-screen absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
 
         <div className="inner max-w-[588px] w-full max-h-[920px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -753,7 +755,7 @@ const JoinModal = () => {
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden sm:w-full sm:h-auto sm:flex sm:justify-center sm:items-center">
+      <div className="sm:hidden sm:w-full sm:h-auto flex sm:justify-center sm:items-center">
         <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
@@ -776,7 +778,7 @@ const JoinModal = () => {
                   type="text"
                   id="email"
                   placeholder="실제 사용하는 이메일을 입력해주세요. "
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]"
                 />
                 <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
                   {checkEmail ? checkEmail : null}
@@ -793,7 +795,7 @@ const JoinModal = () => {
                   type="password"
                   id="password"
                   placeholder="비밀번호는 최소 8자리로 입력해주세요."
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]"
                 />
                 <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
                   {checkPassword}
@@ -814,7 +816,7 @@ const JoinModal = () => {
                       type="password"
                       id="pwCheck"
                       placeholder="비밀번호 확인"
-                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]"
                     />
                     <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
                       {checkPasswordConfirm}
@@ -831,7 +833,7 @@ const JoinModal = () => {
                       type="text"
                       id="nickname"
                       placeholder="닉네임"
-                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]"
                     />
                     <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
                       {checkNickname}
@@ -852,7 +854,7 @@ const JoinModal = () => {
                         required={true}
                         minLength={4}
                         maxLength={4}
-                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] "
                       />
                       <input
                         onChange={(e) => {
@@ -861,7 +863,7 @@ const JoinModal = () => {
                         type="text"
                         placeholder="MM"
                         maxLength={2}
-                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] "
                       />
                       <input
                         onChange={(e) => {
@@ -870,7 +872,7 @@ const JoinModal = () => {
                         type="text"
                         placeholder="DD"
                         maxLength={2}
-                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                        className="w-[111px] h-14 text-center outline-none bg-[#F5F5F5] "
                       />
                     </div>
                     <div className="flex max-w-[358px] w-full m-auto mb-7 ">

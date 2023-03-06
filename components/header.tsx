@@ -27,10 +27,8 @@ const Header = ({ ...props }: any) => {
       // user === authService.currentUser 와 같은 값
       if (user) {
         setIsLoggedIn(true);
-        console.log("로그인");
       } else {
         setIsLoggedIn(false);
-        console.log("로그아웃");
       }
     });
   }, []);
@@ -74,7 +72,7 @@ const Header = ({ ...props }: any) => {
       });
   };
 
-  // 검색 실행 함수
+  // 검색 키워드를 담는 함수
   const SearchHandler = (keyword: any) => {
     setSearch(keyword);
   };
@@ -89,6 +87,15 @@ const Header = ({ ...props }: any) => {
       router.push({
         pathname: `/search/-`,
       });
+    }
+  };
+
+  // 모바일 검색 실행 시, 검색 모달 닫히는 함수
+  const mobileSearchToggle = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      setTimeout(() => {
+        setMobileSearch(false);
+      }, 300);
     }
   };
 
@@ -156,6 +163,7 @@ const Header = ({ ...props }: any) => {
                       onChange={(e) => {
                         SearchHandler(e.target.value);
                       }}
+                      onKeyDown={(e) => mobileSearchToggle(e)}
                       value={search}
                       type="text"
                       id="simple-search"
@@ -241,7 +249,7 @@ const Header = ({ ...props }: any) => {
                 onClick={() => {
                   showModal({
                     modalType: "LoginModal",
-                    modalProps: {},
+                    modalProps: { logOut },
                   });
                 }}
                 className="sm:w-20 sm:h-[42px] sm:text-[18px] sm:duration-150 sm:hover:text-primary mr-4"

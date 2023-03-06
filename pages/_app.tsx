@@ -1,9 +1,19 @@
+import Loading from "@/components/loading/loading";
 import { apiKey } from "@/firebase";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { useEffect } from "react";
+import { Router } from "next/router";
+import { useEffect, useState } from "react";
+import Lottie from "react-lottie-player";
 import { RecoilRoot } from "recoil";
+import lottieJson from "../animation/loading_spinner.json";
+import {
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 declare global {
   interface Window {
@@ -13,6 +23,30 @@ declare global {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [queryClient] = useState(() => new QueryClient());
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const start = () => {
+      // NProgress.start();
+      setLoading(true);
+    };
+    const end = () => {
+      // NProgress.done();
+      setLoading(false);
+    };
+
+    Router.events.on("routeChangeStart", start);
+    Router.events.on("routeChangeComplete", end);
+    Router.events.on("routeChangeError", end);
+
+    return () => {
+      Router.events.off("routeChangeStart", start);
+      Router.events.off("routeChangeComplete", end);
+      Router.events.off("routeChangeError", end);
+    };
+  }, []);
+
   useEffect(() => {
     try {
       if (!window.Kakao.isInitialized() && window.Kakao) {
@@ -24,14 +58,26 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> */}
+        {/* ⬇ 모바일 환경에서 input zoom-in 막기 */}
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+        />
         <title>OHZU</title>
       </Head>
       <RecoilRoot>
-        <Component {...pageProps} />
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Component {...pageProps} />
+          </Hydrate>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        </QueryClientProvider>
       </RecoilRoot>
     </>
   );
