@@ -2,7 +2,7 @@ import { authService, dbService } from "@/firebase";
 import useCreateRecomment from "@/hooks/query/recomment/useCreateRecomment";
 import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 import useModal from "@/hooks/useModal";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { SetStateAction, useState } from "react";
 import RecommentList from "./recomment_list";
 
@@ -113,10 +113,6 @@ const Recomments = ({
           ...snapshotdata,
         };
         const newA = newPost?.alarm.push(newAlarm);
-
-        // await updateDoc(doc(dbService, "Users", comment?.userId as string), {
-        //   alarm: newPost?.alarm,
-        // });
 
         updateUser({
           userId: comment?.userId,

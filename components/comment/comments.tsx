@@ -2,7 +2,7 @@ import { authService, dbService } from "@/firebase";
 import useCreateComment from "@/hooks/query/comment/useCreateComment";
 import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 import useModal from "@/hooks/useModal";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useState } from "react";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
@@ -118,9 +118,6 @@ const Comments = ({
         };
         const newA = newPost?.alarm.push(newAlarm);
 
-        // await updateDoc(doc(dbService, "Users", user?.userId as string), {
-        //   alarm: newPost?.alarm,
-        // });
         updateUser({
           userId: user?.userId,
           editUserObj: {

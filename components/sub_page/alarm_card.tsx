@@ -1,6 +1,5 @@
-import { authService, dbService } from "@/firebase";
+import { authService } from "@/firebase";
 import useUpdateUser from "@/hooks/query/user/useUpdateUser";
-import { doc, updateDoc } from "firebase/firestore";
 import Link from "next/link";
 import React from "react";
 import { RxCross2 } from "react-icons/rx";
@@ -71,12 +70,6 @@ const AlarmCard = ({
     };
     filterAlarm.push(newPost);
 
-    // await updateDoc(
-    //   doc(dbService, "Users", authService.currentUser?.uid as string),
-    //   {
-    //     alarm: filterAlarm,
-    //   }
-    // );
     updateUser({
       userId: authService.currentUser?.uid,
       editUserObj: {
@@ -87,12 +80,7 @@ const AlarmCard = ({
   };
   const onClickDelete = async () => {
     const filterAlarm = alarm.filter((x) => x.createdAt !== post.createdAt);
-    // await updateDoc(
-    //   doc(dbService, "Users", authService.currentUser?.uid as string),
-    //   {
-    //     alarm: filterAlarm,
-    //   }
-    // );
+
     updateUser({
       userId: authService.currentUser?.uid,
       editUserObj: {

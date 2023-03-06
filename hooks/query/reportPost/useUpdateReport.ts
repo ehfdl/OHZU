@@ -6,7 +6,7 @@ const useUpdateReport = ({ reportId }: { reportId: string }) => {
     (body: any) => editReport(body),
     {
       onSuccess: () => {
-        console.log("신고 수정성공");
+        // console.log("신고 수정성공");
       },
       onError: (err) => {
         console.log("신고 수정실패", err);

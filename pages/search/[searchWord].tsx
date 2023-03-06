@@ -24,18 +24,14 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  console.log(searchData);
-
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
       // Firebase 연결되면 화면 표시
       // user === authService.currentUser 와 같은 값
       if (user) {
         setIsLoggedIn(true);
-        console.log("로그인");
       } else {
         setIsLoggedIn(false);
-        console.log("로그아웃");
       }
     });
   }, []);

@@ -1,5 +1,4 @@
-import { authService, dbService } from "@/firebase";
-import { doc, updateDoc } from "firebase/firestore";
+import { authService } from "@/firebase";
 import React, { useEffect } from "react";
 import AlarmCard from "./alarm_card";
 import { FiX } from "react-icons/fi";
@@ -23,12 +22,6 @@ const AlarmModal = ({
 
   const onClickAllReadDelete = async () => {
     const filterAlarm = alarm.filter((content) => content.isDone === false);
-    // await updateDoc(
-    //   doc(dbService, "Users", authService.currentUser?.uid as string),
-    //   {
-    //     alarm: filterAlarm,
-    //   }
-    // );
     updateUser({
       userId: authService.currentUser?.uid,
       editUserObj: {
@@ -42,13 +35,6 @@ const AlarmModal = ({
       content.isDone = true;
       return content;
     });
-
-    // await updateDoc(
-    //   doc(dbService, "Users", authService.currentUser?.uid as string),
-    //   {
-    //     alarm: filterAlarm,
-    //   }
-    // );
     updateUser({
       userId: authService.currentUser?.uid,
       editUserObj: {

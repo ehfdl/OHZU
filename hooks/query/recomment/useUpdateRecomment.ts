@@ -6,7 +6,7 @@ const useUpdateRecomment = (commentId: string) => {
     (body: any) => editRecomment(body),
     {
       onSuccess: () => {
-        console.log("답글 수정성공");
+        // console.log("답글 수정성공");
       },
       onError: (err) => {
         console.log("답글 수정실패", err);

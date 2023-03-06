@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { doc, updateDoc } from "firebase/firestore";
-import { authService, dbService } from "@/firebase";
+import { authService } from "@/firebase";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import useUpdatePost from "@/hooks/query/post/useUpdatePost";
@@ -37,9 +36,6 @@ export const SearchCard = ({ card }: any) => {
       const newLikeArray = card.item.like.filter(
         (id: any) => id !== authService.currentUser?.uid
       );
-      // await updateDoc(doc(dbService, "Posts", card.item.postId), {
-      //   like: newLikeArray,
-      // });
       await updatePost({
         postId: card.item.postId,
         editPostObj: {
@@ -48,9 +44,6 @@ export const SearchCard = ({ card }: any) => {
       });
     } else if (!likeArray) {
       const newLikeArray = card.item.like?.push(authService.currentUser?.uid);
-      // await updateDoc(doc(dbService, "Posts", card.item.postId), {
-      //   like: card.item.like,
-      // });
       await updatePost({
         postId: card.item.postId,
         editPostObj: {

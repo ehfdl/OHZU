@@ -1,9 +1,8 @@
 import { getPost } from "@/api/postAPI";
 import Layout from "@/components/layout";
-import { dbService, storageService } from "@/firebase";
+import { storageService } from "@/firebase";
 import useGetPost from "@/hooks/query/post/useGetPost";
 import useUpdatePost from "@/hooks/query/post/useUpdatePost";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
 import {
   deleteObject,
   getDownloadURL,
@@ -253,7 +252,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
             const desertRef = ref(storageService, `post/${imgId}`);
             deleteObject(desertRef)
               .then(() => {
-                console.log("success", imgId);
+                // console.log("success", imgId);
                 // File deleted successfully
               })
               .catch((error) => {
@@ -305,14 +304,11 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
         postId: id,
         editPostObj: newEditPost,
       });
-
-      // await updateDoc(doc(dbService, "Posts", id), newEditPost);
     } else {
       await updatePost({
         postId: id,
         editPostObj: editPost,
       });
-      // await updateDoc(doc(dbService, "Posts", id), editPost as any);
     }
     router.push(`/post/${id}`);
   };

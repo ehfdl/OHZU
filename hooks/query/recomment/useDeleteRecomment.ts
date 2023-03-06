@@ -7,7 +7,7 @@ const useDeleteRecomment = (recommentId: string) => {
     (body: any) => removeRecomment(body),
     {
       onSuccess: () => {
-        console.log("답글 삭제성공");
+        // console.log("답글 삭제성공");
       },
       onError: (err) => {
         console.log("답글 삭제실패", err);

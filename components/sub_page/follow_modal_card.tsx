@@ -1,7 +1,6 @@
 import { authService, dbService } from "@/firebase";
 import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 import useModal from "@/hooks/useModal";
-import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -35,21 +34,14 @@ const FollowModalCard = ({
         const newFollowingArray = myProfile.following.filter(
           (id: any) => id !== profile.userId
         );
-        // await updateDoc(doc(dbService, "Users", profile.userId as string), {
-        //   follower: newFollowerArray,
-        // });
+
         updateUser({
           userId: profile.userId,
           editUserObj: {
             follower: newFollowerArray,
           },
         });
-        // await updateDoc(
-        //   doc(dbService, "Users", authService.currentUser?.uid as string),
-        //   {
-        //     following: newFollowingArray,
-        //   }
-        // );
+
         updateUser({
           userId: authService.currentUser?.uid,
           editUserObj: {
@@ -61,21 +53,14 @@ const FollowModalCard = ({
           authService.currentUser?.uid as string
         );
         const newFollowingArray = myProfile.following.push(profile.userId);
-        // await updateDoc(doc(dbService, "Users", profile.userId as string), {
-        //   follower: profile.follower,
-        // });
+
         updateUser({
           userId: profile.userId,
           editUserObj: {
             follower: profile.follower,
           },
         });
-        // await updateDoc(
-        //   doc(dbService, "Users", authService.currentUser?.uid as string),
-        //   {
-        //     following: myProfile.following,
-        //   }
-        // );
+
         updateUser({
           userId: authService.currentUser?.uid,
           editUserObj: {

@@ -6,7 +6,7 @@ const useDeleteReport = ({ reportId }: { reportId: string }) => {
     (body: any) => removeReport(body),
     {
       onSuccess: () => {
-        console.log("신고 삭제성공");
+        // console.log("신고 삭제성공");
       },
       onError: (err) => {
         console.log("신고 삭제실패", err);

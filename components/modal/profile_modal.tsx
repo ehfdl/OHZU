@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { dbService, storageService } from "@/firebase";
+import { storageService } from "@/firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { doc, updateDoc } from "firebase/firestore";
 
 import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
@@ -67,13 +66,11 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
           ...form,
           imageURL: imgFileUrl,
         };
-        // await updateDoc(doc(dbService, "Users", myProfile.userId), newForm);
         updateUser({
           userId: myProfile.userId,
           editUserObj: newForm,
         });
       } else {
-        // await updateDoc(doc(dbService, "Users", myProfile.userId), form);
         updateUser({
           userId: myProfile.userId,
           editUserObj: form,

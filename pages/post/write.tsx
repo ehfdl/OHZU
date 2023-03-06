@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect } from "react";
 import Layout from "@/components/layout";
 import { useState } from "react";
-import { dbService, storageService, authService } from "@/firebase";
+import { storageService, authService } from "@/firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
-import { addDoc, collection } from "firebase/firestore";
 import { BsPlusLg, BsFillXCircleFill } from "react-icons/bs";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import { BEER_IMG, ETC_IMG, LIQUOR_IMG, SOJU_IMG } from "@/util";
@@ -330,7 +329,6 @@ const Post = () => {
         };
 
         createPost(newForm);
-        // await addDoc(collection(dbService, "Posts"), newForm);
         setConfirmed(true);
         // router.push("/");
       } else {
@@ -340,7 +338,6 @@ const Post = () => {
           ingredient: filterIngre,
         };
         createPost(newForm);
-        // await addDoc(collection(dbService, "Posts"), newForm);
         setConfirmed(true);
         // router.push("/");
       }

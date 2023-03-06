@@ -91,10 +91,8 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
       // user === authService.currentUser 와 같은 값
       if (user) {
         setIsLoggedIn(true);
-        console.log("로그인");
       } else {
         setIsLoggedIn(false);
-        console.log("로그아웃");
       }
     });
   }, []);

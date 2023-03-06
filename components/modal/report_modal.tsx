@@ -2,8 +2,7 @@ import useModal from "@/hooks/useModal";
 import React, { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { ImCheckboxChecked, ImCheckboxUnchecked } from "react-icons/im";
-import { authService, dbService } from "@/firebase";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { authService } from "@/firebase";
 import useSetReport from "@/hooks/query/reportPost/useSetReport";
 import useUpdateReport from "@/hooks/query/reportPost/useUpdateReport";
 
@@ -24,9 +23,6 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
         if (pastPost.reporter) {
           let copyPost = [...pastPost.reporter];
           copyPost.push({ userId: authService.currentUser?.uid, type: cate });
-          // await updateDoc(doc(dbService, "ReportPosts", reportId), {
-          //   reporter: copyPost,
-          // });
           await updateReport({
             reportId,
             reportType: "ReportPosts",
@@ -58,9 +54,6 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
             userId: authService.currentUser?.uid,
             type: cate,
           });
-          // await updateDoc(doc(dbService, "ReportComments", post.id as string), {
-          //   reporter: copyPost,
-          // });
           await updateReport({
             reportId: post.id,
             reportType: "ReportComments",
@@ -97,12 +90,6 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
             userId: authService.currentUser?.uid,
             type: cate,
           });
-          // await updateDoc(
-          //   doc(dbService, "ReportReComments", post.id as string),
-          //   {
-          //     reporter: copyPost,
-          //   }
-          // );
           await updateReport({
             reportId: post.id,
             reportType: "ReportReComments",

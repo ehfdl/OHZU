@@ -8,7 +8,6 @@ import {
   onSnapshot,
   orderBy,
   query,
-  updateDoc,
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -48,10 +47,8 @@ const UserPage = ({ userId }: { userId: string }) => {
       // user === authService.currentUser 와 같은 값
       if (user) {
         setIsLoggedIn(true);
-        console.log("로그인");
       } else {
         setIsLoggedIn(false);
-        console.log("로그아웃");
       }
     });
   }, []);
@@ -89,21 +86,14 @@ const UserPage = ({ userId }: { userId: string }) => {
       const newFollowingArray = myProfile.following.filter(
         (id: any) => id !== userId
       );
-      // await updateDoc(doc(dbService, "Users", userId), {
-      //   follower: newFollowerArray,
-      // });
+
       updateUser({
         userId: userId,
         editUserObj: {
           follower: newFollowerArray,
         },
       });
-      // await updateDoc(
-      //   doc(dbService, "Users", authService.currentUser?.uid as string),
-      //   {
-      //     following: newFollowingArray,
-      //   }
-      // );
+
       updateUser({
         userId: authService.currentUser?.uid,
         editUserObj: {
@@ -115,21 +105,14 @@ const UserPage = ({ userId }: { userId: string }) => {
         authService.currentUser?.uid
       );
       const newFollowingArray = myProfile.following.push(userId);
-      // await updateDoc(doc(dbService, "Users", userId), {
-      //   follower: userProfile.follower,
-      // });
+
       updateUser({
         userId: userId,
         editUserObj: {
           follower: userProfile.follower,
         },
       });
-      // await updateDoc(
-      //   doc(dbService, "Users", authService.currentUser?.uid as string),
-      //   {
-      //     following: myProfile.following,
-      //   }
-      // );
+
       updateUser({
         userId: authService.currentUser?.uid,
         editUserObj: {
@@ -137,18 +120,10 @@ const UserPage = ({ userId }: { userId: string }) => {
         },
       });
     }
-    // getUserProfile();
+
     getMyProfile();
   };
 
-  // const getUserProfile = async () => {
-  //   const snapshot = await getDoc(doc(dbService, "Users", userId));
-  //   const snapshotdata = await snapshot.data();
-  //   const newProfile = {
-  //     ...snapshotdata,
-  //   };
-  //   setUserProfile(newProfile);
-  // };
   const getMyProfile = async () => {
     const snapshot = await getDoc(
       doc(dbService, "Users", authService.currentUser?.uid as string)
@@ -272,9 +247,6 @@ const UserPage = ({ userId }: { userId: string }) => {
     if (userLike) {
       if (userPosts?.length) {
         const updateUserPoint = async () => {
-          // await updateDoc(doc(dbService, "Users", userId as string), {
-          //   point: userLike + userPosts.length * 5,
-          // });
           updateUser({
             userId: userId,
             editUserObj: {

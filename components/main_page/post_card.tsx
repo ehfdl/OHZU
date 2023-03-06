@@ -1,5 +1,5 @@
 import { authService, dbService } from "@/firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
 import Grade from "../grade";
@@ -41,9 +41,6 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
       const newLikeArray = post.like.filter(
         (id: any) => id !== authService.currentUser?.uid
       );
-      // await updateDoc(doc(dbService, "Posts", post.postId), {
-      //   like: newLikeArray,
-      // });
 
       await updatePost({
         postId: post.postId,
@@ -53,9 +50,6 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
       });
     } else if (!likeArray) {
       const newLikeArray = post.like.push(authService.currentUser?.uid);
-      // await updateDoc(doc(dbService, "Posts", post.postId), {
-      //   like: post.like,
-      // });
       await updatePost({
         postId: post.postId,
         editPostObj: {

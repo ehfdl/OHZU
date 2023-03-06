@@ -1,6 +1,5 @@
-import { authService, dbService } from "@/firebase";
+import { authService } from "@/firebase";
 import useModal from "@/hooks/useModal";
-import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -40,9 +39,7 @@ const UserPostCard = ({ post }: { post: any }) => {
       const newLikeArray = post.like.filter(
         (id: any) => id !== authService.currentUser?.uid
       );
-      // await updateDoc(doc(dbService, "Posts", post.postId), {
-      //   like: newLikeArray,
-      // });
+
       await updatePost({
         postId: post.postId,
         editPostObj: {
@@ -51,9 +48,7 @@ const UserPostCard = ({ post }: { post: any }) => {
       });
     } else if (!likeArray) {
       const newLikeArray = post.like.push(authService.currentUser?.uid);
-      // await updateDoc(doc(dbService, "Posts", post.postId), {
-      //   like: post.like,
-      // });
+
       await updatePost({
         postId: post.postId,
         editPostObj: {

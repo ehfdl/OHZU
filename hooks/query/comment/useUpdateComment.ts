@@ -6,7 +6,7 @@ const useUpdateComment = (commentId: string) => {
     (data: any) => editComment(data),
     {
       onSuccess: () => {
-        console.log("댓글 수정성공");
+        // console.log("댓글 수정성공");
       },
       onError: (err) => {
         console.log("댓글 수정실패", err);
