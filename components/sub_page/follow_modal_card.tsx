@@ -1,6 +1,5 @@
 import { authService, dbService } from "@/firebase";
-import useUpdateUser from "@/hooks/query/user/useUpdateUser";
-import useModal from "@/hooks/useModal";
+import { doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -15,79 +14,47 @@ const FollowModalCard = ({
   myProfile: any;
   getMyProfile: () => Promise<void>;
 }) => {
-  const { showModal } = useModal();
-
-  const { isLoading: isLoadingEditUser, mutate: updateUser } = useUpdateUser(
-    (profile.userId as string) || (authService.currentUser?.uid as string)
-  );
-
   const onClickFollowUpdate = async () => {
-    if (authService.currentUser?.uid) {
-      const FollowerArray = profile?.follower!.includes(
+    const FollowerArray = profile?.follower!.includes(
+      authService.currentUser?.uid as string
+    );
+
+    if (FollowerArray) {
+      const newFollowerArray = profile?.follower!.filter(
+        (id: any) => id !== authService.currentUser?.uid
+      );
+      const newFollowingArray = myProfile.following.filter(
+        (id: any) => id !== profile.userId
+      );
+      await updateDoc(doc(dbService, "Users", profile.userId as string), {
+        follower: newFollowerArray,
+      });
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        {
+          following: newFollowingArray,
+        }
+      );
+    } else if (!FollowerArray) {
+      const newFollowerArray = profile?.follower!.push(
         authService.currentUser?.uid as string
       );
-
-      if (FollowerArray) {
-        const newFollowerArray = profile?.follower!.filter(
-          (id: any) => id !== authService.currentUser?.uid
-        );
-        const newFollowingArray = myProfile.following.filter(
-          (id: any) => id !== profile.userId
-        );
-
-        updateUser({
-          userId: profile.userId,
-          editUserObj: {
-            follower: newFollowerArray,
-          },
-        });
-
-        updateUser({
-          userId: authService.currentUser?.uid,
-          editUserObj: {
-            following: newFollowingArray,
-          },
-        });
-      } else if (!FollowerArray) {
-        const newFollowerArray = profile?.follower!.push(
-          authService.currentUser?.uid as string
-        );
-        const newFollowingArray = myProfile.following.push(profile.userId);
-
-        updateUser({
-          userId: profile.userId,
-          editUserObj: {
-            follower: profile.follower,
-          },
-        });
-
-        updateUser({
-          userId: authService.currentUser?.uid,
-          editUserObj: {
-            following: myProfile.following,
-          },
-        });
-      }
-      getMyProfile();
-    } else {
-      showModal({
-        modalType: "ConfirmModal",
-        modalProps: {
-          title: "로그인 후 이용 가능합니다.",
-          text: "로그인 페이지로 이동하시겠어요?",
-          rightbtnfunc: () => {
-            showModal({
-              modalType: "LoginModal",
-              modalProps: {},
-            });
-          },
-        },
+      const newFollowingArray = myProfile.following.push(profile.userId);
+      await updateDoc(doc(dbService, "Users", profile.userId as string), {
+        follower: profile.follower,
       });
+      await updateDoc(
+        doc(dbService, "Users", authService.currentUser?.uid as string),
+        {
+          following: myProfile.following,
+        }
+      );
     }
+    getMyProfile();
   };
 
   return (
-    <div key={profile?.userId} className="w-full flex justify-center">
+    <div key={profile?.userId} className="w-full flex justify-start">
       <Link href={`/users/${profile.userId}`}>
         <div className="w-14 sm:w-[78px] aspect-square rounded-full bg-[#d9d9d9] overflow-hidden">
           {profile.imageURL !== "" ? (

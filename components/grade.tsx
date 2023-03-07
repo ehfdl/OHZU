@@ -9,8 +9,8 @@ const Grade = ({ score }: { score: number }) => {
       <Image
         className="w-full object-cover"
         src={rank}
-        width={12}
-        height={15}
+        width={18}
+        height={22}
         alt=""
       />
     );
@@ -21,8 +21,8 @@ const Grade = ({ score }: { score: number }) => {
       <Image
         className="w-full object-cover"
         src={rank}
-        width={12}
-        height={15}
+        width={18}
+        height={22}
         alt=""
       />
     );
@@ -33,8 +33,8 @@ const Grade = ({ score }: { score: number }) => {
       <Image
         className="w-full object-cover"
         src={rank}
-        width={12}
-        height={15}
+        width={18}
+        height={22}
         alt=""
       />
     );

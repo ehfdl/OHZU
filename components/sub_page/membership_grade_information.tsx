@@ -2,7 +2,7 @@ import React from "react";
 
 const RankInformationModal = () => {
   return (
-    <div className="w-[250px] h-[180px] mt-3 pt-[15px] pl-[17px] rounded bg-white border-primary border-[1px] z-10 flex flex-col justify-start absolute">
+    <div className=" mt-3 py-[15px] px-[17px] rounded bg-white border-primary border-[1px] z-10 flex flex-col justify-start absolute">
       <div className="text-[14px] font-bold ">회원등급 안내</div>
       <div className="ml-5 mt-2 flex flex-col gap-1">
         <div className="flex gap-[10px] items-center">
@@ -27,17 +27,11 @@ const RankInformationModal = () => {
           </div>
         </div>
       </div>
-      <div className="mt-3 ml-3 mb-7 ">
-        <div>
-          <span className="font-bold">· </span>
-          <span className="text-[12px]">
-            작성한 게시글에 좋아요 받을시 1잔 적립
-          </span>{" "}
-        </div>
-        <div>
-          <span className="font-bold">· </span>
-          <span className="text-[12px]">게시글 작성시 5잔 적립</span>{" "}
-        </div>
+      <div className="mt-3 ml-3 ">
+        <ul className="text-xs list-disc space-y-1">
+          <li>작성한 게시글에 좋아요 받을시 1잔 적립</li>
+          <li>게시글 작성시 5잔 적립</li>
+        </ul>
       </div>
     </div>
   );

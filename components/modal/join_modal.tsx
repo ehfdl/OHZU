@@ -452,8 +452,8 @@ const JoinModal = () => {
         window.localStorage.setItem("token", authObj.access_token);
         axios({
           method: "POST",
-          // url: "https://ohzu.vercel.app/api/kakao",
-          url: "http://localhost:3000/api/kakao",
+          url: "https://ohzu.vercel.app/api/kakao",
+          // url: "http://localhost:3000/api/kakao",
           data: { authObj },
         }).then(function (response) {
           // 서버에서 보낸 jwt토큰을 받음
@@ -549,163 +549,169 @@ const JoinModal = () => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:block w-full h-screen absolute justify-center top-0 left-0 items-center ">
+      <div className="hidden sm:block  w-full h-screen absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
 
-        <div className="inner max-w-[588px] w-full max-h-[920px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="loginContainer flex-col text-center">
-            <MdOutlineClose
-              onClick={() => hideModal()}
-              className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
-            />
-            <h1 className="text-[40px] font-bold mt-[50px] mb-[19px]">
-              회원가입
-            </h1>
-            <form className="formContainer" onSubmit={signUpForm}>
-              <div>
-                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
-                  이메일
-                </p>
-                <input
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                    isEmail;
-                  }}
-                  type="text"
-                  id="email"
-                  placeholder="실제 사용하는 이메일을 입력해주세요. "
-                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01] "
-                />
-                <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
-                  {checkEmail ? checkEmail : null}
-                </p>
-              </div>
-              <div>
-                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
-                  비밀번호
-                </p>
-                <input
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
-                  type="password"
-                  id="password"
-                  placeholder="비밀번호는 최소 8자리로 입력해주세요."
-                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
-                />
-                <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
-                  {checkPassword}
-                </p>
-              </div>
-              <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
-                비밀번호 확인
-              </p>
-              <div>
-                <input
-                  onChange={(e) => {
-                    setPasswordConfirm(e.target.value);
-                  }}
-                  type="password"
-                  id="pwCheck"
-                  placeholder="비밀번호 확인"
-                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1   outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
-                />
-                <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
-                  {checkPasswordConfirm}
-                </p>
-              </div>
-              <div>
-                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
-                  닉네임
-                </p>
-                <input
-                  onChange={(e) => {
-                    setNickname(e.target.value);
-                  }}
-                  type="text"
-                  id="nickname"
-                  placeholder="닉네임"
-                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
-                />
-                <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
-                  {checkNickname}
-                </p>
-              </div>
-              <div className="birth_Container">
-                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left">
-                  생년월일
-                </p>
-                <div className="birth_input_Wrap w-[472px] m-auto mb-[2px] flex items-center justify-between">
+        <div className="inner max-w-[894px] w-full max-h-[700px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          <div className="flex flex-row">
+            <div className="loginContainer flex-col ml-10 text-center">
+              <MdOutlineClose
+                onClick={() => hideModal()}
+                className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
+              />
+              <h1 className="text-[32px] font-bold mt-8 mb-4">회원가입</h1>
+              <form className="formContainer" onSubmit={signUpForm}>
+                <div>
+                  <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
+                    이메일
+                  </p>
                   <input
                     onChange={(e) => {
-                      setUserYear(e.target.value);
-                      yearHandler(e.target.value);
+                      setEmail(e.target.value);
+                      isEmail;
                     }}
                     type="text"
-                    placeholder="YYYY"
-                    required={true}
-                    minLength={4}
-                    maxLength={4}
-                    className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                    id="email"
+                    placeholder="실제 사용하는 이메일을 입력해주세요. "
+                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01] "
                   />
-                  <input
-                    onChange={(e) => {
-                      setUserMonth(e.target.value);
-                    }}
-                    type="text"
-                    placeholder="MM"
-                    maxLength={2}
-                    className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
-                  />
-                  <input
-                    onChange={(e) => {
-                      setUserDay(e.target.value);
-                    }}
-                    type="text"
-                    placeholder="DD"
-                    maxLength={2}
-                    className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
-                  />
+                  <p className=" max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
+                    {checkEmail ? checkEmail : null}
+                  </p>
                 </div>
-                <div className="flex w-[472px] m-auto mb-7 ">
-                  <label htmlFor="auto_login" className="flex  items-center ">
-                    <div
-                      onClick={ageVerification}
-                      id="auto_login"
-                      className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary"
-                    >
-                      성인 인증하기
-                      <span className="inline-block ml-[4px]">✅</span>
-                    </div>
-                    <span className="ml-2 text-sm ">
-                      {!checkAdult ? " " : checkAdult}
-                    </span>
-                  </label>
+                <div>
+                  <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
+                    비밀번호
+                  </p>
+                  <input
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                    }}
+                    type="password"
+                    id="password"
+                    placeholder="비밀번호는 최소 8자리로 입력해주세요."
+                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                  />
+                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
+                    {checkPassword}
+                  </p>
                 </div>
+                <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
+                  비밀번호 확인
+                </p>
+                <div>
+                  <input
+                    onChange={(e) => {
+                      setPasswordConfirm(e.target.value);
+                    }}
+                    type="password"
+                    id="pwCheck"
+                    placeholder="비밀번호 확인"
+                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1   outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                  />
+                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
+                    {checkPasswordConfirm}
+                  </p>
+                </div>
+                <div>
+                  <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
+                    닉네임
+                  </p>
+                  <input
+                    onChange={(e) => {
+                      setNickname(e.target.value);
+                    }}
+                    type="text"
+                    id="nickname"
+                    placeholder="닉네임"
+                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                  />
+                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
+                    {checkNickname}
+                  </p>
+                </div>
+                <div className="birth_Container">
+                  <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
+                    생년월일
+                  </p>
+                  <div className="birth_input_Wrap w-[472px] m-auto mb-[6px] flex items-center justify-between">
+                    <input
+                      onChange={(e) => {
+                        setUserYear(e.target.value);
+                        yearHandler(e.target.value);
+                      }}
+                      type="text"
+                      placeholder="YYYY"
+                      required={true}
+                      minLength={4}
+                      maxLength={4}
+                      className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                    />
+                    <input
+                      onChange={(e) => {
+                        setUserMonth(e.target.value);
+                      }}
+                      type="text"
+                      placeholder="MM"
+                      maxLength={2}
+                      className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                    />
+                    <input
+                      onChange={(e) => {
+                        setUserDay(e.target.value);
+                      }}
+                      type="text"
+                      placeholder="DD"
+                      maxLength={2}
+                      className="w-[144px] h-11 text-center outline-none bg-[#F5F5F5] duration-300 focus:scale-[1.05]"
+                    />
+                  </div>
+                  <div className="flex w-[472px] m-auto mb-5 ">
+                    <label htmlFor="auto_login" className="flex  items-center ">
+                      <div
+                        onClick={ageVerification}
+                        id="auto_login"
+                        className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary"
+                      >
+                        성인 인증하기
+                        <span className="inline-block ml-[4px]">✅</span>
+                      </div>
+                      <span className="ml-2 text-sm ">
+                        {!checkAdult ? " " : checkAdult}
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={
+                    !(
+                      email &&
+                      password &&
+                      passwordConfirm &&
+                      nickname &&
+                      adult &&
+                      userYear &&
+                      userMonth &&
+                      userDay
+                    )
+                  }
+                  className="w-[280px] h-[48px] mb-[29px]  text-white rounded disabled:bg-[#aaa] valid:bg-primary"
+                >
+                  회원가입
+                </button>
+              </form>
+            </div>
+
+            <div className="w-full">
+              <div className="max-w-[310px] w-full m-auto flex items-center justify-center mt-[238px] mb-9">
+                <div className="max-w-[72px] w-full h-[1px] mr-4 bg-textGray" />
+                <p className="text-sm font-semibold ">소셜계정으로 회원가입</p>
+                <div className="max-w-[72px] w-full h-[1px] ml-4 bg-textGray" />
               </div>
 
-              <button
-                type="submit"
-                disabled={
-                  !(
-                    email &&
-                    password &&
-                    passwordConfirm &&
-                    nickname &&
-                    adult &&
-                    userYear &&
-                    userMonth &&
-                    userDay
-                  )
-                }
-                className="w-[280px] h-[48px] mb-[29px]  text-white rounded disabled:bg-[#aaa] valid:bg-primary"
-              >
-                회원가입
-              </button>
-              <p className="text-2xl font-bold mb-[33px]">
-                소셜계정으로 로그인
-              </p>
-              <div className="w-[280px] m-auto mb-[24px] flex items-center  justify-around">
+              <div className="w-[240px] m-auto mb-[308px] flex items-center  justify-between">
                 <div onClick={googleJoin}>
                   <Image
                     src="/image/google.svg"
@@ -738,18 +744,18 @@ const JoinModal = () => {
                   />
                 </div>
               </div>
-              <div className="w-[473px] m-auto flex justify-center text-sm">
+              <div className="w-[190px] m-auto flex justify-center text-sm">
                 <p className="text-slate-400 mr-1">이미 계정이 있으신가요?</p>
                 <span
                   onClick={() => {
                     showModal({ modalType: "LoginModal", modalProps: {} });
                   }}
-                  className="cursor-pointer"
+                  className="font-semibold cursor-pointer"
                 >
                   로그인
                 </span>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>

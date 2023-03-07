@@ -81,20 +81,22 @@ const Footer = () => {
             </Link>
           </div>
           <div className=" text-sm font-semibold text-right mr-[27px] mb-12 cursor-pointer">
-            <span
-              onClick={() =>
-                showModal({
-                  modalType: "ConfirmModal",
-                  modalProps: {
-                    title: "로그아웃 하시겠습니까?",
-                    rightbtntext: "로그아웃",
-                    rightbtnfunc: () => logOut(),
-                  },
-                })
-              }
-            >
-              로그아웃
-            </span>
+            {authService.currentUser ? (
+              <span
+                onClick={() =>
+                  showModal({
+                    modalType: "ConfirmModal",
+                    modalProps: {
+                      title: "로그아웃 하시겠습니까?",
+                      rightbtntext: "로그아웃",
+                      rightbtnfunc: () => logOut(),
+                    },
+                  })
+                }
+              >
+                로그아웃
+              </span>
+            ) : null}
           </div>
           <ul className="flex justify-center max-w-[333px] w-full m-auto text-xs ">
             <Link href="/about" className="duration-150 hover:text-primary">

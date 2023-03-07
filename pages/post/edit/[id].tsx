@@ -441,8 +441,8 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                     <Image
                       src={editPreview_01 as string}
                       className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                      width={72}
-                      height={72}
+                      width={186}
+                      height={186}
                       alt=""
                     />
                   )}
@@ -478,8 +478,8 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                       <Image
                         src={editPreview_02 as string}
                         className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                        width={72}
-                        height={72}
+                        width={186}
+                        height={186}
                         alt=""
                       />
                     )}
@@ -514,8 +514,8 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
                       <Image
                         src={editPreview_03 as string}
                         className="w-[72px] sm:w-[186px] aspect-square object-cover border-[1px] border-borderGray"
-                        width={72}
-                        height={72}
+                        width={186}
+                        height={186}
                         alt=""
                       />
                     )}
