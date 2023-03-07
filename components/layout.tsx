@@ -32,7 +32,7 @@ const Layout = ({ children }: { children: any }) => {
       pageUrl === "/mypage" ? (
         <>
           {authService.currentUser ? (
-            <Link href="/post/write">
+            <Link aria-label="write-btn" href="/post/write">
               <WriteButton />
             </Link>
           ) : (

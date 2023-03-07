@@ -32,7 +32,7 @@ const MainBanner = () => {
   const bannerPrevRef = useRef(null);
 
   return (
-    <div className="group w-full mb-4 flex sm:mb-10 ">
+    <div className="group w-full mb-4 flex sm:mb-10">
       <Swiper
         observer={true}
         observeParents={true}
@@ -58,68 +58,64 @@ const MainBanner = () => {
       >
         <div className="group w-screen">
           <SwiperSlide>
-            <Link href={`/post/7aHaIn5nNLSMwLV4nKyC`}>
+            <Link aria-label="banner-1" href={`/post/7aHaIn5nNLSMwLV4nKyC`}>
               <Image
                 alt=""
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/3.svg"
                 width={300}
                 height={300}
-                priority
               ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <Link href={`/post/HAX99HwmDDUETpxiprFo`}>
+            <Link aria-label="banner-2" href={`/post/HAX99HwmDDUETpxiprFo`}>
               <Image
                 alt=""
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/4.svg"
                 width={300}
                 height={300}
-                priority
               ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <Link href={`/post/w1Y390uY9l7zGUNGSjDI`}>
+            <Link aria-label="banner-3" href={`/post/w1Y390uY9l7zGUNGSjDI`}>
               <Image
                 alt=""
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/5.svg"
                 width={300}
                 height={300}
-                priority
               ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide className="overflow-hidden ">
-            <Link href={`/post/Avg5qd9KUPx1ugWnCHzL`}>
+            <Link aria-label="banner-4" href={`/post/Avg5qd9KUPx1ugWnCHzL`}>
               <Image
                 alt=""
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/6.svg"
                 width={300}
                 height={300}
-                priority
               ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
-            <Link href={`/post/a9ZwgOaQoR3tAj0r3ZyX`}>
+            <Link aria-label="banner-5" href={`/post/a9ZwgOaQoR3tAj0r3ZyX`}>
               <Image
                 alt=""
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/7.svg"
                 width={300}
                 height={300}
-                priority
               ></Image>
             </Link>
           </SwiperSlide>
         </div>
         <div className="w-full">
           <button
+            aria-label="prev"
             ref={bannerPrevRef}
             className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] w-[30px] h-[30px] bg-black/20 text-white cursor-pointer sm:left-10 left-2 z-20 -translate-y-[16px] top-1/2 sm:-translate-y-1/2 rounded-full"
           >
@@ -131,6 +127,7 @@ const MainBanner = () => {
         </div>
         <div className="">
           <button
+            aria-label="next"
             ref={bannerNextRef}
             className="p-2 absolute hidden group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] w-[30px] h-[30px] bg-black/20 text-white cursor-pointer sm:right-10 right-2 z-20 top-1/2 -translate-y-[15px] sm:-translate-y-1/2 rounded-full"
           >

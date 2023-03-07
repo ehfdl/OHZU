@@ -402,7 +402,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           id="breadcrumbs"
           className="hidden w-full space-x-2 sm:flex items-center mb-10 text-sm"
         >
-          <Link href="/" className="text-textGray">
+          <Link aria-label="home" href="/" className="text-textGray">
             홈
           </Link>
           <span className="text-textGray"> &#62; </span>
@@ -424,6 +424,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
             <div className="mt-6 grid grid-cols-3 gap-6 items-center w-full">
               {post?.img?.map((img: string, i: number) => (
                 <button
+                  aria-label={`choice-img${i}`}
                   key={uuidv4()}
                   className={`${
                     img === post?.img![imgIdx]
@@ -481,7 +482,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               </div>
               <div className="flex justify-end items-start space-x-2">
                 <div className="flex flex-col items-center">
-                  <button onClick={postLike}>
+                  <button aria-label="like-btn" onClick={postLike}>
                     {likedUser ? (
                       <FaHeart className="text-primary" size={24} />
                     ) : (
@@ -495,6 +496,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 {authService.currentUser?.uid === post?.userId && (
                   <>
                     <button
+                      aria-label="view-more"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
@@ -506,6 +508,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                         <div className="sm:hidden flex justify-center items-center space-x-5 py-5 border-t border-t-borderGray w-full relative">
                           <span className="font-bold">더보기</span>
                           <button
+                            aria-label="close-btn"
                             className="absolute right-7 w-[18px] h-[18px]"
                             onClick={() => setIsOpen(false)}
                           >
@@ -513,6 +516,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                           </button>
                         </div>
                         <Link
+                          aria-label="edit-post-btn"
                           href={`/post/edit/${postId}`}
                           className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                         >
@@ -523,6 +527,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                           />
                         </Link>
                         <button
+                          aria-label="remove-post-btn"
                           className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                           onClick={() => {
                             setIsOpen(false);
@@ -541,6 +546,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                           <TfiTrash className="hidden sm:block" size={18} />
                         </button>
                         <button
+                          aria-label="share-post-btn"
                           className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                           onClick={doCopy}
                         >
@@ -558,7 +564,14 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
             </div>
             <div id="post-user" className="flex items-start space-x-6 mt-7">
               <div className="flex flex-col items-center justify-start space-y-2 lg:w-[25%] w-[30%]">
-                <Link href={`/users/${user?.userId}`}>
+                <Link
+                  aria-label="post-user"
+                  href={
+                    authService.currentUser?.uid === user?.userId
+                      ? `/mypage`
+                      : `/users/${user?.userId}`
+                  }
+                >
                   {user?.imageURL ? (
                     <Image
                       priority
@@ -566,14 +579,19 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                       height={100}
                       alt=""
                       src={user?.imageURL as string}
-                      className="w-12 sm:w-20 aspect-square rounded-full object-cover"
+                      className="w-12 sm:w-20 aspect-square rounded-full object-cover border-borderGray"
                     />
                   ) : (
                     <div className="w-12 sm:w-20 aspect-square bg-slate-300 rounded-full object-cover" />
                   )}
                 </Link>
                 <Link
-                  href={`/users/${post?.userId}`}
+                  aria-label="post-user"
+                  href={
+                    authService.currentUser?.uid === user?.userId
+                      ? `/mypage`
+                      : `/users/${user?.userId}`
+                  }
                   className="flex justify-center items-center"
                 >
                   <span className="font-bold mr-1 text-xs sm:text-sm lg:text-base">
@@ -597,6 +615,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               <div className="pt-6 flex justify-start flex-wrap">
                 {post?.ingredient?.map((ing: string) => (
                   <Link
+                    aria-label={ing}
                     key={uuidv4()}
                     href={`/search/include/${ing}`}
                     className="inline-block mr-4 mb-4 sm:mr-6 sm:mb-6 py-1.5 px-4 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-xs sm:text-base"
@@ -615,14 +634,16 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               </pre>
             </div>
             {authService.currentUser?.uid !== post?.userId && (
-              <div
-                id="faq"
-                className="absolute right-4 -bottom-16 flex items-start space-x-2 sm:space-x-6"
-              >
-                <button onClick={doCopy} className="w-[24px]">
+              <div className="absolute right-4 -bottom-16 flex items-start space-x-2 sm:space-x-6">
+                <button
+                  aria-label="share-post-btn"
+                  onClick={doCopy}
+                  className="w-[24px]"
+                >
                   <BsShareFill className="w-full text-iconDefault mt-1 hover:text-primary" />
                 </button>
                 <button
+                  aria-label="report-post-btn"
                   onClick={onClickReportPost}
                   className="flex flex-col items-center space-y-0.5 group w-[24px]"
                 >

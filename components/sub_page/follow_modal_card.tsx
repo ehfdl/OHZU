@@ -55,7 +55,7 @@ const FollowModalCard = ({
 
   return (
     <div key={profile?.userId} className="w-full flex justify-start">
-      <Link href={`/users/${profile.userId}`}>
+      <Link aria-label="follower" href={`/users/${profile.userId}`}>
         <div className="w-14 sm:w-[78px] aspect-square rounded-full bg-[#d9d9d9] overflow-hidden">
           {profile.imageURL !== "" ? (
             <Image
@@ -71,7 +71,7 @@ const FollowModalCard = ({
       <div className="flex flex-col ml-5 sm:my-[2px]">
         <div className="flex w-[270px] sm:w-[390px] justify-between">
           <div className="flex gap-1">
-            <Link href={`/users/${profile.userId}`}>
+            <Link aria-label="follower" href={`/users/${profile.userId}`}>
               <span className="font-bold text-[12px] sm:text-base">
                 {profile.nickname}
               </span>
@@ -87,6 +87,7 @@ const FollowModalCard = ({
                 authService.currentUser?.uid as string
               ) ? (
               <button
+                aria-label="follow"
                 onClick={onClickFollowUpdate}
                 className="w-[60px] h-5 text-[11px] sm:text-sm sm:w-[98px] sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-second  text-primary flex justify-center items-center mr-1"
               >
@@ -94,6 +95,7 @@ const FollowModalCard = ({
               </button>
             ) : (
               <button
+                aria-label="follow"
                 onClick={onClickFollowUpdate}
                 className="w-[60px] h-5 text-[11px] sm:text-sm sm:w-[98px] sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-primary  text-white  flex justify-center items-center mr-1"
               >

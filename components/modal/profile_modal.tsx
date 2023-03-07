@@ -114,6 +114,7 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
     <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
       <div className="w-full h-full relative sm:w-[588px] sm:h-[820px] bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
+          aria-label="close"
           className="w-9  sm:w-10 aspect-square absolute top-7 right-7"
           onClick={() => hideModal()}
         >
@@ -176,6 +177,7 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
           />
         </div>
         <button
+          aria-label="save"
           onClick={onSubmit}
           className="w-[344px] sm:w-[280px] h-14 sm:h-12 bg-primary text-white my-16 sm:my-9"
         >

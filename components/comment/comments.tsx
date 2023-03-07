@@ -165,6 +165,7 @@ const Comments = ({
           rows={resizeTextArea.rows}
         />
         <button
+          aria-label="add-comment"
           disabled={authService.currentUser ? false : true}
           onClick={addComment}
           className="absolute right-[34px] bottom-3 disabled:text-gray-400"
@@ -187,6 +188,7 @@ const Comments = ({
       {comments?.length !== 0 && (
         <nav className="w-full flex justify-center items-center space-x-9">
           <button
+            aria-label="prev"
             className="text-primary hover:text-hover active:text-hover disabled:text-gray-300"
             onClick={() => setPage(page - 1)}
             disabled={page === 1}
@@ -197,6 +199,7 @@ const Comments = ({
             .fill(pagesNumber)
             .map((_, i) => (
               <button
+                aria-label="page-number"
                 className="text-gray-400"
                 key={i}
                 onClick={() => setPage(i + 1)}
@@ -206,6 +209,7 @@ const Comments = ({
               </button>
             ))}
           <button
+            aria-label="next"
             onClick={() => setPage(page + 1)}
             disabled={page === pagesNumber}
             className="text-primary hover:text-hover active:text-hover disabled:text-gray-300"

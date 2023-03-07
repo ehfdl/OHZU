@@ -37,6 +37,7 @@ const FollowModal = ({
       <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
       <div className="w-[390px] h-full sm:w-[588px] sm:h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
+          aria-label="close"
           className="sm:w-10 w-9 aspect-square absolute mt-6 sm:mt-8 ml-[340px] sm:ml-[500px]"
           onClick={() => setIsOpenFollowModal(false)}
         >

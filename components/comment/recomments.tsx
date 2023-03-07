@@ -152,6 +152,7 @@ const Recomments = ({
           rows={resizeTextArea.rows}
         />
         <button
+          aria-label="add-recomment"
           disabled={authService.currentUser ? false : true}
           onClick={addRecomment}
           className="absolute right-0 bottom-3 pr-4 disabled:text-gray-400"
@@ -162,6 +163,7 @@ const Recomments = ({
         </button>
       </form>
       <button
+        aria-label="close"
         onClick={() => {
           setIsOpen(false);
         }}

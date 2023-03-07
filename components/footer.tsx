@@ -39,7 +39,7 @@ const Footer = () => {
       <div className="hidden sm:block w-full h-[250px] bg-second">
         <div className="topContentsWrap flex justify-between items-end">
           <div className="inline-block mt-[86px] ml-[69px]">
-            <Link href={`/`}>
+            <Link aria-label="home" href={`/`}>
               <Image
                 className="w-[164px] h-[42px]"
                 src="/LOGO.svg"
@@ -49,20 +49,36 @@ const Footer = () => {
               />
             </Link>
           </div>
-          <ul className="flex justify-between max-w-[541px] w-full mr-[183px] text-xs ">
-            <Link href="/about" className="duration-150 hover:text-primary">
-              <li>브랜드 소개</li>
+          <nav className="flex justify-between max-w-[541px] w-full mr-[183px] text-xs ">
+            <Link
+              aria-label="intro-brand"
+              href="/about"
+              className="duration-150 hover:text-primary"
+            >
+              브랜드 소개
             </Link>
-            <Link href="/temporary" className="duration-150 hover:text-primary">
-              <li>이용약관</li>
+            <Link
+              aria-label="term"
+              href="/temporary"
+              className="duration-150 hover:text-primary"
+            >
+              이용약관
             </Link>
-            <Link href="/temporary" className="duration-150 hover:text-primary">
-              <li>공지사항</li>
+            <Link
+              aria-label="announcement"
+              href="/temporary"
+              className="duration-150 hover:text-primary"
+            >
+              공지사항
             </Link>
-            <Link href="/temporary" className="duration-150 hover:text-primary">
-              <li>개인정보 처리방침</li>
+            <Link
+              aria-label="privacy"
+              href="/temporary"
+              className="duration-150 hover:text-primary"
+            >
+              개인정보 처리방침
             </Link>
-          </ul>
+          </nav>
         </div>
       </div>
 
@@ -70,7 +86,7 @@ const Footer = () => {
       <div className="sm:hidden flex flex-col w-full h-[328px] bg-second ">
         <div className="topContentsWrap max-w-[390px] mx-auto ">
           <div className="inline-block mt-[51px] ml-5 mb-3 ">
-            <Link href={`/`}>
+            <Link aria-label="home" href={`/`}>
               <Image
                 className="w-[70px] h-[18px] cursor-pointer"
                 src="/LOGO.svg"
@@ -98,26 +114,36 @@ const Footer = () => {
               </span>
             ) : null}
           </div>
-          <ul className="flex justify-center max-w-[333px] w-full m-auto text-xs ">
-            <Link href="/about" className="duration-150 hover:text-primary">
-              <li className="pr-4 border-r-[1px] border-textGray">
-                브랜드 소개
-              </li>
+          <nav className="flex justify-center max-w-[333px] w-full m-auto text-xs">
+            <Link
+              aria-label="intro-brand"
+              href="/about"
+              className="duration-150 hover:text-primary"
+            >
+              브랜드 소개
             </Link>
-            <Link href="/temporary" className="duration-150 hover:text-primary">
-              <li className="pl-4 pr-4 border-r-[1px] border-textGray">
-                이용약관
-              </li>
+            <Link
+              aria-label="term"
+              href="/temporary"
+              className="duration-150 hover:text-primary"
+            >
+              이용약관
             </Link>
-            <Link href="/temporary" className="duration-150 hover:text-primary">
-              <li className="pl-4 pr-4 border-r-[1px] border-textGray">
-                공지사항
-              </li>
+            <Link
+              aria-label="announcement"
+              href="/temporary"
+              className="duration-150 hover:text-primary"
+            >
+              공지사항
             </Link>
-            <Link href="/temporary" className="duration-150 hover:text-primary">
-              <li className="pl-4">개인정보 처리방침</li>
+            <Link
+              aria-label="privacy"
+              href="/temporary"
+              className="duration-150 hover:text-primary"
+            >
+              개인정보 처리방침
             </Link>
-          </ul>
+          </nav>
         </div>
       </div>
     </>

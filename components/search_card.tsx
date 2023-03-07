@@ -56,10 +56,13 @@ export const SearchCard = ({ card }: any) => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:block card max-w-[384px] w-full h-[420px] mb-6  rounded  row-span-[1] relative">
-        <Link href={`/post/${card.item.postId}`}>
+      <div className="hidden sm:block card max-w-[384px] w-full h-[420px] mb-6 rounded row-span-[1] relative">
+        <Link
+          aria-label={`${card.item.title}-img`}
+          href={`/post/${card.item.postId}`}
+        >
           <Image
-            className=" max-w-[384px] w-full max-h-[284px] h-full rounded border-[1px] border-borderGray object-cover"
+            className="max-w-[384px] w-full max-h-[284px] h-full rounded border-[1px] border-borderGray object-cover"
             src={card.item.img[0]}
             width={350}
             height={350}
@@ -68,16 +71,19 @@ export const SearchCard = ({ card }: any) => {
           <div className=" bg-black/0 max-w-[384px] w-full h-[284px] object-cover absolute top-0 hover:bg-gray-300/30 hover:block"></div>
         </Link>
 
-        <div className="card-contents flex items-center mt-4 px-[30px] relative mb-4">
+        <div className="card-contents flex items-center px-5 mt-4 relative mb-4">
           <div className="contents-header-wrap flex justify-around ">
             <div className="flex flex-col">
-              <Link href={`/post/${card.item.postId}`}>
+              <Link
+                aria-label={card.item.title}
+                href={`/post/${card.item.postId}`}
+              >
                 <h1 className="text-[22px] font-bold">{card.item.title}</h1>
               </Link>
             </div>
 
             <div
-              className=" absolute top-2 right-5 cursor-pointer"
+              className="absolute top-2 right-5 cursor-pointer"
               onClick={onClickLikeBtn}
             >
               {like ? (
@@ -104,9 +110,9 @@ export const SearchCard = ({ card }: any) => {
             </div>
           </div>
         </div>
-        <p className=" text-[14px] max-w-[384px] w-full h-[45px]  px-5 overflow-hidden break-words">
+        <p className=" text-[14px] max-w-[384px] w-full h-[45px] px-5 overflow-hidden break-words">
           {card.item?.ingredient.map((tag: any, i: number) => (
-            <Link href={`/search/include/${tag}`} key={i}>
+            <Link aria-label={tag} href={`/search/include/${tag}`} key={i}>
               <span className="mr-[10px] text-[14px] font-normal text-textGray">
                 {"#" + tag}
               </span>
@@ -143,7 +149,10 @@ export const SearchCard = ({ card }: any) => {
             {card.item.like.length}
           </p>
         </div>
-        <Link href={`/post/${card.item.postId}`}>
+        <Link
+          aria-label={`${card.item.title}-img`}
+          href={`/post/${card.item.postId}`}
+        >
           <Image
             className="w-[171px] h-[168px]  cursor-pointer rounded border-[1px] border-borderGray  object-cover"
             src={card.item.img[0]}
@@ -156,7 +165,10 @@ export const SearchCard = ({ card }: any) => {
         <div className="card-contents flex items-center mt-3  relative mb-1">
           <div className="contents-header-wrap flex justify-around ">
             <div className="flex flex-col">
-              <Link href={`/post/${card.item.postId}`}>
+              <Link
+                aria-label={card.item.title}
+                href={`/post/${card.item.postId}`}
+              >
                 <h1 className=" font-semibold">{card.item.title}</h1>
               </Link>
             </div>
@@ -164,7 +176,7 @@ export const SearchCard = ({ card }: any) => {
         </div>
         <p className=" text-sm w-full min-h-[60px] h-full  overflow-hidden break-words">
           {card.item?.ingredient.map((tag: any, i: number) => (
-            <Link href={`/search/include/${tag}`} key={i}>
+            <Link aria-label={tag} href={`/search/include/${tag}`} key={i}>
               <span className="mr-[10px] text-xs font-normal text-textGray">
                 {"#" + tag}
               </span>

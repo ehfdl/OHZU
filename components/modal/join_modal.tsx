@@ -684,6 +684,7 @@ const JoinModal = () => {
                 </div>
 
                 <button
+                  aria-label="sign-up"
                   type="submit"
                   disabled={
                     !(
@@ -902,6 +903,7 @@ const JoinModal = () => {
                   </div>
 
                   <button
+                    aria-label="sign-up"
                     type="submit"
                     disabled={
                       !(

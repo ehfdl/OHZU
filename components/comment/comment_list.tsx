@@ -212,6 +212,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
       <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0 pr-6">
         <div className="flex space-x-3 sm:space-x-6 justify-between w-full">
           <Link
+            aria-label="user-img"
             href={`/users/${comment.userId}`}
             className="flex flex-col items-center space-y-2 w-[30%] md:w-[11%]"
           >
@@ -253,12 +254,14 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
               {commentIsEdit && (
                 <div className="flex justify-end items-end space-x-2">
                   <button
+                    aria-label="cancel"
                     className="text-xs font-medium hover:text-black text-textGray"
                     onClick={editToggle}
                   >
                     취소
                   </button>
                   <button
+                    aria-label="done"
                     className="text-xs font-medium hover:text-black text-textGray"
                     onClick={onEditComment}
                   >
@@ -273,12 +276,14 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   } flex justify-end items-end space-x-2 sm:space-x-4 text-xs`}
                 >
                   <button
+                    aria-label="edit-comment"
                     onClick={editToggle}
                     className="hover:text-black text-textGray"
                   >
                     수정
                   </button>
                   <button
+                    aria-label="delete-comment"
                     onClick={() =>
                       showModal({
                         modalType: "ConfirmModal",
@@ -296,6 +301,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   </button>
                   {recomments.length === 0 ? (
                     <button
+                      aria-label="recomment"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
@@ -307,6 +313,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                     </button>
                   ) : (
                     <button
+                      aria-label="recomment"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
@@ -320,9 +327,12 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                 </div>
               ) : (
                 <div className="flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs">
-                  <button onClick={onClickReportComment}>신고</button>
+                  <button aria-label="report" onClick={onClickReportComment}>
+                    신고
+                  </button>
                   {recomments.length === 0 ? (
                     <button
+                      aria-label="recomment"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
@@ -332,6 +342,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                     </button>
                   ) : (
                     <button
+                      aria-label="recomment"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}

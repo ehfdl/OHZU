@@ -433,7 +433,10 @@ const LoginModal = () => {
               </div>
 
               <div className="buttonWrap">
-                <button className="w-[280px] h-[48px] mb-[50px] bg-primary text-white rounded ">
+                <button
+                  aria-label="login"
+                  className="w-[280px] h-[48px] mb-[50px] bg-primary text-white rounded "
+                >
                   로그인
                 </button>
               </div>
@@ -574,7 +577,10 @@ const LoginModal = () => {
                     </div>
 
                     <div className="buttonWrap mb-4">
-                      <button className="w-[344px] h-[56px] mb-[29px] bg-primary text-white rounded   ">
+                      <button
+                        aria-label="login"
+                        className="w-[344px] h-[56px] mb-[29px] bg-primary text-white rounded   "
+                      >
                         로그인
                       </button>
                     </div>
