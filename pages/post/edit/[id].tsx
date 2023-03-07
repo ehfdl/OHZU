@@ -730,12 +730,14 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           />
           <div className="w-full flex flex-col sm:flex-row justify-between gap-6 items-center mt-10">
             <Link
+              aria-label="cancel"
               className="border border-primary text-primary rounded w-full py-3 font-bold text-center"
               href={`/post/${id}`}
             >
               취소
             </Link>
             <button
+              aria-label="submit"
               onClick={onSubmit}
               className="bg-primary rounded w-full py-3 font-bold text-white"
             >

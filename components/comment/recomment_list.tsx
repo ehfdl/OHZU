@@ -168,8 +168,9 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   }, []);
   return (
     <>
-      <li className="py-6 flex space-x-3 sm:space-x-6 justify-end w-full border-b border-borderGray relative before:contents-[''] before:w-4 before:h-4 before:border-l-2 before:border-b-2 before:absolute before:border-iconDefault before:left-0 sm:before:left-4 before:top-8 pl-4 sm:pl-8 before:opacity-0 first:before:opacity-100">
+      <li className="py-6 flex space-x-3 sm:space-x-6 justify-start w-full border-b border-borderGray relative before:contents-[''] before:w-4 before:h-4 before:border-l-2 before:border-b-2 before:absolute before:border-iconDefault before:left-0 sm:before:left-4 before:top-8 pl-4 sm:pl-8 before:opacity-0 first:before:opacity-100">
         <Link
+          aria-label="recomment-user"
           href={`/users/${recomment.userId}`}
           className="flex flex-col items-center space-y-2 w-[34%] md:w-[13%] "
         >
@@ -210,10 +211,15 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
             </span>
             {recommentIsEdit && (
               <div className="flex justify-end items-end space-x-2 text-gray-500">
-                <button className="text-xs font-medium" onClick={editToggle}>
+                <button
+                  aria-label="cancel"
+                  className="text-xs font-medium"
+                  onClick={editToggle}
+                >
                   취소
                 </button>
                 <button
+                  aria-label="done"
                   className="text-xs font-medium"
                   onClick={onEditRecomment}
                 >
@@ -227,8 +233,11 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
                   recommentIsEdit ? "hidden" : "flex"
                 } flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs`}
               >
-                <button onClick={editToggle}>수정</button>
+                <button aria-label="edit" onClick={editToggle}>
+                  수정
+                </button>
                 <button
+                  aria-label="delete"
                   onClick={() =>
                     showModal({
                       modalType: "ConfirmModal",
@@ -246,7 +255,9 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               </div>
             ) : (
               <div className="flex justify-end items-end space-x-2 text-gray-500 text-xs w-1/6">
-                <button onClick={onClickReportComment}>신고</button>
+                <button aria-label="report" onClick={onClickReportComment}>
+                  신고
+                </button>
               </div>
             )}
           </div>

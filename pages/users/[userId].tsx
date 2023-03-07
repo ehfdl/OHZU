@@ -271,6 +271,7 @@ const UserPage = ({ userId }: { userId: string }) => {
               </div>
               {userProfile?.follower.includes(authService.currentUser?.uid) ? (
                 <button
+                  aria-label="follow"
                   onClick={onClickFollowUpdate}
                   className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-5 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-second text-[11px] sm:text-sm text-primary flex justify-center items-center"
                 >
@@ -278,6 +279,7 @@ const UserPage = ({ userId }: { userId: string }) => {
                 </button>
               ) : (
                 <button
+                  aria-label="follow"
                   onClick={onClickFollowUpdate}
                   className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-5 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-primary text-[11px] sm:text-sm text-white  flex justify-center items-center"
                 >

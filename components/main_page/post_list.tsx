@@ -146,6 +146,7 @@ const PostList = () => {
             </div>
             {posts.length > slicenumber + 6 ? (
               <button
+                aria-label="view-more"
                 className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary hover:bg-second hover:border-none rounded-full hover:text-primary hover:font-bold"
                 onClick={() => setSliceNumber(slicenumber + 6)}
               >
@@ -153,6 +154,7 @@ const PostList = () => {
               </button>
             ) : (
               <button
+                aria-label="close"
                 className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary font-thin hover:bg-second hover:border-none rounded-3xl hover:text-primary hover:font-bold"
                 onClick={() => setSliceNumber(0)}
               >
@@ -213,6 +215,7 @@ const PostList = () => {
                   </div>
                   <div className="">
                     <button
+                      aria-label="prev"
                       ref={navigationPrevRef}
                       className="w-[30px] h-[30px] translate-x-[4px] -translate-y-[70px] top-1/2 absolute p-1.5 hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[15px] sm:translate-y-[-30px] z-20 sm:top-[190px] rounded-full"
                     >
@@ -224,6 +227,7 @@ const PostList = () => {
                   </div>
                   <div className="">
                     <button
+                      aria-label="next"
                       ref={navigationNextRef}
                       className="w-[30px] h-[30px] translate-x-[340px] -translate-y-[70px] top-1/2 p-2 absolute hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[1110px] sm:translate-y-[-95px] z-20 sm:top-[260px] rounded-full"
                     >
@@ -290,6 +294,7 @@ const PostList = () => {
                   </div>
                   <div>
                     <button
+                      aria-label="prev"
                       ref={prevRef}
                       className="hidden w-[30px] h-[30px] translate-x-[4px] -translate-y-[70px] top-1/2 absolute p-1.5 sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[20px] sm:translate-y-[-30px] z-20 sm:top-[210px] rounded-full"
                     >
@@ -301,6 +306,7 @@ const PostList = () => {
                   </div>
                   <div>
                     <button
+                      aria-label="next"
                       ref={nextRef}
                       className="w-[30px] h-[30px] translate-x-[340px] -translate-y-[70px] top-1/2 absolute p-2 hidden sm:group-hover:block hover:text-primary hover:bg-second/70 sm:w-[40px] sm:h-[40px] bg-black/20 text-white cursor-pointer sm:translate-x-[1110px] sm:translate-y-[-115px] z-20 sm:top-[300px] rounded-full"
                     >

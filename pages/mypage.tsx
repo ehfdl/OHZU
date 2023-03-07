@@ -189,6 +189,7 @@ const Mypage = () => {
                 )}
               </div>
               <button
+                aria-label="edit-profile"
                 className="sm:mt-4 mt-2 sm:text-base text-[12px]"
                 onClick={() =>
                   showModal({

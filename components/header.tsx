@@ -102,7 +102,7 @@ const Header = ({ ...props }: any) => {
   return (
     <>
       <div className="flex w-full sm:h-[118px] h-[50px] sm:sticky top-0 left-0 z-[8] justify-between items-center bg-white">
-        <Link legacyBehavior href="/">
+        <Link aria-label="home" href="/">
           <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
             <Image src={LOGO_Ohju} alt="Ohju LOGO" priority={true} />
           </div>
@@ -229,23 +229,24 @@ const Header = ({ ...props }: any) => {
             {authService.currentUser || ssuid ? (
               authService.currentUser?.uid ===
               "DllfZJxOSgRqHvF37aJV1RLsPFy2" ? (
-                <Link legacyBehavior href="/ohzu">
-                  <button className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                <Link aria-label="manage-page" href="/ohzu">
+                  <div className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
                     <span className="hidden sm:block">관리페이지</span>
-                  </button>
+                  </div>
                 </Link>
               ) : (
                 <>
                   <Alarm ssuid={ssuid} />
-                  <Link legacyBehavior href="/mypage">
-                    <button className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                  <Link aria-label="my-page" href="/mypage">
+                    <div className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
                       <span className="hidden sm:block">마이페이지</span>
-                    </button>
+                    </div>
                   </Link>
                 </>
               )
             ) : (
               <button
+                aria-label="login-modal"
                 onClick={() => {
                   showModal({
                     modalType: "LoginModal",
@@ -259,6 +260,7 @@ const Header = ({ ...props }: any) => {
             )}
             {authService.currentUser || ssuid ? (
               <button
+                aria-label="logout-modal"
                 onClick={() =>
                   showModal({
                     modalType: "ConfirmModal",
@@ -275,6 +277,7 @@ const Header = ({ ...props }: any) => {
               </button>
             ) : (
               <button
+                aria-label="sign-up-modal"
                 onClick={() => {
                   showModal({
                     modalType: "JoinModal",

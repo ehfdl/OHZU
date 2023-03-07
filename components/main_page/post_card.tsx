@@ -106,7 +106,7 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
     <div className={`flex ${type === "like" ? "scale-90" : null} sm:scale-100`}>
       <div key={post.postId} className="sm:mt-1">
         <div className="w-full h-[168px] sm:h-[284px] ">
-          <Link href={`/post/${post.postId}`}>
+          <Link aria-label={`${post.title}-img`} href={`/post/${post.postId}`}>
             <Image
               src={post.img[0] || defaultImg}
               className="flex sm:w-[384px] h-[168px] sm:h-[284px] object-cover rounded border-[1px] border-borderGray"
@@ -119,7 +119,7 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
         </div>
         <div className="sm:h-[136px] h-[105px] sm:w-[384px] bg-white overflow-hidden  mb-6 ">
           <div className="sm:group">
-            <Link href={`/post/${post.postId}`}>
+            <Link aria-label={post.title} href={`/post/${post.postId}`}>
               <div className="sm:float-left mt-3 sm:mt-2 ml-[1px] text-start sm:ml-[70px] sm:translate-y-[12px] float-none sm:text-[22px] text-base font-bold sm:w-[195px] w-[155px]">
                 {post.title}
               </div>
@@ -127,7 +127,7 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
           </div>
           <div className="sm:mt-5 sm:ml-3 flex items-center w-full mt-2">
             {post.userId === authService.currentUser?.uid ? (
-              <Link href="/mypage">
+              <Link aria-label="mypage" href="/mypage">
                 <div>
                   {user.imageURL && (
                     <Image
@@ -141,7 +141,7 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
                 </div>
               </Link>
             ) : (
-              <Link href={`/users/${post.userId}`}>
+              <Link aria-label="user-page" href={`/users/${post.userId}`}>
                 <div>
                   {user.imageURL && (
                     <Image
