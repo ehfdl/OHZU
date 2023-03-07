@@ -197,9 +197,9 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
     </Layout>
   );
 }
-export const getServerSideProps: GetServerSideProps = async ({
-  params: { searchWord },
-}: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const search = context.query.search as string;
+  const searchWord = search?.replaceAll("/", "");
   return {
     props: { searchWord },
   };

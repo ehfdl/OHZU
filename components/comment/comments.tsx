@@ -182,6 +182,7 @@ const Comments = ({
             key={comment.id}
             comment={comment}
             currentUser={currentUser!}
+            postTitle={post?.title!}
           />
         ))}
       </ul>

@@ -19,8 +19,11 @@ import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import { GetServerSideProps } from "next";
 import FollowModal from "@/components/modal/follow_modal";
+import { useRouter } from "next/router";
 
 const UserPage = ({ userId }: { userId: string }) => {
+  const router = useRouter();
+  console.log(router);
   const [myProfile, setMyProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<any>();
   const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
@@ -428,9 +431,8 @@ const UserPage = ({ userId }: { userId: string }) => {
 
 export default UserPage;
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params: { userId },
-}: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const userId = context.query.userId;
   return {
     props: { userId },
   };

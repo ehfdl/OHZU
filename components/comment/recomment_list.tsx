@@ -171,7 +171,21 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
       <li className="py-6 flex space-x-3 sm:space-x-6 justify-start w-full border-b border-borderGray relative before:contents-[''] before:w-4 before:h-4 before:border-l-2 before:border-b-2 before:absolute before:border-iconDefault before:left-0 sm:before:left-4 before:top-8 pl-4 sm:pl-8 before:opacity-0 first:before:opacity-100">
         <Link
           aria-label="recomment-user"
-          href={`/users/${recomment.userId}`}
+          href={{
+            pathname: `${
+              authService.currentUser?.uid === recommentUser?.userId
+                ? `/mypage`
+                : `/users/${recommentUser?.nickname}`
+            }`,
+            query: {
+              userId: recomment?.userId,
+            },
+          }}
+          as={`${
+            authService.currentUser?.uid === recommentUser?.userId
+              ? `/mypage`
+              : `/users/${recommentUser?.nickname}`
+          }`}
           className="flex flex-col items-center space-y-2 w-[34%] md:w-[13%] "
         >
           {recommentUser?.imageURL && (

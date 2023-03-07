@@ -45,7 +45,16 @@ const MyPostCard = ({ post }: { post: any }) => {
       key={post.postId}
       className="aspect-square sm:aspect-[4/2.6945169712793735] bg-slate-200 overflow-hidden relative rounded border-[1px] border-borderGray"
     >
-      <Link aria-label={post.title} href={`/post/${post.postId}`}>
+      <Link
+        aria-label={post.title}
+        href={{
+          pathname: `/post/${post.title?.replaceAll(" ", "_")}`,
+          query: {
+            postId: post.postId,
+          },
+        }}
+        as={`/post/${post.title?.replaceAll(" ", "_")}`}
+      >
         <div className="w-full sm:h-[92px] h-[60px] bg-gradient-to-t bottom-0 sm:top-0 sm:bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
         <div className="absolute flex flex-col gap-[2px] sm:gap-1 pb-3 sm:pt-6 pl-3 bottom-0 sm:top-0 sm:pl-8 ">
           <div className="text-white font-bold text-[14px] sm:text-[24px]">
@@ -81,7 +90,16 @@ const MyPostCard = ({ post }: { post: any }) => {
           {post.like.length}
         </div>
       </div>
-      <Link aria-label={`${post.title}-img`} href={`/post/${post.postId}`}>
+      <Link
+        aria-label={`${post.title}-img`}
+        href={{
+          pathname: `/post/${post.title?.replaceAll(" ", "_")}`,
+          query: {
+            postId: post.postId,
+          },
+        }}
+        as={`/post/${post.title?.replaceAll(" ", "_")}`}
+      >
         <Image
           src={post.img[0] || defaultImg}
           className="w-full h-full object-cover"

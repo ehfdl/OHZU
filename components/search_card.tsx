@@ -59,7 +59,13 @@ export const SearchCard = ({ card }: any) => {
       <div className="hidden sm:block card max-w-[384px] w-full h-[420px] mb-6 rounded row-span-[1] relative">
         <Link
           aria-label={`${card.item.title}-img`}
-          href={`/post/${card.item.postId}`}
+          href={{
+            pathname: `/post/${card.item.title.replaceAll(" ", "_")}`,
+            query: {
+              postId: card.item.postId,
+            },
+          }}
+          as={`/post/${card.item.title.replaceAll(" ", "_")}`}
         >
           <Image
             className="max-w-[384px] w-full max-h-[284px] h-full rounded border-[1px] border-borderGray object-cover"
@@ -76,7 +82,13 @@ export const SearchCard = ({ card }: any) => {
             <div className="flex flex-col">
               <Link
                 aria-label={card.item.title}
-                href={`/post/${card.item.postId}`}
+                href={{
+                  pathname: `/post/${card.item.title.replaceAll(" ", "_")}`,
+                  query: {
+                    postId: card.item.postId,
+                  },
+                }}
+                as={`/post/${card.item.title.replaceAll(" ", "_")}`}
               >
                 <h1 className="text-[22px] font-bold">{card.item.title}</h1>
               </Link>
@@ -151,7 +163,13 @@ export const SearchCard = ({ card }: any) => {
         </div>
         <Link
           aria-label={`${card.item.title}-img`}
-          href={`/post/${card.item.postId}`}
+          href={{
+            pathname: `/post/${card.item.title.replaceAll(" ", "_")}`,
+            query: {
+              postId: card.item.postId,
+            },
+          }}
+          as={`/post/${card.item.title.replaceAll(" ", "_")}`}
         >
           <Image
             className="w-[171px] h-[168px]  cursor-pointer rounded border-[1px] border-borderGray  object-cover"
@@ -167,7 +185,13 @@ export const SearchCard = ({ card }: any) => {
             <div className="flex flex-col">
               <Link
                 aria-label={card.item.title}
-                href={`/post/${card.item.postId}`}
+                href={{
+                  pathname: `/post/${card.item.title.replaceAll(" ", "_")}`,
+                  query: {
+                    postId: card.item.postId,
+                  },
+                }}
+                as={`/post/${card.item.title.replaceAll(" ", "_")}`}
               >
                 <h1 className=" font-semibold">{card.item.title}</h1>
               </Link>

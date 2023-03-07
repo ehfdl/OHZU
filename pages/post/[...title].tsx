@@ -47,11 +47,22 @@ import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 import useGetReport from "@/hooks/query/reportPost/useGetReport";
 
 interface PostDetailPropsType {
-  postId: string;
+  // postId: string;
 }
 
-const PostDetail = ({ postId }: PostDetailPropsType) => {
+const PostDetail = ({}: PostDetailPropsType) => {
   const router = useRouter();
+  const [postId, setPostId] = useState<string>(router.query.postId as string);
+  // const postId = (router.query.postId as string) || (sessionId as string);
+
+  useEffect(() => {
+    const session_postId = sessionStorage.getItem("POST_ID");
+    setPostId(session_postId as string);
+
+    if (router.query.postId !== postId) {
+      sessionStorage.setItem("POST_ID", router.query.postId as string);
+    }
+  }, []);
 
   SwiperCore.use([Pagination]);
 
@@ -61,11 +72,24 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
     reportType: "ReportPosts",
   });
 
-  const { data: user, isLoading: userLoading } = useGetUser(
-    postData?.userId as string
-  );
+  // const { data: user, isLoading: userLoading } = useGetUser(
+  //   postData?.userId as string
+  // );
 
   const [post, setPost] = useState<Form>(postData!);
+  const [user, setUser] = useState<UserType>();
+
+  const getUser = async () => {
+    const userRef = doc(dbService, "Users", post?.userId as string);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+
+    const newUser: any = {
+      ...userData,
+    };
+
+    setUser(newUser);
+  };
 
   const [imgIdx, setImgIdx] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -199,7 +223,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
       }
     });
     hideModal();
-    router.push("/main");
+    router.push("/");
   };
 
   // Update Post
@@ -382,13 +406,16 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
   };
 
   useEffect(() => {
-    if (authService.currentUser) {
-      updateUserRecently();
+    if (postId) {
+      if (authService.currentUser) {
+        updateUserRecently();
+      }
+      setPost(postData!);
+      getUser();
+      setReportId(postId);
+      getComments();
+      updateView();
     }
-    setPost(postData!);
-    setReportId(postId);
-    getComments();
-    updateView();
   }, []);
 
   useEffect(() => {
@@ -402,7 +429,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           id="breadcrumbs"
           className="hidden w-full space-x-2 sm:flex items-center mb-10 text-sm"
         >
-          <Link aria-label="home" href="/main" className="text-textGray">
+          <Link aria-label="home" href="/" className="text-textGray">
             홈
           </Link>
           <span className="text-textGray"> &#62; </span>
@@ -445,7 +472,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               ))}
             </div>
           </div>
-          <div className="sm:hidden w-full aspect-[4/3]">
+          {/* <div className="sm:hidden w-full aspect-[4/3]">
             <Swiper
               slidesPerView={1}
               pagination={{ clickable: true }}
@@ -466,7 +493,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 </SwiperSlide>
               ))}
             </Swiper>
-          </div>
+          </div> */}
           <div
             id="detail-info-column"
             className="w-full lg:w-1/2 sm:w-[55%] relative mt-10 sm:mt-0 px-4"
@@ -517,7 +544,16 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                         </div>
                         <Link
                           aria-label="edit-post-btn"
-                          href={`/post/edit/${postId}`}
+                          href={{
+                            pathname: `/post/edit/${post.title?.replaceAll(
+                              " ",
+                              "_"
+                            )}`,
+                            query: {
+                              id: postId,
+                            },
+                          }}
+                          as={`/post/edit/${post.title?.replaceAll(" ", "_")}`}
                           className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                         >
                           <span> 게시글 수정하기</span>{" "}
@@ -566,11 +602,21 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               <div className="flex flex-col items-center justify-start space-y-2 lg:w-[25%] w-[30%]">
                 <Link
                   aria-label="post-user"
-                  href={
+                  href={{
+                    pathname: `${
+                      authService.currentUser?.uid === user?.userId
+                        ? `/mypage`
+                        : `/users/${user?.nickname}`
+                    }`,
+                    query: {
+                      userId: user?.userId,
+                    },
+                  }}
+                  as={`${
                     authService.currentUser?.uid === user?.userId
                       ? `/mypage`
-                      : `/users/${user?.userId}`
-                  }
+                      : `/users/${user?.nickname}`
+                  }`}
                 >
                   {user?.imageURL ? (
                     <Image
@@ -587,11 +633,21 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 </Link>
                 <Link
                   aria-label="post-user"
-                  href={
+                  href={{
+                    pathname: `${
+                      authService.currentUser?.uid === user?.userId
+                        ? `/mypage`
+                        : `/users/${user?.nickname}`
+                    }`,
+                    query: {
+                      userId: user?.userId,
+                    },
+                  }}
+                  as={`${
                     authService.currentUser?.uid === user?.userId
                       ? `/mypage`
-                      : `/users/${user?.userId}`
-                  }
+                      : `/users/${user?.nickname}`
+                  }`}
                   className="flex justify-center items-center"
                 >
                   <span className="font-bold mr-1 text-xs sm:text-sm lg:text-base">
@@ -683,7 +739,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
 export default PostDetail;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { postId } = context.params!;
+  const postId = context.query.postId ? context.query.postId : "";
 
   const queryClient = new QueryClient();
 
