@@ -63,7 +63,7 @@ const Header = ({ ...props }: any) => {
           window.location.pathname.includes("edit")
         )
           router.push({
-            pathname: "/",
+            pathname: "/main",
           });
       })
       .catch((err) => {
@@ -102,7 +102,7 @@ const Header = ({ ...props }: any) => {
   return (
     <>
       <div className="flex w-full sm:h-[118px] h-[50px] sm:sticky top-0 left-0 z-[8] justify-between items-center bg-white">
-        <Link aria-label="home" href="/">
+        <Link aria-label="home" href="/main">
           <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
             <Image src={LOGO_Ohju} alt="Ohju LOGO" priority />
           </div>

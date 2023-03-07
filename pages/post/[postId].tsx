@@ -199,7 +199,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
       }
     });
     hideModal();
-    router.push("/");
+    router.push("/main");
   };
 
   // Update Post
@@ -402,7 +402,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           id="breadcrumbs"
           className="hidden w-full space-x-2 sm:flex items-center mb-10 text-sm"
         >
-          <Link aria-label="home" href="/" className="text-textGray">
+          <Link aria-label="home" href="/main" className="text-textGray">
             홈
           </Link>
           <span className="text-textGray"> &#62; </span>
