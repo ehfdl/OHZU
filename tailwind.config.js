@@ -16,7 +16,9 @@ module.exports = {
         phGray: "#ACACAC",
         borderGray: "#E6E6E6",
       },
+      backgroundImage: { landing_bg: "url(/image/landing_background.jpg)" },
     },
   },
+
   plugins: [require("tailwind-scrollbar"), require("@tailwindcss/line-clamp")],
 };
