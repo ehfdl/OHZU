@@ -116,7 +116,7 @@ const PostList = () => {
   return (
     <>
       <div>
-        <div className="sm:w-full flex flex-col justify-center items-center sm:mb-3 sm:min-h-screen">
+        <div className="sm:w-full flex flex-col justify-start items-center sm:mb-3 sm:min-h-screen">
           <Category setCate={setCate} />
           <div className="sm:w-[1200px] w-full flex flex-col justify-start items-center px-4">
             <div className="w-full sm:mt-12 mt-4 mb-4 flex justify-between sm:mb-6">
@@ -130,7 +130,7 @@ const PostList = () => {
               </div>
             </div>
 
-            <div className="w-full gap-4 bg-white grid grid-cols-2  sm:grid sm:grid-cols-3 sm:gap-6">
+            <div className="w-full gap-4 bg-white grid grid-cols-2  sm:grid sm:grid-cols-3 sm:gap-6 min-h-screen">
               {cate === "전체"
                 ? posts
                     ?.map((post: any) => (

@@ -23,7 +23,8 @@ const Home = () => {
 
   return (
     <>
-      {/* <LandingPage /> */}
+      <LandingPage />
+      {/* <Main/> */}
       <Layout>
         <MainBanner />
         <PostList />

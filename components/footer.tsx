@@ -49,7 +49,7 @@ const Footer = () => {
               />
             </Link>
           </div>
-          <nav className="flex justify-between max-w-[541px] w-full mr-[183px] text-xs ">
+          <nav className="flex justify-between max-w-[400px] w-full mr-[183px] text-xs ">
             <Link
               aria-label="intro-brand"
               href="/about"
@@ -118,28 +118,28 @@ const Footer = () => {
             <Link
               aria-label="intro-brand"
               href="/about"
-              className="duration-150 hover:text-primary"
+              className="pr-4 border-r-[1px] border-textGray duration-150 hover:text-primary"
             >
               브랜드 소개
             </Link>
             <Link
               aria-label="term"
               href="/temporary"
-              className="duration-150 hover:text-primary"
+              className="pl-4 pr-4 border-r-[1px] border-textGray duration-150 hover:text-primary"
             >
               이용약관
             </Link>
             <Link
               aria-label="announcement"
               href="/temporary"
-              className="duration-150 hover:text-primary"
+              className="pl-4 pr-4 border-r-[1px] border-textGray duration-150 hover:text-primary"
             >
               공지사항
             </Link>
             <Link
               aria-label="privacy"
               href="/temporary"
-              className="duration-150 hover:text-primary"
+              className="pl-4 duration-150 hover:text-primary"
             >
               개인정보 처리방침
             </Link>
