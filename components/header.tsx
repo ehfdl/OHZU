@@ -104,7 +104,7 @@ const Header = ({ ...props }: any) => {
       <div className="flex w-full sm:h-[118px] h-[50px] sm:sticky top-0 left-0 z-[8] justify-between items-center bg-white">
         <Link aria-label="home" href="/">
           <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
-            <Image src={LOGO_Ohju} alt="Ohju LOGO" priority={true} />
+            <Image src={LOGO_Ohju} alt="Ohju LOGO" priority />
           </div>
         </Link>
         <div className="iconWrap sm:h-[80px] h-6 sm:mr-[32px] flex justify-end items-center relative ">
@@ -129,7 +129,7 @@ const Header = ({ ...props }: any) => {
                   value={search}
                   type="text"
                   id="simple-search"
-                  className="hidden sm:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:ring-none focus:border-none focus:outline-none  "
+                  className="hidden lg:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:ring-none focus:border-none focus:outline-none  "
                   placeholder="혼합주 이름 또는 재료를 입력해주세요."
                   required
                 />
@@ -137,7 +137,7 @@ const Header = ({ ...props }: any) => {
             </div>
             {/* 모바일에서 검색 아이콘 눌렀을 때 표시되는 검색창 */}
             {mobileSearch === true ? (
-              <div className="sm:hidden w-full h-full bg-white fixed top-0 left-0 z-50">
+              <div className=" w-full h-full bg-white fixed top-0 left-0 z-50">
                 <div className="max-w-[360px] w-full h-[50px] m-auto mt-12 text-center relative">
                   <Image
                     onClick={() => {
@@ -148,7 +148,7 @@ const Header = ({ ...props }: any) => {
                     height="18"
                     alt="검색 나가기 화살표"
                     priority={true}
-                    className="absolute top-1/2 left-0 translate-y-[-50%] sm:hidden mr-1 cursor-pointer "
+                    className="absolute top-1/2 left-0 translate-y-[-50%] mr-1 cursor-pointer "
                   />
                   <div className="searchWrap">
                     <Image
@@ -157,7 +157,7 @@ const Header = ({ ...props }: any) => {
                       height="18"
                       alt="검색 아이콘"
                       priority={true}
-                      className="absolute top-1/2 left-12 translate-y-[-50%] sm:hidden mr-1 cursor-pointer "
+                      className="absolute top-1/2 left-12 translate-y-[-50%] mr-1 cursor-pointer "
                     />
                     <input
                       onChange={(e) => {
@@ -167,8 +167,7 @@ const Header = ({ ...props }: any) => {
                       value={search}
                       type="text"
                       id="simple-search"
-                      // priority={true}
-                      className="max-w-[315px] w-full h-[50px]  bg-[#f2f2f2] border   text-sm rounded-[100px] focus:ring-blue-500 focus:border-blue-500 pl-[50px] p-2.5  sm:hidden"
+                      className=" max-w-[315px] w-full h-[50px]  bg-[#f2f2f2] border  text-sm rounded-[100px] focus:ring-blue-500 focus:border-blue-500 pl-[50px] p-2.5 "
                       placeholder="혼합주 이름 또는 재료를 입력해주세요."
                       required
                     />
@@ -186,7 +185,7 @@ const Header = ({ ...props }: any) => {
               height="24"
               alt="검색 아이콘"
               priority={true}
-              className="cursor-pointer sm:hidden mr-1"
+              className="cursor-pointer lg:hidden mr-1"
               onClick={() => {
                 setMobileSearch(true);
               }}

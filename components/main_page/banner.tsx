@@ -60,55 +60,60 @@ const MainBanner = () => {
           <SwiperSlide>
             <Link aria-label="banner-1" href={`/post/7aHaIn5nNLSMwLV4nKyC`}>
               <Image
-                alt=""
+                alt="main_banner_image"
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/3.svg"
                 width={300}
                 height={300}
+                priority
               ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
             <Link aria-label="banner-2" href={`/post/HAX99HwmDDUETpxiprFo`}>
               <Image
-                alt=""
+                alt="main_banner_image"
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/4.svg"
                 width={300}
                 height={300}
+                priority
               ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
             <Link aria-label="banner-3" href={`/post/w1Y390uY9l7zGUNGSjDI`}>
               <Image
-                alt=""
+                alt="main_banner_image"
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/5.svg"
                 width={300}
                 height={300}
+                priority
               ></Image>
             </Link>
           </SwiperSlide>
-          <SwiperSlide className="overflow-hidden ">
+          <SwiperSlide>
             <Link aria-label="banner-4" href={`/post/Avg5qd9KUPx1ugWnCHzL`}>
               <Image
-                alt=""
+                alt="main_banner_image"
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/6.svg"
                 width={300}
                 height={300}
+                priority
               ></Image>
             </Link>
           </SwiperSlide>
           <SwiperSlide>
             <Link aria-label="banner-5" href={`/post/a9ZwgOaQoR3tAj0r3ZyX`}>
               <Image
-                alt=""
+                alt="main_banner_image"
                 className="object-cover w-full min-h-[152px]"
                 src="/banner/7.svg"
                 width={300}
                 height={300}
+                priority
               ></Image>
             </Link>
           </SwiperSlide>
