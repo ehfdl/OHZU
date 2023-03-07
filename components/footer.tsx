@@ -24,7 +24,7 @@ const Footer = () => {
           window.location.pathname.includes("edit")
         )
           router.push({
-            pathname: "/",
+            pathname: "/main",
           });
       })
       .catch((err) => {
@@ -39,7 +39,7 @@ const Footer = () => {
       <div className="hidden sm:block w-full h-[250px] bg-second">
         <div className="topContentsWrap flex justify-between items-end">
           <div className="inline-block mt-[86px] ml-[69px]">
-            <Link aria-label="home" href={`/`}>
+            <Link aria-label="home" href={`/main`}>
               <Image
                 className="w-[164px] h-[42px]"
                 src="/LOGO.svg"
@@ -86,7 +86,7 @@ const Footer = () => {
       <div className="sm:hidden flex flex-col w-full h-[328px] bg-second ">
         <div className="topContentsWrap max-w-[390px] mx-auto ">
           <div className="inline-block mt-[51px] ml-5 mb-3 ">
-            <Link aria-label="home" href={`/`}>
+            <Link aria-label="home" href={`/main`}>
               <Image
                 className="w-[70px] h-[18px] cursor-pointer"
                 src="/LOGO.svg"

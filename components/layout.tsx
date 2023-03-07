@@ -11,7 +11,7 @@ import GlobalModal from "./modal/global_modal";
 import useModal from "@/hooks/useModal";
 
 const Layout = ({ children }: { children: any }) => {
-  const [pageUrl, setPageUrl] = useState("/");
+  const [pageUrl, setPageUrl] = useState("/main");
   const [search, setSearch] = useState("");
   const router = useRouter();
   const { showModal } = useModal();
@@ -27,7 +27,7 @@ const Layout = ({ children }: { children: any }) => {
 
       <Header search={search} setSearch={setSearch} />
       <div>{children}</div>
-      {pageUrl === "/" ||
+      {pageUrl === "/main" ||
       pageUrl.includes("/users") ||
       pageUrl === "/mypage" ? (
         <>

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import Lottie from "react-lottie-player";
 import lottieJson from "../../animation/landing_page.json";
@@ -25,7 +26,9 @@ const LandingPage = () => {
             나만의 혼합주를 사람들과 공유해보세요!
           </p>
           <div className="flex justify-center items-center sm:w-[280px] w-[160px] sm:h-[71px] h-10 m-auto text-sm sm:text-[36px]  text-white border-[1px] rounded-[50px] cursor-pointer duration-300  hover:bg-white/30 ">
-            <p>입장하기</p>
+            <Link href="/main" aria-label="enter_btn">
+              입장하기
+            </Link>
             <Image
               className="sm:w-8 sm:h-8 w-4 h-4 sm:ml-[18px] ml-2 "
               src="/image/underArrow.svg"

@@ -242,7 +242,7 @@ const Post = () => {
       if (toUrl !== "") {
         router.replace(toUrl);
       } else {
-        router.push("/");
+        router.push("/main");
       }
     }
   }, [toUrl, confirmed]);
