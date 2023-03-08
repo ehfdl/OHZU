@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const UserDropdown = ({
   setCateDrop,
@@ -8,7 +8,7 @@ const UserDropdown = ({
   cateDrop: string;
 }) => {
   return (
-    <div className="w-24 sm:w-[111px] text-sm sm:text-base rounded bg-white border-primary border-[1px] z-30 flex flex-col justify-around absolute">
+    <div className="w-24 sm:w-[111px] text-sm sm:text-base rounded bg-white border-second border-[1px] z-30 flex flex-col justify-around absolute">
       <label onChange={() => setCateDrop("최신순")} className="w-full h-[33px]">
         <input
           type="radio"

@@ -667,7 +667,7 @@ const Post = () => {
             name="recipe"
             value={form.recipe}
             onChange={onChangeValue}
-            placeholder="1. Lorem Ipsum is simply dummy text of the..."
+            placeholder="만드는 방법을 입력해주세요."
           />
           <div className="w-full flex justify-center items-center">
             <button
