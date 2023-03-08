@@ -10,6 +10,8 @@ import Fuse from "fuse.js";
 import { SearchCard } from "@/components/search_card";
 import { GetServerSideProps } from "next";
 import Layout from "@/components/layout";
+import Image from "next/image";
+import UserDropdown from "@/components/sub_page/user_dropdown";
 
 export default function Searchwords({ searchWord }: { searchWord: string }) {
   const router = useRouter();
@@ -21,6 +23,7 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
 
   const [drop, setDrop] = useState("최신순");
   const [cate, setCate] = useState("전체");
+  const [dropOnOff, setDropOnOff] = useState(false);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -119,7 +122,35 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
                       .length}
               </span>
             </p>
-            <Dropdown setDrop={setDrop} drop={drop} />
+            {/* <Dropdown setDrop={setDrop} drop={drop} /> */}
+            <div>
+              <div
+                onClick={() => setDropOnOff(!dropOnOff)}
+                className="pr-3 sm:pr-0 pb-3 sm:pb-0 w-[111px] h-[33px] text-[14px] sm:text-base text-[#828293] flex justify-center items-center cursor-pointer"
+              >
+                {drop}
+                {dropOnOff ? (
+                  <Image
+                    src="/arrow/up-arrow.png"
+                    className="absolute ml-16 sm:ml-20"
+                    width={10}
+                    height={6}
+                    alt=""
+                  />
+                ) : (
+                  <Image
+                    src="/arrow/down-arrow.png"
+                    className="absolute ml-16 sm:ml-20"
+                    width={10}
+                    height={6}
+                    alt=""
+                  />
+                )}
+              </div>
+              {dropOnOff ? (
+                <UserDropdown setCateDrop={setDrop} cateDrop={drop} />
+              ) : null}
+            </div>
           </div>
           <div className="card-wrap grid grid-cols-3 gap-6 justify-between">
             {drop === "최신순"
@@ -164,7 +195,35 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
             <p className="ml-6 text-sm font-semibold">
               게시물 <span className="text-primary">{searchData?.length}</span>
             </p>
-            <Dropdown setDrop={setDrop} drop={drop} />
+            {/* <Dropdown setDrop={setDrop} drop={drop} /> */}
+            <div>
+              <div
+                onClick={() => setDropOnOff(!dropOnOff)}
+                className="pr-3 sm:pr-0 pb-3 sm:pb-0 w-[111px] h-[33px] text-[14px] sm:text-base text-[#828293] flex justify-center items-center cursor-pointer"
+              >
+                {drop}
+                {dropOnOff ? (
+                  <Image
+                    src="/arrow/up-arrow.png"
+                    className="absolute ml-16 sm:ml-20"
+                    width={10}
+                    height={6}
+                    alt=""
+                  />
+                ) : (
+                  <Image
+                    src="/arrow/down-arrow.png"
+                    className="absolute ml-16 sm:ml-20"
+                    width={10}
+                    height={6}
+                    alt=""
+                  />
+                )}
+              </div>
+              {dropOnOff ? (
+                <UserDropdown setCateDrop={setDrop} cateDrop={drop} />
+              ) : null}
+            </div>
           </div>
           <div className="card-wrap max-w-[390px] m-auto px-4 w-full grid grid-cols-2 gap-4 place-items-center ">
             {drop === "최신순"

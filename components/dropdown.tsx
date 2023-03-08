@@ -122,7 +122,7 @@ export default function Dropdown({ drop, setDrop }: any) {
                     onClick={() => setDrop("인기순")}
                     href="#"
                     className={classNames(
-                      active ? "bg-second text-gray-900" : "text-gray-700",
+                      active ? "bg-second text-textgray" : "text-gray-700",
                       "block px-4 py-2 text-sm active:bg-white active:text-primary"
                     )}
                   >
