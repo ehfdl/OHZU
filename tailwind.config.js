@@ -16,7 +16,10 @@ module.exports = {
         phGray: "#ACACAC",
         borderGray: "#E6E6E6",
       },
-      backgroundImage: { landing_bg: "url(/image/landing_background.jpg)" },
+      backgroundImage: {
+        landing_bg: "url(/image/landing_background.jpg)",
+        profile_gold: "url(/image/profile_grade_gold.png)",
+      },
     },
   },
 
