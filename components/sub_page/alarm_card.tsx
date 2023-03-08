@@ -96,7 +96,16 @@ const AlarmCard = ({
         <>
           <div className="my-2 text-[12px] text-textGray flex w-full justify-between">
             <div onClick={onClickIsDone}>
-              <Link href={`/post/${post.postId}`}>
+              <Link
+                aria-label="alarm-post"
+                href={{
+                  pathname: `/post/${post.title?.replaceAll(" ", "_")}`,
+                  query: {
+                    postId: post.postId,
+                  },
+                }}
+                as={`/post/${post.title?.replaceAll(" ", "_")}`}
+              >
                 <span className="font-bold text-textGray">{post.nickname}</span>
                 님이
                 <span className="font-bold text-textGray"> {post.title}</span>에
@@ -118,7 +127,16 @@ const AlarmCard = ({
         <>
           <div className="my-2 text-[12px] flex w-full justify-between">
             <div onClick={onClickIsDone}>
-              <Link href={`/post/${post.postId}`}>
+              <Link
+                aria-label="alarm-post"
+                href={{
+                  pathname: `/post/${post.title?.replaceAll(" ", "_")}`,
+                  query: {
+                    postId: post.postId,
+                  },
+                }}
+                as={`/post/${post.title?.replaceAll(" ", "_")}`}
+              >
                 <span className="font-bold">{post.nickname}</span>
                 님이
                 <span className="font-bold"> {post.title}</span>에 작성한{" "}

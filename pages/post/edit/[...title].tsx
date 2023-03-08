@@ -21,9 +21,8 @@ import { BEER_IMG, ETC_IMG, LIQUOR_IMG, SOJU_IMG } from "@/util";
 
 interface ParamsPropsType {
   id: string;
-  post: Form;
 }
-const EditDetail = ({ id, post }: ParamsPropsType) => {
+const EditDetail = ({ id }: ParamsPropsType) => {
   const router = useRouter();
 
   const { data: postData, isLoading: postLoading } = useGetPost(id);
@@ -310,7 +309,15 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
         editPostObj: editPost,
       });
     }
-    router.push(`/post/${id}`);
+    router.push(
+      {
+        pathname: `/post/${editPost.title?.replaceAll(" ", "_")}`,
+        query: {
+          postId: id,
+        },
+      },
+      `/post/${editPost.title?.replaceAll(" ", "_")}`
+    );
   };
 
   useEffect(() => {
@@ -730,12 +737,20 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
           />
           <div className="w-full flex flex-col sm:flex-row justify-between gap-6 items-center mt-10">
             <Link
+              aria-label="cancel"
               className="border border-primary text-primary rounded w-full py-3 font-bold text-center"
-              href={`/post/${id}`}
+              href={{
+                pathname: `/post/${postData?.title?.replaceAll(" ", "_")}`,
+                query: {
+                  postId: id,
+                },
+              }}
+              as={`/post/${postData?.title?.replaceAll(" ", "_")}`}
             >
               취소
             </Link>
             <button
+              aria-label="submit"
               onClick={onSubmit}
               className="bg-primary rounded w-full py-3 font-bold text-white"
             >
@@ -751,7 +766,7 @@ const EditDetail = ({ id, post }: ParamsPropsType) => {
 export default EditDetail;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id } = context.params!;
+  const id = context.query.id!;
 
   const queryClient = new QueryClient();
 

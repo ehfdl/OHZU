@@ -19,8 +19,25 @@ import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import { GetServerSideProps } from "next";
 import FollowModal from "@/components/modal/follow_modal";
+import { useRouter } from "next/router";
 
-const UserPage = ({ userId }: { userId: string }) => {
+const UserPage = () => {
+  const router = useRouter();
+  console.log(router.query);
+  const [sessionId, setSessionId] = useState<string>();
+  const userId = (router.query.userId as string) || (sessionId as string);
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const session_userId = sessionStorage.getItem("USER_ID");
+      setSessionId(session_userId as string);
+    }
+    if (sessionId !== userId) {
+      sessionStorage.removeItem("USER_ID");
+      sessionStorage.setItem("USER_ID", userId);
+    }
+  }, []);
+
   const [myProfile, setMyProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<any>();
   const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
@@ -113,7 +130,7 @@ const UserPage = ({ userId }: { userId: string }) => {
 
   const getUserProfile = async () => {
     const snapshot = await getDoc(doc(dbService, "Users", userId));
-    const snapshotdata = await snapshot.data();
+    const snapshotdata = snapshot.data();
     const newProfile = {
       ...snapshotdata,
     };
@@ -167,29 +184,30 @@ const UserPage = ({ userId }: { userId: string }) => {
   };
 
   useEffect(() => {
-    const getUserPosts = async () => {
-      const q = query(
-        collection(dbService, "Posts"),
-        where("userId", "==", userId),
-        orderBy("createdAt", "desc")
-      );
+    if (userId) {
+      const getUserPosts = async () => {
+        const q = query(
+          collection(dbService, "Posts"),
+          where("userId", "==", userId),
+          orderBy("createdAt", "desc")
+        );
 
-      onSnapshot(q, (snapshot) => {
-        const newUserPosts = snapshot.docs.map((doc) => {
-          const newUserPost: PostType = {
-            postId: doc.id,
-            ...doc.data(),
-          };
-          return newUserPost;
+        onSnapshot(q, (snapshot) => {
+          const newUserPosts = snapshot.docs.map((doc) => {
+            const newUserPost: PostType = {
+              postId: doc.id,
+              ...doc.data(),
+            };
+            return newUserPost;
+          });
+          setUserPosts(newUserPosts);
         });
-        setUserPosts(newUserPosts);
-      });
-    };
+      };
 
-    getUserProfile();
-
-    getUserPosts();
-  }, []);
+      getUserProfile();
+      getUserPosts();
+    }
+  }, [userId]);
   useEffect(() => {
     if (authService.currentUser?.uid) {
       getMyProfile();
@@ -271,6 +289,7 @@ const UserPage = ({ userId }: { userId: string }) => {
               </div>
               {userProfile?.follower.includes(authService.currentUser?.uid) ? (
                 <button
+                  aria-label="follow"
                   onClick={onClickFollowUpdate}
                   className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-5 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-second text-[11px] sm:text-sm text-primary flex justify-center items-center"
                 >
@@ -278,6 +297,7 @@ const UserPage = ({ userId }: { userId: string }) => {
                 </button>
               ) : (
                 <button
+                  aria-label="follow"
                   onClick={onClickFollowUpdate}
                   className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-5 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-primary text-[11px] sm:text-sm text-white  flex justify-center items-center"
                 >
@@ -301,7 +321,7 @@ const UserPage = ({ userId }: { userId: string }) => {
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
-                    게시글<div className="font-bold">{userPosts?.length}</div>
+                    게시물<div className="font-bold">{userPosts?.length}</div>
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
 
@@ -343,7 +363,7 @@ const UserPage = ({ userId }: { userId: string }) => {
           <UserCateNavbar setCate={setCate} />
           <div className="w-full mt-5 sm:mt-12 flex justify-between">
             <div className="pl-6 sm:pl-[3px] text-[14px] sm:text-[20px] font-bold">
-              게시글{" "}
+              게시물{" "}
               <span className="text-primary">
                 {cate === "전체"
                   ? userPosts?.length
@@ -426,9 +446,8 @@ const UserPage = ({ userId }: { userId: string }) => {
 
 export default UserPage;
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params: { userId },
-}: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const userId = context.query.userId ? context.query.userId : "";
   return {
     props: { userId },
   };

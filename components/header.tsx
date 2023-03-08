@@ -1,4 +1,4 @@
-import { apiKey, authService } from "@/firebase";
+import { apiKey, authService, dbService } from "@/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -7,10 +7,13 @@ import Image from "next/image";
 import Alarm from "./sub_page/alarm";
 import { useRouter } from "next/router";
 import useModal from "@/hooks/useModal";
+import { doc, getDoc } from "firebase/firestore";
+import ProfileGrade from "./profile_grade";
 
 const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
   const [currentUser, setCurrentUser] = useState(false);
+  const [user, setUser] = useState<any>();
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [ssuid, setSsuid] = useState<any>("");
@@ -20,6 +23,24 @@ const Header = ({ ...props }: any) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [mobileSearch, setMobileSearch] = useState(false);
+
+  const getUser = async () => {
+    if (authService.currentUser?.uid) {
+      const userRef = doc(
+        dbService,
+        "Users",
+        authService.currentUser?.uid as string
+      );
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+
+      const userProfile = {
+        ...userData,
+      };
+
+      setUser(userProfile);
+    }
+  };
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
@@ -32,6 +53,12 @@ const Header = ({ ...props }: any) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (authService.currentUser?.uid) {
+      getUser();
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (sessionStorage) {
@@ -63,7 +90,7 @@ const Header = ({ ...props }: any) => {
           window.location.pathname.includes("edit")
         )
           router.push({
-            pathname: "/",
+            pathname: "/main",
           });
       })
       .catch((err) => {
@@ -81,7 +108,10 @@ const Header = ({ ...props }: any) => {
     e.preventDefault();
     if (search) {
       router.push({
-        pathname: `/search/${search}`,
+        pathname: "/search/keyword",
+        query: {
+          search,
+        },
       });
     } else if (!search) {
       router.push({
@@ -102,9 +132,9 @@ const Header = ({ ...props }: any) => {
   return (
     <>
       <div className="flex w-full sm:h-[118px] h-[50px] sm:sticky top-0 left-0 z-[8] justify-between items-center bg-white">
-        <Link legacyBehavior href="/">
+        <Link aria-label="home" href="/main">
           <div className="Logo sm:ml-[32px] sm:w-[200px;] sm:h-[60px] ml-5 w-[94px] h-6 justify-center flex items-center cursor-pointer">
-            <Image src={LOGO_Ohju} alt="Ohju LOGO" priority={true} />
+            <Image src={LOGO_Ohju} alt="Ohju LOGO" priority />
           </div>
         </Link>
         <div className="iconWrap sm:h-[80px] h-6 sm:mr-[32px] flex justify-end items-center relative ">
@@ -129,7 +159,7 @@ const Header = ({ ...props }: any) => {
                   value={search}
                   type="text"
                   id="simple-search"
-                  className="hidden sm:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:ring-none focus:border-none focus:outline-none  "
+                  className="hidden lg:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:ring-none focus:border-none focus:outline-none  "
                   placeholder="혼합주 이름 또는 재료를 입력해주세요."
                   required
                 />
@@ -137,7 +167,7 @@ const Header = ({ ...props }: any) => {
             </div>
             {/* 모바일에서 검색 아이콘 눌렀을 때 표시되는 검색창 */}
             {mobileSearch === true ? (
-              <div className="sm:hidden w-full h-full bg-white fixed top-0 left-0 z-50">
+              <div className=" w-full h-full bg-white fixed top-0 left-0 z-50">
                 <div className="max-w-[360px] w-full h-[50px] m-auto mt-12 text-center relative">
                   <Image
                     onClick={() => {
@@ -148,7 +178,7 @@ const Header = ({ ...props }: any) => {
                     height="18"
                     alt="검색 나가기 화살표"
                     priority={true}
-                    className="absolute top-1/2 left-0 translate-y-[-50%] sm:hidden mr-1 cursor-pointer "
+                    className="absolute top-1/2 left-0 translate-y-[-50%] mr-1 cursor-pointer "
                   />
                   <div className="searchWrap">
                     <Image
@@ -157,7 +187,7 @@ const Header = ({ ...props }: any) => {
                       height="18"
                       alt="검색 아이콘"
                       priority={true}
-                      className="absolute top-1/2 left-12 translate-y-[-50%] sm:hidden mr-1 cursor-pointer "
+                      className="absolute top-1/2 left-12 translate-y-[-50%] mr-1 cursor-pointer "
                     />
                     <input
                       onChange={(e) => {
@@ -167,8 +197,7 @@ const Header = ({ ...props }: any) => {
                       value={search}
                       type="text"
                       id="simple-search"
-                      // priority={true}
-                      className="max-w-[315px] w-full h-[50px]  bg-[#f2f2f2] border   text-sm rounded-[100px] focus:ring-blue-500 focus:border-blue-500 pl-[50px] p-2.5  sm:hidden"
+                      className=" max-w-[315px] w-full h-[50px]  bg-[#f2f2f2] border  text-sm rounded-[100px] focus:ring-blue-500 focus:border-blue-500 pl-[50px] p-2.5 "
                       placeholder="혼합주 이름 또는 재료를 입력해주세요."
                       required
                     />
@@ -186,66 +215,34 @@ const Header = ({ ...props }: any) => {
               height="24"
               alt="검색 아이콘"
               priority={true}
-              className="cursor-pointer sm:hidden mr-1"
+              className="cursor-pointer lg:hidden mr-2"
               onClick={() => {
                 setMobileSearch(true);
               }}
             />
 
-            {!authService.currentUser ? (
-              <Image
-                src="/image/m(notLogin)_mypage.svg"
-                width="20"
-                height="24"
-                alt="마이페이지"
-                className="sm:hidden ml-3 cursor-pointer"
-                priority={true}
-                onClick={() => {
-                  if (!authService.currentUser) {
-                    showModal({ modalType: "LoginModal", modalProps: {} });
-                  } else if (authService.currentUser) {
-                    router.push(`/mypage`);
-                  }
-                }}
-              />
-            ) : (
-              <Image
-                src="/image/m(login)_mypage.svg"
-                width="20"
-                height="24"
-                alt="마이페이지"
-                className="sm:hidden mx-3 cursor-pointer"
-                priority={true}
-                onClick={() => {
-                  if (!authService.currentUser) {
-                    showModal({ modalType: "LoginModal", modalProps: {} });
-                  } else if (authService.currentUser) {
-                    router.push(`/mypage`);
-                  }
-                }}
-              />
-            )}
+            {!authService.currentUser ? null : <Alarm ssuid={ssuid} />}
 
             {authService.currentUser || ssuid ? (
               authService.currentUser?.uid ===
               "DllfZJxOSgRqHvF37aJV1RLsPFy2" ? (
-                <Link legacyBehavior href="/ohzu">
-                  <button className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                <Link aria-label="manage-page" href="/ohzu">
+                  <div className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
                     <span className="hidden sm:block">관리페이지</span>
-                  </button>
+                  </div>
                 </Link>
               ) : (
                 <>
-                  <Alarm ssuid={ssuid} />
-                  <Link legacyBehavior href="/mypage">
-                    <button className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
+                  <Link aria-label="my-page" href="/mypage">
+                    <div className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
                       <span className="hidden sm:block">마이페이지</span>
-                    </button>
+                    </div>
                   </Link>
                 </>
               )
             ) : (
               <button
+                aria-label="login-modal"
                 onClick={() => {
                   showModal({
                     modalType: "LoginModal",
@@ -257,8 +254,41 @@ const Header = ({ ...props }: any) => {
                 <span className="hidden sm:block">로그인</span>
               </button>
             )}
+            {!authService.currentUser ? (
+              <Image
+                src="/image/m(notLogin)_mypage.svg"
+                width="32"
+                height="32"
+                alt="마이페이지"
+                className="sm:hidden mr-4 cursor-pointer"
+                priority={true}
+                onClick={() => {
+                  if (!authService.currentUser) {
+                    showModal({ modalType: "LoginModal", modalProps: {} });
+                  } else if (authService.currentUser) {
+                    router.push(`/mypage`);
+                  }
+                }}
+              />
+            ) : (
+              <div
+                onClick={() => {
+                  if (!authService.currentUser) {
+                    showModal({ modalType: "LoginModal", modalProps: {} });
+                  } else if (authService.currentUser) {
+                    router.push(`/mypage`);
+                  }
+                }}
+              >
+                {user && (
+                  <ProfileGrade img={user.imageURL} point={user.point} />
+                )}
+              </div>
+            )}
+
             {authService.currentUser || ssuid ? (
               <button
+                aria-label="logout-modal"
                 onClick={() =>
                   showModal({
                     modalType: "ConfirmModal",
@@ -275,6 +305,7 @@ const Header = ({ ...props }: any) => {
               </button>
             ) : (
               <button
+                aria-label="sign-up-modal"
                 onClick={() => {
                   showModal({
                     modalType: "JoinModal",

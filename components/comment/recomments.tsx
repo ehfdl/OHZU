@@ -14,6 +14,7 @@ interface RecommentPropsType {
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
   comment: CommentType;
   postId: string;
+  postTitle: string;
 }
 
 const Recomments = ({
@@ -24,6 +25,7 @@ const Recomments = ({
   comment,
   currentUser,
   postId,
+  postTitle,
 }: RecommentPropsType) => {
   const date = Date.now();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
@@ -97,7 +99,7 @@ const Recomments = ({
       content: recomment.content,
       postId: postId,
       nickname: currentUser?.nickname,
-      title: comment?.content,
+      title: postTitle,
       type: "답글",
       createdAt: Date.now(),
       isDone: false,
@@ -135,7 +137,7 @@ const Recomments = ({
   };
 
   return (
-    <div className="w-[90%] ml-auto">
+    <div className="w-full pl-9 sm:pl-16">
       <ul className="w-full">
         {recomments.map((item) => (
           <RecommentList key={item.id} recomment={item} />
@@ -152,6 +154,7 @@ const Recomments = ({
           rows={resizeTextArea.rows}
         />
         <button
+          aria-label="add-recomment"
           disabled={authService.currentUser ? false : true}
           onClick={addRecomment}
           className="absolute right-0 bottom-3 pr-4 disabled:text-gray-400"
@@ -162,6 +165,7 @@ const Recomments = ({
         </button>
       </form>
       <button
+        aria-label="close"
         onClick={() => {
           setIsOpen(false);
         }}

@@ -63,7 +63,16 @@ const UserPostCard = ({ post }: { post: any }) => {
       key={post.postId}
       className=" aspect-square bg-slate-200 overflow-hidden relative rounded"
     >
-      <Link href={`/post/${post.postId}`}>
+      <Link
+        aria-label={post.title}
+        href={{
+          pathname: `/post/${post.title?.replaceAll(" ", "_")}`,
+          query: {
+            postId: post.postId,
+          },
+        }}
+        as={`/post/${post.title?.replaceAll(" ", "_")}`}
+      >
         <div className="w-full h-[60px] sm:h-[180px] bottom-0 sm:top-0 bg-gradient-to-t sm:bg-gradient-to-b from-black to-transparent opacity-50 absolute"></div>
 
         <div className="absolute flex flex-col gap-1  sm:pt-9 sm:pl-9 bottom-0 sm:top-0 pb-3 pl-3 ">
@@ -100,7 +109,16 @@ const UserPostCard = ({ post }: { post: any }) => {
           {post.like.length}
         </div>
       </div>
-      <Link href={`/post/${post.postId}`}>
+      <Link
+        aria-label={`${post.title}-img`}
+        href={{
+          pathname: `/post/${post.title?.replaceAll(" ", "_")}`,
+          query: {
+            postId: post.postId,
+          },
+        }}
+        as={`/post/${post.title?.replaceAll(" ", "_")}`}
+      >
         <Image
           src={post.img[0] || defaultImg}
           className="w-full h-full object-cover border-[1px] border-borderGray"

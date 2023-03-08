@@ -137,6 +137,7 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
     <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
       <div className="w-full relative sm:w-[588px] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
+          aria-label="close"
           className="sm:w-10 w-8 aspect-square absolute top-4 right-5"
           onClick={() => hideModal()}
         >
@@ -325,6 +326,7 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
           </div>
         </div>
         <button
+          aria-label="report"
           onClick={setReport}
           className="w-[280px] mt-2 mb-5 sm:mt-5 sm:mb-10 py-3 h-12 bg-primary text-white font-bold rounded"
         >

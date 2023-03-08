@@ -35,12 +35,14 @@ const ConfirmModal = ({
         </p>
         <div className="flex w-full justify-center sm:gap-4">
           <button
+            aria-label="cancel"
             className="py-3 w-1/2 sm:w-[236px] border-t border-r sm:border border-primary text-primary rounded-bl sm:rounded"
             onClick={leftbtnfunc ? leftbtnfunc : hideModal}
           >
             {leftbtntext ? leftbtntext : "취소"}
           </button>
           <button
+            aria-label="confirm"
             className="py-3 w-1/2 sm:w-[236px] bg-primary text-white rounded-br sm:rounded"
             onClick={rightbtnfunc}
           >

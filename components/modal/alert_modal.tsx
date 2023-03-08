@@ -44,6 +44,7 @@ const AlertModal = ({ src, title, text, btntext, btnfunc }: any) => {
               {text}
             </pre>
             <button
+              aria-label="confirm"
               onClick={() => {
                 btnfunc ? btnfunc() : hideModal();
               }}

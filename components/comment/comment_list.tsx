@@ -21,9 +21,10 @@ import useDeleteComment from "@/hooks/query/comment/useDeleteComment";
 interface CommentProps {
   comment: CommentType;
   currentUser: UserType;
+  postTitle: string;
 }
 
-const CommentList = ({ comment, currentUser }: CommentProps) => {
+const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
   const { content, createdAt, userId, id, isEdit, postId } = comment;
 
   // get User
@@ -45,7 +46,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
-    const textareaLineHeight = 24;
+    const textareaLineHeight = 26;
     const { minRows, maxRows } = resizeTextArea;
 
     const previousRows = event.target.rows;
@@ -209,11 +210,18 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
 
   return (
     <>
-      <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0 pr-6">
-        <div className="flex space-x-3 sm:space-x-6 justify-between w-full">
+      <li className="flex flex-col items-center justify-start py-5 px-4 border-b border-borderGray last:border-b-0 w-full">
+        <div className="flex space-x-3 sm:space-x-6 justify-start w-full">
           <Link
-            href={`/users/${comment.userId}`}
-            className="flex flex-col items-center space-y-2 w-[30%] md:w-[11%]"
+            aria-label="user-img"
+            href={{
+              pathname: `/users/${user?.nickname.replaceAll(" ", "_")}`,
+              query: {
+                userId: comment.userId,
+              },
+            }}
+            as={`/users/${user?.nickname.replaceAll(" ", "_")}`}
+            className="flex flex-col items-center space-y-2 w-[32px] sm:w-[40px] aspect-square"
           >
             {user?.imageURL && (
               <Image
@@ -221,44 +229,46 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                 height={48}
                 alt=""
                 src={user?.imageURL as string}
-                className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
+                className="w-8 sm:w-10 aspect-square rounded-full object-cover"
               />
             )}
-            <div className="flex justify-start items-center space-x-1">
-              <span className="text-xs">{user?.nickname}</span>
-              <span className="w-[8px] sm:w-[12px]">
+          </Link>
+          <div className="flex flex-col justify-between w-[calc(100%-2.5rem)] sm:w-[calc(100%-3rem)]">
+            <div className="flex justify-start items-center mb-0.5">
+              <span className="text-xs mr-1">{user?.nickname}</span>
+              <span className="w-[8px] sm:w-[12px] mr-2">
                 <Grade score={user?.point!} />
               </span>
+              <span className="text-xs text-gray-500 flex items-end">
+                {createdAt}
+              </span>
             </div>
-          </Link>
-          <div className="space-y-6 flex flex-col justify-between w-full">
             {commentIsEdit ? (
               <textarea
                 name="editContent"
                 value={editContent}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-xs sm:text-base"
+                className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm sm:text-base"
                 rows={resizeTextArea.rows}
                 placeholder={content}
               />
             ) : (
-              <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
+              <pre className="whitespace-pre-wrap break-all text-sm sm:text-base">
                 {content}
               </pre>
             )}
-            <div className="flex justify-between">
-              <span className="text-xs text-gray-500 flex items-end">
-                {createdAt}
-              </span>
+            <div className="flex justify-end mt-2">
               {commentIsEdit && (
-                <div className="flex justify-end items-end space-x-2">
+                <div className="flex justify-end items-end space-x-6">
                   <button
+                    aria-label="cancel"
                     className="text-xs font-medium hover:text-black text-textGray"
                     onClick={editToggle}
                   >
                     취소
                   </button>
                   <button
+                    aria-label="done"
                     className="text-xs font-medium hover:text-black text-textGray"
                     onClick={onEditComment}
                   >
@@ -270,15 +280,17 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                 <div
                   className={`${
                     commentIsEdit ? "hidden" : "flex"
-                  } flex justify-end items-end space-x-2 sm:space-x-4 text-xs`}
+                  } flex justify-end items-end space-x-6 text-xs`}
                 >
                   <button
+                    aria-label="edit-comment"
                     onClick={editToggle}
                     className="hover:text-black text-textGray"
                   >
                     수정
                   </button>
                   <button
+                    aria-label="delete-comment"
                     onClick={() =>
                       showModal({
                         modalType: "ConfirmModal",
@@ -296,6 +308,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   </button>
                   {recomments.length === 0 ? (
                     <button
+                      aria-label="recomment"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
@@ -307,6 +320,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                     </button>
                   ) : (
                     <button
+                      aria-label="recomment"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
@@ -319,10 +333,13 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                   )}
                 </div>
               ) : (
-                <div className="flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs">
-                  <button onClick={onClickReportComment}>신고</button>
+                <div className="flex justify-end items-end space-x-6 text-gray-500 text-xs">
+                  <button aria-label="report" onClick={onClickReportComment}>
+                    신고
+                  </button>
                   {recomments.length === 0 ? (
                     <button
+                      aria-label="recomment"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
@@ -332,6 +349,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
                     </button>
                   ) : (
                     <button
+                      aria-label="recomment"
                       onClick={() => {
                         setIsOpen(!isOpen);
                       }}
@@ -354,6 +372,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
             setIsOpen={setIsOpen}
             comment={comment}
             postId={postId}
+            postTitle={postTitle}
           />
         )}
       </li>

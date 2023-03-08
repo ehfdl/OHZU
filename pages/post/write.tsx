@@ -242,7 +242,7 @@ const Post = () => {
       if (toUrl !== "") {
         router.replace(toUrl);
       } else {
-        router.push("/");
+        router.push("/main");
       }
     }
   }, [toUrl, confirmed]);
@@ -667,10 +667,11 @@ const Post = () => {
             name="recipe"
             value={form.recipe}
             onChange={onChangeValue}
-            placeholder="1. Lorem Ipsum is simply dummy text of the..."
+            placeholder="만드는 방법을 입력해주세요."
           />
           <div className="w-full flex justify-center items-center">
             <button
+              aria-label="submit"
               onClick={onSubmit}
               className=" mt-8 mb-20 text-white bg-primary w-[344px] sm:w-[280px] h-14 sm:h-12 rounded"
             >

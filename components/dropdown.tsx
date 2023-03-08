@@ -12,7 +12,10 @@ export default function Dropdown({ drop, setDrop }: any) {
       {/* 웹 */}
       <Menu as="div" className="hidden sm:inline-block relative  text-left">
         <div>
-          <Menu.Button className="inline-flex w-full justify-center  bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+          <Menu.Button
+            aria-label="sort"
+            className="inline-flex w-full justify-center  bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+          >
             {drop}
             <ChevronDownIcon className="-mr-1  h-5 w-5" aria-hidden="true" />
           </Menu.Button>
@@ -79,7 +82,10 @@ export default function Dropdown({ drop, setDrop }: any) {
       {/* 모바일 */}
       <Menu as="div" className="sm:hidden relative inline-block text-left">
         <div>
-          <Menu.Button className="inline-flex relative right-6 w-full justify-center bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+          <Menu.Button
+            aria-label="sort"
+            className="inline-flex relative right-6 w-full justify-center bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+          >
             {drop}
             <ChevronDownIcon className="-mr-1  h-5 w-5" aria-hidden="true" />
           </Menu.Button>
@@ -116,7 +122,7 @@ export default function Dropdown({ drop, setDrop }: any) {
                     onClick={() => setDrop("인기순")}
                     href="#"
                     className={classNames(
-                      active ? "bg-second text-gray-900" : "text-gray-700",
+                      active ? "bg-second text-textgray" : "text-gray-700",
                       "block px-4 py-2 text-sm active:bg-white active:text-primary"
                     )}
                   >

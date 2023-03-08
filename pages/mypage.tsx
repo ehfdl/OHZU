@@ -189,6 +189,7 @@ const Mypage = () => {
                 )}
               </div>
               <button
+                aria-label="edit-profile"
                 className="sm:mt-4 mt-2 sm:text-base text-[12px]"
                 onClick={() =>
                   showModal({
@@ -215,11 +216,19 @@ const Mypage = () => {
                       <BiInfoCircle
                         onMouseOver={() => setIsOpenInforModal(true)}
                         onMouseOut={() => setIsOpenInforModal(false)}
-                        className="w-[18px] sm:w-5 aspect-square text-[#999999]"
+                        className="hidden sm:block w-[18px] sm:w-5 aspect-square text-[#999999]"
+                      />
+                      <BiInfoCircle
+                        onClick={() => setIsOpenInforModal(true)}
+                        className="sm:hidden w-[18px] sm:w-5 aspect-square text-[#999999]"
                       />
                     </span>
                   </div>
-                  {isOpenInforModal ? <RankInformationModal /> : null}
+                  {isOpenInforModal ? (
+                    <RankInformationModal
+                      setIsOpenInforModal={setIsOpenInforModal}
+                    />
+                  ) : null}
                 </div>
                 <div className="w-52 sm:w-72 flex justify-between items-center mt-2 sm:mt-1">
                   <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
@@ -227,7 +236,7 @@ const Mypage = () => {
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
-                    게시글<div className="font-bold">{myPosts?.length}</div>
+                    게시물<div className="font-bold">{myPosts?.length}</div>
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
@@ -269,7 +278,7 @@ const Mypage = () => {
           <Cate_Navbar setCate={setCate} cate={cate} />
 
           <div className="w-full mt-5 sm:mt-12 pl-6 sm:pl-[3px] text-[14px] sm:text-[20px] font-bold">
-            게시글{" "}
+            게시물{" "}
             <span className="text-primary">
               {ohju === "my-ohju"
                 ? cate === "전체"
