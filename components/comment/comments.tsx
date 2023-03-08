@@ -54,7 +54,7 @@ const Comments = ({
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { name, value } = event.target;
-    const textareaLineHeight = 24;
+    const textareaLineHeight = 26;
     const { minRows, maxRows } = resizeTextArea;
 
     const previousRows = event.target.rows;
@@ -139,20 +139,20 @@ const Comments = ({
   };
 
   return (
-    <div id="comments" className="max-w-[768px] w-full mx-auto">
-      <div className="sm:text-xl font-medium space-x-2 mb-4 pl-2 mx-4">
+    <div id="comments" className="max-w-[768px] w-full mx-auto mb-10">
+      <div className="font-medium space-x-2 px-2 mx-4 sm:px-4 sm:mx-0 sm:text-xl ">
         <span>댓글</span>
         <span>{comments?.length}</span>
       </div>
-      <div className="h-[1px] bg-black mb-6 mx-4" />
-      <form className="w-full flex items-center relative space-x-4 sm:space-x-6 px-4">
+      <div className="h-[1px] bg-black mt-2.5 mb-4 mx-4 sm:mx-0" />
+      <form className="w-full flex items-center relative space-x-6 px-4">
         {currentUser?.imageURL && (
           <Image
             width={48}
             height={48}
             alt=""
             src={currentUser?.imageURL}
-            className="bg-slate-300 w-[36px] sm:w-[45px] aspect-square rounded-full object-cover"
+            className="w-[36px] sm:w-[45px] aspect-square rounded-full object-cover border-borderGray"
           />
         )}
         <textarea
@@ -160,7 +160,7 @@ const Comments = ({
           name="content"
           value={comment.content}
           onChange={handleChange}
-          className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm"
+          className="w-full pl-4 pr-12 py-3.5 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm"
           placeholder="댓글을 입력해주세요."
           rows={resizeTextArea.rows}
         />
@@ -168,7 +168,7 @@ const Comments = ({
           aria-label="add-comment"
           disabled={authService.currentUser ? false : true}
           onClick={addComment}
-          className="absolute right-[34px] bottom-3 disabled:text-gray-400"
+          className="absolute right-8 disabled:text-gray-400"
         >
           <span className="text-sm font-bold text-phGray hover:text-black">
             등록
@@ -176,7 +176,7 @@ const Comments = ({
         </button>
       </form>
 
-      <ul id="comment-list" className="mt-4 mb-6">
+      <ul id="comment-list" className="mt-2.5 mb-6 w-full">
         {comments?.slice(offset, offset + limit).map((comment) => (
           <CommentList
             key={comment.id}

@@ -441,7 +441,7 @@ const PostDetail = () => {
       <div className="sm:max-w-[1200px] w-full mx-auto sm:py-20 sm:px-4 relative">
         <div
           id="breadcrumbs"
-          className="hidden w-full space-x-2 sm:flex items-center mb-10 text-sm"
+          className="hidden w-full space-x-2 sm:flex items-center mb-3.5 text-lg px-4 sm:px-5 xl:px-0"
         >
           <Link aria-label="home" href="/" className="text-textGray">
             홈
@@ -451,17 +451,20 @@ const PostDetail = () => {
         </div>
         <div
           id="post-detail"
-          className="w-full flex flex-col sm:flex-row justify-between items-stretch sm:space-x-10 mb-32"
+          className="w-full flex flex-col sm:px-5 xl:px-0 sm:flex-row justify-start items-stretch md:space-x-12 xl:space-x-32 mb-16 sm:mb-32"
         >
-          <div id="images-column" className="hidden sm:block sm:w-2/5 w-full">
+          <div
+            id="images-column"
+            className="hidden sm:block sm:w-2/5 md:w-1/2 w-full"
+          >
             {post?.img && (
               <Image
                 priority
-                width={450}
-                height={450}
+                width={486}
+                height={486}
                 alt=""
                 src={post?.img === null ? "" : (post?.img![imgIdx] as string)}
-                className="w-full aspect-square object-cover rounded"
+                className="w-full max-w-[486px] aspect-square object-cover rounded"
               />
             )}
             <div className="mt-6 grid grid-cols-3 gap-6 items-center w-full">
@@ -514,27 +517,28 @@ const PostDetail = () => {
           </div>
           <div
             id="detail-info-column"
-            className="w-full lg:w-1/2 sm:w-[55%] relative mt-10 sm:mt-0 px-4"
+            className="w-full lg:w-1/2 sm:w-[55%] relative mt-10 sm:mt-0 "
           >
-            <div id="title-column" className="flex justify-between items-start">
-              <div className="flex flex-col items-start">
-                <h4 className="text-lg sm:text-2xl font-bold mb-1 sm:mb-2">
-                  {post?.title}
-                </h4>
+            <div
+              id="title-column"
+              className="flex justify-between items-start px-4 sm:px-0"
+            >
+              <div className="flex flex-col items-start space-y-2">
+                <h4 className="text-lg sm:text-3xl font-bold">{post?.title}</h4>
                 <span className="block py-1 px-5 rounded-full text-xs sm:text-sm text-primary bg-second">
                   {post?.type}
                 </span>
               </div>
-              <div className="flex justify-end items-start space-x-2">
-                <div className="flex flex-col items-center">
+              <div className="flex justify-end items-start sm:items-center space-x-5">
+                <div className="flex flex-col items-center sm:flex-row sm:items-center sm:space-x-1.5">
                   <button aria-label="like-btn" onClick={postLike}>
                     {likedUser ? (
-                      <FaHeart className="text-primary" size={24} />
+                      <FaHeart className="text-primary" size={23} />
                     ) : (
-                      <FiHeart className="text-primary" size={24} />
+                      <FiHeart className="text-primary" size={23} />
                     )}
                   </button>
-                  <span className="text-textGray text-xs">
+                  <span className="text-textGray text-[11px] sm:text-base">
                     {post?.like!.length}
                   </span>
                 </div>
@@ -546,7 +550,7 @@ const PostDetail = () => {
                         setIsOpen(!isOpen);
                       }}
                     >
-                      <FiMoreVertical className="sm:w-6 sm:h-6 w-5 h-5 text-iconDefault hover:text-iconHover" />
+                      <FiMoreVertical className="w-5 h-5 text-iconDefault hover:text-iconHover" />
                     </button>
                     {isOpen && (
                       <div className="fixed bottom-0 sm:absolute sm:top-14 right-0 z-20 bg-white border-second sm:border flex flex-col items-center sm:py-1.5 sm:px-0.5 w-full sm:w-auto h-fit">
@@ -616,8 +620,11 @@ const PostDetail = () => {
                 )}
               </div>
             </div>
-            <div id="post-user" className="flex items-start space-x-6 mt-7">
-              <div className="flex flex-col items-center justify-start space-y-2 lg:w-[25%] w-[30%]">
+            <div
+              id="post-user"
+              className="flex justify-start items-center space-x-7 mt-7 px-4 sm:px-0"
+            >
+              <div className="flex flex-col items-center justify-start space-y-2">
                 <Link
                   aria-label="post-user"
                   href={{
@@ -635,18 +642,19 @@ const PostDetail = () => {
                       ? `/mypage`
                       : `/users/${user?.nickname}`
                   }`}
+                  className="w-12 sm:w-16 flex justify-center items-center"
                 >
                   {user?.imageURL ? (
                     <Image
                       priority
-                      width={100}
-                      height={100}
+                      width={64}
+                      height={64}
                       alt=""
                       src={user?.imageURL as string}
-                      className="w-12 sm:w-20 aspect-square rounded-full object-cover border-borderGray"
+                      className="w-12 sm:w-16 aspect-square rounded-full object-cover border-borderGray"
                     />
                   ) : (
-                    <div className="w-12 sm:w-20 aspect-square bg-slate-300 rounded-full object-cover" />
+                    <div className="w-12 sm:w-16 aspect-square bg-slate-300 rounded-full object-cover" />
                   )}
                 </Link>
                 <Link
@@ -668,60 +676,61 @@ const PostDetail = () => {
                   }`}
                   className="flex justify-center items-center"
                 >
-                  <span className="font-bold mr-1 text-xs sm:text-sm lg:text-base">
+                  <span className="font-bold mr-1 text-xs sm:text-sm block w-max">
                     {user?.nickname}
                   </span>
-                  <span className="w-[10px] sm:w-[12px]">
+                  <span className="w-[10px]">
                     <Grade score={user?.point!} />
                   </span>
                 </Link>
               </div>
-              <div className="w-full pt-1">
-                <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
-                  {post?.text}
-                </pre>
-              </div>
+              <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
+                {post?.text}
+              </pre>
             </div>
-            <div id="ingredient" className="mt-10 mb-9">
-              <span className="inline-block py-1.5 px-5 sm:px-7 sm:py-2 bg-primary text-white lg:text-xl text-sm rounded-full">
+            <div className="mt-10 mb-6 h-[7px] sm:h-[1.5px] w-full bg-detailBorder" />
+            <div id="ingredient" className="px-4 sm:px-0">
+              <span className="inline-block text-primary sm:text-lg mb-4">
                 준비물
               </span>
-              <div className="pt-6 flex justify-start flex-wrap">
+              <div className="flex justify-start flex-wrap">
                 {post?.ingredient?.map((ing: string) => (
                   <Link
                     aria-label={ing}
                     key={uuidv4()}
-                    href={`/search/include/${ing}`}
-                    className="inline-block mr-4 mb-4 sm:mr-6 sm:mb-6 py-1.5 px-4 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-xs sm:text-base"
+                    href={`/search/include/${ing.replaceAll(" ", "_")}`}
+                    className="inline-block mr-4 mb-4 sm:mr-6 sm:mb-4 py-1 px-5 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-xs sm:text-sm"
                   >
                     {ing}
                   </Link>
                 ))}
               </div>
             </div>
-            <div id="recipe">
-              <span className="inline-block py-1.5 px-5 sm:px-7 sm:py-2 bg-primary text-white lg:text-xl text-sm rounded-full">
+            <div className="my-6 h-[7px] sm:h-[1.5px] w-full bg-detailBorder" />
+            <div id="recipe" className="px-4 sm:px-0">
+              <span className="inline-block text-primary sm:text-lg mb-4">
                 만드는 방법
               </span>
-              <pre className="text-xs sm:text-base pt-6 whitespace-pre-wrap break-all !leading-10 pl-2">
+              <pre className="text-xs sm:text-base whitespace-pre-wrap break-all !leading-10 pl-2">
                 {post?.recipe}
               </pre>
             </div>
             {authService.currentUser?.uid !== post?.userId && (
-              <div className="absolute right-4 -bottom-16 flex items-start space-x-2 sm:space-x-6">
+              <div className="absolute right-[38px] -bottom-14 flex items-center space-x-5 sm:space-x-6">
                 <button
                   aria-label="share-post-btn"
                   onClick={doCopy}
-                  className="w-[24px]"
+                  className="w-5 sm:w-6"
                 >
-                  <BsShareFill className="w-full text-iconDefault mt-1 hover:text-primary" />
+                  <BsShareFill className="w-5 sm:w-6 text-iconDefault hover:text-primary" />
                 </button>
                 <button
                   aria-label="report-post-btn"
                   onClick={onClickReportPost}
-                  className="flex flex-col items-center space-y-0.5 group w-[24px]"
+                  className="flex flex-col items-center group w-max"
                 >
-                  <RiAlarmWarningLine className="w-full text-iconDefault group-hover:text-primary" />
+                  <RiAlarmWarningLine className="w-3 sm:w-4 text-iconDefault group-hover:text-primary" />
+                  <RiAlarmWarningLine className="w-3 sm:w-4 text-iconDefault group-hover:text-primary" />
                   <span className="text-[10px] text-iconDefault group-hover:text-primary">
                     신고
                   </span>

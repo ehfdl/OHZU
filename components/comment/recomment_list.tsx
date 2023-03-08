@@ -29,7 +29,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
-    const textareaLineHeight = 24;
+    const textareaLineHeight = 26;
     const { minRows, maxRows } = resizeTextArea;
 
     const previousRows = event.target.rows;
@@ -168,7 +168,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
   }, []);
   return (
     <>
-      <li className="py-6 flex space-x-3 sm:space-x-6 justify-start w-full border-b border-borderGray relative before:contents-[''] before:w-4 before:h-4 before:border-l-2 before:border-b-2 before:absolute before:border-iconDefault before:left-0 sm:before:left-4 before:top-8 pl-4 sm:pl-8 before:opacity-0 first:before:opacity-100">
+      <li className="py-6 flex space-x-3 sm:space-x-6 justify-start w-full border-b border-borderGray relative before:contents-[''] before:w-4 before:h-4 before:border-l-2 before:border-b-2 before:absolute before:border-iconDefault before:left-0 sm:before:left-4 before:top-8 pl-8 sm:pl-10 before:opacity-0 first:before:opacity-100">
         <Link
           aria-label="recomment-user"
           href={{
@@ -186,7 +186,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               ? `/mypage`
               : `/users/${recommentUser?.nickname}`
           }`}
-          className="flex flex-col items-center space-y-2 w-[34%] md:w-[13%] "
+          className="flex flex-col items-center space-y-2 w-[32px] sm:w-[40px] aspect-square"
         >
           {recommentUser?.imageURL && (
             <Image
@@ -194,37 +194,37 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               height={48}
               alt=""
               src={recommentUser?.imageURL as string}
-              className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
+              className="w-8 sm:w-10 aspect-square rounded-full object-cover"
             />
           )}
-          <div className="flex justify-start items-center space-x-1">
-            <span className="text-xs">{recommentUser?.nickname}</span>
-            <span className="w-[8px] sm:w-[12px]">
+        </Link>
+        <div className="flex flex-col justify-between w-[calc(100%-2.5rem)] sm:w-[calc(100%-3rem)]">
+          <div className="flex justify-start items-center mb-0.5">
+            <span className="text-xs mr-1">{recommentUser?.nickname}</span>
+            <span className="w-[8px] sm:w-[12px] mr-2">
               <Grade score={recommentUser?.point!} />
             </span>
+            <span className="text-xs text-gray-500 flex items-end">
+              {createdAt}
+            </span>
           </div>
-        </Link>
-        <div className="space-y-6 flex flex-col justify-between w-full">
           {recommentIsEdit ? (
             <textarea
               name="editContent"
               value={editRecommentContent}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-xs sm:text-base"
+              className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm sm:text-base"
               rows={resizeTextArea.rows}
               placeholder={content}
             />
           ) : (
-            <pre className="whitespace-pre-wrap break-all text-xs sm:text-sm">
+            <pre className="whitespace-pre-wrap break-all text-sm sm:text-base">
               {content}
             </pre>
           )}
-          <div className="flex justify-between">
-            <span className="text-xs text-gray-500 flex items-end">
-              {createdAt}
-            </span>
+          <div className="flex justify-end mt-2">
             {recommentIsEdit && (
-              <div className="flex justify-end items-end space-x-2 text-gray-500">
+              <div className="flex justify-end items-end space-x-6">
                 <button
                   aria-label="cancel"
                   className="text-xs font-medium"
@@ -245,7 +245,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               <div
                 className={`${
                   recommentIsEdit ? "hidden" : "flex"
-                } flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs`}
+                } flex justify-end items-end space-x-6 text-xs text-textGray`}
               >
                 <button aria-label="edit" onClick={editToggle}>
                   수정
