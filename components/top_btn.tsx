@@ -31,12 +31,12 @@ const TopButton = () => {
         <div className="scroll__container fixed sm:right-[84px] sm:bottom-[150px] right-5 z-[1]">
           <button
             aria-label="top-btn"
-            className="rounded-full w-16 h-16 font-light text-sm text-primary  bg-white border duration-300 border-primary hover:text-white hover:bg-hover "
+            className="rounded-full w-16 h-16 font-light text-sm text-primary  bg-white border duration-300 border-primary hover:text-primary hover:bg-second"
             id="top"
             onClick={scrollToTop}
             type="button"
           >
-            Top
+            TOP
           </button>
         </div>
       )}

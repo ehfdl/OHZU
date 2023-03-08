@@ -19,8 +19,25 @@ import Image from "next/image";
 import useModal from "@/hooks/useModal";
 import { GetServerSideProps } from "next";
 import FollowModal from "@/components/modal/follow_modal";
+import { useRouter } from "next/router";
 
-const UserPage = ({ userId }: { userId: string }) => {
+const UserPage = () => {
+  const router = useRouter();
+  console.log(router.query);
+  const [sessionId, setSessionId] = useState<string>();
+  const userId = (router.query.userId as string) || (sessionId as string);
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const session_userId = sessionStorage.getItem("USER_ID");
+      setSessionId(session_userId as string);
+    }
+    if (sessionId !== userId) {
+      sessionStorage.removeItem("USER_ID");
+      sessionStorage.setItem("USER_ID", userId);
+    }
+  }, []);
+
   const [myProfile, setMyProfile] = useState<any>();
   const [userProfile, setUserProfile] = useState<any>();
   const [usersFollowerProfile, setUsersFollowerProfile] = useState<any>();
@@ -113,7 +130,7 @@ const UserPage = ({ userId }: { userId: string }) => {
 
   const getUserProfile = async () => {
     const snapshot = await getDoc(doc(dbService, "Users", userId));
-    const snapshotdata = await snapshot.data();
+    const snapshotdata = snapshot.data();
     const newProfile = {
       ...snapshotdata,
     };
@@ -167,29 +184,30 @@ const UserPage = ({ userId }: { userId: string }) => {
   };
 
   useEffect(() => {
-    const getUserPosts = async () => {
-      const q = query(
-        collection(dbService, "Posts"),
-        where("userId", "==", userId),
-        orderBy("createdAt", "desc")
-      );
+    if (userId) {
+      const getUserPosts = async () => {
+        const q = query(
+          collection(dbService, "Posts"),
+          where("userId", "==", userId),
+          orderBy("createdAt", "desc")
+        );
 
-      onSnapshot(q, (snapshot) => {
-        const newUserPosts = snapshot.docs.map((doc) => {
-          const newUserPost: PostType = {
-            postId: doc.id,
-            ...doc.data(),
-          };
-          return newUserPost;
+        onSnapshot(q, (snapshot) => {
+          const newUserPosts = snapshot.docs.map((doc) => {
+            const newUserPost: PostType = {
+              postId: doc.id,
+              ...doc.data(),
+            };
+            return newUserPost;
+          });
+          setUserPosts(newUserPosts);
         });
-        setUserPosts(newUserPosts);
-      });
-    };
+      };
 
-    getUserProfile();
-
-    getUserPosts();
-  }, []);
+      getUserProfile();
+      getUserPosts();
+    }
+  }, [userId]);
   useEffect(() => {
     if (authService.currentUser?.uid) {
       getMyProfile();
@@ -428,9 +446,8 @@ const UserPage = ({ userId }: { userId: string }) => {
 
 export default UserPage;
 
-export const getServerSideProps: GetServerSideProps = async ({
-  params: { userId },
-}: any) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const userId = context.query.userId ? context.query.userId : "";
   return {
     props: { userId },
   };

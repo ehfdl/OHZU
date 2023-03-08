@@ -81,7 +81,10 @@ const Header = ({ ...props }: any) => {
     e.preventDefault();
     if (search) {
       router.push({
-        pathname: `/search/${search}`,
+        pathname: "/search/keyword",
+        query: {
+          search,
+        },
       });
     } else if (!search) {
       router.push({

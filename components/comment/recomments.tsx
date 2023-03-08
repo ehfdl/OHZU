@@ -14,6 +14,7 @@ interface RecommentPropsType {
   setIsOpen: React.Dispatch<SetStateAction<boolean>>;
   comment: CommentType;
   postId: string;
+  postTitle: string;
 }
 
 const Recomments = ({
@@ -24,6 +25,7 @@ const Recomments = ({
   comment,
   currentUser,
   postId,
+  postTitle,
 }: RecommentPropsType) => {
   const date = Date.now();
   const dateForm = new Intl.DateTimeFormat("ko-KR", {
@@ -97,7 +99,7 @@ const Recomments = ({
       content: recomment.content,
       postId: postId,
       nickname: currentUser?.nickname,
-      title: comment?.content,
+      title: postTitle,
       type: "답글",
       createdAt: Date.now(),
       isDone: false,

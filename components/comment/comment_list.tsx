@@ -21,9 +21,10 @@ import useDeleteComment from "@/hooks/query/comment/useDeleteComment";
 interface CommentProps {
   comment: CommentType;
   currentUser: UserType;
+  postTitle: string;
 }
 
-const CommentList = ({ comment, currentUser }: CommentProps) => {
+const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
   const { content, createdAt, userId, id, isEdit, postId } = comment;
 
   // get User
@@ -213,7 +214,13 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
         <div className="flex space-x-3 sm:space-x-6 justify-between w-full">
           <Link
             aria-label="user-img"
-            href={`/users/${comment.userId}`}
+            href={{
+              pathname: `/users/${user?.nickname.replaceAll(" ", "_")}`,
+              query: {
+                userId: comment.userId,
+              },
+            }}
+            as={`/users/${user?.nickname.replaceAll(" ", "_")}`}
             className="flex flex-col items-center space-y-2 w-[30%] md:w-[11%]"
           >
             {user?.imageURL && (
@@ -365,6 +372,7 @@ const CommentList = ({ comment, currentUser }: CommentProps) => {
             setIsOpen={setIsOpen}
             comment={comment}
             postId={postId}
+            postTitle={postTitle}
           />
         )}
       </li>

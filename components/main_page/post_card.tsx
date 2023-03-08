@@ -106,7 +106,16 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
     <div className={`flex ${type === "like" ? "scale-90" : null} sm:scale-100`}>
       <div key={post.postId} className="sm:mt-1">
         <div className="w-full h-[168px] sm:h-[284px] ">
-          <Link aria-label={`${post.title}-img`} href={`/post/${post.postId}`}>
+          <Link
+            aria-label={`${post.title}-img`}
+            href={{
+              pathname: `/post/${post.title.replaceAll(" ", "_")}`,
+              query: {
+                postId: post.postId,
+              },
+            }}
+            as={`/post/${post.title.replaceAll(" ", "_")}`}
+          >
             <Image
               src={post.img[0] || defaultImg}
               className="flex sm:w-[384px] h-[168px] sm:h-[284px] object-cover rounded border-[1px] border-borderGray"
@@ -119,7 +128,16 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
         </div>
         <div className="sm:h-[136px] h-[105px] sm:w-[384px] bg-white overflow-hidden  mb-6 ">
           <div className="sm:group">
-            <Link aria-label={post.title} href={`/post/${post.postId}`}>
+            <Link
+              aria-label={post.title}
+              href={{
+                pathname: `/post/${post.title.replaceAll(" ", "_")}`,
+                query: {
+                  postId: post.postId,
+                },
+              }}
+              as={`/post/${post.title.replaceAll(" ", "_")}`}
+            >
               <div className="sm:float-left mt-3 sm:mt-2 ml-[1px] text-start sm:ml-[70px] sm:translate-y-[12px] float-none sm:text-[22px] text-base font-bold sm:w-[195px] w-[155px]">
                 {post.title}
               </div>
@@ -141,7 +159,16 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
                 </div>
               </Link>
             ) : (
-              <Link aria-label="user-page" href={`/users/${post.userId}`}>
+              <Link
+                aria-label="user-page"
+                href={{
+                  pathname: `/users/${user?.nickname?.replaceAll(" ", "_")}`,
+                  query: {
+                    userId: post.userId,
+                  },
+                }}
+                as={`/users/${user?.nickname?.replaceAll(" ", "_")}`}
+              >
                 <div>
                   {user.imageURL && (
                     <Image
@@ -169,20 +196,20 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
 
             <div
               onClick={onClickLikeBtn}
-              className="absolute flex flex-col float-right w-4 h-4 translate-x-[142px] -translate-y-[200px] sm:translate-x-[330px] sm:-translate-y-[23px] items-center sm:w-[20px] sm:h-[16px] sm:z-[5] sm:mr-6 sm:mt-6 sm:mb-3 cursor-pointer"
+              className="absolute flex flex-col float-right w-4 h-4 translate-x-[142px] -translate-y-[200px] sm:translate-x-[330px] sm:-translate-y-[23px] items-center sm:w-[20px] sm:h-[16px] sm:z-[5] sm:mr-6 sm:mt-4 sm:mb-3 cursor-pointer"
             >
               {like ? (
                 <Image
                   alt=""
                   src="/like/like-pressed.png"
-                  width={20}
+                  width={18}
                   height={23}
                 />
               ) : (
                 <Image
                   alt=""
                   src="/like/like-default.png"
-                  width={20}
+                  width={18}
                   height={23}
                 />
               )}

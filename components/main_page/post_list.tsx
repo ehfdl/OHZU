@@ -130,7 +130,7 @@ const PostList = () => {
               </div>
             </div>
 
-            <div className="w-full gap-4 bg-white grid grid-cols-2  sm:grid sm:grid-cols-3 sm:gap-6 min-h-screen">
+            <div className="w-full gap-4 bg-white grid grid-cols-2  sm:grid sm:grid-cols-3 sm:gap-6">
               {cate === "전체"
                 ? posts
                     ?.map((post: any) => (

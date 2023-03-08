@@ -10,8 +10,6 @@ import {
 } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
 
-import { dehydrate, QueryClient } from "@tanstack/react-query";
-
 import { v4 as uuidv4 } from "uuid";
 
 import { useEffect, useState } from "react";
@@ -36,36 +34,52 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { Pagination } from "swiper";
 import "swiper/css"; //basic
 import "swiper/css/pagination";
-
-import { getPost } from "@/api/postAPI";
-import { useGetUser } from "@/hooks/query/user/useGetUser";
-import useGetPost from "@/hooks/query/post/useGetPost";
 import useUpdatePost from "@/hooks/query/post/useUpdatePost";
 import { BEER_IMG, ETC_IMG, LIQUOR_IMG, SOJU_IMG } from "@/util";
 import useDeletePost from "@/hooks/query/post/useDeletePost";
 import useUpdateUser from "@/hooks/query/user/useUpdateUser";
-import useGetReport from "@/hooks/query/reportPost/useGetReport";
 
-interface PostDetailPropsType {
-  postId: string;
-}
-
-const PostDetail = ({ postId }: PostDetailPropsType) => {
+const PostDetail = () => {
   const router = useRouter();
+
+  const [sessionId, setSessionId] = useState<string>();
+  const postId = (router.query.postId as string) || (sessionId as string);
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const session_postId = sessionStorage.getItem("POST_ID");
+      setSessionId(session_postId as string);
+    }
+    if (sessionId !== postId) {
+      sessionStorage.removeItem("POST_ID");
+      sessionStorage.setItem("POST_ID", postId);
+    }
+  }, []);
 
   SwiperCore.use([Pagination]);
 
-  const { data: postData, isLoading: postLoading } = useGetPost(postId);
-  const { data: reportPost, isLoading: reportPostLoading } = useGetReport({
-    reportId: postId,
-    reportType: "ReportPosts",
+  const [post, setPost] = useState<Form>();
+  const getPost = async () => {
+    const docRef = doc(dbService, "Posts", postId);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    const newPost = {
+      ...data,
+    };
+    setPost(newPost);
+  };
+
+  const [user, setUser] = useState<UserType>({
+    userId: "",
+    email: "",
+    nickname: "",
+    imageURL: "",
+    introduce: "",
+    point: 0,
+    following: [],
+    follower: [],
+    recently: [],
   });
-
-  const { data: user, isLoading: userLoading } = useGetUser(
-    postData?.userId as string
-  );
-
-  const [post, setPost] = useState<Form>(postData!);
 
   const [imgIdx, setImgIdx] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -199,7 +213,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
       }
     });
     hideModal();
-    router.push("/main");
+    router.push("/");
   };
 
   // Update Post
@@ -258,7 +272,13 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
   };
 
   const updateView = async () => {
-    let curView = ++post.view!;
+    const docRef = doc(dbService, "Posts", postId);
+    const docSnap = await getDoc(docRef);
+    const forUpdate = {
+      ...docSnap.data(),
+    };
+
+    let curView = ++forUpdate.view;
     const editPostObj = {
       ...post,
       view: curView,
@@ -315,10 +335,10 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
   };
 
   const onClickReportPost = async () => {
-    // const snapshot = await getDoc(doc(dbService, "ReportPosts", postId));
-    // const snapshotdata = await snapshot.data();
+    const snapshot = await getDoc(doc(dbService, "ReportPosts", postId));
+    const snapshotdata = await snapshot.data();
     const pastPost = {
-      ...reportPost,
+      ...snapshotdata,
     };
 
     if (authService.currentUser?.uid) {
@@ -363,6 +383,19 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
       });
     }
   };
+
+  const getUser = async () => {
+    const userRef = doc(dbService, "Users", post?.userId as string);
+    const userSnap = await getDoc(userRef);
+    const userData = userSnap.data();
+
+    const newUser = {
+      ...userData,
+    };
+
+    setUser(newUser);
+  };
+
   const getCurrentUser = async () => {
     if (authService.currentUser?.uid) {
       const userRef = doc(
@@ -382,14 +415,22 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
   };
 
   useEffect(() => {
-    if (authService.currentUser) {
-      updateUserRecently();
+    if (postId) {
+      if (authService.currentUser) {
+        updateUserRecently();
+      }
+      updateView();
+      getPost();
+      setReportId(postId);
+      getComments();
     }
-    setPost(postData!);
-    setReportId(postId);
-    getComments();
-    updateView();
-  }, []);
+  }, [postId]);
+
+  useEffect(() => {
+    if (post) {
+      getUser();
+    }
+  }, [post]);
 
   useEffect(() => {
     getCurrentUser();
@@ -402,7 +443,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           id="breadcrumbs"
           className="hidden w-full space-x-2 sm:flex items-center mb-10 text-sm"
         >
-          <Link aria-label="home" href="/main" className="text-textGray">
+          <Link aria-label="home" href="/" className="text-textGray">
             홈
           </Link>
           <span className="text-textGray"> &#62; </span>
@@ -413,14 +454,16 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
           className="w-full flex flex-col sm:flex-row justify-between items-stretch sm:space-x-10 mb-32"
         >
           <div id="images-column" className="hidden sm:block sm:w-2/5 w-full">
-            <Image
-              priority
-              width={450}
-              height={450}
-              alt=""
-              src={post?.img === null ? "" : post?.img![imgIdx]}
-              className="w-full aspect-square object-cover rounded"
-            />
+            {post?.img && (
+              <Image
+                priority
+                width={450}
+                height={450}
+                alt=""
+                src={post?.img === null ? "" : (post?.img![imgIdx] as string)}
+                className="w-full aspect-square object-cover rounded"
+              />
+            )}
             <div className="mt-6 grid grid-cols-3 gap-6 items-center w-full">
               {post?.img?.map((img: string, i: number) => (
                 <button
@@ -433,14 +476,16 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                   } w-full aspect-square object-cover rounded overflow-hidden`}
                   onClick={() => onImgChange(i)}
                 >
-                  <Image
-                    priority
-                    width={150}
-                    height={150}
-                    alt=""
-                    src={img}
-                    className="w-full aspect-square object-cover"
-                  />
+                  {img && (
+                    <Image
+                      priority
+                      width={150}
+                      height={150}
+                      alt=""
+                      src={img}
+                      className="w-full aspect-square object-cover"
+                    />
+                  )}
                 </button>
               ))}
             </div>
@@ -517,7 +562,16 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                         </div>
                         <Link
                           aria-label="edit-post-btn"
-                          href={`/post/edit/${postId}`}
+                          href={{
+                            pathname: `/post/edit/${post?.title?.replaceAll(
+                              " ",
+                              "_"
+                            )}`,
+                            query: {
+                              id: postId,
+                            },
+                          }}
+                          as={`/post/edit/${post?.title?.replaceAll(" ", "_")}`}
                           className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                         >
                           <span> 게시글 수정하기</span>{" "}
@@ -566,11 +620,21 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               <div className="flex flex-col items-center justify-start space-y-2 lg:w-[25%] w-[30%]">
                 <Link
                   aria-label="post-user"
-                  href={
+                  href={{
+                    pathname: `${
+                      authService.currentUser?.uid === user?.userId
+                        ? `/mypage`
+                        : `/users/${user?.nickname}`
+                    }`,
+                    query: {
+                      userId: user?.userId,
+                    },
+                  }}
+                  as={`${
                     authService.currentUser?.uid === user?.userId
                       ? `/mypage`
-                      : `/users/${user?.userId}`
-                  }
+                      : `/users/${user?.nickname}`
+                  }`}
                 >
                   {user?.imageURL ? (
                     <Image
@@ -587,11 +651,21 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
                 </Link>
                 <Link
                   aria-label="post-user"
-                  href={
+                  href={{
+                    pathname: `${
+                      authService.currentUser?.uid === user?.userId
+                        ? `/mypage`
+                        : `/users/${user?.nickname}`
+                    }`,
+                    query: {
+                      userId: user?.userId,
+                    },
+                  }}
+                  as={`${
                     authService.currentUser?.uid === user?.userId
                       ? `/mypage`
-                      : `/users/${user?.userId}`
-                  }
+                      : `/users/${user?.nickname}`
+                  }`}
                   className="flex justify-center items-center"
                 >
                   <span className="font-bold mr-1 text-xs sm:text-sm lg:text-base">
@@ -629,7 +703,7 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
               <span className="inline-block py-1.5 px-5 sm:px-7 sm:py-2 bg-primary text-white lg:text-xl text-sm rounded-full">
                 만드는 방법
               </span>
-              <pre className="text-xs sm:text-base pt-6 whitespace-pre-wrap break-all leading-10 pl-2">
+              <pre className="text-xs sm:text-base pt-6 whitespace-pre-wrap break-all !leading-10 pl-2">
                 {post?.recipe}
               </pre>
             </div>
@@ -683,26 +757,11 @@ const PostDetail = ({ postId }: PostDetailPropsType) => {
 export default PostDetail;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { postId } = context.params!;
-
-  const queryClient = new QueryClient();
-
-  let isError = false;
-
-  try {
-    await queryClient.prefetchQuery(["post", postId], () =>
-      getPost(postId as string)
-    );
-  } catch (error: any) {
-    isError = true;
-    context.res.statusCode = error.response.status;
-  }
+  const postId = context.query.postId ? context.query.postId : "";
 
   return {
     props: {
       postId,
-      isError,
-      dehydratedState: dehydrate(queryClient),
     },
   };
 };
