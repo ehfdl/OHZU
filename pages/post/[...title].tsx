@@ -574,7 +574,7 @@ const PostDetail = () => {
                           as={`/post/edit/${post?.title?.replaceAll(" ", "_")}`}
                           className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                         >
-                          <span> 게시글 수정하기</span>{" "}
+                          <span> 게시물 수정하기</span>{" "}
                           <MdOutlineEditNote
                             className="hidden sm:block"
                             size={18}
@@ -596,7 +596,7 @@ const PostDetail = () => {
                             });
                           }}
                         >
-                          <span>게시글 삭제하기</span>
+                          <span>게시물 삭제하기</span>
                           <TfiTrash className="hidden sm:block" size={18} />
                         </button>
                         <button
@@ -604,7 +604,7 @@ const PostDetail = () => {
                           className="flex justify-center items-center space-x-5 sm:px-5 py-5 sm:py-2.5 border-t border-t-borderGray sm:border-t-0 w-full"
                           onClick={doCopy}
                         >
-                          <span>게시글 공유하기</span>
+                          <span>게시물 공유하기</span>
                           <BsShareFill
                             size={18}
                             className="p-0.5 hidden sm:block"

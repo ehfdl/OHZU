@@ -228,7 +228,7 @@ const Mypage = () => {
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
-                    게시글<div className="font-bold">{myPosts?.length}</div>
+                    게시물<div className="font-bold">{myPosts?.length}</div>
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
                   <div
@@ -270,7 +270,7 @@ const Mypage = () => {
           <Cate_Navbar setCate={setCate} cate={cate} />
 
           <div className="w-full mt-5 sm:mt-12 pl-6 sm:pl-[3px] text-[14px] sm:text-[20px] font-bold">
-            게시글{" "}
+            게시물{" "}
             <span className="text-primary">
               {ohju === "my-ohju"
                 ? cate === "전체"

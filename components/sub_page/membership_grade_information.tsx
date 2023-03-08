@@ -29,8 +29,8 @@ const RankInformationModal = () => {
       </div>
       <div className="mt-3 ml-3 ">
         <ul className="text-xs list-disc space-y-1">
-          <li>작성한 게시글에 좋아요 받을시 1잔 적립</li>
-          <li>게시글 작성시 5잔 적립</li>
+          <li>작성한 게시물에 좋아요 받을시 1잔 적립</li>
+          <li>게시물 작성시 5잔 적립</li>
         </ul>
       </div>
     </div>
