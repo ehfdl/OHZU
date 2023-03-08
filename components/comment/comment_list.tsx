@@ -46,7 +46,7 @@ const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = event.target;
-    const textareaLineHeight = 24;
+    const textareaLineHeight = 26;
     const { minRows, maxRows } = resizeTextArea;
 
     const previousRows = event.target.rows;
@@ -210,8 +210,8 @@ const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
 
   return (
     <>
-      <li className="flex flex-col items-center justify-center py-6 border-b border-borderGray last:border-b-0 pr-6">
-        <div className="flex space-x-3 sm:space-x-6 justify-between w-full">
+      <li className="flex flex-col items-center justify-start py-5 px-4 border-b border-borderGray last:border-b-0 w-full">
+        <div className="flex space-x-3 sm:space-x-6 justify-start w-full">
           <Link
             aria-label="user-img"
             href={{
@@ -221,7 +221,7 @@ const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
               },
             }}
             as={`/users/${user?.nickname.replaceAll(" ", "_")}`}
-            className="flex flex-col items-center space-y-2 w-[30%] md:w-[11%]"
+            className="flex flex-col items-center space-y-2 w-[32px] sm:w-[40px] aspect-square"
           >
             {user?.imageURL && (
               <Image
@@ -229,37 +229,37 @@ const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
                 height={48}
                 alt=""
                 src={user?.imageURL as string}
-                className="bg-slate-300 w-[32px] sm:w-[40px] aspect-square rounded-full object-cover"
+                className="w-8 sm:w-10 aspect-square rounded-full object-cover"
               />
             )}
-            <div className="flex justify-start items-center space-x-1">
-              <span className="text-xs">{user?.nickname}</span>
-              <span className="w-[8px] sm:w-[12px]">
+          </Link>
+          <div className="flex flex-col justify-between w-[calc(100%-2.5rem)] sm:w-[calc(100%-3rem)]">
+            <div className="flex justify-start items-center mb-0.5">
+              <span className="text-xs mr-1">{user?.nickname}</span>
+              <span className="w-[8px] sm:w-[12px] mr-2">
                 <Grade score={user?.point!} />
               </span>
+              <span className="text-xs text-gray-500 flex items-end">
+                {createdAt}
+              </span>
             </div>
-          </Link>
-          <div className="space-y-6 flex flex-col justify-between w-full">
             {commentIsEdit ? (
               <textarea
                 name="editContent"
                 value={editContent}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-xs sm:text-base"
+                className="w-full px-4 py-3 rounded border border-phGray h-auto scrollbar-none resize-none focus-visible:outline-none text-sm sm:text-base"
                 rows={resizeTextArea.rows}
                 placeholder={content}
               />
             ) : (
-              <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
+              <pre className="whitespace-pre-wrap break-all text-sm sm:text-base">
                 {content}
               </pre>
             )}
-            <div className="flex justify-between">
-              <span className="text-xs text-gray-500 flex items-end">
-                {createdAt}
-              </span>
+            <div className="flex justify-end mt-2">
               {commentIsEdit && (
-                <div className="flex justify-end items-end space-x-2">
+                <div className="flex justify-end items-end space-x-6">
                   <button
                     aria-label="cancel"
                     className="text-xs font-medium hover:text-black text-textGray"
@@ -280,7 +280,7 @@ const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
                 <div
                   className={`${
                     commentIsEdit ? "hidden" : "flex"
-                  } flex justify-end items-end space-x-2 sm:space-x-4 text-xs`}
+                  } flex justify-end items-end space-x-6 text-xs`}
                 >
                   <button
                     aria-label="edit-comment"
@@ -333,7 +333,7 @@ const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
                   )}
                 </div>
               ) : (
-                <div className="flex justify-end items-end space-x-2 sm:space-x-4 text-gray-500 text-xs">
+                <div className="flex justify-end items-end space-x-6 text-gray-500 text-xs">
                   <button aria-label="report" onClick={onClickReportComment}>
                     신고
                   </button>

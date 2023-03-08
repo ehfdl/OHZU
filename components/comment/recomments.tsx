@@ -137,7 +137,7 @@ const Recomments = ({
   };
 
   return (
-    <div className="w-[90%] ml-auto">
+    <div className="w-full pl-9 sm:pl-16">
       <ul className="w-full">
         {recomments.map((item) => (
           <RecommentList key={item.id} recomment={item} />
