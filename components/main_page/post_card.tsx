@@ -129,132 +129,110 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
                 width={300}
                 height={300}
               />
-              {/* <div className=" bg-black/0 max-w-[384px] w-full h-[284px] object-cover absolute top-0 left-1 hover:bg-gray-300/30 hover:block"></div> */}
+              <div className=" bg-black/0 w-full aspect-[1.01785714/1] sm:aspect-[1.35211268/1] object-cover absolute top-0 sm:top-1 hover:bg-gray-300/30 hover:block"></div>
             </Link>
           </div>
           <div className="sm:aspect-[2.82352941/1] aspect-[1.62857143/1] w-full bg-white mb-6 ">
-            <div>
-              <div className="sm:group">
-                <Link
-                  aria-label={post.title}
-                  href={{
-                    pathname: `/post/${post.title.replaceAll(" ", "_")}`,
-                    query: {
-                      postId: post.postId,
-                    },
-                  }}
-                  as={`/post/${post.title.replaceAll(" ", "_")}`}
-                >
-                  <div className="sm:float-left mt-3 sm:mt-2 ml-[1px] text-start sm:ml-[70px] sm:translate-y-[12px] float-none sm:text-[22px] text-base font-bold sm:w-[150px]">
-                    {post.title}
-                  </div>
-                </Link>
-                <div
-                  onClick={onClickLikeBtn}
-                  className="hidden sm:block flex-col right-0 top float-right w-4 h-4 items-center sm:w-[20px] sm:h-[16px] sm:z-[5] cursor-pointer "
-                >
-                  {like ? (
-                    <Image
-                      alt=""
-                      src="/like/like-pressed.png"
-                      width={18}
-                      height={23}
-                    />
-                  ) : (
-                    <Image
-                      alt=""
-                      src="/like/like-default.png"
-                      width={18}
-                      height={23}
-                    />
-                  )}
-                  <div className="ml-[6px] sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">
-                    {post.like.length}
-                  </div>
-                </div>
-              </div>
-              <div className="sm:mt-5 sm:ml-3 flex items-center w-full mt-2">
-                {post.userId === authService.currentUser?.uid ? (
-                  <Link aria-label="mypage" href="/mypage">
-                    <div>
-                      {user.imageURL && (
-                        <Image
-                          className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointer"
-                          alt=""
-                          src={user.imageURL as string}
-                          width={300}
-                          height={300}
-                        />
-                      )}
-                    </div>
-                  </Link>
-                ) : (
+            <div className="flex justify-between">
+              <div>
+                <div className="sm:group">
                   <Link
-                    aria-label="user-page"
+                    aria-label={post.title}
                     href={{
-                      pathname: `/users/${user?.nickname?.replaceAll(
-                        " ",
-                        "_"
-                      )}`,
+                      pathname: `/post/${post.title.replaceAll(" ", "_")}`,
                       query: {
-                        userId: post.userId,
+                        postId: post.postId,
                       },
                     }}
-                    as={`/users/${user?.nickname?.replaceAll(" ", "_")}`}
+                    as={`/post/${post.title.replaceAll(" ", "_")}`}
                   >
-                    <div>
-                      {user.imageURL && (
-                        <Image
-                          className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointe "
-                          alt=""
-                          src={user.imageURL as string}
-                          width={100}
-                          height={100}
-                        />
-                      )}
+                    <div className="sm:float-left mt-3 sm:mt-2 ml-[1px] text-start sm:ml-[70px] sm:translate-y-[12px] float-none sm:text-[22px] text-base font-bold sm:w-[150px]">
+                      {post.title}
                     </div>
                   </Link>
-                )}
-
-                <div className="mb-2">
-                  <div className="sm:text-sm text-[14px]" key={user.userId}>
-                    <p className="sm:float-left float-left ml-[8px] sm:mt-[18px] sm:ml-[14px] text-black leading-none -translate-y-[1px]">
-                      {user?.nickname}
-                    </p>
-                    <span className="sm:float-left float-left w-[11px] h-[14px] sm:mt-[18px]  sm:w-[11px] sm:h-[14px] ml-1 -translate-y-[2px] sm:-translate-y-[2px]">
-                      <Grade score={user?.point as number} />
-                    </span>
-                  </div>
                 </div>
-
-                <div
-                  onClick={onClickLikeBtn}
-                  className="absolute flex flex-col float-right w-4 h-4 sm:hidden right-4 top-4 items-center sm:w-[20px] sm:h-[16px] sm:z-[5] sm:mr-6 sm:mt-4 sm:mb-3 cursor-pointer"
-                >
-                  {like ? (
-                    <Image
-                      alt=""
-                      src="/like/like-pressed.png"
-                      width={18}
-                      height={23}
-                    />
+                <div className="sm:mt-5 sm:ml-3 flex items-center w-full mt-2">
+                  {post.userId === authService.currentUser?.uid ? (
+                    <Link aria-label="mypage" href="/mypage">
+                      <div>
+                        {user.imageURL && (
+                          <Image
+                            className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointer"
+                            alt=""
+                            src={user.imageURL as string}
+                            width={300}
+                            height={300}
+                          />
+                        )}
+                      </div>
+                    </Link>
                   ) : (
-                    <Image
-                      alt=""
-                      src="/like/like-default.png"
-                      width={18}
-                      height={23}
-                    />
+                    <Link
+                      aria-label="user-page"
+                      href={{
+                        pathname: `/users/${user?.nickname?.replaceAll(
+                          " ",
+                          "_"
+                        )}`,
+                        query: {
+                          userId: post.userId,
+                        },
+                      }}
+                      as={`/users/${user?.nickname?.replaceAll(" ", "_")}`}
+                    >
+                      <div>
+                        {user.imageURL && (
+                          <Image
+                            className="sm:w-11 float-left sm:float-none sm:h-11 w-6 h-6 mt-[-13px] rounded-full sm:mb-2 bg-black cursor-pointe "
+                            alt=""
+                            src={user.imageURL as string}
+                            width={100}
+                            height={100}
+                          />
+                        )}
+                      </div>
+                    </Link>
                   )}
-                  <div className="sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">
-                    {post.like.length}
+
+                  <div className="mb-2">
+                    <div className="sm:text-sm text-[14px]" key={user.userId}>
+                      <p className="sm:float-left float-left ml-[8px] sm:mt-[18px] sm:ml-[14px] text-black leading-none -translate-y-[1px]">
+                        {user?.nickname}
+                      </p>
+                      <span className="sm:float-left float-left w-[11px] h-[14px] sm:mt-[18px]  sm:w-[11px] sm:h-[14px] ml-1 -translate-y-[2px] sm:-translate-y-[2px]">
+                        <Grade score={user?.point as number} />
+                      </span>
+                    </div>
+                  </div>
+
+                  <div
+                    onClick={onClickLikeBtn}
+                    className="absolute flex flex-col float-right w-4 h-4 sm:hidden right-4 top-4 items-center sm:w-[20px] sm:h-[16px] sm:z-[5] sm:mr-6 sm:mt-4 sm:mb-3 cursor-pointer"
+                  >
+                    {like ? (
+                      <Image
+                        alt=""
+                        src="/like/like-pressed.png"
+                        width={18}
+                        height={23}
+                      />
+                    ) : (
+                      <Image
+                        alt=""
+                        src="/like/like-default.png"
+                        width={18}
+                        height={23}
+                      />
+                    )}
+                    <div className="sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">
+                      {post.like.length}
+                    </div>
                   </div>
                 </div>
               </div>
-
-              {/* <div
+              <div
                 onClick={onClickLikeBtn}
-                className="hidden sm:block flex-col float-right w-4 h-4 items-center sm:w-[20px] sm:h-[16px] sm:z-[5] cursor-pointer "
+                className="hidden sm:block flex-col mt-5 mr-2 items-center sm:w-[20px] sm:h-[16px] sm:z-[5] cursor-pointer "
               >
                 {like ? (
                   <Image
@@ -274,9 +252,9 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
                 <div className="ml-[6px] sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">
                   {post.like.length}
                 </div>
-              </div> */}
+              </div>
             </div>
-            <div className="text-sm mx-[0.5px] text-[#8E8E93] sm:text-sm sm:mx-[13px] sm:mt-1 sm:mb-2 sm:w-[345px] sm:line-clamp-3 line-clamp-2 text-ellipsis break-all font-normal">
+            <div className="text-sm mx-[0.5px] text-[#8E8E93] sm:text-sm sm:mx-[13px] sm:mt-1 sm:mb-2 sm:px-1 sm:line-clamp-3 line-clamp-2 text-ellipsis break-all font-normal">
               {post.text}
             </div>
           </div>
