@@ -216,11 +216,19 @@ const Mypage = () => {
                       <BiInfoCircle
                         onMouseOver={() => setIsOpenInforModal(true)}
                         onMouseOut={() => setIsOpenInforModal(false)}
-                        className="w-[18px] sm:w-5 aspect-square text-[#999999]"
+                        className="hidden sm:block w-[18px] sm:w-5 aspect-square text-[#999999]"
+                      />
+                      <BiInfoCircle
+                        onClick={() => setIsOpenInforModal(true)}
+                        className="sm:hidden w-[18px] sm:w-5 aspect-square text-[#999999]"
                       />
                     </span>
                   </div>
-                  {isOpenInforModal ? <RankInformationModal /> : null}
+                  {isOpenInforModal ? (
+                    <RankInformationModal
+                      setIsOpenInforModal={setIsOpenInforModal}
+                    />
+                  ) : null}
                 </div>
                 <div className="w-52 sm:w-72 flex justify-between items-center mt-2 sm:mt-1">
                   <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
