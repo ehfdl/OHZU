@@ -196,20 +196,20 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
 
             <div
               onClick={onClickLikeBtn}
-              className="absolute flex flex-col float-right w-4 h-4 translate-x-[142px] -translate-y-[200px] sm:translate-x-[330px] sm:-translate-y-[23px] items-center sm:w-[20px] sm:h-[16px] sm:z-[5] sm:mr-6 sm:mt-6 sm:mb-3 cursor-pointer"
+              className="absolute flex flex-col float-right w-4 h-4 translate-x-[142px] -translate-y-[200px] sm:translate-x-[330px] sm:-translate-y-[23px] items-center sm:w-[20px] sm:h-[16px] sm:z-[5] sm:mr-6 sm:mt-4 sm:mb-3 cursor-pointer"
             >
               {like ? (
                 <Image
                   alt=""
                   src="/like/like-pressed.png"
-                  width={20}
+                  width={18}
                   height={23}
                 />
               ) : (
                 <Image
                   alt=""
                   src="/like/like-default.png"
-                  width={20}
+                  width={18}
                   height={23}
                 />
               )}

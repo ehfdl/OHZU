@@ -70,7 +70,7 @@ const MainBanner = () => {
             >
               <Image
                 alt="main_banner_image"
-                className="object-cover w-full min-h-[152px]"
+                className="object-cover w-full min-h-[180px]"
                 src="/banner/3.svg"
                 width={300}
                 height={300}
@@ -91,7 +91,7 @@ const MainBanner = () => {
             >
               <Image
                 alt="main_banner_image"
-                className="object-cover w-full min-h-[152px]"
+                className="object-cover w-full min-h-[180px]"
                 src="/banner/4.svg"
                 width={300}
                 height={300}
@@ -112,7 +112,7 @@ const MainBanner = () => {
             >
               <Image
                 alt="main_banner_image"
-                className="object-cover w-full min-h-[152px]"
+                className="object-cover w-full min-h-[180px]"
                 src="/banner/5.svg"
                 width={300}
                 height={300}
@@ -133,7 +133,7 @@ const MainBanner = () => {
             >
               <Image
                 alt="main_banner_image"
-                className="object-cover w-full min-h-[152px]"
+                className="object-cover w-full min-h-[180px]"
                 src="/banner/6.svg"
                 width={300}
                 height={300}
@@ -154,7 +154,7 @@ const MainBanner = () => {
             >
               <Image
                 alt="main_banner_image"
-                className="object-cover w-full min-h-[152px]"
+                className="object-cover w-full min-h-[180px]"
                 src="/banner/7.svg"
                 width={300}
                 height={300}
@@ -167,12 +167,27 @@ const MainBanner = () => {
           .swiper-pagination .swiper-pagination-bullet {
             background: rgba(255, 255, 255, 0.7);
             opacity: 1;
-            border-radius: 0;
-            width: 30px;
-            height: 5px;
+            width: 10px;
+            height: 10px;
+            margin: 0 5px !important;
           }
           .swiper-pagination .swiper-pagination-bullet-active {
             background: #ff6161;
+            width: 50px;
+            border-radius: 100px;
+          }
+          @media screen and (max-width: 520px) {
+            .swiper-pagination {
+              bottom: 0px !important;
+            }
+            .swiper-pagination .swiper-pagination-bullet {
+              width: 6px;
+              height: 6px;
+              margin: 0 3px !important;
+            }
+            .swiper-pagination .swiper-pagination-bullet-active {
+              width: 30px;
+            }
           }
         `}</style>
       </Swiper>

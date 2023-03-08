@@ -10,7 +10,7 @@ module.exports = {
         primary: "#FF6161",
         second: "#FFF0F0",
         hover: "#D2373F",
-        iconDefault: "#CCCCCC",
+        iconDefault: "#ACACAC",
         iconHover: "#666666",
         textGray: "#8E8E93",
         phGray: "#ACACAC",
