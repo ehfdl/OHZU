@@ -163,13 +163,13 @@ const LoginModal = () => {
         hideModal();
       })
       .catch((error) => {
-        // 이 부분에서는 오류를 처리합니다.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // 사용된 사용자 계정 이메일
-        const email = error.customData.email;
-        // AuthCredential 타입 제공됩니다.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "구글 로그인 취소",
+            text: "구글 로그인을 취소하였습니다.",
+          },
+        });
       });
   };
 
@@ -214,14 +214,13 @@ const LoginModal = () => {
         hideModal();
       })
       .catch((error) => {
-        // 이 부분에서는 오류를 처리합니다.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // 사용된 사용자 계정 이메일
-        const email = error.customData.email;
-        // AuthCredential 타입 제공됩니다.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        alert(error);
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "페이스북 로그인 취소",
+            text: "페이스북 로그인을 취소하였습니다.",
+          },
+        });
       });
   };
 
@@ -284,13 +283,18 @@ const LoginModal = () => {
                     alarm: [],
                   }
                 );
-                alert("카카오 간편 회원가입 성공!");
+                console.log("카카오 간편 회원가입 성공!");
               }
               hideModal();
             })
             .catch((error: any) => {
-              const errorMessage = error.message;
-              console.log(errorMessage);
+              showModal({
+                modalType: "AlertModal",
+                modalProps: {
+                  title: "카카오 로그인 취소",
+                  text: "카카오 로그인을 취소하였습니다.",
+                },
+              });
             });
         });
       },
@@ -344,7 +348,6 @@ const LoginModal = () => {
   }, [email, password]);
 
   // 인증메일을 받지않고 로그인창을 끄면 서비스 이용이 가능함을 확인함. 이를 해결하는 함수
-  //✅ header에 있는 logOut 메소드를 login_modal로 넘겨주려면 전역모달에 어떻게 넣어야 하는가?
   // 나가기 버튼 클릭 시, 로그아웃 시키는 함수
   const logOutClose = () => {
     if (authService.currentUser) {
@@ -582,7 +585,7 @@ const LoginModal = () => {
                             setCheckedSaveEmail(!checkedSaveEmail)
                           }
                         />
-                        <span className="ml-2 ">이메일 저장하기</span>
+                        <span className="ml-2 text-sm ">이메일 저장하기</span>
                       </label>
                     </div>
 

@@ -184,11 +184,6 @@ const JoinModal = () => {
     }
 
     // 이메일 인증 구현 step
-    //1.  auth에 유저가 생성되고 나서 이메일 인증을 보내고, emailVerified가 undefined면 로그아웃?
-    //2.  createUserWithEmailAndPassword을 실행 시키고 나서 이메일 인증을 보내고, emailVerified가 true로 바뀌면 setDoc이 되게?
-
-    // 회원가입 시에 로그인이 바로된다.
-
     // 1. 회원가입을 시킨다 (auth 등록이 되어야 emailVerified 속성에 접근가능하기 때문)
     // 2. 이메일인증메소드를 사용하여 emailVerified 속성이 true일 때 서비스를 이용가능하게. undefined이면 로그인도 못하게 막아버리게.
 
@@ -322,13 +317,13 @@ const JoinModal = () => {
         hideModal();
       })
       .catch((error) => {
-        // 이 부분에서는 오류를 처리합니다.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // 사용된 사용자 계정 이메일
-        const email = error.customData.email;
-        // AuthCredential 타입 제공됩니다.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "간편 회원가입 취소",
+            text: "구글로 간편 회원가입을 취소하였습니다.",
+          },
+        });
       });
   };
 
@@ -374,14 +369,13 @@ const JoinModal = () => {
         hideModal();
       })
       .catch((error) => {
-        // 이 부분에서는 오류를 처리합니다.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // 사용된 사용자 계정 이메일
-        const email = error.customData.email;
-        // AuthCredential 타입 제공됩니다.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        alert(error);
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "간편 회원가입 취소",
+            text: "페이스북으로 간편 회원가입을 취소하였습니다.",
+          },
+        });
       });
   };
 
@@ -526,9 +520,13 @@ const JoinModal = () => {
               hideModal();
             })
             .catch((error) => {
-              const errorCode = error.code;
-              const errorMessage = error.message;
-              alert(errorMessage);
+              showModal({
+                modalType: "AlertModal",
+                modalProps: {
+                  title: "간편 회원가입 취소",
+                  text: "카카오 간편 회원가입을 취소하였습니다.",
+                },
+              });
             });
         });
       },

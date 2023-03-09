@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 
 const About = () => {
@@ -15,13 +16,15 @@ const About = () => {
       </div>
       <div className="flex items-center max-h-[45%] h-full">
         <div className="flex flex-col flex-wrap sm:justify-between max-w-[1156px] w-full m-auto sm:flex-row sm:items-center">
-          <Image
-            alt="OHZU Logo"
-            src="/LOGO.svg"
-            className="sm:max-w-[234px] max-w-[180px] w-full max-h-[60px] h-full mb-5 m-auto sm:m-0"
-            width={100}
-            height={100}
-          />
+          <Link href="/main">
+            <Image
+              alt="OHZU Logo"
+              src="/LOGO.svg"
+              className="sm:max-w-[234px] max-w-[180px] w-full max-h-[60px] h-full mb-5 m-auto sm:m-0"
+              width={100}
+              height={100}
+            />
+          </Link>
           <div className="text-center sm:text-left">
             <p className="mt-2 mb-[22px] font-semibold sm:text-[24px] text-lg">
               오늘의 혼합주
