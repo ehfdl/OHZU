@@ -12,6 +12,7 @@ import { GetServerSideProps } from "next";
 import Layout from "@/components/layout";
 import Image from "next/image";
 import UserDropdown from "@/components/sub_page/user_dropdown";
+import UserCateNavbar from "@/components/navbar/user_cate_navbar";
 
 interface PropsType {
   searchWord: string;
@@ -24,7 +25,7 @@ export default function SearchInclude({
 }) {
   const router = useRouter();
 
-  const searchWord = search_include;
+  const searchWord = search_include.replaceAll("_", " ");
 
   const [posts, setPosts] = useState<PostType[]>([]);
   const [searchData, setSearchData]: any = useState();
@@ -111,19 +112,25 @@ export default function SearchInclude({
     <Layout>
       {/* 웹 */}
       <div className="hidden sm:block max-w-[1200px] w-full m-auto ">
-        <h1 className="mt-20 mb-11 text-[40px] font-bold">
+        <h1 className="mt-20 text-[40px] font-bold">
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
           <span className="text-textGray font-normal">
             &nbsp;와(과) 연관된 OHZU
           </span>
         </h1>
         <div className=" w-full flex justify-center mb-12">
-          <Category setCate={setCate} />
+          <UserCateNavbar setCate={setCate} />
         </div>
         <div className="max-w-[1200px] m-auto min-h-screen ">
           <div className="inner-top-wrap flex justify-between items-center mb-[15px]">
             <p className="text-[20px] font-semibold">
-              게시물 <span className="text-primary">{searchData?.length}</span>
+              게시물{" "}
+              <span className="text-primary">
+                {cate === "전체"
+                  ? searchData?.length
+                  : searchData?.filter((post: any) => cate === post.item.type)
+                      .length}
+              </span>
             </p>
             {/* <Dropdown setDrop={setDrop} drop={drop} />
              */}
@@ -193,20 +200,26 @@ export default function SearchInclude({
             &nbsp;와(과) 연관된 OHZU
           </span>
         </h1>
-        <div className=" w-full flex justify-center mb-12">
+        <div className="w-full flex justify-center mb-5">
           <Category setCate={setCate} />
         </div>
-        <div className="max-w-[1200px] m-auto min-h-screen ">
+        <div className="max-w-[1200px] m-auto min-h-screen">
           <div className="inner-top-wrap flex justify-between items-center mb-[15px]">
             <p className="ml-6 text-sm font-semibold">
-              게시물 <span className="text-primary">{searchData?.length}</span>
+              게시물{" "}
+              <span className="text-primary">
+                {cate === "전체"
+                  ? searchData?.length
+                  : searchData?.filter((post: any) => cate === post.item.type)
+                      .length}
+              </span>
             </p>
             {/* <Dropdown setDrop={setDrop} drop={drop} />
              */}
             <div>
               <div
                 onClick={() => setDropOnOff(!dropOnOff)}
-                className="pr-3 sm:pr-0 pb-3 sm:pb-0 w-[111px] h-[33px] text-[14px] sm:text-base text-[#828293] flex justify-center items-center cursor-pointer"
+                className="pr-3 sm:pr-0 sm:pb-0 w-[111px] h-[33px] text-[14px] sm:text-base text-[#828293] flex justify-center items-center cursor-pointer"
               >
                 {drop}
                 {dropOnOff ? (
