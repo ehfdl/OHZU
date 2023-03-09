@@ -15,12 +15,9 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import React, { SetStateAction, useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { GrFacebook } from "react-icons/gr";
+import React, { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { SiNaver, SiKakaotalk } from "react-icons/si";
 import axios from "axios";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
@@ -358,7 +355,7 @@ const LoginModal = () => {
       {/* 웹 */}
       <div className="hidden sm:flex w-full h-screen absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-        <div className="inner max-w-[588px] w-full max-h-[700px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
+        <div className="inner max-w-[588px] w-full max-h-[90%] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => {
