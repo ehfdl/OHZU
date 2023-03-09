@@ -10,9 +10,10 @@ import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 
 export interface ProfileModalProps {
   myProfile?: any;
+  myPosts?: any;
 }
 
-const ProfileModal = ({ myProfile }: ProfileModalProps) => {
+const ProfileModal = ({ myProfile, myPosts }: ProfileModalProps) => {
   const [form, setForm] = useState(myProfile);
   const [imgFile, setImgFile] = useState<File | null>();
 
@@ -179,7 +180,10 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
           <button
             className="w-full mt-7 text-right text-textGray"
             onClick={() => {
-              showModal({ modalType: "DeleteAccountModal", modalProps: {} });
+              showModal({
+                modalType: "DeleteAccountModal",
+                modalProps: { myPosts: myPosts },
+              });
             }}
           >
             회원탈퇴

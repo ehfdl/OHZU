@@ -2,10 +2,27 @@ import React, { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
+import useDeletePost from "@/hooks/query/post/useDeletePost";
+import { authService, dbService, storageService } from "@/firebase";
+import { deleteUser, signOut } from "firebase/auth";
+import { BEER_IMG, ETC_IMG, LIQUOR_IMG, SOJU_IMG } from "@/util";
+import { deleteObject, ref } from "firebase/storage";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
+import { useRouter } from "next/router";
 
-export interface DeleteAccountModalProps {}
+export interface DeleteAccountModalProps {
+  myPosts?: any;
+}
 
-const DeleteAccountModal = ({}: DeleteAccountModalProps) => {
+const DeleteAccountModal = ({ myPosts }: DeleteAccountModalProps) => {
+  const router = useRouter();
   const [form, setForm] = useState({ check: false, pw: "" });
   const [valiCheck, setValiCheck] = useState("");
   const [valiPw, setValiPw] = useState("");
@@ -42,14 +59,166 @@ const DeleteAccountModal = ({}: DeleteAccountModalProps) => {
     //   }
   };
 
+  const deleteAll = async () => {
+    if (myPosts) {
+      myPosts.map(async (item: any) => {
+        if (item && authService.currentUser?.uid) {
+          const commentQuery = query(
+            collection(dbService, "Comments"),
+            where("postId", "==", item.postId)
+          );
+          const myCommentQuery = query(
+            collection(dbService, "Comments"),
+            where("userId", "==", authService.currentUser?.uid)
+          );
+
+          const commentQuerySnapShot = await getDocs(commentQuery);
+          const myCommentQuerySnapShot = await getDocs(myCommentQuery);
+
+          const recommentQuery = query(
+            collection(dbService, "Recomments"),
+            where("postId", "==", item.postId)
+          );
+          const myRecommentQuery = query(
+            collection(dbService, "Recomments"),
+            where("userId", "==", authService.currentUser?.uid)
+          );
+
+          const recommentQuerySnapShot = await getDocs(recommentQuery);
+          const myRecommentQuerySnapShot = await getDocs(myRecommentQuery);
+
+          if (
+            commentQuerySnapShot !== null ||
+            commentQuerySnapShot !== undefined
+          ) {
+            const newComment: any = [];
+            commentQuerySnapShot.forEach((doc) => {
+              const newCommentObj = {
+                id: doc.id,
+                ...doc.data(),
+              };
+              newComment.push(newCommentObj.id);
+            });
+
+            newComment.map(async (id: string) => {
+              await deleteDoc(doc(dbService, "Comments", id as string));
+            });
+          }
+          if (
+            myCommentQuerySnapShot !== null ||
+            myCommentQuerySnapShot !== undefined
+          ) {
+            const newComment: any = [];
+            myCommentQuerySnapShot.forEach((doc) => {
+              const newCommentObj = {
+                id: doc.id,
+                ...doc.data(),
+              };
+              newComment.push(newCommentObj.id);
+            });
+
+            newComment.map(async (id: string) => {
+              await deleteDoc(doc(dbService, "Comments", id as string));
+            });
+          }
+
+          if (
+            recommentQuerySnapShot !== null ||
+            recommentQuerySnapShot !== undefined
+          ) {
+            const newRecomment: any = [];
+            recommentQuerySnapShot.forEach((doc) => {
+              const newObj = {
+                id: doc.id,
+                ...doc.data(),
+              };
+              newRecomment.push(newObj.id);
+            });
+
+            newRecomment.map(async (id: string) => {
+              await deleteDoc(doc(dbService, "Recomments", id as string));
+            });
+          }
+
+          if (
+            myRecommentQuerySnapShot !== null ||
+            myRecommentQuerySnapShot !== undefined
+          ) {
+            const newRecomment: any = [];
+            myRecommentQuerySnapShot.forEach((doc) => {
+              const newObj = {
+                id: doc.id,
+                ...doc.data(),
+              };
+              newRecomment.push(newObj.id);
+            });
+
+            newRecomment.map(async (id: string) => {
+              await deleteDoc(doc(dbService, "Recomments", id as string));
+            });
+          }
+
+          // Delete Image
+          const postImgId = item?.img?.map((item: string) => {
+            if (
+              item !== SOJU_IMG &&
+              item !== BEER_IMG &&
+              item !== LIQUOR_IMG &&
+              item !== ETC_IMG
+            ) {
+              return item.split("2F")[1].split("?")[0];
+            } else {
+              return null;
+            }
+          });
+
+          postImgId?.map(async (item: string | null) => {
+            if (item !== null && item !== undefined) {
+              const desertRef = ref(storageService, `post/${item}`);
+
+              await deleteObject(desertRef)
+                .then(() => {
+                  // File deleted successfully
+                })
+                .catch((error) => {
+                  console.log("error", error);
+                  // Uh-oh, an error occurred!
+                });
+            }
+          });
+        }
+        await deleteDoc(doc(dbService, "Posts", item.postId));
+      });
+    }
+    await deleteDoc(
+      doc(dbService, "Users", authService.currentUser?.uid as string)
+    );
+    console.log("완료");
+  };
+
   const onSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     validateForm();
-    //     if(form.pw === "비밀번호랑 같다면" ){
-    //         회원탈퇴
-    // hideModal();
 
-    //     }
+    if (authService.currentUser?.uid) {
+      deleteAll();
+
+      deleteUser(authService.currentUser)
+        .then(() => {
+          console.log("authService.currentUser : ", authService.currentUser);
+          sessionStorage.clear();
+        })
+        .catch((error) => {
+          console.log(
+            "Error : ",
+            error,
+            "authService.CurrentUser",
+            authService.currentUser
+          );
+        });
+      hideModal();
+      router.push("/");
+    }
   };
 
   useEffect(() => {

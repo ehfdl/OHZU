@@ -194,7 +194,7 @@ const Mypage = () => {
                 onClick={() =>
                   showModal({
                     modalType: "ProfileModal",
-                    modalProps: { myProfile: myProfile },
+                    modalProps: { myProfile: myProfile, myPosts: myPosts },
                   })
                 }
               >
