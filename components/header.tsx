@@ -1,4 +1,4 @@
-import { apiKey, authService } from "@/firebase";
+import { apiKey, authService, dbService } from "@/firebase";
 import { signOut } from "firebase/auth";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -7,10 +7,13 @@ import Image from "next/image";
 import Alarm from "./sub_page/alarm";
 import { useRouter } from "next/router";
 import useModal from "@/hooks/useModal";
+import { doc, getDoc } from "firebase/firestore";
+import ProfileGrade from "./profile_grade";
 
 const Header = ({ ...props }: any) => {
   // login, logout 상태변화 감지
   const [currentUser, setCurrentUser] = useState(false);
+  const [user, setUser] = useState<any>();
   const [search, setSearch] = useState("");
   const router = useRouter();
   const [ssuid, setSsuid] = useState<any>("");
@@ -20,6 +23,24 @@ const Header = ({ ...props }: any) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [mobileSearch, setMobileSearch] = useState(false);
+
+  const getUser = async () => {
+    if (authService.currentUser?.uid) {
+      const userRef = doc(
+        dbService,
+        "Users",
+        authService.currentUser?.uid as string
+      );
+      const userSnap = await getDoc(userRef);
+      const userData = userSnap.data();
+
+      const userProfile = {
+        ...userData,
+      };
+
+      setUser(userProfile);
+    }
+  };
 
   useEffect(() => {
     authService.onAuthStateChanged((user) => {
@@ -32,6 +53,12 @@ const Header = ({ ...props }: any) => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (authService.currentUser?.uid) {
+      getUser();
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (sessionStorage) {
@@ -188,45 +215,13 @@ const Header = ({ ...props }: any) => {
               height="24"
               alt="검색 아이콘"
               priority={true}
-              className="cursor-pointer lg:hidden mr-1"
+              className="cursor-pointer lg:hidden mr-2"
               onClick={() => {
                 setMobileSearch(true);
               }}
             />
 
-            {!authService.currentUser ? (
-              <Image
-                src="/image/m(notLogin)_mypage.svg"
-                width="20"
-                height="24"
-                alt="마이페이지"
-                className="sm:hidden ml-3 cursor-pointer"
-                priority={true}
-                onClick={() => {
-                  if (!authService.currentUser) {
-                    showModal({ modalType: "LoginModal", modalProps: {} });
-                  } else if (authService.currentUser) {
-                    router.push(`/mypage`);
-                  }
-                }}
-              />
-            ) : (
-              <Image
-                src="/image/m(login)_mypage.svg"
-                width="20"
-                height="24"
-                alt="마이페이지"
-                className="sm:hidden mx-3 cursor-pointer"
-                priority={true}
-                onClick={() => {
-                  if (!authService.currentUser) {
-                    showModal({ modalType: "LoginModal", modalProps: {} });
-                  } else if (authService.currentUser) {
-                    router.push(`/mypage`);
-                  }
-                }}
-              />
-            )}
+            {!authService.currentUser ? null : <Alarm ssuid={ssuid} />}
 
             {authService.currentUser || ssuid ? (
               authService.currentUser?.uid ===
@@ -238,7 +233,6 @@ const Header = ({ ...props }: any) => {
                 </Link>
               ) : (
                 <>
-                  <Alarm ssuid={ssuid} />
                   <Link aria-label="my-page" href="/mypage">
                     <div className="sm:text-[18px]  sm:duration-150 sm:hover:text-primary">
                       <span className="hidden sm:block">마이페이지</span>
@@ -260,6 +254,38 @@ const Header = ({ ...props }: any) => {
                 <span className="hidden sm:block">로그인</span>
               </button>
             )}
+            {!authService.currentUser ? (
+              <Image
+                src="/image/m(notLogin)_mypage.svg"
+                width="32"
+                height="32"
+                alt="마이페이지"
+                className="sm:hidden mr-4 cursor-pointer"
+                priority={true}
+                onClick={() => {
+                  if (!authService.currentUser) {
+                    showModal({ modalType: "LoginModal", modalProps: {} });
+                  } else if (authService.currentUser) {
+                    router.push(`/mypage`);
+                  }
+                }}
+              />
+            ) : (
+              <div
+                onClick={() => {
+                  if (!authService.currentUser) {
+                    showModal({ modalType: "LoginModal", modalProps: {} });
+                  } else if (authService.currentUser) {
+                    router.push(`/mypage`);
+                  }
+                }}
+              >
+                {user && (
+                  <ProfileGrade img={user.imageURL} point={user.point} />
+                )}
+              </div>
+            )}
+
             {authService.currentUser || ssuid ? (
               <button
                 aria-label="logout-modal"

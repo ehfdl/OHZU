@@ -124,7 +124,11 @@ export const SearchCard = ({ card }: any) => {
         </div>
         <p className=" text-[14px] max-w-[384px] w-full h-[45px] px-5 overflow-hidden break-words">
           {card.item?.ingredient.map((tag: any, i: number) => (
-            <Link aria-label={tag} href={`/search/include/${tag}`} key={i}>
+            <Link
+              aria-label={tag}
+              href={`/search/include/${tag.replaceAll(" ", "_")}`}
+              key={i}
+            >
               <span className="mr-[10px] text-[14px] font-normal text-textGray">
                 {"#" + tag}
               </span>

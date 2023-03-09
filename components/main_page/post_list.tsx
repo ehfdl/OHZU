@@ -118,7 +118,7 @@ const PostList = () => {
       <div>
         <div className="sm:w-full flex flex-col justify-start items-center sm:mb-3 sm:min-h-screen">
           <Category setCate={setCate} />
-          <div className="sm:w-[1200px] w-full flex flex-col justify-start items-center px-4">
+          <div className="max-w-[1200px] w-full flex flex-col justify-start items-center px-4">
             <div className="w-full sm:mt-12 mt-4 mb-4 flex justify-between sm:mb-6">
               <div className="sm:text-xl text-sm font-bold">
                 게시물{" "}
@@ -130,7 +130,7 @@ const PostList = () => {
               </div>
             </div>
 
-            <div className="w-full gap-4 bg-white grid grid-cols-2  sm:grid sm:grid-cols-3 sm:gap-6">
+            <div className="w-full gap-4 bg-white grid grid-cols-2 relative sm:grid sm:grid-cols-3 sm:gap-6">
               {cate === "전체"
                 ? posts
                     ?.map((post: any) => (
@@ -171,7 +171,7 @@ const PostList = () => {
                     : userPosts?.filter((post) => cate === post.type).length}
                 </span>
               </div>
-              <div className="group">
+              <div className="group w-full min-h-[244px]">
                 <Swiper
                   spaceBetween={160}
                   slidesPerView={3}
@@ -181,19 +181,24 @@ const PostList = () => {
                     nextEl: navigationNextRef.current,
                   }}
                   breakpoints={{
+                    160: {
+                      slidesPerView: 3,
+                      spaceBetween: 10,
+                      slidesPerGroup: 2,
+                    },
                     320: {
                       slidesPerView: 3,
-                      spaceBetween: 130,
+                      spaceBetween: 10,
                       slidesPerGroup: 2,
                     },
                     500: {
                       slidesPerView: 3,
-                      spaceBetween: 30,
+                      spaceBetween: 10,
                       slidesPerGroup: 3,
                     },
                     640: {
                       slidesPerView: 3,
-                      spaceBetween: 30,
+                      spaceBetween: 10,
                       slidesPerGroup: 3,
                     },
                     768: {
@@ -206,7 +211,7 @@ const PostList = () => {
                   grabCursor={true}
                   slidesPerGroup={2}
                 >
-                  <div className="">
+                  <div className="w-full h-full">
                     {userLikePosts?.map((post: any) => (
                       <SwiperSlide key={post.postId}>
                         <PostCard key={post.postId} post={post} type="like" />
@@ -250,7 +255,7 @@ const PostList = () => {
                     : userPosts?.filter((post) => cate === post.type).length}
                 </span>
               </div>
-              <div className="group overflow-visible">
+              <div className="group  overflow-visible">
                 <Swiper
                   spaceBetween={160}
                   slidesPerView={3}
@@ -260,19 +265,24 @@ const PostList = () => {
                     nextEl: nextRef.current,
                   }}
                   breakpoints={{
+                    160: {
+                      slidesPerView: 3,
+                      spaceBetween: 10,
+                      slidesPerGroup: 2,
+                    },
                     320: {
                       slidesPerView: 3,
-                      spaceBetween: 130,
+                      spaceBetween: 10,
                       slidesPerGroup: 2,
                     },
                     500: {
                       slidesPerView: 3,
-                      spaceBetween: 30,
+                      spaceBetween: 10,
                       slidesPerGroup: 3,
                     },
                     640: {
                       slidesPerView: 3,
-                      spaceBetween: 30,
+                      spaceBetween: 10,
                       slidesPerGroup: 3,
                     },
                     768: {
@@ -285,7 +295,7 @@ const PostList = () => {
                   grabCursor={true}
                   slidesPerGroup={2}
                 >
-                  <div>
+                  <div className="w-3/5">
                     {userViewPosts?.map((post: any) => (
                       <SwiperSlide key={post.postId}>
                         <PostCard key={post.postId} post={post} type="like" />

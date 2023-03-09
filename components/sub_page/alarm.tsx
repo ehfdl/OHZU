@@ -1,7 +1,8 @@
 import { authService, dbService } from "@/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { AiFillBell } from "react-icons/ai";
+import { AiFillBell, AiOutlineBell } from "react-icons/ai";
 import AlarmModal from "./alarm_modal";
 
 const Alarm = ({ ssuid }: { ssuid: string }) => {
@@ -33,8 +34,12 @@ const Alarm = ({ ssuid }: { ssuid: string }) => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:block mr-2">
-        <AiFillBell
+      <div className="hidden sm:block sm:mr-2">
+        <Image
+          src="/image/w_bell.svg"
+          width={32}
+          height={32}
+          alt="w_bell"
           onClick={() => setIsAlarmOpenModal(!isAlarmOpenModal)}
           className="sm:w-8 sm:h-8 w-6 h-6 cursor-pointer"
         />
@@ -56,13 +61,17 @@ const Alarm = ({ ssuid }: { ssuid: string }) => {
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden mr-2">
-        <AiFillBell
+      <div className="sm:hidden ml-1">
+        <Image
+          src="/image/m_bell.svg"
+          width={28}
+          height={28}
+          alt="w_bell"
           onClick={() => setIsAlarmOpenModal(!isAlarmOpenModal)}
           className="w-7 h-7 cursor-pointer"
         />
         {alarm.filter((content) => content.isDone === false).length !== 0 ? (
-          <div className="w-[6px] h-[6px] rounded-full bg-primary text-[8px] text-white flex justify-center items-center pt-[1px] absolute top-0 ml-6 "></div>
+          <div className="w-[6px] h-[6px] rounded-full bg-primary text-[8px] text-white flex justify-center items-center pt-[1px] absolute top-0 ml-[22px] "></div>
         ) : (
           <div></div>
         )}
