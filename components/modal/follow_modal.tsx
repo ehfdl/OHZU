@@ -33,9 +33,9 @@ const FollowModal = ({
     };
   }, []);
   return (
-    <div className=" w-full h-screen flex absolute justify-center top-0 left-0 items-center">
+    <div className="w-full h-screen flex absolute justify-center top-0 left-0 items-center sm:py-10">
       <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-      <div className="w-[390px] h-full sm:w-[588px] sm:h-[820px] rounded bg-white z-40 flex flex-col justify-start items-center">
+      <div className="w-[390px] h-full sm:w-[588px] sm:min-h-[90%] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
           aria-label="close"
           className="sm:w-10 w-9 aspect-square absolute mt-6 sm:mt-8 ml-[340px] sm:ml-[500px]"

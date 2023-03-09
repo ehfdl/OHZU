@@ -552,7 +552,7 @@ const JoinModal = () => {
       <div className="hidden sm:block  w-full h-screen absolute justify-center top-0 left-0 items-center ">
         <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
 
-        <div className="inner max-w-[894px] w-full max-h-[700px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <div className="inner max-w-[894px] w-full max-h-[700px] h-full bg-white z-[10] rounded fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-none">
           <div className="flex flex-row">
             <div className="loginContainer flex-col ml-10 text-center">
               <MdOutlineClose
