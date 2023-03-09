@@ -7,7 +7,6 @@ import {
 } from "@/firebase";
 import {
   FacebookAuthProvider,
-  getAuth,
   GoogleAuthProvider,
   sendPasswordResetEmail,
   signInWithCustomToken,
@@ -15,15 +14,13 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import React, { SetStateAction, useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { GrFacebook } from "react-icons/gr";
-import { MdOutlineClose } from "react-icons/md";
+import { useEffect, useState } from "react";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { SiNaver, SiKakaotalk } from "react-icons/si";
+import { MdOutlineClose } from "react-icons/md";
 import axios from "axios";
-import Image from "next/image";
 import useModal from "@/hooks/useModal";
+import Image from "next/image";
 import FindPassword from "../find_password";
 
 export interface LoginModalProps {}
@@ -31,6 +28,7 @@ export interface LoginModalProps {}
 const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [checkEmail, setCheckEmail] = useState("");
 
   const [findPassword, setFindPassword] = useState(false);
   const [mobileOption, setMobileOption] = useState(false);
@@ -85,6 +83,8 @@ const LoginModal = () => {
         if (errorMessage.includes("user-not-found")) {
           alert("가입되지 않은 회원입니다.");
           return;
+        } else if (errorMessage.includes("auth/invalid-email")) {
+          alert("가입되지 않은 회원입니다.");
         } else if (errorMessage.includes("wrong-password")) {
           alert("비밀번호가 잘못 되었습니다.");
         }
@@ -93,12 +93,13 @@ const LoginModal = () => {
 
   // 이메일 유효성 검사
   useEffect(() => {
-    if (email) {
+    if (email)
       if (email.match(emailRegEx) === null) {
-        setEmail("이메일 형식을 확인해주세요.");
+        setCheckEmail("이메일 형식을 확인해주세요.");
+      } else {
+        setCheckEmail("");
       }
-    }
-  }, [setEmail]);
+  }, [setEmail, email]);
 
   // 비밀번호 재설정 함수 (비밀번호 찾기)
   const resetPassword = () => {
@@ -162,13 +163,13 @@ const LoginModal = () => {
         hideModal();
       })
       .catch((error) => {
-        // 이 부분에서는 오류를 처리합니다.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // 사용된 사용자 계정 이메일
-        const email = error.customData.email;
-        // AuthCredential 타입 제공됩니다.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "구글 로그인 취소",
+            text: "구글 로그인을 취소하였습니다.",
+          },
+        });
       });
   };
 
@@ -213,14 +214,13 @@ const LoginModal = () => {
         hideModal();
       })
       .catch((error) => {
-        // 이 부분에서는 오류를 처리합니다.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // 사용된 사용자 계정 이메일
-        const email = error.customData.email;
-        // AuthCredential 타입 제공됩니다.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        alert(error);
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "페이스북 로그인 취소",
+            text: "페이스북 로그인을 취소하였습니다.",
+          },
+        });
       });
   };
 
@@ -283,13 +283,18 @@ const LoginModal = () => {
                     alarm: [],
                   }
                 );
-                alert("카카오 간편 회원가입 성공!");
+                console.log("카카오 간편 회원가입 성공!");
               }
               hideModal();
             })
             .catch((error: any) => {
-              const errorMessage = error.message;
-              console.log(errorMessage);
+              showModal({
+                modalType: "AlertModal",
+                modalProps: {
+                  title: "카카오 로그인 취소",
+                  text: "카카오 로그인을 취소하였습니다.",
+                },
+              });
             });
         });
       },
@@ -343,7 +348,6 @@ const LoginModal = () => {
   }, [email, password]);
 
   // 인증메일을 받지않고 로그인창을 끄면 서비스 이용이 가능함을 확인함. 이를 해결하는 함수
-  //✅ header에 있는 logOut 메소드를 login_modal로 넘겨주려면 전역모달에 어떻게 넣어야 하는가?
   // 나가기 버튼 클릭 시, 로그아웃 시키는 함수
   const logOutClose = () => {
     if (authService.currentUser) {
@@ -381,8 +385,11 @@ const LoginModal = () => {
                   id="email"
                   defaultValue={email}
                   placeholder="이메일을 입력해주세요."
-                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-4 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
                 />
+                <p className=" max-w-[472px] w-full m-auto text-right text-sm text-[#999999]">
+                  {checkEmail ? checkEmail : null}
+                </p>
               </div>
               <div>
                 <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
@@ -395,13 +402,15 @@ const LoginModal = () => {
                   placeholder="비밀번호를 입력해주세요."
                   className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
                 />
-                <p
-                  onClick={() => {
-                    setFindPassword(true);
-                  }}
-                  className=" w-[472px] m-auto mb-[22px] text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary"
-                >
-                  비밀번호 찾기
+                <p className=" w-[472px] m-auto mb-[22px] text-right text-gray-500 text-sm">
+                  <span
+                    onClick={() => {
+                      setFindPassword(true);
+                    }}
+                    className="cursor-pointer duration-150 hover:text-primary"
+                  >
+                    비밀번호 찾기
+                  </span>
                 </p>
                 {/* 비밀번호 찾기 */}
                 {findPassword === true ? (
@@ -486,7 +495,7 @@ const LoginModal = () => {
                   onClick={() => {
                     showModal({ modalType: "JoinModal", modalProps: {} });
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer duration-150 hover:text-primary"
                 >
                   회원가입
                 </span>
@@ -518,11 +527,14 @@ const LoginModal = () => {
                 <input
                   onChange={(e) => setEmail(e.target.value)}
                   type="text"
-                  id="email"
+                  id="m_email"
                   // defaultValue={email}
                   placeholder="이메일을 입력해주세요."
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-6 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
                 />
+                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs">
+                  {checkEmail ? checkEmail : null}
+                </p>
               </div>
               <div>
                 <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
@@ -531,15 +543,16 @@ const LoginModal = () => {
                 <input
                   onChange={(e) => setPassword(e.target.value)}
                   type="password"
-                  id="password"
+                  id="m_password"
                   placeholder="비밀번호를 입력해주세요."
                   className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
                 />
-                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs cursor-pointer duration-150 hover:text-primary">
+                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs">
                   <span
                     onClick={() => {
                       setFindPassword(true);
                     }}
+                    className="cursor-pointer duration-150 hover:text-primary"
                   >
                     비밀번호 찾기
                   </span>
@@ -563,7 +576,7 @@ const LoginModal = () => {
                         className="flex  items-center mb-[48px]"
                       >
                         <input
-                          id="saveEmail"
+                          id="m_saveEmail"
                           name="saveEmail"
                           type="checkbox"
                           checked={checkedSaveEmail as boolean}
@@ -572,7 +585,7 @@ const LoginModal = () => {
                             setCheckedSaveEmail(!checkedSaveEmail)
                           }
                         />
-                        <span className="ml-2 ">이메일 저장하기</span>
+                        <span className="ml-2 text-sm ">이메일 저장하기</span>
                       </label>
                     </div>
 
@@ -634,7 +647,7 @@ const LoginModal = () => {
                   onClick={() => {
                     showModal({ modalType: "JoinModal", modalProps: {} });
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer duration-150 hover:text-primary"
                 >
                   회원가입
                 </span>

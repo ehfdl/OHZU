@@ -1,6 +1,6 @@
 import { apiKey, authService } from "@/firebase";
 import useModal from "@/hooks/useModal";
-import { signOut } from "firebase/auth";
+import { deleteUser, getAuth, signOut } from "firebase/auth";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -33,12 +33,45 @@ const Footer = () => {
       });
   };
 
+  // 회원탈퇴
+  const deleteAccount = () => {
+    showModal({
+      modalType: "ConfirmModal",
+      modalProps: {
+        title: "회원 탈퇴",
+        text: "탈퇴하시게 되면 모든 정보가 사라집니다.",
+
+        rightbtnfunc: () => {
+          showModal({
+            modalType: "AlertModal",
+            modalProps: {
+              title: "회원 탈퇴",
+              text: "회원 탈퇴 되었습니다. 다음에 또 봬요!",
+            },
+          });
+          if (authService.currentUser?.uid) {
+            deleteUser(authService.currentUser)
+              .then(() => {
+                console.log(
+                  "authService.currentUser : ",
+                  authService.currentUser
+                );
+              })
+              .catch((error) => {
+                console.log("Error : ", error);
+              });
+          }
+        },
+      },
+    });
+  };
+
   return (
     <>
       {/* 웹 */}
       <div className="hidden sm:block w-full h-[250px] bg-second">
-        <div className="topContentsWrap flex justify-between items-end">
-          <div className="inline-block mt-[86px] ml-[69px]">
+        <div className="topContentsWrap flex h-full justify-between items-center">
+          <div className="inline-block ml-[69px]">
             <Link aria-label="home" href={`/main`}>
               <Image
                 className="w-[164px] h-[42px]"
@@ -49,36 +82,70 @@ const Footer = () => {
               />
             </Link>
           </div>
-          <nav className="flex justify-between max-w-[400px] w-full mr-[183px] text-xs ">
-            <Link
-              aria-label="intro-brand"
-              href="/about"
-              className="duration-150 hover:text-primary"
-            >
-              브랜드 소개
-            </Link>
-            <Link
-              aria-label="term"
-              href="/temporary"
-              className="duration-150 hover:text-primary"
-            >
-              이용약관
-            </Link>
-            <Link
-              aria-label="announcement"
-              href="/temporary"
-              className="duration-150 hover:text-primary"
-            >
-              공지사항
-            </Link>
-            <Link
-              aria-label="privacy"
-              href="/temporary"
-              className="duration-150 hover:text-primary"
-            >
-              개인정보 처리방침
-            </Link>
-          </nav>
+          <div className="flex flex-col max-w-[400px] w-full mr-[183px] text-xs ">
+            <nav className="flex justify-between">
+              <Link
+                aria-label="intro-brand"
+                href="/about"
+                className="duration-150 hover:text-primary"
+              >
+                브랜드 소개
+              </Link>
+              <Link
+                aria-label="term"
+                href="/temporary"
+                className="duration-150 hover:text-primary"
+              >
+                이용약관
+              </Link>
+              <Link
+                aria-label="announcement"
+                href="/temporary"
+                className="duration-150 hover:text-primary"
+              >
+                공지사항
+              </Link>
+              <Link
+                aria-label="privacy"
+                href="/temporary"
+                className="duration-150 hover:text-primary"
+              >
+                개인정보 처리방침
+              </Link>
+            </nav>
+            <div className="flex mt-4">
+              <a
+                aria-label="OHZU Team Notion"
+                href={`https://silent-attraction-8d9.notion.site/OHZU-aeb08cd15d9c482f8b95a358b44ef646`}
+                target="_blank"
+              >
+                <Image
+                  className="w-[30px] h-[32px]"
+                  src="/image/notion.svg"
+                  alt="Notion Logo"
+                  width="100"
+                  height="100"
+                />
+              </a>
+              <a
+                aria-label="OHZU Team GitHub"
+                href={`https://github.com/ehfdl/OHZU`}
+                className="ml-6"
+                target="_blank"
+              >
+                <Image
+                  className="w-[32px] h-[32px]"
+                  src="/image/github.svg"
+                  alt="github Logo"
+                  width="100"
+                  height="100"
+                />
+              </a>
+            </div>
+            <p onClick={deleteAccount} className="cursor-pointer">
+              회원탈퇴
+            </p>
+          </div>
         </div>
       </div>
 
