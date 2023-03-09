@@ -134,7 +134,7 @@ const ReportModal = ({ type, post, currentUser, pastPost, reportId }: any) => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10 flex-wrap py-5 overflow-scroll scrollbar-none">
       <div className="w-full relative sm:w-[588px] rounded bg-white z-40 flex flex-col justify-start items-center">
         <button
           aria-label="close"

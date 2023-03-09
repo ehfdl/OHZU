@@ -10,9 +10,10 @@ import useUpdateUser from "@/hooks/query/user/useUpdateUser";
 
 export interface ProfileModalProps {
   myProfile?: any;
+  myPosts?: any;
 }
 
-const ProfileModal = ({ myProfile }: ProfileModalProps) => {
+const ProfileModal = ({ myProfile, myPosts }: ProfileModalProps) => {
   const [form, setForm] = useState(myProfile);
   const [imgFile, setImgFile] = useState<File | null>();
 
@@ -20,7 +21,7 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
 
   const [validateNickName, setValidateNickName] = useState("");
 
-  const { hideModal } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const onChangeValue = (
     event:
@@ -111,8 +112,8 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
   }, [form]);
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10">
-      <div className="w-full h-full relative sm:w-[588px] sm:min-h-[90%] bg-white z-40 flex flex-col justify-start items-center rounded overflow-scroll scrollbar-none pb-2">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10 flex-wrap overflow-scroll scrollbar-none">
+      <div className="w-full relative max-w-[390px] sm:max-w-[588px] pt-4 pb-10 sm:py-20 bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
           aria-label="close"
           className="w-9  sm:w-10 aspect-square absolute top-7 right-7"
@@ -121,8 +122,8 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
           <FiX className="w-full h-full text-phGray" />
         </button>
 
-        <div className="text-[18px] sm:text-[32px] font-bold mt-6 sm:mt-[84px]">
-          프로필 편집
+        <div className="text-[18px] sm:text-[32px] font-bold mt-6 ">
+          프로필 설정
         </div>
         <div className="w-[120px] sm:w-40 aspect-square mt-12 sm:mt-6 bg-[#d9d9d9] rounded-full ">
           {preview !== null
@@ -175,13 +176,25 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
             onChange={onChangeValue}
             className="w-full sm:text-base text-[14px] min-h-[132px] mt-2 bg-[#f5f5f5] py-2 px-4 resize-none"
           />
+
+          <button
+            className="w-full mt-7 text-right text-textGray"
+            onClick={() => {
+              showModal({
+                modalType: "DeleteAccountModal",
+                modalProps: { myPosts: myPosts },
+              });
+            }}
+          >
+            회원탈퇴
+          </button>
         </div>
         <button
           aria-label="save"
           onClick={onSubmit}
-          className="w-[344px] sm:w-[280px]  bg-primary text-white my-16 sm:my-9 py-3"
+          className="w-[344px] sm:w-[280px]  bg-primary text-white mt-4 py-3"
         >
-          저장
+          수정하기
         </button>
       </div>
     </div>

@@ -1,7 +1,5 @@
-import { getPost } from "@/api/postAPI";
 import Layout from "@/components/layout";
 import { dbService, storageService } from "@/firebase";
-import useGetPost from "@/hooks/query/post/useGetPost";
 import useUpdatePost from "@/hooks/query/post/useUpdatePost";
 import {
   deleteObject,

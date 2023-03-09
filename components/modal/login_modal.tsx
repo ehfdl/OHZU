@@ -7,7 +7,6 @@ import {
 } from "@/firebase";
 import {
   FacebookAuthProvider,
-  getAuth,
   GoogleAuthProvider,
   sendPasswordResetEmail,
   signInWithCustomToken,
@@ -19,8 +18,8 @@ import React, { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import axios from "axios";
-import Image from "next/image";
 import useModal from "@/hooks/useModal";
+import Image from "next/image";
 import FindPassword from "../find_password";
 
 export interface LoginModalProps {}
@@ -28,6 +27,7 @@ export interface LoginModalProps {}
 const LoginModal = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [checkEmail, setCheckEmail] = useState("");
 
   const [findPassword, setFindPassword] = useState(false);
   const [mobileOption, setMobileOption] = useState(false);
@@ -82,6 +82,8 @@ const LoginModal = () => {
         if (errorMessage.includes("user-not-found")) {
           alert("가입되지 않은 회원입니다.");
           return;
+        } else if (errorMessage.includes("auth/invalid-email")) {
+          alert("가입되지 않은 회원입니다.");
         } else if (errorMessage.includes("wrong-password")) {
           alert("비밀번호가 잘못 되었습니다.");
         }
@@ -90,12 +92,13 @@ const LoginModal = () => {
 
   // 이메일 유효성 검사
   useEffect(() => {
-    if (email) {
+    if (email)
       if (email.match(emailRegEx) === null) {
-        setEmail("이메일 형식을 확인해주세요.");
+        setCheckEmail("이메일 형식을 확인해주세요.");
+      } else {
+        setCheckEmail("");
       }
-    }
-  }, [setEmail]);
+  }, [setEmail, email]);
 
   // 비밀번호 재설정 함수 (비밀번호 찾기)
   const resetPassword = () => {
@@ -159,13 +162,13 @@ const LoginModal = () => {
         hideModal();
       })
       .catch((error) => {
-        // 이 부분에서는 오류를 처리합니다.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // 사용된 사용자 계정 이메일
-        const email = error.customData.email;
-        // AuthCredential 타입 제공됩니다.
-        const credential = GoogleAuthProvider.credentialFromError(error);
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "구글 로그인 취소",
+            text: "구글 로그인을 취소하였습니다.",
+          },
+        });
       });
   };
 
@@ -210,14 +213,13 @@ const LoginModal = () => {
         hideModal();
       })
       .catch((error) => {
-        // 이 부분에서는 오류를 처리합니다.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // 사용된 사용자 계정 이메일
-        const email = error.customData.email;
-        // AuthCredential 타입 제공됩니다.
-        const credential = FacebookAuthProvider.credentialFromError(error);
-        alert(error);
+        showModal({
+          modalType: "AlertModal",
+          modalProps: {
+            title: "페이스북 로그인 취소",
+            text: "페이스북 로그인을 취소하였습니다.",
+          },
+        });
       });
   };
 
@@ -280,13 +282,18 @@ const LoginModal = () => {
                     alarm: [],
                   }
                 );
-                alert("카카오 간편 회원가입 성공!");
+                console.log("카카오 간편 회원가입 성공!");
               }
               hideModal();
             })
             .catch((error: any) => {
-              const errorMessage = error.message;
-              console.log(errorMessage);
+              showModal({
+                modalType: "AlertModal",
+                modalProps: {
+                  title: "카카오 로그인 취소",
+                  text: "카카오 로그인을 취소하였습니다.",
+                },
+              });
             });
         });
       },
@@ -340,7 +347,6 @@ const LoginModal = () => {
   }, [email, password]);
 
   // 인증메일을 받지않고 로그인창을 끄면 서비스 이용이 가능함을 확인함. 이를 해결하는 함수
-  //✅ header에 있는 logOut 메소드를 login_modal로 넘겨주려면 전역모달에 어떻게 넣어야 하는가?
   // 나가기 버튼 클릭 시, 로그아웃 시키는 함수
   const logOutClose = () => {
     if (authService.currentUser) {
@@ -353,9 +359,8 @@ const LoginModal = () => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:flex w-full h-screen absolute justify-center top-0 left-0 items-center ">
-        <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-        <div className="inner max-w-[588px] w-full max-h-[90%] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-scroll scrollbar-none">
+      <div className="hidden sm:flex fixed top-0 left-0 right-0 bottom-0 justify-center items-center flex-wrap z-10 overflow-y-scroll scrollbar-none bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px] py-5">
+        <div className="inner max-w-[588px] w-full py-10 bg-white z-[10]  rounded relative">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => {
@@ -364,9 +369,7 @@ const LoginModal = () => {
               }}
               className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
             />
-            <h4 className="text-[32px] font-bold mt-[60px] mb-[29px]">
-              로그인
-            </h4>
+            <h4 className="text-[32px] font-bold mt-8 mb-[29px]">로그인</h4>
             <form className="formContainer" onSubmit={signIn}>
               <div>
                 <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
@@ -378,8 +381,11 @@ const LoginModal = () => {
                   id="email"
                   defaultValue={email}
                   placeholder="이메일을 입력해주세요."
-                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-4 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
                 />
+                <p className=" max-w-[472px] w-full m-auto text-right text-sm text-[#999999]">
+                  {checkEmail ? checkEmail : null}
+                </p>
               </div>
               <div>
                 <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
@@ -392,13 +398,15 @@ const LoginModal = () => {
                   placeholder="비밀번호를 입력해주세요."
                   className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
                 />
-                <p
-                  onClick={() => {
-                    setFindPassword(true);
-                  }}
-                  className=" w-[472px] m-auto mb-[22px] text-right text-gray-500 text-sm cursor-pointer duration-150 hover:text-primary"
-                >
-                  비밀번호 찾기
+                <p className=" w-[472px] m-auto mb-[22px] text-right text-gray-500 text-sm">
+                  <span
+                    onClick={() => {
+                      setFindPassword(true);
+                    }}
+                    className="cursor-pointer duration-150 hover:text-primary"
+                  >
+                    비밀번호 찾기
+                  </span>
                 </p>
                 {/* 비밀번호 찾기 */}
                 {findPassword === true ? (
@@ -483,7 +491,7 @@ const LoginModal = () => {
                   onClick={() => {
                     showModal({ modalType: "JoinModal", modalProps: {} });
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer duration-150 hover:text-primary"
                 >
                   회원가입
                 </span>
@@ -494,8 +502,8 @@ const LoginModal = () => {
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden sm:w-full flex sm:justify-center sm:items-center">
-        <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
+      <div className="sm:hidden fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10 flex-wrap overflow-scroll scrollbar-none">
+        <div className="w-full relative max-w-[588px] pt-4 pb-10 sm:py-20 bg-white z-40 flex flex-col justify-start items-center rounded">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => {
@@ -504,9 +512,7 @@ const LoginModal = () => {
               }}
               className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
             />
-            <h4 className="text-[24px] font-bold mt-[100px] mb-[23px]">
-              로그인
-            </h4>
+            <h4 className="text-[24px] font-bold mt-16 mb-[23px]">로그인</h4>
             <form className="formContainer" onSubmit={signIn}>
               <div>
                 <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
@@ -515,11 +521,14 @@ const LoginModal = () => {
                 <input
                   onChange={(e) => setEmail(e.target.value)}
                   type="text"
-                  id="email"
+                  id="m_email"
                   // defaultValue={email}
                   placeholder="이메일을 입력해주세요."
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-6 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
                 />
+                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs">
+                  {checkEmail ? checkEmail : null}
+                </p>
               </div>
               <div>
                 <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
@@ -528,15 +537,16 @@ const LoginModal = () => {
                 <input
                   onChange={(e) => setPassword(e.target.value)}
                   type="password"
-                  id="password"
+                  id="m_password"
                   placeholder="비밀번호를 입력해주세요."
                   className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
                 />
-                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs cursor-pointer duration-150 hover:text-primary">
+                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs">
                   <span
                     onClick={() => {
                       setFindPassword(true);
                     }}
+                    className="cursor-pointer duration-150 hover:text-primary"
                   >
                     비밀번호 찾기
                   </span>
@@ -560,7 +570,7 @@ const LoginModal = () => {
                         className="flex  items-center mb-[48px]"
                       >
                         <input
-                          id="saveEmail"
+                          id="m_saveEmail"
                           name="saveEmail"
                           type="checkbox"
                           checked={checkedSaveEmail as boolean}
@@ -569,7 +579,7 @@ const LoginModal = () => {
                             setCheckedSaveEmail(!checkedSaveEmail)
                           }
                         />
-                        <span className="ml-2 ">이메일 저장하기</span>
+                        <span className="ml-2 text-sm ">이메일 저장하기</span>
                       </label>
                     </div>
 
@@ -587,9 +597,9 @@ const LoginModal = () => {
               </div>
 
               <div className="max-w-[358px] w-full m-auto flex items-center justify-center mt-[38px] mb-[54px]">
-                <div className="max-w-[116px] w-full h-[1px] mr-4 bg-textGray" />
+                <div className="max-w-[110px] w-full h-[1px] mr-4 bg-textGray" />
                 <p className="text-xl font-semibold ">소셜 로그인</p>
-                <div className="max-w-[116px] w-full h-[1px] ml-4 bg-textGray" />
+                <div className="max-w-[110px] w-full h-[1px] ml-4 bg-textGray" />
               </div>
 
               <div className="w-[280px] m-auto mb-[64px] flex items-center  justify-around">
@@ -631,7 +641,7 @@ const LoginModal = () => {
                   onClick={() => {
                     showModal({ modalType: "JoinModal", modalProps: {} });
                   }}
-                  className="cursor-pointer"
+                  className="cursor-pointer duration-150 hover:text-primary"
                 >
                   회원가입
                 </span>
