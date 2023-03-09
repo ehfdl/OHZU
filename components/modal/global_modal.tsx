@@ -6,7 +6,7 @@ import LoginModal from "./login_modal";
 import JoinModal from "./join_modal";
 import { modalState } from "../recoil/modal";
 import ProfileModal from "./profile_modal";
-
+import DeleteAccountModal from "./delete_account_modal";
 import ReportModal from "./report_modal";
 
 export const MODAL_TYPES = {
@@ -15,7 +15,7 @@ export const MODAL_TYPES = {
   LoginModal: "LoginModal",
   JoinModal: "JoinModal",
   ProfileModal: "ProfileModal",
-
+  DeleteAccountModal: "DeleteAccountModal",
   ReportModal: "ReportModal",
 } as const;
 
@@ -25,7 +25,7 @@ const MODAL_COMPONENTS: any = {
   [MODAL_TYPES.LoginModal]: LoginModal,
   [MODAL_TYPES.JoinModal]: JoinModal,
   [MODAL_TYPES.ProfileModal]: ProfileModal,
-
+  [MODAL_TYPES.DeleteAccountModal]: DeleteAccountModal,
   [MODAL_TYPES.ReportModal]: ReportModal,
 };
 

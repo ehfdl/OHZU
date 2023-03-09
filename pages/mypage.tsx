@@ -198,7 +198,7 @@ const Mypage = () => {
                   })
                 }
               >
-                프로필 편집
+                프로필 설정
               </button>
             </div>
             <div className="flex flex-col">
