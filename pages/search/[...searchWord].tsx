@@ -104,8 +104,8 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
   return (
     <Layout>
       {/* 웹 */}
-      <div className="hidden sm:block max-w-[1200px] w-full m-auto ">
-        <h1 className="mt-20 text-[40px] font-bold">
+      <div className="sm:block max-w-[1200px] w-full m-auto ">
+        <h1 className="mt-20 mb-11 text-[40px] font-bold">
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
           <span className="text-textGray">&nbsp;검색 결과</span>
         </h1>

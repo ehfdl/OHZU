@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
-import { storageService } from "@/firebase";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
-import { v4 as uuidv4 } from "uuid";
 import Image from "next/image";
 import useModal from "@/hooks/useModal";
-import useUpdateUser from "@/hooks/query/user/useUpdateUser";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools/build/lib/devtools";
 
 export interface DeleteAccountModalProps {}
 
@@ -71,7 +66,7 @@ const DeleteAccountModal = ({}: DeleteAccountModalProps) => {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center flex-wrap sm:py-10 !m-0 z-10 overflow-scroll scrollbar-none">
       <div className="w-full h-full sm:h-auto relative sm:w-[588px] p-6 sm:p-9 bg-white z-40 flex flex-col justify-start items-center rounded overflow-scroll scrollbar-none">
         <button
           aria-label="close"

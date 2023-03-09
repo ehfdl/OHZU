@@ -25,7 +25,7 @@ const AlertModal = ({ src, title, text, btntext, btnfunc }: any) => {
       <div className="w-screen h-full bg-black/50 fixed top-0 left-0 z-10">
         <div
           className="max-w-[344px] w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  bg-white rounded
-        sm:max-w-[588px] sm:w-full         "
+        sm:max-w-[588px] sm:w-full"
         >
           <div className="flex flex-col justify-center items-center pt-[30px] sm:pt-[64px]">
             {src && (

@@ -33,17 +33,16 @@ const FollowModal = ({
     };
   }, []);
   return (
-    <div className="w-full h-screen flex absolute justify-center top-0 left-0 items-center sm:py-10">
-      <div className="w-full h-full fixed left-0 top-0 z-30 bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-      <div className="w-[390px] h-full sm:w-[588px] sm:min-h-[90%] rounded bg-white z-40 flex flex-col justify-start items-center">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10 flex-wrap overflow-scroll scrollbar-none">
+      <div className="w-full relative max-w-[390px] sm:max-w-[588px] pb-10 pt-2 bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
           aria-label="close"
-          className="sm:w-10 w-9 aspect-square absolute mt-6 sm:mt-8 ml-[340px] sm:ml-[500px]"
+          className="sm:w-10 w-9 aspect-square absolute right-4 top-4 sm:right-8 sm:top-8"
           onClick={() => setIsOpenFollowModal(false)}
         >
           <FiX className="w-full h-full text-phGray" />
         </button>
-        <div className="w-full flex justify-around mt-10 text-[24px]">
+        <div className="w-full flex justify-around text-[24px] mt-8 sm:mt-16">
           <label
             onChange={() => setFollow("follower")}
             className="w-1/2 text-slate-500 text-center"
@@ -76,7 +75,7 @@ const FollowModal = ({
           </label>
         </div>
 
-        <div className="flex pt-8 sm:pt-10 flex-col gap-6 justify-start items-center w-[342px] sm:w-[492px] overflow-auto scrollbar-none">
+        <div className="flex pt-8 sm:pt-10 flex-col gap-6 justify-start items-center w-[342px] sm:w-[492px] overflow-auto scrollbar-none min-h-screen sm:min-h-[694px]">
           {follow === "following" && usersFollowingProfile
             ? usersFollowingProfile.map((profile) => (
                 <FollowModalCard

@@ -111,8 +111,8 @@ const ProfileModal = ({ myProfile }: ProfileModalProps) => {
   }, [form]);
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10">
-      <div className="w-full h-full sm:h-auto relative sm:w-[588px] pb-10 sm:py-20 bg-white z-40 flex flex-col justify-start items-center rounded overflow-scroll scrollbar-none">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10 flex-wrap overflow-scroll scrollbar-none">
+      <div className="w-full relative max-w-[390px] sm:max-w-[588px] pt-4 pb-10 sm:py-20 bg-white z-40 flex flex-col justify-start items-center rounded">
         <button
           aria-label="close"
           className="w-9  sm:w-10 aspect-square absolute top-7 right-7"
