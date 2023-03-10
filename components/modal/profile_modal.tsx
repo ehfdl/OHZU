@@ -192,7 +192,7 @@ const ProfileModal = ({ myProfile, myPosts }: ProfileModalProps) => {
         <button
           aria-label="save"
           onClick={onSubmit}
-          className="w-[344px] sm:w-[280px]  bg-primary text-white mt-4 py-3"
+          className="w-[344px] sm:w-[280px] rounded bg-primary text-white mt-4 py-4"
         >
           수정하기
         </button>

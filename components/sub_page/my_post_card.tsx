@@ -71,19 +71,19 @@ const MyPostCard = ({ post }: { post: any }) => {
       >
         {like ? (
           <Image
-            className="w-4 h-[14px] sm:w-[27px] sm:h-6"
+            className="w-4 h-[14px] sm:w-6 sm:h-[21px]"
             src="/like/like-pressed.png"
             alt=""
-            width={16}
-            height={14}
+            width={24}
+            height={21}
           />
         ) : (
           <Image
-            className="w-4 h-[14px] sm:w-[27px] sm:h-6"
+            className="w-4 h-[14px] sm:w-6 sm:h-[21px]"
             src="/like/like-default.png"
             alt=""
-            width={16}
-            height={14}
+            width={24}
+            height={21}
           />
         )}
         <div className="text-[rgba(255,255,255,0.5)] text-[11px]">
