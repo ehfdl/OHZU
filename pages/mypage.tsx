@@ -210,17 +210,17 @@ const Mypage = () => {
                       <Grade score={myLike! + myPosts?.length! * 5} />
                     </span>
                   </div>
-                  <div className="text-[11px] sm:text-[20px] flex">
+                  <div className="text-xs sm:text-[20px] flex items-center">
                     <span>{myLike! + myPosts?.length! * 5}잔</span>
-                    <span className="ml-1 mt-1 sm:mt-[6px]">
+                    <span className="ml-1 sm:mt-[6px]">
                       <BiInfoCircle
                         onMouseOver={() => setIsOpenInforModal(true)}
                         onMouseOut={() => setIsOpenInforModal(false)}
-                        className="hidden sm:block w-[18px] sm:w-5 aspect-square text-[#999999]"
+                        className="hidden sm:block w-[18px] h-[18px] sm:w-5 aspect-square text-[#999999]"
                       />
                       <BiInfoCircle
                         onClick={() => setIsOpenInforModal(true)}
-                        className="sm:hidden w-[18px] sm:w-5 aspect-square text-[#999999]"
+                        className="sm:hidden w-[18px] h-[18px] sm:w-5 aspect-square text-[#999999]"
                       />
                     </span>
                   </div>
@@ -231,11 +231,11 @@ const Mypage = () => {
                   ) : null}
                 </div>
                 <div className="w-52 sm:w-72 flex justify-between items-center mt-2 sm:mt-1">
-                  <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
+                  <div className="text-xs sm:text-base flex flex-col justify-center items-center">
                     좋아요<div className="font-bold">{myLike}</div>
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
-                  <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
+                  <div className="text-xs sm:text-base flex flex-col justify-center items-center">
                     게시물<div className="font-bold">{myPosts?.length}</div>
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
@@ -244,7 +244,7 @@ const Mypage = () => {
                       setIsOpenFollowModal(true);
                       setFollow("follower");
                     }}
-                    className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
+                    className="text-xs sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로워
                     <div className="font-bold">
@@ -257,7 +257,7 @@ const Mypage = () => {
                       setIsOpenFollowModal(true);
                       setFollow("following");
                     }}
-                    className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
+                    className="text-xs sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로잉
                     <div className="font-bold">

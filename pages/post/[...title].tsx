@@ -524,7 +524,7 @@ const PostDetail = () => {
               className="flex justify-between items-start px-4 sm:px-0"
             >
               <div className="flex flex-col items-start space-y-2">
-                <h4 className="text-lg sm:text-3xl font-bold">{post?.title}</h4>
+                <h4 className="text-xl sm:text-3xl font-bold">{post?.title}</h4>
                 <span className="block py-1 px-5 rounded-full text-xs sm:text-sm text-primary bg-second">
                   {post?.type}
                 </span>
@@ -684,7 +684,7 @@ const PostDetail = () => {
                   </span>
                 </Link>
               </div>
-              <pre className="whitespace-pre-wrap break-all text-xs sm:text-base">
+              <pre className="whitespace-pre-wrap break-all text-sm sm:text-base">
                 {post?.text}
               </pre>
             </div>
@@ -699,7 +699,7 @@ const PostDetail = () => {
                     aria-label={ing}
                     key={uuidv4()}
                     href={`/search/include/${ing.replaceAll(" ", "_")}`}
-                    className="inline-block mr-4 mb-4 sm:mr-6 sm:mb-4 py-1 px-5 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-xs sm:text-sm"
+                    className="inline-block mr-4 mb-4 sm:mr-6 sm:mb-4 py-1.5 px-5 sm:px-6 rounded-full border border-gray-700 cursor-pointer hover:text-textGray transition text-sm sm:text-sm"
                   >
                     {ing}
                   </Link>
@@ -711,7 +711,7 @@ const PostDetail = () => {
               <span className="inline-block font-semibold text-primary sm:text-lg mb-4">
                 만드는 방법
               </span>
-              <pre className="text-xs sm:text-base whitespace-pre-wrap break-all !leading-10 pl-2">
+              <pre className="text-sm sm:text-base whitespace-pre-wrap break-all !leading-10 pl-2">
                 {post?.recipe}
               </pre>
             </div>
