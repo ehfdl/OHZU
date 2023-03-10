@@ -68,9 +68,13 @@ const LoginModal = () => {
           );
           hideModal();
         } else {
-          alert(
-            "인증이 되지 않은 사용자입니다. 서비스 이용에 제한이 있습니다."
-          );
+          showModal({
+            modalType: "AlertModal",
+            modalProps: {
+              title: "로그인 실패",
+              text: "인증이 되지 않은 사용자입니다. 서비스 이용에 제한이 있습니다.",
+            },
+          });
           if (authService.currentUser !== null) {
             signOut(authService);
           }
@@ -80,12 +84,36 @@ const LoginModal = () => {
         const errorMessage = error.message;
         console.log("errorMessage:", errorMessage);
         if (errorMessage.includes("user-not-found")) {
-          alert("가입되지 않은 회원입니다.");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: {
+              title: "로그인 실패",
+              text: "가입되지 않은 회원입니다.",
+              btnfunc: () =>
+                showModal({ modalType: "LoginModal", modalProps: {} }),
+            },
+          });
           return;
         } else if (errorMessage.includes("auth/invalid-email")) {
-          alert("가입되지 않은 회원입니다.");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: {
+              title: "로그인 실패",
+              text: "가입되지 않은 회원입니다.",
+              btnfunc: () =>
+                showModal({ modalType: "LoginModal", modalProps: {} }),
+            },
+          });
         } else if (errorMessage.includes("wrong-password")) {
-          alert("비밀번호가 잘못 되었습니다.");
+          showModal({
+            modalType: "AlertModal",
+            modalProps: {
+              title: "로그인 실패",
+              text: "비밀번호를 다시 입력해주세요.",
+              btnfunc: () =>
+                showModal({ modalType: "LoginModal", modalProps: {} }),
+            },
+          });
         }
       });
   };
@@ -381,9 +409,9 @@ const LoginModal = () => {
                   id="email"
                   defaultValue={email}
                   placeholder="이메일을 입력해주세요."
-                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-phGray  duration-300 focus:scale-[1.01]"
                 />
-                <p className=" max-w-[472px] w-full m-auto text-right text-sm text-[#999999]">
+                <p className=" max-w-[472px] w-full m-auto text-right text-sm text-phGray">
                   {checkEmail ? checkEmail : null}
                 </p>
               </div>
@@ -396,9 +424,9 @@ const LoginModal = () => {
                   type="password"
                   id="password"
                   placeholder="비밀번호를 입력해주세요."
-                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-300 focus:scale-[1.01]"
+                  className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-phGray  duration-300 focus:scale-[1.01]"
                 />
-                <p className=" w-[472px] m-auto mb-[22px] text-right text-gray-500 text-sm">
+                <p className=" w-[472px] m-auto mb-[22px] text-right text-textGray text-sm">
                   <span
                     onClick={() => {
                       setFindPassword(true);
@@ -419,10 +447,10 @@ const LoginModal = () => {
                 ) : // showModal({ modalType: "AlertModal", modalProps: {} })
                 null}
 
-                <div className="flex w-[472px] m-auto">
+                <div className="flex items-center w-[472px] m-auto">
                   <label
-                    htmlFor="auto_login"
-                    className="flex  items-center mb-[31px]"
+                    htmlFor="saveEmail"
+                    className="flex items-center mb-[31px]"
                   >
                     <input
                       id="saveEmail"
@@ -432,7 +460,7 @@ const LoginModal = () => {
                       className="w-5 h-5 cursor-pointer"
                       onChange={() => setCheckedSaveEmail(!checkedSaveEmail)}
                     />
-                    <span className="ml-2 ">이메일 저장하기</span>
+                    <span className="ml-2 mt-[3px] ">이메일 저장하기</span>
                   </label>
                 </div>
               </div>
@@ -471,10 +499,6 @@ const LoginModal = () => {
                     className="cursor-pointer"
                   />
                 </div>
-                {/* 네이버 로그인 구현 전 */}
-                {/* <div>
-              <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
-            </div> */}
                 <div onClick={loginFormWithKakao}>
                   <Image
                     src="/image/kakao.svg"
@@ -502,8 +526,8 @@ const LoginModal = () => {
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10 flex-wrap overflow-scroll scrollbar-none">
-        <div className="w-full relative max-w-[588px] pt-4 pb-10 sm:py-20 bg-white z-40 flex flex-col justify-start items-center rounded">
+      <div className="sm:hidden sm:w-full flex sm:justify-center sm:items-center">
+        <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => {
@@ -524,9 +548,9 @@ const LoginModal = () => {
                   id="m_email"
                   // defaultValue={email}
                   placeholder="이메일을 입력해주세요."
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-phGray "
                 />
-                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs">
+                <p className="max-w-[358px] w-full m-auto text-right text-textGray text-xs">
                   {checkEmail ? checkEmail : null}
                 </p>
               </div>
@@ -539,9 +563,9 @@ const LoginModal = () => {
                   type="password"
                   id="m_password"
                   placeholder="비밀번호를 입력해주세요."
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-[#666] "
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-phGray "
                 />
-                <p className="max-w-[358px] w-full m-auto text-right text-gray-500 text-xs">
+                <p className="max-w-[358px] w-full m-auto text-right text-phGray text-xs">
                   <span
                     onClick={() => {
                       setFindPassword(true);
@@ -564,7 +588,7 @@ const LoginModal = () => {
                 {/* input 값 들어가면 보이는 컨텐츠 */}
                 {mobileOption === true ? (
                   <div className="focusContainer block">
-                    <div className="flex max-w-[358px] w-full  m-auto">
+                    <div className="flex max-w-[358px] w-full m-auto">
                       <label
                         htmlFor="auto_login"
                         className="flex  items-center mb-[48px]"
@@ -621,10 +645,6 @@ const LoginModal = () => {
                     className="cursor-pointer"
                   />
                 </div>
-                {/* 네이버 로그인 구현 전 */}
-                {/* <div>
-              <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
-            </div> */}
                 <div onClick={loginFormWithKakao}>
                   <Image
                     src="/image/kakao.svg"
@@ -635,7 +655,7 @@ const LoginModal = () => {
                   />
                 </div>
               </div>
-              <div className="max-w-[203px] w-full m-auto flex justify-center text-sm">
+              <div className="max-w-[203px] w-full m-auto pb-7 flex justify-center text-sm">
                 <p className="text-slate-400 mr-1">아직 회원이 아니신가요?</p>
                 <span
                   onClick={() => {
