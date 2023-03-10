@@ -132,9 +132,9 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
               <div className=" bg-black/0 w-full aspect-[1.01785714/1] sm:aspect-[1.35211268/1] object-cover absolute top-0 sm:top-1 hover:bg-gray-300/30 hover:block"></div>
             </Link>
           </div>
-          <div className="sm:aspect-[2.82352941/1] aspect-[1.62857143/1] w-full bg-white mb-6 ">
-            <div className="flex justify-between">
-              <div>
+          <div className="sm:aspect-[2.82352941/1] aspect-[1.62857143/1] w-full bg-white mb-6 pr-1 ">
+            <div className="flex justify-between overflow-hidden">
+              <div className="">
                 <div className="sm:group">
                   <Link
                     aria-label={post.title}
@@ -146,7 +146,7 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
                     }}
                     as={`/post/${post.title.replaceAll(" ", "_")}`}
                   >
-                    <div className="sm:float-left mt-3 sm:mt-2 ml-[1px] text-start sm:ml-[70px] sm:translate-y-[12px] float-none sm:text-[22px] text-base font-bold sm:w-[150px]">
+                    <div className="sm:line-clamp-1 sm:text-ellipsis sm:break-all lg:line-clamp-none lg:text-clip lg:break-normal sm:float-left mt-3 sm:mt-2 ml-[1px] text-start sm:ml-[70px] sm:translate-y-[12px] float-none lg:text-[22px] sm:text-[18px] text-base font-bold sm:w-[100px] lg:w-full aspect-auto">
                       {post.title}
                     </div>
                   </Link>
@@ -213,15 +213,15 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
                       <Image
                         alt=""
                         src="/like/like-pressed.png"
-                        width={18}
-                        height={23}
+                        width={24}
+                        height={21}
                       />
                     ) : (
                       <Image
                         alt=""
                         src="/like/like-default.png"
-                        width={18}
-                        height={23}
+                        width={24}
+                        height={21}
                       />
                     )}
                     <div className="sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">
