@@ -33,39 +33,6 @@ const Footer = () => {
       });
   };
 
-  // 회원탈퇴
-  const deleteAccount = () => {
-    showModal({
-      modalType: "ConfirmModal",
-      modalProps: {
-        title: "회원 탈퇴",
-        text: "탈퇴하시게 되면 모든 정보가 사라집니다.",
-
-        rightbtnfunc: () => {
-          showModal({
-            modalType: "AlertModal",
-            modalProps: {
-              title: "회원 탈퇴",
-              text: "회원 탈퇴 되었습니다. 다음에 또 봬요!",
-            },
-          });
-          if (authService.currentUser?.uid) {
-            deleteUser(authService.currentUser)
-              .then(() => {
-                console.log(
-                  "authService.currentUser : ",
-                  authService.currentUser
-                );
-              })
-              .catch((error) => {
-                console.log("Error : ", error);
-              });
-          }
-        },
-      },
-    });
-  };
-
   return (
     <>
       {/* 웹 */}
@@ -118,6 +85,7 @@ const Footer = () => {
                 aria-label="OHZU Team Notion"
                 href={`https://silent-attraction-8d9.notion.site/OHZU-aeb08cd15d9c482f8b95a358b44ef646`}
                 target="_blank"
+                rel="noreferrer"
               >
                 <Image
                   className="w-[30px] h-[32px]"
@@ -132,6 +100,7 @@ const Footer = () => {
                 href={`https://github.com/ehfdl/OHZU`}
                 className="ml-6"
                 target="_blank"
+                rel="noreferrer"
               >
                 <Image
                   className="w-[32px] h-[32px]"
@@ -142,9 +111,6 @@ const Footer = () => {
                 />
               </a>
             </div>
-            <p onClick={deleteAccount} className="cursor-pointer">
-              회원탈퇴
-            </p>
           </div>
         </div>
       </div>
@@ -211,6 +177,37 @@ const Footer = () => {
               개인정보 처리방침
             </Link>
           </nav>
+          <div className="flex mt-4">
+            <a
+              aria-label="OHZU Team Notion"
+              href={`https://silent-attraction-8d9.notion.site/OHZU-aeb08cd15d9c482f8b95a358b44ef646`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Image
+                className="w-[30px] h-[32px]"
+                src="/image/notion.svg"
+                alt="Notion Logo"
+                width="100"
+                height="100"
+              />
+            </a>
+            <a
+              aria-label="OHZU Team GitHub"
+              href={`https://github.com/ehfdl/OHZU`}
+              className="ml-6"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Image
+                className="w-[32px] h-[32px]"
+                src="/image/github.svg"
+                alt="github Logo"
+                width="100"
+                height="100"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </>

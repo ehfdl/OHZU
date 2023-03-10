@@ -194,11 +194,11 @@ const Mypage = () => {
                 onClick={() =>
                   showModal({
                     modalType: "ProfileModal",
-                    modalProps: { myProfile: myProfile },
+                    modalProps: { myProfile: myProfile, myPosts: myPosts },
                   })
                 }
               >
-                프로필 편집
+                프로필 설정
               </button>
             </div>
             <div className="flex flex-col">

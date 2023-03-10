@@ -1,7 +1,5 @@
-import { getPost } from "@/api/postAPI";
 import Layout from "@/components/layout";
-import { storageService } from "@/firebase";
-import useGetPost from "@/hooks/query/post/useGetPost";
+import { dbService, storageService } from "@/firebase";
 import useUpdatePost from "@/hooks/query/post/useUpdatePost";
 import {
   deleteObject,
@@ -18,16 +16,41 @@ import { BsFillXCircleFill, BsPlusLg } from "react-icons/bs";
 import { v4 as uuidv4 } from "uuid";
 import { dehydrate, QueryClient } from "@tanstack/react-query";
 import { BEER_IMG, ETC_IMG, LIQUOR_IMG, SOJU_IMG } from "@/util";
+import { doc, getDoc } from "firebase/firestore";
 
 interface ParamsPropsType {
   id: string;
 }
-const EditDetail = ({ id }: ParamsPropsType) => {
+const EditDetail = () => {
   const router = useRouter();
 
-  const { data: postData, isLoading: postLoading } = useGetPost(id);
+  const [sessionId, setSessionId] = useState<string>();
+  const id = (router.query.id as string) || (sessionId as string);
 
-  const [editPost, setEditPost] = useState<Form>(postData!);
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      const session_id = sessionStorage.getItem("EDIT_ID");
+      setSessionId(session_id as string);
+    }
+    if (sessionId !== id) {
+      sessionStorage.removeItem("EDIT_ID");
+      sessionStorage.setItem("EDIT_ID", id);
+    }
+  }, []);
+
+  const [postData, setPostData] = useState<Form>();
+  const [editPost, setEditPost] = useState<Form>();
+
+  const getEditPost = async () => {
+    const docRef = doc(dbService, "Posts", id);
+    const docSnap = await getDoc(docRef);
+    const data = docSnap.data();
+    const newPost = {
+      ...data,
+    };
+    setPostData(newPost);
+    setEditPost(newPost);
+  };
 
   const [editImgFile_01, setEditImgFile_01] = useState<File | null>();
   const [editImgFile_02, setEditImgFile_02] = useState<File | null>();
@@ -111,19 +134,19 @@ const EditDetail = ({ id }: ParamsPropsType) => {
   };
 
   const validateChangePost = () => {
-    if (editPost.title!.length > 10) {
+    if (editPost?.title?.length! > 10) {
       setValidateTitle("이름을 10자 이하로 입력해 주세요.");
-    } else if (editPost.title!.length <= 10) {
+    } else if (editPost?.title?.length! <= 10) {
       setValidateTitle("");
     }
-    if (editPost.text !== "") {
+    if (editPost?.text !== "") {
       setValidateIntro("");
     }
-    if (editPost.type !== "") {
+    if (editPost?.type !== "") {
       setValidateCate("");
     }
 
-    if (editPost.recipe !== "") {
+    if (editPost?.recipe !== "") {
       setValidateRecipe("");
     }
   };
@@ -152,13 +175,13 @@ const EditDetail = ({ id }: ParamsPropsType) => {
   };
 
   const validateClickPost = () => {
-    if (editPost.title === "" || editPost.title!.length > 10) {
+    if (editPost?.title === "" || editPost?.title?.length! > 10) {
       setValidateTitle("이름을 10자 이하로 입력해 주세요.");
       return true;
-    } else if (editPost.text === "") {
+    } else if (editPost?.text === "") {
       setValidateIntro("소개를 입력해주세요");
       return true;
-    } else if (editPost.type === "") {
+    } else if (editPost?.type === "") {
       setValidateCate("카테고리 한 개를 선택해주세요.");
       return true;
     } else if (
@@ -181,7 +204,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
     ) {
       setValidateIng("준비물를 한가지 이상 입력해주세요.");
       return true;
-    } else if (editPost.recipe === "") {
+    } else if (editPost?.recipe === "") {
       setValidateRecipe("방법을 입력해주세요.");
       return true;
     }
@@ -218,7 +241,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
     let imgFileUrl = "";
     let editPreview = [editPreview_01, editPreview_02, editPreview_03];
     // let newEditPreview = editPreview.filter((view) => view != null);
-    let savePreview: any = [...editPost.img!];
+    let savePreview: any = [...editPost?.img!];
 
     if (editPreview.length !== 0) {
       let downloadPreview = await Promise.allSettled(
@@ -276,13 +299,13 @@ const EditDetail = ({ id }: ParamsPropsType) => {
           downloadPreview.filter((i: any) => i.value === undefined).length ===
             downloadPreview.length
         ) {
-          if (editPost.type === "소주") {
+          if (editPost?.type === "소주") {
             savePreview[0] = SOJU_IMG;
-          } else if (editPost.type === "맥주") {
+          } else if (editPost?.type === "맥주") {
             savePreview[0] = BEER_IMG;
-          } else if (editPost.type === "양주") {
+          } else if (editPost?.type === "양주") {
             savePreview[0] = LIQUOR_IMG;
-          } else if (editPost.type === "기타") {
+          } else if (editPost?.type === "기타") {
             savePreview[0] = ETC_IMG;
           }
         } else {
@@ -311,12 +334,12 @@ const EditDetail = ({ id }: ParamsPropsType) => {
     }
     router.push(
       {
-        pathname: `/post/${editPost.title?.replaceAll(" ", "_")}`,
+        pathname: `/post/${editPost?.title?.replaceAll(" ", "_")}`,
         query: {
           postId: id,
         },
       },
-      `/post/${editPost.title?.replaceAll(" ", "_")}`
+      `/post/${editPost?.title?.replaceAll(" ", "_")}`
     );
   };
 
@@ -357,57 +380,65 @@ const EditDetail = ({ id }: ParamsPropsType) => {
   }, [editImgFile_03]);
 
   useEffect(() => {
-    if (editPost.img![0]) {
-      setEditPreview_01(editPost.img![0]);
-    } else {
-      setEditPreview_01(null);
-    }
-    if (editPost.img![1]) {
-      setEditPreview_02(editPost.img![1]);
-    } else {
-      setEditPreview_02(null);
-    }
-    if (editPost.img![2]) {
-      setEditPreview_03(editPost.img![2]);
-    } else {
-      setEditPreview_03(null);
-    }
+    if (postData) {
+      if (editPost?.img![0]) {
+        setEditPreview_01(editPost?.img![0]);
+      } else {
+        setEditPreview_01(null);
+      }
+      if (editPost?.img![1]) {
+        setEditPreview_02(editPost?.img![1]);
+      } else {
+        setEditPreview_02(null);
+      }
+      if (editPost?.img![2]) {
+        setEditPreview_03(editPost?.img![2]);
+      } else {
+        setEditPreview_03(null);
+      }
 
-    if (editPost.ingredient![0]) {
-      setEditIng((prev) => {
-        return { ...prev, editIng_01: editPost.ingredient![0] };
-      });
-    }
-    if (editPost.ingredient![1]) {
-      setEditIng((prev) => {
-        return { ...prev, editIng_02: editPost.ingredient![1] };
-      });
-    }
-    if (editPost.ingredient![2]) {
-      setEditIng((prev) => {
-        return { ...prev, editIng_03: editPost.ingredient![2] };
-      });
-    }
-    if (editPost.ingredient![3]) {
-      setEditIng((prev) => {
-        return { ...prev, editIng_04: editPost.ingredient![3] };
-      });
-    }
-    if (editPost.ingredient![4]) {
-      setEditIng((prev) => {
-        return { ...prev, editIng_05: editPost.ingredient![4] };
-      });
-    }
-    if (editPost.ingredient![5]) {
-      setEditIng((prev) => {
-        return { ...prev, editIng_06: editPost.ingredient![5] };
-      });
-    }
+      if (editPost?.ingredient![0]) {
+        setEditIng((prev) => {
+          return { ...prev, editIng_01: editPost?.ingredient![0] };
+        });
+      }
+      if (editPost?.ingredient![1]) {
+        setEditIng((prev) => {
+          return { ...prev, editIng_02: editPost?.ingredient![1] };
+        });
+      }
+      if (editPost?.ingredient![2]) {
+        setEditIng((prev) => {
+          return { ...prev, editIng_03: editPost?.ingredient![2] };
+        });
+      }
+      if (editPost?.ingredient![3]) {
+        setEditIng((prev) => {
+          return { ...prev, editIng_04: editPost?.ingredient![3] };
+        });
+      }
+      if (editPost?.ingredient![4]) {
+        setEditIng((prev) => {
+          return { ...prev, editIng_05: editPost?.ingredient![4] };
+        });
+      }
+      if (editPost?.ingredient![5]) {
+        setEditIng((prev) => {
+          return { ...prev, editIng_06: editPost?.ingredient![5] };
+        });
+      }
 
-    if (editPost.ingredient?.length! > 3) {
-      setEditPlusIng(true);
+      if (editPost?.ingredient?.length! > 3) {
+        setEditPlusIng(true);
+      }
     }
-  }, []);
+  }, [postData]);
+
+  useEffect(() => {
+    if (id) {
+      getEditPost();
+    }
+  }, [id]);
 
   return (
     <Layout>
@@ -540,7 +571,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
           </div>
           <input
             name="title"
-            value={editPost.title}
+            value={editPost?.title}
             onChange={onChangeValue}
             placeholder={postData?.title}
             className="w-full text-[14px] sm:text-base"
@@ -557,7 +588,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
           <textarea
             className="w-full h-20 sm:h-[118px] text-[14px] sm:text-base px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
             name="text"
-            value={editPost.text}
+            value={editPost?.text}
             onChange={onChangeValue}
             placeholder={postData?.text}
           />
@@ -577,7 +608,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                 value="소주"
                 onChange={onChangeValue}
                 className="hidden peer"
-                checked={editPost.type === "소주" ? true : false}
+                checked={editPost?.type === "소주" ? true : false}
               />
               <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
                 소주
@@ -590,7 +621,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                 value="맥주"
                 onChange={onChangeValue}
                 className="hidden peer"
-                checked={editPost.type === "맥주" ? true : false}
+                checked={editPost?.type === "맥주" ? true : false}
               />
               <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
                 맥주
@@ -603,7 +634,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                 value="양주"
                 onChange={onChangeValue}
                 className="hidden peer"
-                checked={editPost.type === "양주" ? true : false}
+                checked={editPost?.type === "양주" ? true : false}
               />
               <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
                 양주
@@ -616,7 +647,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                 value="기타"
                 onChange={onChangeValue}
                 className="hidden peer"
-                checked={editPost.type === "기타" ? true : false}
+                checked={editPost?.type === "기타" ? true : false}
               />
               <span className="w-full h-full bg-[#ededed] border-2 rounded-[16px] flex items-center justify-center text-center peer-checked:bg-[#909090] peer-checked:text-white peer-checked:border-[#5a5a5a] peer-checked:rounded-[16px]]">
                 기타
@@ -646,8 +677,8 @@ const EditDetail = ({ id }: ParamsPropsType) => {
               value={editIng.editIng_01}
               onChange={onChangeIngre}
               placeholder={`${
-                editPost.ingredient![0] !== undefined
-                  ? editPost.ingredient![0]
+                editPost?.ingredient![0] !== undefined
+                  ? editPost?.ingredient![0]
                   : "준비물 1"
               }`}
             />
@@ -657,8 +688,8 @@ const EditDetail = ({ id }: ParamsPropsType) => {
               value={editIng.editIng_02}
               onChange={onChangeIngre}
               placeholder={`${
-                editPost.ingredient![1] !== undefined
-                  ? editPost.ingredient![1]
+                editPost?.ingredient![1] !== undefined
+                  ? editPost?.ingredient![1]
                   : "준비물 2"
               }`}
             />
@@ -668,8 +699,8 @@ const EditDetail = ({ id }: ParamsPropsType) => {
               value={editIng.editIng_03}
               onChange={onChangeIngre}
               placeholder={`${
-                editPost.ingredient![2] !== undefined
-                  ? editPost.ingredient![2]
+                editPost?.ingredient![2] !== undefined
+                  ? editPost?.ingredient![2]
                   : "준비물 3"
               }`}
             />
@@ -682,8 +713,8 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                   value={editIng.editIng_04}
                   onChange={onChangeIngre}
                   placeholder={`${
-                    editPost.ingredient![3] !== undefined
-                      ? editPost.ingredient![3]
+                    editPost?.ingredient![3] !== undefined
+                      ? editPost?.ingredient![3]
                       : "준비물 4"
                   }`}
                 />
@@ -693,8 +724,8 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                   value={editIng.editIng_05}
                   onChange={onChangeIngre}
                   placeholder={`${
-                    editPost.ingredient![4] !== undefined
-                      ? editPost.ingredient![4]
+                    editPost?.ingredient![4] !== undefined
+                      ? editPost?.ingredient![4]
                       : "준비물 5"
                   }`}
                 />
@@ -704,8 +735,8 @@ const EditDetail = ({ id }: ParamsPropsType) => {
                   value={editIng.editIng_06}
                   onChange={onChangeIngre}
                   placeholder={`${
-                    editPost.ingredient![5] !== undefined
-                      ? editPost.ingredient![5]
+                    editPost?.ingredient![5] !== undefined
+                      ? editPost?.ingredient![5]
                       : "준비물 6"
                   }`}
                 />
@@ -731,7 +762,7 @@ const EditDetail = ({ id }: ParamsPropsType) => {
           <textarea
             className="w-full h-28 sm:h-[170px] text-[14px] sm:text-base px-4 py-3 border border-phGray scrollbar-none resize-none focus-visible:outline-none"
             name="recipe"
-            value={editPost.recipe}
+            value={editPost?.recipe}
             onChange={onChangeValue}
             placeholder={postData?.recipe}
           />
@@ -766,20 +797,9 @@ const EditDetail = ({ id }: ParamsPropsType) => {
 export default EditDetail;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const id = context.query.id!;
-
-  const queryClient = new QueryClient();
-
-  let isError = false;
-
-  try {
-    await queryClient.prefetchQuery(["post", id], () => getPost(id as string));
-  } catch (error: any) {
-    isError = true;
-    context.res.statusCode = error.response.status;
-  }
+  const id = context.query.id ? context.query.id : "";
 
   return {
-    props: { id, isError, dehydratedState: dehydrate(queryClient) },
+    props: { id },
   };
 };

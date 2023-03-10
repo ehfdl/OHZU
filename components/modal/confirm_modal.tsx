@@ -27,7 +27,7 @@ const ConfirmModal = ({
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px]  flex justify-center items-center !m-0 z-10">
+    <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center flex-wrap !m-0 z-10 overflow-scroll scrollbar-none">
       <div className="relative w-[350px] sm:w-[588px] bg-white flex flex-col justify-center items-center rounded pt-8 sm:px-12 sm:py-16">
         <h2 className="font-bold sm:text-3xl">{title}</h2>
         <p className="text-center text-sm sm:text-base text-textGray mt-4 sm:mt-6 mb-9 sm:mb-11">

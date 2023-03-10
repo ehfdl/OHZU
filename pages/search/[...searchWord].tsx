@@ -12,6 +12,7 @@ import { GetServerSideProps } from "next";
 import Layout from "@/components/layout";
 import Image from "next/image";
 import UserDropdown from "@/components/sub_page/user_dropdown";
+import UserCateNavbar from "@/components/navbar/user_cate_navbar";
 
 export default function Searchwords({ searchWord }: { searchWord: string }) {
   const router = useRouter();
@@ -108,8 +109,8 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
           {searchWord ? `'${searchWord}' ` : " '-' "}{" "}
           <span className="text-textGray">&nbsp;검색 결과</span>
         </h1>
-        <div className=" w-full flex justify-center mb-12">
-          <Category setCate={setCate} />
+        <div className="w-full flex justify-center mb-12">
+          <UserCateNavbar setCate={setCate} />
         </div>
         <div className="max-w-[1200px] m-auto min-h-screen">
           <div className="inner-top-wrap flex justify-between items-center mb-[15px]">
@@ -193,7 +194,13 @@ export default function Searchwords({ searchWord }: { searchWord: string }) {
         <div className="w-full m-auto min-h-screen ">
           <div className="inner-top-wrap max-w-[390px] w-full m-auto flex justify-between items-center mt-[-30px] mb-[20px]">
             <p className="ml-6 text-sm font-semibold">
-              게시물 <span className="text-primary">{searchData?.length}</span>
+              게시물{" "}
+              <span className="text-primary">
+                {cate === "전체"
+                  ? searchData?.length
+                  : searchData?.filter((post: any) => cate === post.item.type)
+                      .length}
+              </span>
             </p>
             {/* <Dropdown setDrop={setDrop} drop={drop} /> */}
             <div>

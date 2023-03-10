@@ -5,7 +5,7 @@ import { AlertModalProps } from "../modal/alert_modal";
 import { LoginModalProps } from "../modal/login_modal";
 import { JoinModalProps } from "../modal/join_modal";
 import { ProfileModalProps } from "../modal/profile_modal";
-
+import { DeleteAccountModalProps } from "../modal/delete_account_modal";
 import { ReportModalProps } from "../modal/report_modal";
 
 const {
@@ -14,7 +14,7 @@ const {
   LoginModal,
   JoinModal,
   ProfileModal,
-
+  DeleteAccountModal,
   ReportModal,
 } = MODAL_TYPES;
 
@@ -48,13 +48,19 @@ export interface ReportModalType {
   modalProps: ReportModalProps;
 }
 
+export interface DeleteAccountModalType {
+  modalType: typeof DeleteAccountModal;
+  modalProps: DeleteAccountModalProps;
+}
+
 export type ModalType =
   | ConfirmModalType
   | AlertModalType
   | LoginModalType
   | JoinModalType
   | ProfileModalType
-  | ReportModalType;
+  | ReportModalType
+  | DeleteAccountModalType;
 
 export const modalState = atom<ModalType | null>({
   key: "modalState",

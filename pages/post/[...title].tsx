@@ -730,7 +730,6 @@ const PostDetail = () => {
                   className="flex flex-col items-center group w-max"
                 >
                   <RiAlarmWarningLine className="w-3 sm:w-4 text-iconDefault group-hover:text-primary" />
-                  <RiAlarmWarningLine className="w-3 sm:w-4 text-iconDefault group-hover:text-primary" />
                   <span className="text-[10px] text-iconDefault group-hover:text-primary">
                     신고
                   </span>

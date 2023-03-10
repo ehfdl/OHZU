@@ -14,10 +14,9 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { useEffect, useState } from "react";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { SiNaver, SiKakaotalk } from "react-icons/si";
+import React, { useEffect, useState } from "react";
 import { MdOutlineClose } from "react-icons/md";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import axios from "axios";
 import useModal from "@/hooks/useModal";
 import Image from "next/image";
@@ -360,9 +359,8 @@ const LoginModal = () => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:flex w-full h-screen absolute justify-center top-0 left-0 items-center ">
-        <div className="w-full h-full fixed left-0 top-0 z-[9] bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px]" />
-        <div className="inner max-w-[588px] w-full max-h-[700px] h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2">
+      <div className="hidden sm:flex fixed top-0 left-0 right-0 bottom-0 justify-center items-center flex-wrap z-10 overflow-y-scroll scrollbar-none bg-[rgba(0,0,0,0.5)] backdrop-blur-[2px] py-5">
+        <div className="inner max-w-[588px] w-full py-10 bg-white z-[10]  rounded relative">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => {
@@ -371,9 +369,7 @@ const LoginModal = () => {
               }}
               className="absolute top-[32px] right-[32px] w-6 h-6 cursor-pointer duration-150 hover:text-red-400"
             />
-            <h4 className="text-[32px] font-bold mt-[60px] mb-[29px]">
-              로그인
-            </h4>
+            <h4 className="text-[32px] font-bold mt-8 mb-[29px]">로그인</h4>
             <form className="formContainer" onSubmit={signIn}>
               <div>
                 <p className="max-w-[472px] w-full m-auto mb-[6px] text-left font-semibold">
@@ -506,8 +502,8 @@ const LoginModal = () => {
       </div>
 
       {/* 모바일 */}
-      <div className="sm:hidden sm:w-full flex sm:justify-center sm:items-center">
-        <div className="inner w-full h-full bg-white z-[10] fixed top-1/2 left-1/2 rounded transform -translate-x-1/2 -translate-y-1/2 overflow-auto scrollbar-none">
+      <div className="sm:hidden fixed top-0 left-0 w-screen h-screen bg-black/50 backdrop-blur-[2px] flex justify-center items-center sm:py-10 !m-0 z-10 flex-wrap overflow-scroll scrollbar-none">
+        <div className="w-full relative max-w-[588px] pt-4 pb-10 sm:py-20 bg-white z-40 flex flex-col justify-start items-center rounded">
           <div className="loginContainer flex-col text-center">
             <MdOutlineClose
               onClick={() => {
@@ -516,9 +512,7 @@ const LoginModal = () => {
               }}
               className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
             />
-            <h4 className="text-[24px] font-bold mt-[100px] mb-[23px]">
-              로그인
-            </h4>
+            <h4 className="text-[24px] font-bold mt-16 mb-[23px]">로그인</h4>
             <form className="formContainer" onSubmit={signIn}>
               <div>
                 <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
@@ -603,9 +597,9 @@ const LoginModal = () => {
               </div>
 
               <div className="max-w-[358px] w-full m-auto flex items-center justify-center mt-[38px] mb-[54px]">
-                <div className="max-w-[116px] w-full h-[1px] mr-4 bg-textGray" />
+                <div className="max-w-[110px] w-full h-[1px] mr-4 bg-textGray" />
                 <p className="text-xl font-semibold ">소셜 로그인</p>
-                <div className="max-w-[116px] w-full h-[1px] ml-4 bg-textGray" />
+                <div className="max-w-[110px] w-full h-[1px] ml-4 bg-textGray" />
               </div>
 
               <div className="w-[280px] m-auto mb-[64px] flex items-center  justify-around">

@@ -11,7 +11,7 @@ const Category = ({
       <nav className="hidden sm:flex w-[550px]  justify-around text-[20px]">
         <label
           onChange={() => setCate("전체")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -26,7 +26,7 @@ const Category = ({
         </label>
         <label
           onChange={() => setCate("소주")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -40,7 +40,7 @@ const Category = ({
         </label>
         <label
           onChange={() => setCate("맥주")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -54,7 +54,7 @@ const Category = ({
         </label>
         <label
           onChange={() => setCate("양주")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -68,7 +68,7 @@ const Category = ({
         </label>
         <label
           onChange={() => setCate("기타")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -86,7 +86,7 @@ const Category = ({
       <nav className="sm:hidden max-w-[390px] w-full flex justify-around ">
         <label
           onChange={() => setCate("전체")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -101,7 +101,7 @@ const Category = ({
         </label>
         <label
           onChange={() => setCate("소주")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -115,7 +115,7 @@ const Category = ({
         </label>
         <label
           onChange={() => setCate("맥주")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -129,7 +129,7 @@ const Category = ({
         </label>
         <label
           onChange={() => setCate("양주")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
@@ -143,7 +143,7 @@ const Category = ({
         </label>
         <label
           onChange={() => setCate("기타")}
-          className="w-[88px] text-slate-500 text-center"
+          className="w-[88px] text-textGray text-center"
         >
           <input
             type="radio"
