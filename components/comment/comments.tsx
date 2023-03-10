@@ -23,15 +23,11 @@ const Comments = ({
   post,
 }: CommentsProps) => {
   const date = Date.now();
-  const dateForm = new Intl.DateTimeFormat("ko-KR", {
-    dateStyle: "long",
-    timeStyle: "medium",
-  }).format(date);
   const initialComment = {
     content: "",
     postId: "",
     userId: "",
-    createdAt: "",
+    createdAt: date,
     isEdit: false,
     id: "",
     commentId: "",
@@ -94,7 +90,7 @@ const Comments = ({
       content: comment.content.trim(),
       postId: postId,
       userId: authService.currentUser?.uid!,
-      createdAt: dateForm,
+      createdAt: date,
       isEdit: false,
     };
     const newAlarm = {
@@ -103,7 +99,7 @@ const Comments = ({
       nickname: currentUser?.nickname,
       title: post?.title,
       type: "댓글",
-      createdAt: Date.now(),
+      createdAt: date,
       isDone: false,
     };
     if (comment.content.trim() !== "") {

@@ -8,7 +8,7 @@ declare interface Form {
   text?: string;
   like?: string[];
   view?: number;
-  createdAt?: string;
+  createdAt?: number;
   id?: string;
 }
 declare interface WriteForm {
@@ -21,7 +21,7 @@ declare interface WriteForm {
   text?: string;
   like?: string[];
   view?: number;
-  createdAt?: string;
+  createdAt?: number;
   id?: string;
 }
 declare interface PostType extends Form {
@@ -32,7 +32,7 @@ declare interface CommentType {
   content: string;
   postId: string;
   userId: string;
-  createdAt: string;
+  createdAt: number;
   id: string;
   isEdit?: boolean;
   commentId: string;

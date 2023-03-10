@@ -153,13 +153,14 @@ const Header = ({ ...props }: any) => {
               {/* 모바일 검색창이 활성화가 되면, 웹 검색창은 none상태로 =>  모바일환경에서 검색기능이 제대로 작동함. */}
               {mobileSearch === true ? null : (
                 <input
+                  aria-label="m_search"
                   onChange={(e) => {
                     SearchHandler(e.target.value);
                   }}
                   value={search}
                   type="text"
-                  id="simple-search"
-                  className="hidden lg:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:ring-none focus:border-none focus:outline-none  "
+                  id="m_search"
+                  className="hidden lg:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:outline-none  placeholder:text-iconDefault focus:ring-[#aaa] focus:border-[#aaa]"
                   placeholder="혼합주 이름 또는 재료를 입력해주세요."
                   required
                 />
@@ -167,43 +168,46 @@ const Header = ({ ...props }: any) => {
             </div>
             {/* 모바일에서 검색 아이콘 눌렀을 때 표시되는 검색창 */}
             {mobileSearch === true ? (
-              <div className=" w-full h-full bg-white fixed top-0 left-0 z-50">
-                <div className="max-w-[360px] w-full h-[50px] m-auto mt-12 text-center relative">
-                  <Image
-                    onClick={() => {
-                      setMobileSearch(false);
-                    }}
-                    src="/image/m_arrow.svg"
-                    width="12"
-                    height="18"
-                    alt="검색 나가기 화살표"
-                    priority={true}
-                    className="absolute top-1/2 left-0 translate-y-[-50%] mr-1 cursor-pointer "
-                  />
-                  <div className="searchWrap">
+              <>
+                <div className=" w-full h-full bg-[#3e3e3e] fixed top-0 left-0 z-5 opacity-[0.95] z-50" />
+                <div className=" w-full h-full fixed top-0 left-0 z-50">
+                  <div className="max-w-[360px] w-full h-[50px] m-auto mt-12 text-center relative">
                     <Image
-                      src="/image/search.svg"
-                      width="18"
-                      height="18"
-                      alt="검색 아이콘"
-                      priority={true}
-                      className="absolute top-1/2 left-12 translate-y-[-50%] mr-1 cursor-pointer "
-                    />
-                    <input
-                      onChange={(e) => {
-                        SearchHandler(e.target.value);
+                      onClick={() => {
+                        setMobileSearch(false);
                       }}
-                      onKeyDown={(e) => mobileSearchToggle(e)}
-                      value={search}
-                      type="text"
-                      id="simple-search"
-                      className=" max-w-[315px] w-full h-[50px]  bg-[#f2f2f2] border  text-sm rounded-[100px] focus:ring-blue-500 focus:border-blue-500 pl-[50px] p-2.5 "
-                      placeholder="혼합주 이름 또는 재료를 입력해주세요."
-                      required
+                      src="/image/m_arrow.svg"
+                      width="12"
+                      height="18"
+                      alt="검색 나가기 화살표"
+                      priority={true}
+                      className="absolute top-1/2 left-0 translate-y-[-50%] mr-1 cursor-pointer "
                     />
+                    <div className="searchWrap">
+                      <Image
+                        src="/image/search.svg"
+                        width="18"
+                        height="18"
+                        alt="검색 아이콘"
+                        priority={true}
+                        className="absolute top-1/2 left-12 translate-y-[-50%] mr-1 cursor-pointer "
+                      />
+                      <input
+                        onChange={(e) => {
+                          SearchHandler(e.target.value);
+                        }}
+                        onKeyDown={(e) => mobileSearchToggle(e)}
+                        value={search}
+                        type="text"
+                        id="simple-search"
+                        className=" max-w-[315px] w-full h-[50px]  bg-white border text-sm rounded-[100px] focus:ring-blue-500 focus:border-blue-500 pl-[50px] p-2.5 placeholder:text-iconHover  "
+                        placeholder="혼합주 이름 또는 재료를 입력해주세요."
+                        required
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             ) : null}
           </form>
 

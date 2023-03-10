@@ -177,8 +177,8 @@ const ProfileModal = ({ myProfile, myPosts }: ProfileModalProps) => {
             className="w-full sm:text-base text-[14px] min-h-[132px] mt-2 bg-[#f5f5f5] py-2 px-4 resize-none"
           />
 
-          <button
-            className="w-full mt-7 text-right text-textGray"
+          <div
+            className="w-full mt-5 text-right text-textGray "
             onClick={() => {
               showModal({
                 modalType: "DeleteAccountModal",
@@ -186,13 +186,13 @@ const ProfileModal = ({ myProfile, myPosts }: ProfileModalProps) => {
               });
             }}
           >
-            회원탈퇴
-          </button>
+            <button className="duration-150 hover:text-hover">회원탈퇴</button>
+          </div>
         </div>
         <button
           aria-label="save"
           onClick={onSubmit}
-          className="w-[344px] sm:w-[280px]  bg-primary text-white mt-4 py-3"
+          className="w-[344px] sm:w-[280px] rounded bg-primary text-white mt-4 py-4"
         >
           수정하기
         </button>

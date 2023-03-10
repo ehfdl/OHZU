@@ -4,7 +4,7 @@ import React from "react";
 const ProfileGrade = ({ img, point }: { img: string; point: number }) => {
   return (
     <div
-      className={`sm:hidden w-7 mx-3 aspect-square ${
+      className={`sm:hidden w-7 h-7 mx-3 aspect-square flex items-center justify-center ${
         point < 30
           ? "bg-textGray"
           : point < 50
@@ -14,10 +14,10 @@ const ProfileGrade = ({ img, point }: { img: string; point: number }) => {
     >
       <Image
         src={img}
-        width="28"
-        height="28"
+        width="100"
+        height="100"
         alt="마이페이지"
-        className="sm:hidden w-full h-full cursor-pointer object-cover rounded-full"
+        className="sm:hidden w-6 h-6 cursor-pointer object-cover rounded-full"
         priority={true}
       />
     </div>

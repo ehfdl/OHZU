@@ -28,16 +28,12 @@ const Recomments = ({
   postTitle,
 }: RecommentPropsType) => {
   const date = Date.now();
-  const dateForm = new Intl.DateTimeFormat("ko-KR", {
-    dateStyle: "long",
-    timeStyle: "medium",
-  }).format(date);
 
   const initialRecomment = {
     content: "",
     commentId: "",
     userId: "",
-    createdAt: "",
+    createdAt: date,
     id: "",
     postId: "",
   };
@@ -92,7 +88,7 @@ const Recomments = ({
       content: recomment.content,
       commentId: id,
       userId: authService.currentUser?.uid,
-      createdAt: dateForm,
+      createdAt: date,
       postId,
     };
     const newAlarm = {
@@ -101,7 +97,7 @@ const Recomments = ({
       nickname: currentUser?.nickname,
       title: postTitle,
       type: "답글",
-      createdAt: Date.now(),
+      createdAt: date,
       isDone: false,
     };
     if (recomment.content.trim() !== "") {

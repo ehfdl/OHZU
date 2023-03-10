@@ -27,6 +27,10 @@ interface CommentProps {
 const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
   const { content, createdAt, userId, id, isEdit, postId } = comment;
 
+  const createdAtS = new Intl.DateTimeFormat("ko-KR", {
+    dateStyle: "long",
+    timeStyle: "medium",
+  }).format(createdAt);
   // get User
   const { data: user, isLoading: userLoading } = useGetUser(comment?.userId);
 
@@ -240,7 +244,7 @@ const CommentList = ({ comment, currentUser, postTitle }: CommentProps) => {
                 <Grade score={user?.point!} />
               </span>
               <span className="text-xs text-gray-500 flex items-end">
-                {createdAt}
+                {createdAtS}
               </span>
             </div>
             {commentIsEdit ? (
