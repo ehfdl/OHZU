@@ -240,11 +240,6 @@ const JoinModal = () => {
     let age = nowYear - newUserYear; // ex) 2023 - 2004 => 19
     let newAge = Math.abs(age);
 
-    console.log("newUserYear : ", newUserYear);
-    console.log("newUserDay : ", newUserDay);
-    console.log("age : ", age);
-    console.log("newAge : ", newAge);
-
     if (
       (0 <= newUserYear && newUserYear < 1940) ||
       newUserMonth == 0 ||
@@ -379,83 +374,6 @@ const JoinModal = () => {
       });
   };
 
-  // 네이버
-  // const { naver } = window as any;
-
-  // const loginFormWithNaver = (props: any) => {
-  //   const naverLogin = new naver.LoginWithNaverId({
-  //     // 발급받은 client ID
-  //     clientId: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID,
-  //     // app 등록 시에 callbackURL에 추가했던 URL
-  //     callbackUrl: "http://localhost:3000",
-  //     isPopup: false, // popup 형식으로 띄울것인지 설정
-  //     loginButton: { color: "white", type: 1, height: "40" }, //버튼의 스타일, 타입, 크기를 지정
-  //   });
-  //     const a = naverLogin.init();
-  //     console.log('네이버 로그인 이닛 : ', a)
-
-  //     const token = location.hash;
-  //     console.log("토큰 : ", token);
-  //   axios({
-  //     method: "POST",
-  //     // url: "https://ohzu.vercel.app/api/kakao",
-  //     url: "http://localhost:3000",
-  //     data: { token },
-  //   }).then(function (response) {
-  //     // 서버에서 보낸 jwt토큰을 받음
-  //     console.log(response);
-  //     localStorage.setItem("data", JSON.stringify(response.data));
-  //     console.log("responseData", response.data);
-
-  //     return signInWithCustomToken(
-  //       authService,
-  //       `${response.data.firebaseToken}`
-  //     )
-  //       .then(async (userCredential) => {
-  //         const user = userCredential.user;
-  //         console.log("네이버 토큰 : ", response.data);
-  //         sessionStorage.setItem(
-  //           apiKey as string,
-  //           authService.currentUser?.uid as string
-  //         );
-
-  //         const snapshot = await getDoc(
-  //           doc(dbService, "Users", authService.currentUser?.uid as string)
-  //         );
-  //         const snapshotdata = await snapshot.data();
-  //         const newProfile = {
-  //           ...snapshotdata,
-  //         };
-
-  //         if (!newProfile.userId) {
-  //           setDoc(
-  //             doc(dbService, "Users", authService.currentUser?.uid as string),
-  //             {
-  //               userId: authService.currentUser?.uid,
-  //               email: "",
-  //               nickname: "네이버",
-  //               imageURL:
-  //                 "https://firebasestorage.googleapis.com/v0/b/oh-ju-79642.appspot.com/o/profile%2Fblank_profile.png?alt=media&token=0053da71-f478-44a7-ae13-320539bdf641",
-  //               introduce: "",
-  //               point: "",
-  //               following: [],
-  //               follower: [],
-  //               recently: [],
-  //               alarm: [],
-  //             }
-  //           );
-  //           alert("네이버 간편 회원가입 성공!");
-  //         }
-  //         setJoinIsOpen(false);
-  //       })
-  //       .catch((error) => {
-  //         const errorCode = error.code;
-  //         const errorMessage = error.message;
-  //         alert(errorMessage);
-  //       });
-  //   });
-  // };
-
   // 카카오
   const loginFormWithKakao = () => {
     window.Kakao.Auth.login({
@@ -588,9 +506,9 @@ const JoinModal = () => {
                     type="text"
                     id="email"
                     placeholder="실제 사용하는 이메일을 입력해주세요. "
-                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01] "
+                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-phGray  duration-200 focus:scale-[1.01] "
                   />
-                  <p className=" max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
+                  <p className=" max-w-[472px] w-full m-auto mb-1 text-right text-sm text-phGray">
                     {checkEmail ? checkEmail : null}
                   </p>
                 </div>
@@ -605,9 +523,9 @@ const JoinModal = () => {
                     type="password"
                     id="password"
                     placeholder="비밀번호는 최소 8자리로 입력해주세요."
-                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-phGray  duration-200 focus:scale-[1.01]"
                   />
-                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-xs text-[#999999]">
+                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-xs text-textGray">
                     {checkPassword}
                   </p>
                 </div>
@@ -622,9 +540,9 @@ const JoinModal = () => {
                     type="password"
                     id="pwCheck"
                     placeholder="비밀번호 확인"
-                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1   outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1   outline-none bg-[#F5F5F5] placeholder:text-phGray  duration-200 focus:scale-[1.01]"
                   />
-                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
+                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-textGray">
                     {checkPasswordConfirm}
                   </p>
                 </div>
@@ -639,9 +557,9 @@ const JoinModal = () => {
                     type="text"
                     id="nickname"
                     placeholder="닉네임"
-                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]  duration-200 focus:scale-[1.01]"
+                    className="max-w-[472px] w-full h-[44px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-phGray  duration-200 focus:scale-[1.01]"
                   />
-                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-[#999999]">
+                  <p className="max-w-[472px] w-full m-auto mb-1 text-right text-sm text-textGray">
                     {checkNickname}
                   </p>
                 </div>
@@ -728,7 +646,9 @@ const JoinModal = () => {
             <div className="w-full">
               <div className="max-w-[310px] w-full m-auto flex items-center justify-center mt-[238px] mb-9">
                 <div className="max-w-[72px] w-full h-[1px] mr-4 bg-textGray" />
-                <p className="text-sm font-semibold ">소셜계정으로 회원가입</p>
+                <p className="text-sm font-semibold break-keep">
+                  소셜계정으로 회원가입
+                </p>
                 <div className="max-w-[72px] w-full h-[1px] ml-4 bg-textGray" />
               </div>
 
@@ -805,9 +725,9 @@ const JoinModal = () => {
                   type="text"
                   id="m_email"
                   placeholder="실제 사용하는 이메일을 입력해주세요. "
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]"
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-phGray "
                 />
-                <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
+                <p className="max-w-[358px] w-full m-auto text-right text-textGray text-xs">
                   {checkEmail ? checkEmail : null}
                 </p>
               </div>
@@ -822,9 +742,9 @@ const JoinModal = () => {
                   type="password"
                   id="m_password"
                   placeholder="비밀번호는 최소 8자리로 입력해주세요."
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]"
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-phGray"
                 />
-                <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
+                <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-textGray">
                   {checkPassword}
                 </p>
               </div>
@@ -843,9 +763,9 @@ const JoinModal = () => {
                       type="password"
                       id="m_pwCheck"
                       placeholder="비밀번호 확인"
-                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]"
+                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-phGray"
                     />
-                    <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
+                    <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-textGray">
                       {checkPasswordConfirm}
                     </p>
                   </div>
@@ -860,9 +780,9 @@ const JoinModal = () => {
                       type="text"
                       id="m_nickname"
                       placeholder="닉네임"
-                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-[#666]"
+                      className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-phGray"
                     />
-                    <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-[#999999]">
+                    <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-textGray">
                       {checkNickname}
                     </p>
                   </div>
@@ -913,12 +833,12 @@ const JoinModal = () => {
                         <div
                           onClick={ageVerification}
                           id="m_auto_login"
-                          className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary"
+                          className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary break-keep"
                         >
                           성인 인증하기
-                          <span className="inline-block ml-[4px]">✅</span>
+                          <span className="inline-block ml-1 w-2 h-2">✅</span>
                         </div>
-                        <span className="ml-2 text-sm ">
+                        <span className="ml-2 text-sm break-keep">
                           {!checkAdult ? " " : checkAdult}
                         </span>
                       </label>
@@ -948,7 +868,7 @@ const JoinModal = () => {
                 </>
               ) : null}
 
-              <div className="max-w-[358px] w-full m-auto flex items-center justify-center mt-[38px] mb-[54px]">
+              <div className="max-w-[358px] w-full m-auto flex items-center justify-center mt-[62px] mb-[54px]">
                 <div className="max-w-[116px] w-full h-[1px] mr-4 bg-textGray" />
                 <p className="text-xl font-semibold ">소셜 로그인</p>
                 <div className="max-w-[116px] w-full h-[1px] ml-4 bg-textGray" />
@@ -973,10 +893,6 @@ const JoinModal = () => {
                     className="cursor-pointer"
                   />
                 </div>
-                {/* 네이버 로그인 구현 전 */}
-                {/* <div>
-                <SiNaver className="w-10 h-10 border border-slate-400 cursor-pointer" />
-              </div> */}
                 <div onClick={loginFormWithKakao}>
                   <Image
                     src="/image/kakao.svg"

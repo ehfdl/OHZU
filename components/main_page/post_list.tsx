@@ -147,7 +147,7 @@ const PostList = () => {
             {posts.length > slicenumber + 6 ? (
               <button
                 aria-label="view-more"
-                className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary hover:bg-second hover:border-none rounded-full hover:text-primary hover:font-bold"
+                className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary hover:bg-second hover:border-none rounded-full hover:text-primary"
                 onClick={() => setSliceNumber(slicenumber + 6)}
               >
                 더보기
@@ -155,7 +155,7 @@ const PostList = () => {
             ) : (
               <button
                 aria-label="close"
-                className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary font-thin hover:bg-second hover:border-none rounded-3xl hover:text-primary hover:font-bold"
+                className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary hover:bg-[#333] hover:border-none rounded-full hover:text-white"
                 onClick={() => setSliceNumber(0)}
               >
                 접기

@@ -36,9 +36,9 @@ const Footer = () => {
   return (
     <>
       {/* 웹 */}
-      <div className="hidden sm:block w-full h-[250px] bg-second">
-        <div className="topContentsWrap flex h-full justify-between items-center">
-          <div className="inline-block ml-[69px]">
+      <div className="hidden sm:block w-full py-20 bg-second">
+        <div className="topContentsWrap flex h-full justify-between items-stretch">
+          <div className="flex justify-end items-start ml-[69px]">
             <Link aria-label="home" href={`/main`}>
               <Image
                 className="w-[164px] h-[42px]"
@@ -111,14 +111,15 @@ const Footer = () => {
                 />
               </a>
             </div>
+            <p className="mt-20 text-textGray">© OHZU, Inc.</p>
           </div>
         </div>
       </div>
 
       {/* 모바일*/}
-      <div className="sm:hidden flex flex-col w-full h-[328px] bg-second ">
+      <div className="sm:hidden flex flex-col w-full pt-12 pb-6 bg-second">
         <div className="topContentsWrap max-w-[390px] mx-auto ">
-          <div className="inline-block mt-[51px] ml-5 mb-3 ">
+          <div className="inline-block">
             <Link aria-label="home" href={`/main`}>
               <Image
                 className="w-[70px] h-[18px] cursor-pointer"

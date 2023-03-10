@@ -16,6 +16,11 @@ interface RecommentListPropsType {
 const RecommentList = ({ recomment }: RecommentListPropsType) => {
   const { commentId, userId, createdAt, content, id } = recomment;
 
+  const createdAtS = new Intl.DateTimeFormat("ko-KR", {
+    dateStyle: "long",
+    timeStyle: "medium",
+  }).format(createdAt);
+
   const [editRecommentContent, setEditRecommentContent] = useState<string>();
   const [recommentIsEdit, setRecommentIsEdit] = useState(false);
 
@@ -205,7 +210,7 @@ const RecommentList = ({ recomment }: RecommentListPropsType) => {
               <Grade score={recommentUser?.point!} />
             </span>
             <span className="text-xs text-gray-500 flex items-end">
-              {createdAt}
+              {createdAtS}
             </span>
           </div>
           {recommentIsEdit ? (

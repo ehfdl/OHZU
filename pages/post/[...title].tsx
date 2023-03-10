@@ -213,7 +213,7 @@ const PostDetail = () => {
       }
     });
     hideModal();
-    router.push("/");
+    router.push("/main");
   };
 
   // Update Post
@@ -467,7 +467,7 @@ const PostDetail = () => {
                 className="w-full max-w-[486px] aspect-square object-cover rounded"
               />
             )}
-            <div className="mt-6 grid grid-cols-3 gap-6 items-center w-full">
+            <div className="mt-6 max-w-[486px] grid grid-cols-3 gap-6 items-center w-full">
               {post?.img?.map((img: string, i: number) => (
                 <button
                   aria-label={`choice-img${i}`}
@@ -690,7 +690,7 @@ const PostDetail = () => {
             </div>
             <div className="mt-10 mb-6 h-[7px] sm:h-[1.5px] w-full bg-detailBorder" />
             <div id="ingredient" className="px-4 sm:px-0">
-              <span className="inline-block text-primary sm:text-lg mb-4">
+              <span className="inline-block font-semibold text-primary sm:text-lg mb-4">
                 준비물
               </span>
               <div className="flex justify-start flex-wrap">
@@ -708,7 +708,7 @@ const PostDetail = () => {
             </div>
             <div className="my-6 h-[7px] sm:h-[1.5px] w-full bg-detailBorder" />
             <div id="recipe" className="px-4 sm:px-0">
-              <span className="inline-block text-primary sm:text-lg mb-4">
+              <span className="inline-block font-semibold text-primary sm:text-lg mb-4">
                 만드는 방법
               </span>
               <pre className="text-xs sm:text-base whitespace-pre-wrap break-all !leading-10 pl-2">
