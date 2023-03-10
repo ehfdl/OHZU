@@ -13,11 +13,7 @@ import useCreatePost from "@/hooks/query/post/useCreatePost";
 
 const Post = () => {
   const router = useRouter();
-  const date = new Date();
-  const dateForm = new Intl.DateTimeFormat("ko-KR", {
-    dateStyle: "long",
-    timeStyle: "medium",
-  }).format(date);
+  const date = Date.now();
   const initialForm = {
     userId: authService.currentUser?.uid as string,
     img: [""],
@@ -27,7 +23,7 @@ const Post = () => {
     recipe: "",
     text: "",
     like: [],
-    createdAt: dateForm,
+    createdAt: date,
     view: 0,
   };
 
