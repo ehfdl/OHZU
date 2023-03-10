@@ -213,7 +213,7 @@ const PostDetail = () => {
       }
     });
     hideModal();
-    router.push("/");
+    router.push("/main");
   };
 
   // Update Post

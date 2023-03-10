@@ -295,7 +295,7 @@ const Mypage = () => {
                 : null}
             </span>
           </div>
-          <div className="w-full min-h-[200px] mt-4 px-4 sm:px-0 bg-white grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
+          <div className="w-full min-h-[calc(100vh-650px)] mt-4 px-4 sm:px-0 bg-white grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
             {ohju === "my-ohju"
               ? myPosts?.map((post) =>
                   cate === "전체" ? (
