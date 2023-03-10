@@ -160,7 +160,7 @@ const Header = ({ ...props }: any) => {
                   value={search}
                   type="text"
                   id="m_search"
-                  className="hidden lg:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:ring-none focus:border-none focus:outline-none  placeholder:text-iconDefault"
+                  className="hidden lg:block w-[419px] pl-10 p-2.5 bg-[#f2f2f2] border text-sm rounded-[50px] focus:outline-none  placeholder:text-iconDefault focus:ring-[#aaa] focus:border-[#aaa]"
                   placeholder="혼합주 이름 또는 재료를 입력해주세요."
                   required
                 />

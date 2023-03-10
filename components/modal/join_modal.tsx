@@ -725,9 +725,9 @@ const JoinModal = () => {
                   type="text"
                   id="m_email"
                   placeholder="실제 사용하는 이메일을 입력해주세요. "
-                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-1 outline-none bg-[#F5F5F5] placeholder:text-phGray"
+                  className="max-w-[358px] w-full h-[56px] p-2 pl-4 mb-3 outline-none bg-[#F5F5F5] placeholder:text-phGray "
                 />
-                <p className="max-w-[358px] w-full m-auto mb-5 text-right text-xs text-textGray">
+                <p className="max-w-[358px] w-full m-auto text-right text-textGray text-xs">
                   {checkEmail ? checkEmail : null}
                 </p>
               </div>
@@ -833,12 +833,12 @@ const JoinModal = () => {
                         <div
                           onClick={ageVerification}
                           id="m_auto_login"
-                          className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary"
+                          className="px-2 py-1 border-1 text-sm cursor-pointer duration-150 hover:text-primary break-keep"
                         >
                           성인 인증하기
-                          <span className="inline-block ml-[4px]">✅</span>
+                          <span className="inline-block ml-1 w-2 h-2">✅</span>
                         </div>
-                        <span className="ml-2 text-sm ">
+                        <span className="ml-2 text-sm break-keep">
                           {!checkAdult ? " " : checkAdult}
                         </span>
                       </label>
@@ -868,7 +868,7 @@ const JoinModal = () => {
                 </>
               ) : null}
 
-              <div className="max-w-[358px] w-full m-auto flex items-center justify-center mt-[38px] mb-[54px]">
+              <div className="max-w-[358px] w-full m-auto flex items-center justify-center mt-[62px] mb-[54px]">
                 <div className="max-w-[116px] w-full h-[1px] mr-4 bg-textGray" />
                 <p className="text-xl font-semibold ">소셜 로그인</p>
                 <div className="max-w-[116px] w-full h-[1px] ml-4 bg-textGray" />

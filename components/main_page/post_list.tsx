@@ -155,7 +155,7 @@ const PostList = () => {
             ) : (
               <button
                 aria-label="close"
-                className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary font-thin hover:bg-second hover:border-none rounded-3xl hover:text-primary"
+                className="sm:w-[120px] w-[348px] h-[50px] sm:h-[48px] mt-0 sm:mt-1 bg-transparent border border-primary text-primary hover:bg-[#333] hover:border-none rounded-full hover:text-white"
                 onClick={() => setSliceNumber(0)}
               >
                 접기

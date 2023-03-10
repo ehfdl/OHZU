@@ -536,7 +536,9 @@ const LoginModal = () => {
               }}
               className="absolute top-[60px] right-6 w-5 h-5 cursor-pointer duration-150 hover:text-red-400"
             />
-            <h4 className="text-[24px] font-bold mt-16 mb-[23px]">로그인</h4>
+            <h1 className="text-[24px] font-bold mt-[100px] mb-[23px]">
+              로그인
+            </h1>
             <form className="formContainer" onSubmit={signIn}>
               <div>
                 <p className="max-w-[358px] w-full pl-3 m-auto mb-[2px] text-left font-bold">
