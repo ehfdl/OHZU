@@ -291,7 +291,7 @@ const UserPage = () => {
                 <button
                   aria-label="follow"
                   onClick={onClickFollowUpdate}
-                  className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-5 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-second text-[11px] sm:text-sm text-primary flex justify-center items-center"
+                  className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-6 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-second text-xs sm:text-sm text-primary flex justify-center items-center"
                 >
                   팔로우
                 </button>
@@ -299,7 +299,7 @@ const UserPage = () => {
                 <button
                   aria-label="follow"
                   onClick={onClickFollowUpdate}
-                  className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-5 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-primary text-[11px] sm:text-sm text-white  flex justify-center items-center"
+                  className="mt-3 sm:mt-4 w-[60px] sm:w-[98px] h-6 sm:h-[30px] rounded-[100px] sm:rounded-[50px] bg-primary text-xs sm:text-sm text-white  flex justify-center items-center"
                 >
                   팔로우
                 </button>
@@ -316,11 +316,11 @@ const UserPage = () => {
                   </div>
                 </div>
                 <div className="w-52 sm:w-72 flex justify-between items-center mt-2 sm:mt-1">
-                  <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
+                  <div className="text-xs sm:text-base flex flex-col justify-center items-center">
                     좋아요<div className="font-bold">{userLike}</div>
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
-                  <div className="text-[11px] sm:text-base flex flex-col justify-center items-center">
+                  <div className="text-xs sm:text-base flex flex-col justify-center items-center">
                     게시물<div className="font-bold">{userPosts?.length}</div>
                   </div>
                   <div className="h-6 sm:h-8 border-r border-[#c9c5c5]" />
@@ -330,7 +330,7 @@ const UserPage = () => {
                       setIsOpenFollowModal(true);
                       setFollow("follower");
                     }}
-                    className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
+                    className="text-xs sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로워
                     <div className="font-bold">
@@ -343,7 +343,7 @@ const UserPage = () => {
                       setIsOpenFollowModal(true);
                       setFollow("following");
                     }}
-                    className="text-[11px] sm:text-base flex flex-col justify-center items-center cursor-pointer"
+                    className="text-xs sm:text-base flex flex-col justify-center items-center cursor-pointer"
                   >
                     팔로잉
                     <div className="font-bold">
