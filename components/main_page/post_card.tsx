@@ -232,24 +232,24 @@ const PostCard = ({ post, type }: { post: any; type?: string }) => {
               </div>
               <div
                 onClick={onClickLikeBtn}
-                className="hidden sm:block flex-col mt-5 mr-2 items-center sm:w-[20px] sm:h-[16px] sm:z-[5] cursor-pointer "
+                className="hidden sm:block flex-col mt-5 mr-3 items-center sm:w-[24px] sm:h-[18px] sm:z-[5] cursor-pointer "
               >
                 {like ? (
                   <Image
                     alt=""
                     src="/like/like-pressed.png"
-                    width={18}
-                    height={23}
+                    width={24}
+                    height={21}
                   />
                 ) : (
                   <Image
                     alt=""
                     src="/like/like-default.png"
-                    width={18}
-                    height={23}
+                    width={24}
+                    height={21}
                   />
                 )}
-                <div className="ml-[6px] sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">
+                <div className="ml-[9px] sm:text-[rgba(87,86,86,0.5)] text-[11px] text-white">
                   {post.like.length}
                 </div>
               </div>

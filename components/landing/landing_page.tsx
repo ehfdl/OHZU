@@ -20,7 +20,7 @@ const LandingPage = () => {
           </p>
           <Link href="/main" aria-label="enter_btn">
             <div className="flex justify-center items-center sm:w-[280px] w-[160px] sm:h-[71px] h-10 m-auto text-sm sm:text-[36px]  text-white border-[1px] rounded-[50px] cursor-pointer duration-300  hover:bg-white/30 ">
-              입장하기
+              <span className="mt-1">입장하기</span>
               <Image
                 className="sm:w-8 sm:h-8 w-4 h-4 sm:ml-[18px] ml-2 "
                 src="/image/underArrow.svg"
