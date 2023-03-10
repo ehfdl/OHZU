@@ -38,17 +38,17 @@
 
 **최영진** - 글 작성 페이지, 마이 페이지, 관리페이지
 <a href="https://github.com/ehfdl">
-<img src="https://img.shields.io/badge/Go Github-green?style=flat-square&logo=Github&logoColor=로고색"/>
+<img src="https://img.shields.io/badge/Go Github-green?style=flat-square&logo=Github&logoColor=white"/>
 </a>
 </br>
 **박휘인** - 로그인/회원가입 헤더/푸터
 <a href="https://github.com/Huwiinn">
-<img src="https://img.shields.io/badge/Go Github-red?style=flat-square&logo=Github&logoColor=로고색"/>
+<img src="https://img.shields.io/badge/Go Github-red?style=flat-square&logo=Github&logoColor=white"/>
 </a>
 </br>
 **김동한** - 게시물 상세 페이지
 <a href="https://github.com/kimdongzzi">
-<img src="https://img.shields.io/badge/Go Github-blue?style=flat-square&logo=Github&logoColor=로고색"/>
+<img src="https://img.shields.io/badge/Go Github-blue?style=flat-square&logo=Github&logoColor=white"/>
 </a>
 </br>
 **김한울** - 메인 페이지
@@ -286,7 +286,7 @@ sessionStorage를 이용하여 처음에 받은 쿼리를 저장하여 사용
 
 </br>
 
-- Next.js <Image>를 사용해 이미지 최적화를 하여 **Perfomance를 최대 30% 개선하였습니다.**
+- Next.js `<Image>`를 사용해 이미지 최적화를 하여 **Perfomance를 최대 30% 개선하였습니다.**
 - `<button>`과 `<Link>` 태그에 고유한 aria-lable값을 부여하여 **Accessibility를 최대 27% 개선하였습니다.**
 
 <details style="margin-bottom: 30px; margin-left:30px;">
