@@ -53,6 +53,8 @@ export default function SearchInclude({
   // 검색
   const getSearch = () => {
     const postsData = new Fuse(posts, {
+      threshold: 0.2,
+      distance: 100,
       keys: ["title", "ingredient"],
     });
     const result = postsData.search(searchWord);
